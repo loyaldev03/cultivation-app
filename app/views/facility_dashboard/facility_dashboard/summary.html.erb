@@ -1,6 +1,7 @@
 <%= react_component 'facility_dashboard/RoomsDashboardApp',
   {
     defaultFacilityId: current_default_facility&.id.to_s,
+    currentFacilityId: current_facility&.id.to_s,
     currentTime: Time.current,
   }
 %>

@@ -5,6 +5,7 @@
 <%= react_component 'cultivation/dashboards/ManifestsDashboardApp',
   {
     defaultFacilityId: current_default_facility&.id.to_s,
+    currentFacilityId: current_facility&.id.to_s,
     currentTime: Time.current,
   }
 %>

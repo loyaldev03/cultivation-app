@@ -130,7 +130,7 @@ const activeTaskStore = new ActiveTaskStore()
 class TasksDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DashboardTaskStore.loadTasks_dashboard(this.props.facilityId)
+    DashboardTaskStore.loadTasks_dashboard(this.props.currentFacilityId)
   }
   state = {
     columns: [
@@ -290,7 +290,7 @@ class TasksDashboardApp extends React.Component {
 
   onFetchData = (state, instance) => {
     activeTaskStore.setFilter({
-      facility_id: this.props.facilityId,
+      facility_id: this.props.currentFacilityId,
       page: state.page,
       limit: state.pageSize
     })
@@ -310,12 +310,12 @@ class TasksDashboardApp extends React.Component {
   }
 
   render() {
-    const { facilityId } = this.props
+    const { currentFacilityId } = this.props
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
         <div className="pb4">
-          <TaskWidget facility_id={this.props.facilityId} />
+          <TaskWidget facility_id={currentFacilityId} />
         </div>
         <div className="flex justify-between">
           <input

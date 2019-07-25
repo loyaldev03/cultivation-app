@@ -20,7 +20,7 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   end
 
   def all
-    issues = Issues::Issue.all
+    issues = Issues::Issue.all.includes(:task, :cultivation_batch, :reported_by, :assigned_to, :resolved_by)
     render json: Issues::IssueSerializer.new(issues).serialized_json
   end
 

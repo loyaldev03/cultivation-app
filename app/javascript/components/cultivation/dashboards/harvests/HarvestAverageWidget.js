@@ -50,17 +50,23 @@ class PlantByRoomWidget extends React.Component {
       <React.Fragment>
         <AverageWidget
           title="Average Cost per gram"
-          count={'$ ' + HarvestStore.average_harvest_cost.toLocaleString()}
+          count={`$ ${
+            HarvestStore.average_harvest_cost
+              ? HarvestStore.average_harvest_cost
+              : 0
+          }`}
           icon="attach_money"
           className="mb3"
-          // loaded={DahboardBatchStore.batches_info_loaded}
         />
         <AverageWidget
           title="Average yeild / square feet"
-          count={HarvestStore.average_harvest_yield.toLocaleString() + ' lbs'}
+          count={` ${
+            HarvestStore.average_harvest_yield
+              ? HarvestStore.average_harvest_yield
+              : 0
+          } lbs`}
           icon="attach_money"
           className="mt3"
-          // loaded={DahboardBatchStore.batches_info_loaded}
         />
       </React.Fragment>
     )

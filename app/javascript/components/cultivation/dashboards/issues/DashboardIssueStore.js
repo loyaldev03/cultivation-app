@@ -60,31 +60,37 @@ class IssueDashboard {
     if (this.issue_by_group_loaded) {
       let final_result = {
         labels: this.data_issue_by_group[0].issues.map(d => d.date),
-        datasets: 
-          this.data_issue_by_group.map(e => {
-            let rgb = "rgb(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255)+ "," + Math.floor(Math.random() * 255) + ")"
-            return {
-              label: e.issue_type,
-              data: e.issues.map(f => f.issue_count),
-              backgroundColor: rgb,
-              fill: false,
-              lineTension: 0.1,
-              borderColor: rgb,
-              borderCapStyle: 'butt',
-              borderDash: [],
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              pointBorderColor: rgb,
-              pointBackgroundColor: '#fff',
-              pointBorderWidth: 1,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: rgb,
-              pointHoverBorderColor: rgb,
-              pointHoverBorderWidth: 2,
-              pointRadius: 1,
-              pointHitRadius: 10
-            }
-          })
+        datasets: this.data_issue_by_group.map(e => {
+          let rgb =
+            'rgb(' +
+            Math.floor(Math.random() * 255) +
+            ',' +
+            Math.floor(Math.random() * 255) +
+            ',' +
+            Math.floor(Math.random() * 255) +
+            ')'
+          return {
+            label: e.issue_type,
+            data: e.issues.map(f => f.issue_count),
+            backgroundColor: rgb,
+            fill: false,
+            lineTension: 0.1,
+            borderColor: rgb,
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: rgb,
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: rgb,
+            pointHoverBorderColor: rgb,
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10
+          }
+        })
       }
 
       return final_result

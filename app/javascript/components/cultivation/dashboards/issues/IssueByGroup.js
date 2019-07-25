@@ -50,4 +50,3 @@ export default class IssueByGroup extends React.Component {
     )
   }
 }
-

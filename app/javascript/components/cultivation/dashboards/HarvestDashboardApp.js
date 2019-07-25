@@ -137,7 +137,7 @@ class HarvestDashboard extends React.Component {
           <div className="flex h-50">
             <div className="w-30">
               <HarvestAverageWidget
-                facility_id={this.props.defaultFacilityId}
+                facility_id={this.props.currentFacilityId}
               />
             </div>
             <div className="w-50">
@@ -146,7 +146,7 @@ class HarvestDashboard extends React.Component {
                 style={{ height: 320 + 'px' }}
               >
                 <HarvestByYeildWidget
-                  facility_id={this.props.defaultFacilityId}
+                  facility_id={this.props.currentFacilityId}
                 />
               </div>
             </div>
@@ -156,7 +156,7 @@ class HarvestDashboard extends React.Component {
                 style={{ height: 320 + 'px' }}
               >
                 <HarvestCostByGramWidget
-                  facility_id={this.props.defaultFacilityId}
+                  facility_id={this.props.currentFacilityId}
                 />
               </div>
             </div>

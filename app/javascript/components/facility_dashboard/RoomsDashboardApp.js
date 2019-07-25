@@ -186,7 +186,8 @@ class RoomsDashboardApp extends React.Component {
   }
 
   showValue(props) {
-    const room_purpose = props.row.purpose.split(',')[0]
+    const room_purpose =
+      props.row.purpose == null ? '' : props.row.purpose.split(',')[0]
     return Object.values(GROWTH_PHASE).includes(room_purpose)
   }
 

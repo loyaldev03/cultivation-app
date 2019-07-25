@@ -182,7 +182,6 @@ module Inventory
       plant.cultivation_batch_id = cultivation_batch_id
       plant.current_growth_stage = batch.current_growth_stage
       plant.location_id = location_id
-      plant.status = is_draft ? 'draft' : 'available'
       plant.planting_date = planting_date
       plant.mother_id = mother_id
       plant.wet_weight = wet_weight
@@ -204,7 +203,6 @@ module Inventory
         modifier: user,
         location_id: location_id,
         location_type: 'tray',
-        status: is_draft ? 'draft' : 'available',
         planting_date: planting_date,
         mother_id: mother_id,
         wet_weight: wet_weight,

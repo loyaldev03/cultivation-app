@@ -16,7 +16,7 @@ class PlantWidgetApp extends React.Component {
             className="ba b--light-gray pa3 bg-white br2 mr3"
             style={{ height: 400 + 'px' }}
           >
-            <PlantByPhaseWidget facility_id={this.props.facility_id}/>
+            <PlantByPhaseWidget facility_id={this.props.facility_id} />
           </div>
         </div>
         <div className="w-50">

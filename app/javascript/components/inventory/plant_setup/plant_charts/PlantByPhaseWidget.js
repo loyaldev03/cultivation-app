@@ -76,7 +76,7 @@ export default class PlantByPhaseWidget extends React.Component {
       }
     }
     return (
-        <React.Fragment>
+      <React.Fragment>
         <div className="flex justify-between mb2">
           <h1 className="f5 fw6 dark-grey">Plant Distribution by Phases</h1>
           <div className="flex">
@@ -107,8 +107,7 @@ export default class PlantByPhaseWidget extends React.Component {
           </div>
         </div>
         <h1 className="f5 fw6 grey">
-              Total Plants:{' '}
-              {PlantStore.data_plant_distribution.total_plant}{' '}
+          Total Plants: {PlantStore.data_plant_distribution.total_plant}{' '}
         </h1>
         <br />
         {PlantStore.plant_distribution_loaded ? (

@@ -1,7 +1,5 @@
-import { observable, action, computed} from 'mobx'
-import {
-  httpGetOptions
-} from '../../../utils'
+import { observable, action, computed } from 'mobx'
+import { httpGetOptions } from '../../../utils'
 
 function parseTask(taskAttributes) {
   return Object.assign(taskAttributes)

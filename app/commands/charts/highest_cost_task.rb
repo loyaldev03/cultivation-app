@@ -40,7 +40,7 @@ module Charts
         start_date = 'all'
       end
 
-      tasks = Cultivation::Task.in(id: low_levelquery_tasks).includes(:time_logs)
+      tasks = Cultivation::Task.where(facility_id: @args[:facility_id]).in(id: low_levelquery_tasks).includes(:time_logs)
       if start_date == 'all'
         tasks
       else
@@ -63,7 +63,7 @@ module Charts
           Constants::BATCH_STATUS_SCHEDULED,
           Constants::BATCH_STATUS_ACTIVE,
         ],
-      )
+      ).includes(:tasks)
       batches.map do |batch|
         if batch.tasks.present?
           query_tasks = Cultivation::QueryTasks.call(batch).result

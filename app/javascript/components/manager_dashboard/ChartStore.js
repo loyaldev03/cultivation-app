@@ -75,10 +75,10 @@ class ChartStore {
   }
 
   @action
-  async unassignedTask() {
+  async unassignedTask(facility_id) {
     this.isLoading = true
     this.unassigned_task = false
-    const url = `/api/v1/dashboard_charts/unassigned_task`
+    const url = `/api/v1/dashboard_charts/unassigned_task?facility_id=${facility_id}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -94,10 +94,10 @@ class ChartStore {
   }
 
   @action
-  async highestCostTask(range) {
+  async highestCostTask(range, facility_id) {
     this.isLoading = true
     this.highest_cost_task_loaded = false
-    const url = `/api/v1/dashboard_charts/highest_cost_task?range=${range}`
+    const url = `/api/v1/dashboard_charts/highest_cost_task?range=${range}&facility_id=${facility_id}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -113,10 +113,10 @@ class ChartStore {
   }
 
   @action
-  async issueList() {
+  async issueList(facility_id) {
     this.isLoading = true
     this.issue_list_loaded = false
-    const url = `/api/v1/dashboard_charts/issue_list`
+    const url = `/api/v1/dashboard_charts/issue_list?facility_id=${facility_id}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {

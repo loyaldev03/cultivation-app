@@ -8,7 +8,10 @@ module Charts
     end
 
     def call
-      batch_tasks = Cultivation::Task.where(:batch_id.nin => ['', nil]).where(user_ids: nil).group_by(&:batch_id)
+      batch_tasks = Cultivation::Task.where(:batch_id.nin => ['', nil])
+                                     .where(user_ids: nil, facility_id: @args[:facility_id])
+                                     .includes(:batch)
+                                     .group_by(&:batch_id)
       json_array = []
       batch_tasks.map do |batch, tasks|
         if tasks.last.batch && tasks.last.batch.status == 'ACTIVE'

@@ -12,9 +12,15 @@ import classNames from 'classnames'
 import IssueStore from '../../issues/store/IssueStore'
 import IssueByPriority from './issues/IssueByPriority'
 import IssueByGroup from './issues/IssueByGroup'
+import DashboardIssueStore from './issues/DashboardIssueStore'
 
 @observer
 class IssuesDashboard extends React.Component {
+  constructor(props) {
+    super(props)
+    DashboardIssueStore.loadIssueByPriority(this.props.currentFacilityId)
+    DashboardIssueStore.loadIssueByGroup(this.props.currentFacilityId)
+  }
   state = {
     columns: [
       { accessor: 'id', show: false },
@@ -158,7 +164,7 @@ class IssuesDashboard extends React.Component {
                 className="ba b--light-gray pa3 bg-white br2"
                 style={{ height: 350 + 'px' }}
               >
-                <IssueByGroup facility_id={this.props.facilityId} />
+                <IssueByGroup facility_id={this.props.currentFacilityId} />
               </div>
             </div>
           </div>

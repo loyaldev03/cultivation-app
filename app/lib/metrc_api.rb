@@ -145,7 +145,6 @@ class MetrcApi
 
     # - Plant Batch API
 
-
     # - Harvest
 
     def get_harvest_waste_type
@@ -153,8 +152,5 @@ class MetrcApi
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
-
-
-
   end
 end

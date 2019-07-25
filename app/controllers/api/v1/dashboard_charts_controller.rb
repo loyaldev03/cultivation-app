@@ -26,17 +26,17 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   end
 
   def unassigned_task
-    result = Charts::UnassignedTask.call(current_user).result
+    result = Charts::UnassignedTask.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
 
   def highest_cost_task
-    result = Charts::HighestCostTask.call(current_user, {range: params[:range]}).result
+    result = Charts::HighestCostTask.call(current_user, {range: params[:range], facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
 
   def issue_list
-    result = Charts::IssueList.call(current_user).result
+    result = Charts::IssueList.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
 

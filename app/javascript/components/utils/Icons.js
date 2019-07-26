@@ -31,6 +31,11 @@ import TempBatchDistribution from '../../../assets/images/dummy/home-batch-distr
 import TempHomeTaskHighestCost from '../../../assets/images/dummy/home-task-highest-cost.png'
 import TempHomeStrain from '../../../assets/images/dummy/home-strain-distribution.png'
 
+import FacilityDashboardWidget from '../../../assets/images/dummy/facility-dashboard.png'
+import FacilityRoomCapacityWidget from '../../../assets/images/dummy/facility-rooms-capacity.png'
+import FacilityRoomDetailsWidget from '../../../assets/images/dummy/facility-rooms-details.png'
+import FacilityDonutChartWidget from '../../../assets/images/dummy/facility-dashboard-donut.png'
+
 import DefaultAvatar from '../../../assets/images/blank-avatar.png'
 export {
   ImgAdd,
@@ -64,5 +69,9 @@ export {
   TempHomeTaskHighestCost,
   TempHomeStrain,
   WorkerDashboardGraph,
-  DefaultAvatar
+  DefaultAvatar,
+  FacilityDashboardWidget,
+  FacilityRoomCapacityWidget,
+  FacilityDonutChartWidget,
+  FacilityRoomDetailsWidget
 }

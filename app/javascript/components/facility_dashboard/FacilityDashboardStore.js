@@ -33,8 +33,6 @@ class FacilityDashboardStore {
     } finally {
     }
   }
-
-  
 }
 
 const facilityDashboard = new FacilityDashboardStore()

@@ -20,27 +20,27 @@ class FacilityDashboardApp extends React.Component {
           <FacilityOverview facility_id={this.props.currentFacilityId} />
 
           <div className="flex pv4">
-            <div className="ba b--light-gray pa3 bg-white br2"
-            >
-              <DashboardRoomsCapacity facility_id={this.props.currentFacilityId} />
+            <div className="ba b--light-gray pa3 bg-white br2">
+              <DashboardRoomsCapacity
+                facility_id={this.props.currentFacilityId}
+              />
               <div className="flex justify-between">
                 <div className="w-50">
-                  <DashboardDonutChart facility_id={this.props.currentFacilityId} />
+                  <DashboardDonutChart
+                    facility_id={this.props.currentFacilityId}
+                  />
                 </div>
                 <div className="w-50">
-                  <DashboardRoomDetails facility_id={this.props.currentFacilityId} />
+                  <DashboardRoomDetails
+                    facility_id={this.props.currentFacilityId}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </React.Fragment>
-      
-    )}
+    )
+  }
 }
 export default FacilityDashboardApp
-
-
-
-        
-      

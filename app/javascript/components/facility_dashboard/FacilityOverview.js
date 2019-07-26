@@ -5,7 +5,7 @@ import FacilityDashboardStore from './FacilityDashboardStore'
 const FacilityWidget = ({
   title,
   count,
-  icon = "access_time",
+  icon = 'access_time',
   className = '',
   loaded = false
 }) => {
@@ -42,21 +42,27 @@ class FacilityOverview extends React.Component {
         <div className="flex justify-between">
           <FacilityWidget
             title="Capacity"
-            count= {` ${FacilityDashboardStore.data_facility_overview.facility_capacity} %`}
+            count={` ${
+              FacilityDashboardStore.data_facility_overview.facility_capacity
+            } %`}
             className="ma3"
             icon="home"
             loaded={FacilityDashboardStore.facility_overview_loaded}
           />
           <FacilityWidget
             title="Available spots for plants"
-            count={FacilityDashboardStore.data_facility_overview.available_spots}
+            count={
+              FacilityDashboardStore.data_facility_overview.available_spots
+            }
             className="ma3"
             icon="scatter_plot"
             loaded={FacilityDashboardStore.facility_overview_loaded}
           />
           <FacilityWidget
             title="Average yeild/ sq ft"
-            count= {` ${FacilityDashboardStore.data_facility_overview.average_yield} lbs`}
+            count={` ${
+              FacilityDashboardStore.data_facility_overview.average_yield
+            } lbs`}
             className="ma3"
             icon="spa"
             loaded={FacilityDashboardStore.facility_overview_loaded}

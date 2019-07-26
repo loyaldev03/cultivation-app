@@ -60,12 +60,12 @@ export default class HarvestCostByGramWidget extends React.Component {
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
                     <MenuButton
-                      text={'Top'}
+                      text="Top"
                       className=""
                       onClick={() => this.onChangeOrder('top')}
                     />
                     <MenuButton
-                      text={'Worse'}
+                      text="Worse"
                       className=""
                       onClick={() => this.onChangeOrder('worse')}
                     />
@@ -84,8 +84,8 @@ export default class HarvestCostByGramWidget extends React.Component {
         </div>
         {HarvestStore.harvest_cost_list_loaded ? (
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-            {HarvestStore.harvest_cost_list.map(e => (
-              <div className="flex items-center">
+            {HarvestStore.harvest_cost_list.map((e, i) => (
+              <div className="flex items-center" key={i}>
                 <h1 className="f6 fw6 w-20 dark-grey">{e.harvest_batch}</h1>
                 <ProgressBar
                   percent={e.cost}

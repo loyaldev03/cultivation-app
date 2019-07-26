@@ -24,7 +24,7 @@ module Charts
 
     def generate_issues_with_date(b)
       arr = []
-      (Time.current.beginning_of_month..Time.current.end_of_month).each do |date|
+      (Time.current.beginning_of_month.to_date..Time.current.end_of_month.to_date).each do |date|
         arr << {
           date: date,
           issue_count: b.select { |v| v.created_at.strftime('%F') == date.to_s }.count,

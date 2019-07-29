@@ -60,6 +60,12 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
+    def get_plant_additives_types
+      url = "#{BASE_URL}/plants/v1/additives/types?licenseNumber=#{FACILITY_LICENSE}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
     # - Plants
 
     # + Strain API

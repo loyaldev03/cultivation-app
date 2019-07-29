@@ -142,6 +142,13 @@ class MetrcApi
 
     # + Plant Batch API
 
+    # get infor about a specific plant batch
+    def get_plant_batches_info(lic_no, batch_id)
+      url = "#{BASE_URL}/plantbatches/v1/#{batch_id}?licenseNumber=#{lic_no}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
     # By default, query for Batches that was created within the last hour
     def get_plant_batches(lic_no, modified_start = nil, modified_end = nil)
       modified_start ||= (Time.current - 1.hours).utc.iso8601
@@ -160,12 +167,14 @@ class MetrcApi
 
     # - Plant Batch API
 
-    # - Harvest
+    # + Harvest
 
     def get_harvest_waste_type
       url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{FACILITY_LICENSE}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    # - Harvest
   end
 end

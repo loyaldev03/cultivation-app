@@ -38,12 +38,33 @@ module Inventory
     field :wet_waste_weight, type: Float, default: -> { 0.0 }
     field :wet_weight_uom, type: String
 
-    field :last_metrc_update, type: DateTime
-
     # E.g. If plant is purchased, this would like to invoice item
     # E.g. If grown from clipping, this would be nil
     field :ref_id, type: BSON::ObjectId
     field :ref_type, type: String
+
+    # Metrc related fields
+    # PlantBatchName on Metrc (this is a Metrc Plant Tag in CA)
+    field :metrc_id, type: Integer
+    field :metrc_state, type: String
+    field :metrc_growth_phase, type: String
+    field :plant_batch_id, type: Integer
+    field :plant_batch_name, type: String
+    field :metrc_strain_name, type: String
+    field :metrc_room_name, type: String
+    field :metrc_harvest_id, type: Integer
+    field :metrc_harvest_count, type: Integer
+    field :metrc_harvest_uom, type: String
+    field :metrc_harvest_uom_abbr, type: String
+    field :metrc_harvest_wet_weight, type: String
+    field :metrc_is_on_hold, type: Boolean, default: -> { false }
+    field :metrc_planted_date, type: String
+    field :metrc_veg_date, type: String
+    field :metrc_flower_date, type: String
+    field :metrc_harvested_date, type: String
+    field :metrc_destroyed_date, type: String
+    # Last time this record was updated from Metrc
+    field :last_metrc_update, type: DateTime
 
     track_history on: [:plant_tag,
                        :location_id,

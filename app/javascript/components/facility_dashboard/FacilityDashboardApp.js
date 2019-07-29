@@ -3,8 +3,6 @@ import { observer } from 'mobx-react'
 import { FacilityDashboardWidget } from '../utils'
 import FacilityOverview from './FacilityOverview'
 import DashboardRoomsCapacity from './DashboardRoomsCapacity'
-import DashboardDonutChart from './DashboardDonutChart'
-import DashboardRoomDetails from './DashboardRoomDetails'
 import FacilityDashboardStore from './FacilityDashboardStore'
 
 @observer
@@ -24,18 +22,6 @@ class FacilityDashboardApp extends React.Component {
               <DashboardRoomsCapacity
                 facility_id={this.props.currentFacilityId}
               />
-              <div className="flex justify-between">
-                <div className="w-50">
-                  <DashboardDonutChart
-                    facility_id={this.props.currentFacilityId}
-                  />
-                </div>
-                <div className="w-50">
-                  <DashboardRoomDetails
-                    facility_id={this.props.currentFacilityId}
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </div>

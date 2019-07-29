@@ -64,6 +64,12 @@ class MetrcApi
 
     # + Strain API
 
+    def get_strains_info(facility_license, id)
+      url = "#{BASE_URL}/strains/v1/#{id}?licenseNumber=#{facility_license}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
     def get_strains(facility_license)
       url = "#{BASE_URL}/strains/v1/active?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)

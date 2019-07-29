@@ -31,5 +31,6 @@ module Metrc
     field :metrc_strain_id, type: Integer
     field :metrc_tracked_count, type: Integer
     field :metrc_untracked_count, type: Integer
+    field :metrc_live_count, type: Integer
   end
 end

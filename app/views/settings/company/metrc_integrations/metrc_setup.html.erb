@@ -308,6 +308,16 @@
         </div>
         <div class="dt-row">
           <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
+            Additive Types
+          </div>
+          <% metrc_h = current_facility.metrc_histories.find_by(code: "plants_additives_types") %>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%">
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdatePlantAdditiveTypes", code: "plants_additives_types"), class: 'btn btn--primary btn--small', method: :put, data: {remote: false}%>
+          </div>
+        </div>
+        <div class="dt-row">
+          <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
             Create Plantings
           </div>
           <% metrc_h = current_facility.metrc_histories.find_by(code: "plants_create_planting") %>

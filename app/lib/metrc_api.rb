@@ -37,7 +37,7 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
-    # + Plant Waste Methods and Reasons
+    # + Plants
 
     def get_plant_waste_methods
       url = "#{BASE_URL}/plants/v1/waste/methods?licenseNumber=#{FACILITY_LICENSE}"
@@ -51,7 +51,16 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
-    # - Plant Waste Methods and Reasons
+    def get_plants_flowering(lic_no, modified_start = nil, modified_end = nil)
+      url = "#{BASE_URL}/plants/v1/flowering?licenseNumber=#{lic_no}"
+      if modified_start && modified_end
+        url += "&lastModifiedStart=#{modified_start}&lastModifiedEnd=#{modified_end}"
+      end
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    # - Plants
 
     # + Strain API
 

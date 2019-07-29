@@ -176,5 +176,21 @@ class MetrcApi
     end
 
     # - Harvest
+
+    # + Packages
+
+    def get_package_adjust_reason
+      url = "#{BASE_URL}/packages/v1/adjust/reasons?licenseNumber=#{FACILITY_LICENSE}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    def get_package_type
+      url = "#{BASE_URL}/packages/v1/types?licenseNumber=#{FACILITY_LICENSE}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    # - Packages
   end
 end

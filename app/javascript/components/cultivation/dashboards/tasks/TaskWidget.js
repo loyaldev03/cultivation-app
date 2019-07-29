@@ -7,7 +7,7 @@ const TaskWidgetList = ({
   count,
   icon,
   className = '',
-  loaded = true
+  loaded = false
 }) => {
   return (
     <div

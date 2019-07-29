@@ -1,6 +1,10 @@
 <% content_for :breadcrumb do %>
   <%= breadcrumbs ["Home",root_path], 'Facility Dashboard' %>
 <% end %>
-<div class="mh4 mt4">
-  <%= image_tag "dummy/facility-dashboard.png", style: 'max-width: 1300px; width: 100%;' %>
-</div>
+<%= react_component 'facility_dashboard/FacilityDashboardApp',
+  {
+    defaultFacilityId: current_default_facility&.id.to_s,
+    currentFacilityId: current_facility&.id.to_s,
+    currentTime: Time.current,
+  }
+%>

@@ -1,23 +1,52 @@
-import React, { memo, useState, lazy, Suspense } from 'react'
+import React from 'react'
+import { Line } from 'react-chartjs-2'
+import DashboardIssueStore from './DashboardIssueStore'
 import { observer } from 'mobx-react'
-import { TempIssueGroupWidgets } from '../../../utils'
 
 @observer
-class IssueByGroup extends React.Component {
+export default class IssueByGroup extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
+    const options = {
+      legend: {
+        position: 'bottom'
+      },
+      scales: {
+        xAxes: [
+          {
+            gridLines: {
+              display: false
+            },
+            ticks: {
+              display: false
+            }
+          }
+        ],
+        yAxes: [
+          {
+            gridLines: {
+              display: false
+            }
+          }
+        ]
+      }
+    }
     return (
       <React.Fragment>
-        {/* <div className="flex justify-between">
-          <h1 className="f5 fw6 dark-grey">Priority</h1>
-        </div> */}
-        <img src={TempIssueGroupWidgets} />
+        <div className="flex justify-between mb3">
+          <div>
+            <h1 className="f5 fw6 dark-grey">Group</h1>
+          </div>
+        </div>
+        {DashboardIssueStore.issue_by_group_loaded ? (
+          <Line data={DashboardIssueStore.IssueByGroup} options={options} />
+        ) : (
+          'loading...'
+        )}
       </React.Fragment>
     )
   }
 }
-
-export default IssueByGroup

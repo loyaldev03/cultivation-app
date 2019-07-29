@@ -13,7 +13,7 @@ module Charts
       harvest_batches = Inventory::HarvestBatch.in(cultivation_batch_id: batches.map { |a| a.id.to_s }).includes(:cultivation_batch)
       sum_yield = 0
       harvest_json = harvest_batches.map do |a|
-        yield_amount = a.total_wet_weight / facility.square_foot
+        yield_amount = a.total_wet_weight / facility.square_foot rescue 0.0
         sum_yield += yield_amount
         {
           id: a.id.to_s,

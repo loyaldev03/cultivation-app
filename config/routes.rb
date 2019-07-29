@@ -472,6 +472,13 @@ Rails.application.routes.draw do
           get 'issue_by_priority'
         end
       end
+
+
+      resources :facility_dashboard_charts, only: [:index] do
+        collection do
+          get 'facility_overview'
+        end
+      end
       resources :holidays, only: [:index, :create, :update] do 
         get 'show_by_date', on: :collection
       end

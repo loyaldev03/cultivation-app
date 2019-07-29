@@ -20,7 +20,9 @@ module Charts
         total_used += (c[:total_capacity] - c[:available_capacity])
       end
 
-      facility_capacity_used = (total_used / total_capacity) * 100
+      unless total_capacity == 0
+        facility_capacity_used = (total_used / total_capacity) * 100
+      end
 
       json = {
         total_plants: total_plants,

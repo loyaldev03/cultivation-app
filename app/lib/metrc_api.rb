@@ -37,7 +37,7 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
-    # + Plant Waste Methods and Reasons
+    # + Plants
 
     def get_plant_waste_methods
       url = "#{BASE_URL}/plants/v1/waste/methods?licenseNumber=#{FACILITY_LICENSE}"
@@ -51,9 +51,24 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
-    # - Plant Waste Methods and Reasons
+    def get_plants_flowering(lic_no, modified_start = nil, modified_end = nil)
+      url = "#{BASE_URL}/plants/v1/flowering?licenseNumber=#{lic_no}"
+      if modified_start && modified_end
+        url += "&lastModifiedStart=#{modified_start}&lastModifiedEnd=#{modified_end}"
+      end
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    # - Plants
 
     # + Strain API
+
+    def get_strains_info(facility_license, id)
+      url = "#{BASE_URL}/strains/v1/#{id}?licenseNumber=#{facility_license}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
 
     def get_strains(facility_license)
       url = "#{BASE_URL}/strains/v1/active?licenseNumber=#{facility_license}"
@@ -127,6 +142,13 @@ class MetrcApi
 
     # + Plant Batch API
 
+    # get infor about a specific plant batch
+    def get_plant_batches_info(lic_no, batch_id)
+      url = "#{BASE_URL}/plantbatches/v1/#{batch_id}?licenseNumber=#{lic_no}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
     # By default, query for Batches that was created within the last hour
     def get_plant_batches(lic_no, modified_start = nil, modified_end = nil)
       modified_start ||= (Time.current - 1.hours).utc.iso8601
@@ -145,13 +167,17 @@ class MetrcApi
 
     # - Plant Batch API
 
-    # - Harvest
+    # + Harvest
 
     def get_harvest_waste_type
       url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{FACILITY_LICENSE}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    # - Harvest
+
+    # + Packages
 
     def get_package_adjust_reason
       url = "#{BASE_URL}/packages/v1/adjust/reasons?licenseNumber=#{FACILITY_LICENSE}"
@@ -164,5 +190,7 @@ class MetrcApi
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    # - Packages
   end
 end

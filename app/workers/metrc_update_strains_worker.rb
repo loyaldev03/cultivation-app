@@ -2,7 +2,8 @@ class MetrcUpdateStrainsWorker
   include Sidekiq::Worker
   sidekiq_options queue: 'low'
 
-  def perform(facility_id)
+  def perform(facility_id, metrc_strain_id = nil)
+    @logger = Logger.new(STDOUT)
     @facility_id = facility_id
     # Overview of the logic flow
     # Get strains from API (1)
@@ -12,19 +13,22 @@ class MetrcUpdateStrainsWorker
     # When found existing strains
     #   call update strains api
 
-    metrc_strains = MetrcApi.get_strains(facility.site_license) # Hash format
+    metrc_strains = get_strains_from_metrc(metrc_strain_id) # Hash format
     local_strains = facility.strains.to_a # Ruby object format
     new_strains_name = get_new_strains(metrc_strains, local_strains)
 
-    # Create new strains in Metrc
-    create_strains_on_metrc(facility.site_license,
-                            new_strains_name,
-                            local_strains)
+    # If metrc strain id is provided, it's already on metrc
+    if metrc_strain_id.nil?
+      # Create new strains in Metrc
+      create_strains_on_metrc(facility.site_license,
+                              new_strains_name,
+                              local_strains)
 
-    # Detect changes and update in Metrc
-    update_strains_on_metrc(facility.site_license,
-                            local_strains,
-                            metrc_strains)
+      # Detect changes and update in Metrc
+      update_strains_on_metrc(facility.site_license,
+                              local_strains,
+                              metrc_strains)
+    end
 
     # Update Metrc Id to local record
     update_local_metrc_ids(facility.site_license,
@@ -35,6 +39,16 @@ class MetrcUpdateStrainsWorker
   end
 
   private
+
+  def get_strains_from_metrc(metrc_strain_id = nil)
+    if metrc_strain_id
+      metrc_strain = MetrcApi.get_strains_info(facility.site_license,
+                                               metrc_strain_id)
+      [metrc_strain]
+    else
+      MetrcApi.get_strains(facility.site_license) # Hash format
+    end
+  end
 
   def facility
     @facility ||= Facility.find(@facility_id)
@@ -112,6 +126,7 @@ class MetrcUpdateStrainsWorker
         found = metrc_strains.detect { |i| i['Name'] == s.strain_name }
         if found
           s.metrc_id = found['Id']
+          s.u_at = Time.current
           s.save
         end
       end

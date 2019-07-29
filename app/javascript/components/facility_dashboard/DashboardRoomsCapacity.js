@@ -19,14 +19,10 @@ class DashboardRoomsCapacity extends React.Component {
         <img src={FacilityRoomCapacityWidget} />
         <div className="flex justify-between">
           <div className="w-50">
-            <DashboardDonutChart 
-              facility_id={this.props.currentFacilityId}
-            />
+            <DashboardDonutChart facility_id={this.props.currentFacilityId} />
           </div>
           <div className="w-50">
-            <DashboardRoomDetails
-              facility_id={this.props.currentFacilityId}
-            />
+            <DashboardRoomDetails facility_id={this.props.currentFacilityId} />
           </div>
         </div>
       </React.Fragment>

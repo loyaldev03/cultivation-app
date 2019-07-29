@@ -477,6 +477,8 @@ Rails.application.routes.draw do
       resources :facility_dashboard_charts, only: [:index] do
         collection do
           get 'facility_overview'
+          get 'rooms_capacity'
+          get 'room_detail'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

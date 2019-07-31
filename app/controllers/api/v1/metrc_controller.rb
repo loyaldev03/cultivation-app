@@ -1,7 +1,23 @@
 class Api::V1::MetrcController < Api::V1::BaseApiController
   def index
-    tags = Inventory::MetrcTag.where(facility_id: params[:facility_id])
-    render json: Inventory::MetrcTagSerializer.new(tags).serialized_json, status: 200
+    # tags = Inventory::MetrcTag.where(facility_id: params[:facility_id])
+    # render json: Inventory::MetrcTagSerializer.new(tags).serialized_json, status: 200
+    query_cmd = Inventory::QueryMetrcs.call(
+      facility_id: params[:facility_id],
+      page: params[:page],
+      limit: params[:limit],
+      search: params[:search],
+    )
+
+    if query_cmd.success?
+      result = query_cmd.result
+      render json: {
+        data: result['data'].as_json,
+        metadata: query_cmd.metadata.as_json,
+      }
+    else
+      render json: {errors: query_cmd.errors}
+    end
   end
 
   def bulk_create

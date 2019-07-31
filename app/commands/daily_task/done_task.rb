@@ -11,8 +11,7 @@ module DailyTask
 
     def call
       if valid_params?
-        last_time_log = task.time_logs.find_by(end_time: nil)
-        last_time_log&.stop!
+        stop_time_logs
         task.update(work_status: Constants::WORK_STATUS_DONE)
         CalculateTotalActualCostJob.perform_later(task.id.to_s)
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
@@ -27,6 +26,14 @@ module DailyTask
 
     def task
       @task ||= Cultivation::Task.find(task_id)
+    end
+
+    def stop_time_logs
+      logs = task.time_logs.where(user_id: user.id,
+                                  end_time: nil)
+      if logs.any?
+        logs.each(&:stop!)
+      end
     end
 
     def user

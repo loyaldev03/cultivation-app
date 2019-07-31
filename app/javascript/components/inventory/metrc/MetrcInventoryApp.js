@@ -1,29 +1,142 @@
-import React, { memo, useState, lazy, Suspense } from 'react'
+import isEmpty from 'lodash.isempty'
+import uniq from 'lodash.uniq'
+import React, { memo, useState } from 'react'
+import classNames from 'classnames'
+import { differenceInDays } from 'date-fns'
+import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
-import DashboardMetrcStore from './DashboardMetrcStore'
-import MetrcStore from './MetrcStore'
-import classnames from 'classnames'
 import {
     SlidePanel,
     SlidePanelFooter,
     SlidePanelHeader
   } from '../../utils/SlidePanel'
-
 import {
+  decimalFormatter,
+  formatDate2,
+  httpGetOptions,
+  ActiveBadge,
   CheckboxSelect,
+  HeaderFilter,
+  Loading,
   ListingTable,
-  formatAgo, 
-  httpGetOptions, 
+  formatAgo,
+  TempTaskWidgets,
   httpPostOptions
 } from '../../utils'
+import DashboardMetrcStore from './DashboardMetrcStore'
+import classnames from 'classnames'
 
+class ActiveTaskStore {
+  @observable tasks = []
+  @observable isLoading = false
+  @observable isDataLoaded = false
+  @observable metadata = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_id: '',
+    page: 0,
+    limit: 20
+  }
+  @observable columnFilters = {}
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadActiveTasks()
+        }
+      },
+      { delay: 700 }
+    )
+  }
+
+  @action
+  async loadActiveTasks() {
+    this.isLoading = true
+    let url = `/api/v1/metrc?facility_id=${
+      this.filter.facility_id
+    }`
+    url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        this.tasks = response.data
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
+        this.isDataLoaded = true
+      } else {
+        this.tasks = []
+        this.metadata = { pages: 0 }
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      page: filter.page,
+      limit: filter.limit
+    }
+  }
+
+  /* + column filters */
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
+  }
+  /* - column filters */
+
+  @computed
+  get filteredList() {
+    if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
+      return this.tasks.filter(b => {
+        if (this.isFiltered(b)) {
+          return false
+        }
+        const filterLc = this.searchTerm.toLowerCase()
+        const nameLc = `${b.tag}`.toLowerCase()
+        const results = nameLc.includes(filterLc)
+        return results
+      })
+    } else {
+      return this.tasks
+    }
+  }
+}
+
+const activeTaskStore = new ActiveTaskStore()
 
 @observer
 class MetrcInventoryApp extends React.Component {
   constructor(props) {
     super(props)
     DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
-    
   }
   state = {
     data: [],
@@ -48,23 +161,17 @@ class MetrcInventoryApp extends React.Component {
             )
           }
         },
-
+  
         {
-            Header: 'Last Update',
-            accessor: 'u_at',
-            Cell: props => {
-                return <span className="">{formatAgo(props.value)}</span>
-            }
+          Header: 'Last Update',
+          accessor: 'u_at',
+          Cell: props => {
+            return <span className="">{formatAgo(props.value)}</span>
+          }
         }
-      
-      
-    ]
+      ]
+    
   }
-  componentDidMount() {
-    MetrcStore.loadMetrcs(this.props.facility_id)
-  }
-
-
   onToggleSidebar = () => {
     this.setState({ showEditor: !this.state.showEditor })
   }
@@ -76,7 +183,16 @@ class MetrcInventoryApp extends React.Component {
     })
     this.onToggleSidebar()
     this.editor.reset()
-    MetrcStore.loadMetrcs(this.props.facility_id)
+    DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
+  }
+
+  onFetchData = (state, instance) => {
+    activeTaskStore.setFilter({
+      facility_id: this.props.facility_id,
+      page: state.page,
+      limit: state.pageSize
+    })
+    activeTaskStore.loadActiveTasks()
   }
 
   onToggleColumns = (header, value) => {
@@ -125,19 +241,22 @@ class MetrcInventoryApp extends React.Component {
             className="input w5"
             placeholder="Search Tag ID"
             onChange={e => {
-              MetrcStore.filter = e.target.value
+                activeTaskStore.searchTerm = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
-        
+
         <ListingTable
-            data={MetrcStore.filteredList}
+          ajax={true}
+            onFetchData={this.onFetchData}
+            data={activeTaskStore.filteredList}
+            pages={activeTaskStore.metadata.pages}
             columns={columns}
-            isLoading={MetrcStore.isLoading}
+            isLoading={activeTaskStore.isLoading}
         />
       </div>
-      
+    
     )
   }
 }
@@ -234,6 +353,5 @@ class MetricEditor extends React.Component {
       })
     })
   }
-  
 
 export default MetrcInventoryApp

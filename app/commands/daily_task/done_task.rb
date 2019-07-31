@@ -17,6 +17,10 @@ module DailyTask
         CalculateTotalActualCostJob.perform_later(task.id.to_s)
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
         CalculateTotalActualCostBatchJob.perform_later(@task.batch_id.to_s)
+
+        # When a clipping task is completed. Group batch into lot size of 100,
+        # to as a PlantBatch for Metrc synchronization.
+        GenerateBatchLots.perform_async(@batch_id)
         task
       end
     rescue StandardError

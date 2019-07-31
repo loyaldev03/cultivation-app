@@ -23,7 +23,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def other_tasks
-    Rails.logger.debug "\n\r\t\t\t>>>>>>>>>>>>>>>>>>>>>> other_tasks"
     @tasks_date = Time.current.beginning_of_day
     tasks = get_other_tasks(current_user.id, @tasks_date)
 
@@ -40,23 +39,29 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
   def tasks_by_date
     tasks = current_user.cultivation_tasks.expected_on(params[:date])
-    batches = Cultivation::Batch.find(tasks.map { |a| a.batch_id }.uniq)
-    query_locations = batches.map { |a| {batch_id: a.id.to_s, query: QueryLocations.call(a.facility_id)} }
+    batches = Cultivation::Batch.in(id: tasks.map(&:batch_id).uniq)
+    locations = batches.map do |a|
+      {batch_id: a.id.to_s, query: QueryLocations.call(a.facility_id)}
+    end
     json_serializer = TaskCalendarSerializer.new(
       tasks,
-      params: {query: query_locations},
+      params: {query: locations},
     ).serializable_hash[:data]
 
     render json: json_serializer
   end
 
   def work_schedules
-    result = DailyTask::QueryUserWorkSchedules.call(params[:start_date], params[:end_date], current_user).result
+    result = DailyTask::QueryUserWorkSchedules.call(params[:start_date],
+                                                    params[:end_date],
+                                                    current_user).result
     render json: result
   end
 
   def tasks_by_date_range
-    result = DailyTask::QueryTaskByDateRange.call(params[:start_date], params[:end_date], current_user).result
+    result = DailyTask::QueryTaskByDateRange.call(params[:start_date],
+                                                  params[:end_date],
+                                                  current_user).result
     render json: result
   end
 

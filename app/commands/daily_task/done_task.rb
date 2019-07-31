@@ -18,9 +18,12 @@ module DailyTask
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
         CalculateTotalActualCostBatchJob.perform_later(@task.batch_id.to_s)
 
-        # When a clipping task is completed. Group batch into lot size of 100,
-        # to as a PlantBatch for Metrc synchronization.
-        GenerateBatchLots.perform_async(@batch_id)
+        # When clone are moved into trays. Generate PlantBatch
+        # for Metrc synchronization.
+        if task.indelible == Constants::INDELIBLE_MOVING_TO_TRAY
+          GenerateBatchLots.perform_async(@batch_id)
+        end
+
         task
       end
     rescue StandardError

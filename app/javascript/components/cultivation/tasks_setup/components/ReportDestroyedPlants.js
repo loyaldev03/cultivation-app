@@ -23,11 +23,11 @@ class ReportDestroyedPlants extends React.Component {
     }
   }
   onSave = async () => {
-    const plant_id = this.inputPlantId.value
+    const plant_tag = this.inputPlantId.value
     const reason = this.inputReason.value
-    const res = await destroyedPlantsStore.addDestroyedPlant(plant_id, reason)
+    const res = await destroyedPlantsStore.addDestroyedPlant(plant_tag, reason)
     if (res && this.props.onClose) {
-      toast('Destroyed plant recorded', 'success')
+      // toast('Destroyed plant recorded', 'success')
       this.inputPlantId.value = ''
       this.inputReason.value = ''
       this.props.onClose()
@@ -74,8 +74,8 @@ class ReportDestroyedPlants extends React.Component {
                     <div className="i">Nothing yet...</div>
                   ) : (
                     destroyedPlantsStore.plants.map(p => (
-                      <div key={p.plant_id} className="flex items-center pv1">
-                        <span className="flex-auto">{p.plant_id}</span>
+                      <div key={p.plant_tag} className="flex items-center pv1">
+                        <span className="flex-auto">{p.plant_tag}</span>
                         <span className="w4">{p.destroyed_on}</span>
                         <i
                           className="w1 material-icons icon--medium"
@@ -124,15 +124,15 @@ class DestroyedPlantsStore {
   }
 
   @action
-  async addDestroyedPlant(plant_id, reason) {
-    if (!plant_id) return
+  async addDestroyedPlant(plant_tag, reason) {
+    if (!plant_tag) return
     this.isSaving = true
-    const payload = { plant_id, reason, destroyed_on: new Date().toString() }
+    const payload = { plant_tag, destroyed_reason: reason, destroyed_on: new Date().toString() }
     // Optimistic update
-    const found = this.plants.find(p => p.plant_id === plant_id)
+    const found = this.plants.find(p => p.plant_tag === plant_tag)
     if (found) {
       this.plants = this.plants.map(p =>
-        p.plant_id === plant_id ? payload : p
+        p.plant_tag === plant_tag ? payload : p
       )
     } else {
       this.plants = [...this.plants, payload]

@@ -57,7 +57,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     command = Inventory::SaveDestroyedPlant.call(
       current_user,
       batch_id: params[:batch_id],
-      plant_id: params[:plant_id],
+      plant_tag: params[:plant_tag],
       destroyed_reason: params[:destroyed_reason],
     )
     if command.success?

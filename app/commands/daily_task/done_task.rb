@@ -9,6 +9,7 @@ module DailyTask
       @user_id = user_id
     end
 
+    # This is called when a task has been completed by a worker.
     def call
       if valid_params?
         stop_time_logs

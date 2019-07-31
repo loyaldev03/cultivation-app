@@ -127,7 +127,11 @@ class DestroyedPlantsStore {
   async addDestroyedPlant(plant_tag, reason) {
     if (!plant_tag) return
     this.isSaving = true
-    const payload = { plant_tag, destroyed_reason: reason, destroyed_on: new Date().toString() }
+    const payload = {
+      plant_tag,
+      destroyed_reason: reason,
+      destroyed_on: new Date().toString()
+    }
     // Optimistic update
     const found = this.plants.find(p => p.plant_tag === plant_tag)
     if (found) {

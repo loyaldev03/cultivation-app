@@ -21,7 +21,7 @@ module DailyTask
         # When clone are moved into trays. Generate PlantBatch
         # for Metrc synchronization.
         if task.indelible == Constants::INDELIBLE_MOVING_TO_TRAY
-          GenerateBatchLots.perform_async(@batch_id)
+          GenerateBatchLots.perform_async(task.batch_id.to_s)
         end
 
         task

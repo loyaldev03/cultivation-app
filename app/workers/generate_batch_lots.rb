@@ -24,8 +24,11 @@ class GenerateBatchLots
   end
 
   def generate_plant_batches_by_clipping
-    # Create plant batch for each mother plants' clipping
-    # PlantBatch lot size == number of clippings from each Mother Plant
+    # Create plant batch for each mother plants' clipping.
+    # PlantBatch lot size == number of clippings from each Mother Plant.
+    # 1. count number of tag required (number of mother plants).
+    # 2. for each batch, count number of plants -> number of clippings.
+    # 3. generate plant batches based on 1 & 2.
   end
 
   def generate_plant_batches_by_lot_size

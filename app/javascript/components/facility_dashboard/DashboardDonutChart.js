@@ -13,42 +13,51 @@ class DashboardDonutChart extends React.Component {
   }
   render() {
     const options = {
-    plugins: {
-      labels: {
-        render: 'label', 
-        overlap: true,
-        fontSize: 14,
-        fontStyle: 'bold',
-        fontColor: 'white',
-      }
-    },
-    title: {
-      display: true,
-    },
+      plugins: {
+        labels: {
+          render: 'label',
+          overlap: true,
+          fontSize: 14,
+          fontStyle: 'bold',
+          fontColor: 'white'
+        }
+      },
+      title: {
+        display: true
+      },
       tooltips: {
-        enabled: false, 
+        enabled: false,
         displayColors: false,
         callbacks: {
           label: function(tooltipItem, data) {
-            return  data.labels[tooltipItem.index];
+            return data.labels[tooltipItem.index]
           }
         }
       },
       legend: {
         display: false
       }
-    } 
+    }
     return (
       <React.Fragment>
         <div className="flex justify-between">
-          <h1 className="f5 fw6 dark-grey ttc">{FacilityDashboardStore.current_room_purpose} - {FacilityDashboardStore.data_list_rooms.total_rooms} Rooms</h1>
+          <h1 className="f5 fw6 dark-grey ttc">
+            {FacilityDashboardStore.current_room_purpose} -{' '}
+            {FacilityDashboardStore.data_list_rooms.total_rooms} Rooms
+          </h1>
         </div>
-        < Doughnut data={FacilityDashboardStore.RoomPupose} 
+        <Doughnut
+          data={FacilityDashboardStore.RoomPupose}
           options={options}
-          style={{ cursor: 'pointer'}}
-          onElementsClick={e=>{
+          style={{ cursor: 'pointer' }}
+          onElementsClick={e => {
             let room = FacilityDashboardStore.data_list_rooms.rooms[e[0]._index]
-            FacilityDashboardStore.loadRoomsDetail(this.props.facility_id, room.purpose, room.room_code, room.room_name)
+            FacilityDashboardStore.loadRoomsDetail(
+              this.props.facility_id,
+              room.purpose,
+              room.room_code,
+              room.room_name
+            )
           }}
         />
       </React.Fragment>

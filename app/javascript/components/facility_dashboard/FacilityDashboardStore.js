@@ -61,7 +61,9 @@ class FacilityDashboardStore {
 
   @action
   setRoomPupose(purpose) {
-    this.data_list_rooms = this.data_rooms_capacity.find(e =>e.purpose == purpose)
+    this.data_list_rooms = this.data_rooms_capacity.find(
+      e => e.purpose == purpose
+    )
     this.current_room_purpose = purpose
   }
 
@@ -70,7 +72,7 @@ class FacilityDashboardStore {
     let count = this.data_list_rooms.total_rooms
     for (var i = 0; i < count; i++) {
       data.push(1)
-    } 
+    }
     let final_result = {
       labels: this.data_list_rooms.rooms.map(e => e.room_code),
       datasets: [

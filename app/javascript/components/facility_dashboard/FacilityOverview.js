@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import FacilityDashboardStore from './FacilityDashboardStore'
-import {numberFormatter} from '../utils'
+import { numberFormatter } from '../utils'
 
 const FacilityWidget = ({
   title,
@@ -52,18 +52,18 @@ class FacilityOverview extends React.Component {
           />
           <FacilityWidget
             title="Available spots for plants"
-            count={
-              numberFormatter.format(FacilityDashboardStore.data_facility_overview.available_spots)
-            }
+            count={numberFormatter.format(
+              FacilityDashboardStore.data_facility_overview.available_spots
+            )}
             className="ma3"
             icon="scatter_plot"
             loaded={FacilityDashboardStore.facility_overview_loaded}
           />
           <FacilityWidget
             title="Average yeild/ sq ft"
-            count={` ${
-              numberFormatter.format(FacilityDashboardStore.data_facility_overview.average_yield)
-            } lbs`}
+            count={` ${numberFormatter.format(
+              FacilityDashboardStore.data_facility_overview.average_yield
+            )} lbs`}
             className="ma3"
             icon="spa"
             loaded={FacilityDashboardStore.facility_overview_loaded}

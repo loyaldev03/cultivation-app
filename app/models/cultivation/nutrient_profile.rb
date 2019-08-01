@@ -5,6 +5,8 @@ module Cultivation
     field :phase_name, type: String # e.g Clone, Flower
     field :name, type: String # e.g. Week1
     field :task_id, type: BSON::ObjectId # bind to task
+    field :start_date, type: Time # task start and end_date
+    field :end_date, type: Time
     field :light_hours, type: Float
     field :temperature_day, type: Float
     field :temperature_night, type: Float

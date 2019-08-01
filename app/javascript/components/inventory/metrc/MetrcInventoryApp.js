@@ -6,10 +6,10 @@ import { differenceInDays } from 'date-fns'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import {
-    SlidePanel,
-    SlidePanelFooter,
-    SlidePanelHeader
-  } from '../../utils/SlidePanel'
+  SlidePanel,
+  SlidePanelFooter,
+  SlidePanelHeader
+} from '../../utils/SlidePanel'
 import {
   decimalFormatter,
   formatDate2,
@@ -56,9 +56,7 @@ class ActiveTaskStore {
   @action
   async loadActiveTasks() {
     this.isLoading = true
-    let url = `/api/v1/metrc?facility_id=${
-      this.filter.facility_id
-    }`
+    let url = `/api/v1/metrc?facility_id=${this.filter.facility_id}`
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
@@ -142,35 +140,34 @@ class MetrcInventoryApp extends React.Component {
     data: [],
     showEditor: false,
     columns: [
-        { Header: 'Tag', accessor: 'tag' },
-        { Header: 'Type', accessor: 'tag_type' },
-        {
-          Header: 'Status',
-          accessor: 'status',
-          width: 200,
-          Cell: props => {
-            return (
-              <span
-                className={classnames('ttc', {
-                  grey: props.value === 'assigned',
-                  green: props.value === 'available'
-                })}
-              >
-                {props.value === 'assigned' ? 'used' : props.value}
-              </span>
-            )
-          }
-        },
-  
-        {
-          Header: 'Last Update',
-          accessor: 'u_at',
-          Cell: props => {
-            return <span className="">{formatAgo(props.value)}</span>
-          }
+      { Header: 'Tag', accessor: 'tag' },
+      { Header: 'Type', accessor: 'tag_type' },
+      {
+        Header: 'Status',
+        accessor: 'status',
+        width: 200,
+        Cell: props => {
+          return (
+            <span
+              className={classnames('ttc', {
+                grey: props.value === 'assigned',
+                green: props.value === 'available'
+              })}
+            >
+              {props.value === 'assigned' ? 'used' : props.value}
+            </span>
+          )
         }
-      ]
-    
+      },
+
+      {
+        Header: 'Last Update',
+        accessor: 'u_at',
+        Cell: props => {
+          return <span className="">{formatAgo(props.value)}</span>
+        }
+      }
+    ]
   }
   onToggleSidebar = () => {
     this.setState({ showEditor: !this.state.showEditor })
@@ -210,7 +207,7 @@ class MetrcInventoryApp extends React.Component {
   render() {
     const { columns, showEditor } = this.state
     return (
-        <div className="w-100 bg-white pa3">
+      <div className="w-100 bg-white pa3">
         <div className="flex mb4 mt2">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">METRC Tags</h1>
           <div style={{ justifySelf: 'end' }}>
@@ -241,7 +238,7 @@ class MetrcInventoryApp extends React.Component {
             className="input w5"
             placeholder="Search Tag ID"
             onChange={e => {
-                activeTaskStore.searchTerm = e.target.value
+              activeTaskStore.searchTerm = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
@@ -249,109 +246,108 @@ class MetrcInventoryApp extends React.Component {
 
         <ListingTable
           ajax={true}
-            onFetchData={this.onFetchData}
-            data={activeTaskStore.filteredList}
-            pages={activeTaskStore.metadata.pages}
-            columns={columns}
-            isLoading={activeTaskStore.isLoading}
+          onFetchData={this.onFetchData}
+          data={activeTaskStore.filteredList}
+          pages={activeTaskStore.metadata.pages}
+          columns={columns}
+          isLoading={activeTaskStore.isLoading}
         />
       </div>
-    
     )
   }
 }
 
 class MetricEditor extends React.Component {
-    state = {
-      metrcs: '',
-      tag_type: 'plant'
-    }
-  
-    reset = () => {
-      this.setState({
-        metrcs: '',
-        tag_type: 'plant'
-      })
-    }
-  
-    onChange = event => {
-      const key = event.target.name
-      this.setState({ [key]: event.target.value })
-    }
-  
-    onSave = event => {
-      // console.log('on save...')
-      this.props.onSave({
-        metrcs: this.state.metrcs,
-        tag_type: this.state.tag_type
-      })
-    }
-  
-    render() {
-      const { onClose } = this.props
-      const { metrcs, tag_type } = this.state
-  
-      return (
-        <div className="flex flex-column h-100">
-          <SlidePanelHeader onClose={onClose} title="Add METRC tags" />
-          <div className="flex flex-column flex-auto justify-between">
-            <div className="pv3 ph4 flex flex-column">
-              <div className="mb3 f6">
-                <label className="f6 fw6 db mb1 gray ttc">Tag IDs</label>
-                <textarea
-                  name="metrcs"
-                  value={metrcs}
-                  style={{ height: '250px' }}
-                  onChange={this.onChange}
-                  className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-                />
-              </div>
-  
-              <div className="mb3 f6">
-                <label className="f6 fw6 db mb1 gray ttc">Tag type</label>
-                <div className="w-100 flex  mt2">
-                  <label className="mr4">
-                    <input
-                      type="radio"
-                      name="tag_type"
-                      value="plant"
-                      checked={tag_type == 'plant'}
-                      onChange={this.onChange}
-                    />
-                    <span className="ml2">Plant</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="tag_type"
-                      value="package"
-                      checked={tag_type == 'package'}
-                      onChange={this.onChange}
-                    />
-                    <span className="ml2">Package</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
-          </div>
-        </div>
-      )
-    }
+  state = {
+    metrcs: '',
+    tag_type: 'plant'
   }
 
-  const bulkCreateMetrcs = (facilityId, data) => {
-    const url = `/api/v1/metrc/bulk_create/${facilityId}`
-  
-    return fetch(url, httpPostOptions(data)).then(response => {
-      return response.json().then(data => {
-        // console.log(data)
-        return {
-          status: response.status,
-          data: data.data
-        }
-      })
+  reset = () => {
+    this.setState({
+      metrcs: '',
+      tag_type: 'plant'
     })
   }
+
+  onChange = event => {
+    const key = event.target.name
+    this.setState({ [key]: event.target.value })
+  }
+
+  onSave = event => {
+    // console.log('on save...')
+    this.props.onSave({
+      metrcs: this.state.metrcs,
+      tag_type: this.state.tag_type
+    })
+  }
+
+  render() {
+    const { onClose } = this.props
+    const { metrcs, tag_type } = this.state
+
+    return (
+      <div className="flex flex-column h-100">
+        <SlidePanelHeader onClose={onClose} title="Add METRC tags" />
+        <div className="flex flex-column flex-auto justify-between">
+          <div className="pv3 ph4 flex flex-column">
+            <div className="mb3 f6">
+              <label className="f6 fw6 db mb1 gray ttc">Tag IDs</label>
+              <textarea
+                name="metrcs"
+                value={metrcs}
+                style={{ height: '250px' }}
+                onChange={this.onChange}
+                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+              />
+            </div>
+
+            <div className="mb3 f6">
+              <label className="f6 fw6 db mb1 gray ttc">Tag type</label>
+              <div className="w-100 flex  mt2">
+                <label className="mr4">
+                  <input
+                    type="radio"
+                    name="tag_type"
+                    value="plant"
+                    checked={tag_type == 'plant'}
+                    onChange={this.onChange}
+                  />
+                  <span className="ml2">Plant</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="tag_type"
+                    value="package"
+                    checked={tag_type == 'package'}
+                    onChange={this.onChange}
+                  />
+                  <span className="ml2">Package</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
+        </div>
+      </div>
+    )
+  }
+}
+
+const bulkCreateMetrcs = (facilityId, data) => {
+  const url = `/api/v1/metrc/bulk_create/${facilityId}`
+
+  return fetch(url, httpPostOptions(data)).then(response => {
+    return response.json().then(data => {
+      // console.log(data)
+      return {
+        status: response.status,
+        data: data.data
+      }
+    })
+  })
+}
 
 export default MetrcInventoryApp

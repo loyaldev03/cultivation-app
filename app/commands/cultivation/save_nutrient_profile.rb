@@ -16,10 +16,14 @@ module Cultivation
 
     def save_record
       batch = Cultivation::Batch.find(args[:batch_id])
+      task = batch.tasks.find_by(phase: args[:phase], name: args[:selectedWeek])
       record = batch.nutrient_profiles.find_or_create_by(phase_name: args[:phase], name: args[:selectedWeek])
+
       record.phase_name = args[:phase]
       record.name = args[:selectedWeek]
-      record.task_id = ''
+      record.task_id = task.id.to_s
+      record.start_date = task.start_date
+      record.end_date = task.end_date
       record.light_hours = args[:light_hours]
       record.temperature_day = args[:temperature_day]
       record.temperature_night = args[:temperature_night]

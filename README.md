@@ -32,6 +32,12 @@ Cannected
     * NOTE: `git commit` would trigger `pre-commit` hook to format `Ruby` & `JavaScript` codes
 * (Optional) copy `master.key` from others and put it under `config/master.key`
 
+### Docker
+* To use mongodb via docker
+* Create a new volume for mongodb data `docker volume create mongodbdata`
+* Run docker mongodb image
+* `docker run --name mongo37 -d -p 27017:27017 -v mongodbdata:/data/db mongo:3.7`
+
 ### Development Workflow
 * Pick a task from VSTS
     * Move task to `Active` column & assign yourself to the task

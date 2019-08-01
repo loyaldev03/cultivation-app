@@ -16,4 +16,6 @@ const moneyFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2
 })
 
-export { decimalFormatter, moneyFormatter, sanitizeText }
+const numberFormatter = new Intl.NumberFormat('en')
+
+export { decimalFormatter, moneyFormatter, sanitizeText, numberFormatter }

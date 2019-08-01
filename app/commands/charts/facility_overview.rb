@@ -20,7 +20,7 @@ module Charts
       {
         facility_capacity: facility_capacity,
         available_spots: available_spots,
-        average_yield: facility.square_foot ? harvest_yeild / facility.square_foot : 0,
+        average_yield: facility.square_foot ? (harvest_yeild / facility.square_foot).round(2) : 0,
       }
     end
   end

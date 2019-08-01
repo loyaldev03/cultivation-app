@@ -21,6 +21,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "chart.js": "^2.8.0",
+    "chartjs-plugin-labels": "^1.1.0",
     "classnames": "^2.2.6",
     "convert-units": "^2.3.4",
     "d3": "^5.9.7",

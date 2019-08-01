@@ -37,6 +37,8 @@ Cannected
 * Create a new volume for mongodb data `docker volume create mongodbdata`
 * Run docker mongodb image
 * `docker run --name mongo37 -d -p 27017:27017 -v mongodbdata:/data/db mongo:3.7`
+* To use redis via docker
+* `docker run --name redis -d -p 6379:6379 redis`
 
 ### Development Workflow
 * Pick a task from VSTS

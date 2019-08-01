@@ -39,6 +39,12 @@ class MetrcApi
 
     # + Plants
 
+    def create_plant_plantings(lic_no, params)
+      url = "#{BASE_URL}/plants/v1/create/plantings?licenseNumber=#{lic_no}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     def get_plant_waste_methods
       url = "#{BASE_URL}/plants/v1/waste/methods?licenseNumber=#{FACILITY_LICENSE}"
       res = RestClient.get(url, HEADERS)
@@ -171,7 +177,7 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
-    def create_plant_batches(lic_no, params)
+    def create_batch_plantings(lic_no, params)
       url = "#{BASE_URL}/plantbatches/v1/createplantings?licenseNumber=#{lic_no}"
       res = RestClient.post(url, params.to_json, HEADERS)
       res.code == 200

@@ -38,8 +38,6 @@ module Cultivation
 
     field :destroyed_plants_count, type: Integer, default: -> { 0 }
 
-    # TODO: Add batch_metrc_tag field (plant tag)
-
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan', dependent: :delete_all

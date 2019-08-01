@@ -23,6 +23,7 @@ module Cultivation
         Time.use_zone(batch.facility.timezone) do
           update_current_growth_stage(batch)
           update_plants_current_growth_stage(batch)
+          metrc_daily_trigger(batch)
         end
       end
     end
@@ -96,6 +97,11 @@ module Cultivation
           )
         end
       end
+    end
+
+    def metrc_daily_trigger(batch)
+      # Generate PlantBatch if necessary
+      GenerateBatchLots.perform_async(batch.id.to_s)
     end
 
     def calculate_estimated_hours(tasks)

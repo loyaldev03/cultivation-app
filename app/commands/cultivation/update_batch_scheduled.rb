@@ -32,10 +32,6 @@ module Cultivation
         UpdateTask.call(@current_user, args, true)
       end
 
-      # Once the batch is scheduled, generate Plant Batch and group
-      # batch into lot size of 100. Plant batch will be push to Metc
-      # when batch become active.
-      GenerateBatchLots.perform_async(@batch_id)
       validate
     end
 

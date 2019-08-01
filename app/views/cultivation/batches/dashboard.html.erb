@@ -46,6 +46,5 @@
 -->
 
 <div class="mh4 mt4">
-  <%= image_tag "dummy/cultivation-dashboard-cropped.png", style: 'max-width: 1300px; width: 100%;' %>
-<!-- display example-->
+  <%= react_component 'manager_dashboard/ManagerDashboardApp', {batches: @batches, facilityId: current_facility&.id.to_s} %>
 </div>

@@ -12,6 +12,15 @@ class Cultivation::BatchesController < ApplicationController
     @dashboard = DashboardForm::DashboardForm.new
   end
 
+  def dashboard
+    @batches = Cultivation::Batch.all.active.map do |b|
+      {
+        id: b.id.to_s,
+        name: b.name,
+      }
+    end
+  end
+
   def new
     if params[:onboarding_type].present?
       current_facility.update_onboarding('ONBOARDING_SETUP_BATCH')

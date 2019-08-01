@@ -10,13 +10,6 @@ class Cultivation::BatchesController < ApplicationController
 
   def index
     @dashboard = DashboardForm::DashboardForm.new
-
-    @batches = Cultivation::Batch.all.active.map do |b|
-      {
-        id: b.id.to_s,
-        name: b.name,
-      }
-    end
   end
 
   def dashboard

@@ -16,7 +16,7 @@ module Metrc
     # "Clone" or "Seed" - need to correspond to Metrc Plant Type
     field :plant_type, type: String
     # Date when this batch become active "2018-12-15"
-    # This value should be in UTC, and correspond to Batch's Start Date
+    # This value should be in UTC, and correspond to Metrc's PlantedDate
     field :actual_date, type: String
     # This is Plant tag assigned to this batch.
     # In CA, each batch is max at 100 quantity
@@ -32,5 +32,12 @@ module Metrc
     field :metrc_tracked_count, type: Integer
     field :metrc_untracked_count, type: Integer
     field :metrc_live_count, type: Integer
+    field :metrc_packaged_count, type: Integer
+    field :metrc_harvested_count, type: Integer
+    field :metrc_destroyed_count, type: Integer
+    field :metrc_source_package_id, type: Integer
+    field :metrc_source_package_label, type: String
+    field :metrc_source_plant_id, type: Integer # Metrc ID of plant
+    field :metrc_source_plant_label, type: String # MetrcTag of mother plant
   end
 end

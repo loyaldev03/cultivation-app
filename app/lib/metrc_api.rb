@@ -175,8 +175,8 @@ class MetrcApi
 
     # + Harvest
 
-    def get_harvest_waste_type
-      url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{FACILITY_LICENSE}"
+    def get_harvest_waste_type(facility_license)
+      url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
@@ -185,14 +185,14 @@ class MetrcApi
 
     # + Packages
 
-    def get_package_adjust_reason
-      url = "#{BASE_URL}/packages/v1/adjust/reasons?licenseNumber=#{FACILITY_LICENSE}"
+    def get_package_adjust_reason(facility_license)
+      url = "#{BASE_URL}/packages/v1/adjust/reasons?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
 
-    def get_package_type
-      url = "#{BASE_URL}/packages/v1/types?licenseNumber=#{FACILITY_LICENSE}"
+    def get_package_type(facility_license)
+      url = "#{BASE_URL}/packages/v1/types?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end

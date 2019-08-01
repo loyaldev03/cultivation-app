@@ -16,6 +16,7 @@ class MetrcUpdatePlantBatches
   # - mark metrc tag as "reported" in database.
   def perform(batch_id)
     @batch_id = batch_id
+    @logger = Logger.new(STDOUT)
     # Only trigger logic if batch is already active.
     if batch.status == Constants::BATCH_STATUS_ACTIVE
       m_batches = MetrcApi.get_plant_batches(facility.site_license) # Hash format
@@ -25,19 +26,22 @@ class MetrcUpdatePlantBatches
       new_batches = get_new_batches_tags(m_batches, c_batches)
 
       # Create new Plant Batch on Metrc
+      @logger.debug 'create_plant_batches_on_metrc'
       create_plant_batches_on_metrc(new_batches, c_batches)
 
       # Save metrc_id from Metrc to database
+      @logger.debug 'update_plant_batches_metrc_ids'
       update_plant_batches_metrc_ids(c_batches)
 
       # Mark metrc tags as reported to metrc
+      @logger.debug 'mark local metrc tags as reported'
       if new_batches.any?
         Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
                                                 metrc_tags: new_batches)
       else
         batch_tags = c_batches.map(&:metrc_tag)
         Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
-                                                metrc_tags: new_batches)
+                                                metrc_tags: batch_tags)
       end
 
       true
@@ -62,6 +66,13 @@ class MetrcUpdatePlantBatches
           plant_batch.metrc_strain_id = found['StrainId']
           plant_batch.metrc_tracked_count = found['TrackedCount']
           plant_batch.metrc_untracked_count = found['UntrackedCount']
+          plant_batch.metrc_packaged_count = found['PackagedCount']
+          plant_batch.metrc_harvested_count = found['HarvestedCount']
+          plant_batch.metrc_destroyed_count = found['DestroyedCount']
+          plant_batch.metrc_source_package_id = found['SourcePackageId']
+          plant_batch.metrc_source_package_label = found['SourcePackageLabel']
+          plant_batch.metrc_source_plant_id = found['SourcePlantId']
+          plant_batch.metrc_source_plant_label = found['SourcePlantLabel']
           plant_batch.save
         end
       end
@@ -71,25 +82,52 @@ class MetrcUpdatePlantBatches
   def create_plant_batches_on_metrc(new_batches, db_batches)
     if new_batches.any?
       params = []
+      plantbatch_source = ''
       new_batches.each do |metrc_tag|
         found = db_batches.detect { |i| i.metrc_tag == metrc_tag }
         # Only create new Metrc Plant Batch if metrc_id not found
         if found&.metrc_id.nil?
-          params << {
-            "Name": found.metrc_tag,
-            "Type": found.plant_type,
-            "Count": found.count,
-            "Strain": found.strain,
-            "Room": found.room,
-            "ActualDate": found.actual_date,
-          }
+          if found.metrc_source_plant_label.present?
+            plantbatch_source = 'clipping'
+            params << generate_plant_plantings_params(found)
+          else
+            plantbatch_source = 'none'
+            params << generate_batch_plantings_params(found)
+          end
         end
       end
       # Create all plant batches in Metrc with a single api call
-      if params.any?
-        MetrcApi.create_plant_batches(facility.site_license, params)
+      if params.any? && plantbatch_source == 'none'
+        @logger.debug 'create_batch_plantings'
+        MetrcApi.create_batch_plantings(facility.site_license, params)
+      elsif params.any? && plantbatch_source == 'clipping'
+        @logger.debug 'create_plant_plantings'
+        MetrcApi.create_plant_plantings(facility.site_license, params)
       end
     end
+  end
+
+  def generate_plant_plantings_params(plantbatch)
+    {
+      "PlantLabel": plantbatch.metrc_source_plant_label,
+      "PlantBatchName": plantbatch.metrc_tag,
+      "PlantBatchType": 'Clone',
+      "PlantCount": plantbatch.count,
+      "StrainName": plantbatch.strain,
+      "RoomName": plantbatch.room,
+      "ActualDate": plantbatch.actual_date,
+    }
+  end
+
+  def generate_batch_plantings_params(plantbatch)
+    {
+      "Name": plantbatch.metrc_tag,
+      "Type": plantbatch.plant_type,
+      "Count": plantbatch.count,
+      "Strain": plantbatch.strain,
+      "Room": plantbatch.room,
+      "ActualDate": plantbatch.actual_date,
+    }
   end
 
   def get_new_batches_tags(metrc_batches, db_batches = [])

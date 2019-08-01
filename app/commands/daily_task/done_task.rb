@@ -9,14 +9,22 @@ module DailyTask
       @user_id = user_id
     end
 
+    # This is called when a task has been completed by a worker.
     def call
       if valid_params?
-        last_time_log = task.time_logs.find_by(end_time: nil)
-        last_time_log&.stop!
+        stop_time_logs
         task.update(work_status: Constants::WORK_STATUS_DONE)
         CalculateTotalActualCostJob.perform_later(task.id.to_s)
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
         CalculateTotalActualCostBatchJob.perform_later(@task.batch_id.to_s)
+
+        # When clone are moved into trays. Generate PlantBatch
+        # for Metrc synchronization.
+        if task.indelible == Constants::INDELIBLE_CLIP_POT_TAG ||
+           task.indelible == Constants::INDELIBLE_MOVING_TO_TRAY
+          GenerateBatchLots.perform_async(task.batch_id.to_s)
+        end
+
         task
       end
     rescue StandardError
@@ -27,6 +35,14 @@ module DailyTask
 
     def task
       @task ||= Cultivation::Task.find(task_id)
+    end
+
+    def stop_time_logs
+      logs = task.time_logs.where(user_id: user.id,
+                                  end_time: nil)
+      if logs.any?
+        logs.each(&:stop!)
+      end
     end
 
     def user

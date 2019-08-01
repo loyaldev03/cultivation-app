@@ -39,6 +39,12 @@ class MetrcApi
 
     # + Plants
 
+    def create_plant_plantings(lic_no, params)
+      url = "#{BASE_URL}/plants/v1/create/plantings?licenseNumber=#{lic_no}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     def get_plant_waste_methods
       url = "#{BASE_URL}/plants/v1/waste/methods?licenseNumber=#{FACILITY_LICENSE}"
       res = RestClient.get(url, HEADERS)
@@ -64,6 +70,12 @@ class MetrcApi
       url = "#{BASE_URL}/plants/v1/additives/types?licenseNumber=#{FACILITY_LICENSE}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
+    end
+
+    def destroy_immature_plant(facility_license, params)
+      url = "#{BASE_URL}/plantbatches/v1/destroy?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
     end
 
     # - Plants
@@ -165,7 +177,7 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
-    def create_plant_batches(lic_no, params)
+    def create_batch_plantings(lic_no, params)
       url = "#{BASE_URL}/plantbatches/v1/createplantings?licenseNumber=#{lic_no}"
       res = RestClient.post(url, params.to_json, HEADERS)
       res.code == 200
@@ -175,8 +187,8 @@ class MetrcApi
 
     # + Harvest
 
-    def get_harvest_waste_type
-      url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{FACILITY_LICENSE}"
+    def get_harvest_waste_type(facility_license)
+      url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
@@ -185,14 +197,14 @@ class MetrcApi
 
     # + Packages
 
-    def get_package_adjust_reason
-      url = "#{BASE_URL}/packages/v1/adjust/reasons?licenseNumber=#{FACILITY_LICENSE}"
+    def get_package_adjust_reason(facility_license)
+      url = "#{BASE_URL}/packages/v1/adjust/reasons?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
 
-    def get_package_type
-      url = "#{BASE_URL}/packages/v1/types?licenseNumber=#{FACILITY_LICENSE}"
+    def get_package_type(facility_license)
+      url = "#{BASE_URL}/packages/v1/types?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end

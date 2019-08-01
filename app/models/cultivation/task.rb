@@ -34,7 +34,7 @@ module Cultivation
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String # full ruby class name
 
-    field :work_status, type: String, default: 'new' # use for daily task => new, started, stuck
+    field :work_status, type: String, default: Constants::WORK_STATUS_NEW
     field :package_id, type: BSON::ObjectId   # Used by task related to sales product.
 
     #notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted

@@ -23,6 +23,7 @@ module Constants
   INDELIBLE_STAYING = 'staying'.freeze
   INDELIBLE_CLEANING = 'cleaning'.freeze
 
+  WORK_STATUS_NEW = 'new'.freeze
   WORK_STATUS_STARTED = 'started'.freeze
   WORK_STATUS_STOPPED = 'stopped'.freeze
   WORK_STATUS_STUCK = 'stuck'.freeze

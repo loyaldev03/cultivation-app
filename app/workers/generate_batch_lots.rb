@@ -7,17 +7,36 @@ class GenerateBatchLots
 
   def perform(batch_id)
     @batch_id = batch_id
+    @logger = Logger.new(STDOUT)
 
-    # calculate number of batch needed in group of lot size
-    batch_size, last_size = batch.quantity.divmod(MAX_LOT_SIZE)
+    if clipping_task.work_status != Constants::WORK_STATUS_DONE
+      # Here we wait for the work complete before pushing to Metrc.
+      # In order to push to Metrc. Each PlantBatch would needs to be
+      # record together with the Mother Plant tag and total number of
+      # clippings from the Mother Plant.
+      @logger.debug '>>> move to clone task not done'
+      return 0
+    end
 
-    # number of metrc required for this batch when tagging it in lot size
-    tag_required = batch_size + (last_size.positive? ? 1 : 0)
-    metrc_tags = Inventory::QueryAvailableMetrcTags.call(
-      batch.facility_id,
-      tag_required,
-      Constants::METRC_TAG_TYPE_PLANT,
-    ).result
+    if batch.batch_source == 'clones_from_mother'
+      @logger.debug '>>> generate_plant_batches_by_clipping'
+      generate_plant_batches_by_clipping
+    else
+      @logger.debug '>>> generate_plant_batches_by_lot_size'
+      generate_plant_batches_by_lot_size
+    end
+  end
+
+  def generate_plant_batches_by_clipping
+    # Create plant batch for each mother plants' clipping.
+    # PlantBatch lot size == number of clippings from each Mother Plant.
+    # 1. count number of tag required (number of mother plants).
+    mother_clippings = get_plant_clippings
+    tag_required = mother_clippings.size
+    return 0 if tag_required.zero?
+    return 0 if existing_plant_batches.size == tag_required
+
+    metrc_tags = get_metrc_tags(tag_required)
 
     if metrc_tags.blank? || metrc_tags.size < tag_required
       # notify manager regarding insufficient tags
@@ -25,14 +44,76 @@ class GenerateBatchLots
       return 0
     end
 
-    # check for existing plant batch
-    if existing_plant_batches.size == tag_required
+    # 2. generate plant batches based on 1
+    plant_batches = create_plantbatches_by_clippings(mother_clippings,
+                                                     metrc_tags)
+    plant_batches.size
+  end
+
+  def get_plant_clippings
+    histories = Cultivation::PlantMovementHistory.where(
+      batch_id: @batch_id,
+      activity: Constants::INDELIBLE_CLIP_POT_TAG,
+    )
+    histories || []
+  end
+
+  def generate_plant_batches_by_lot_size
+    # PlantBatch lot size == 100
+    # calculate number of batch needed in group of lot size
+    batch_size, last_size = batch.quantity.divmod(MAX_LOT_SIZE)
+
+    # number of metrc required for this batch when tagging it in lot size
+    tag_required = batch_size + (last_size.positive? ? 1 : 0)
+    return 0 if tag_required.zero?
+    return 0 if existing_plant_batches.size == tag_required
+
+    metrc_tags = get_metrc_tags(tag_required)
+
+    if metrc_tags.blank? || metrc_tags.size < tag_required
+      # notify manager regarding insufficient tags
+      notify_insufficient_tags(tag_required)
       return 0
     end
 
     # placeholder for all generated batches
-    plant_batches = []
+    plant_batches = create_plantbatch_by_size(batch_size, last_size, metrc_tags)
+    plant_batches.size
+  end
 
+  def get_metrc_tags(quantity)
+    Inventory::QueryAvailableMetrcTags.call(
+      batch.facility_id,
+      quantity,
+      Constants::METRC_TAG_TYPE_PLANT,
+    ).result
+  end
+
+  def create_plantbatches_by_clippings(mother_clippings, metrc_tags)
+    plant_batches = []
+    mother_clippings.each_with_index do |c, i|
+      count = c.plants.size
+      if count.positive?
+        metrc_tag = metrc_tags.shift(1)[0]
+        plant_batches << make_plant_batch(i + 1,
+                                          metrc_tag,
+                                          count,
+                                          c.mother_plant_code)
+      end
+    end
+
+    if plant_batches.any?
+      Metrc::PlantBatch.create(plant_batches)
+      used_tags = plant_batches.map { |x| x[:metrc_tag] }
+      # Mark tags as "assigned" in db
+      Inventory::UpdateMetrcTagsAssigned.call(facility_id: batch.facility_id,
+                                              metrc_tags: used_tags)
+    end
+    plant_batches
+  end
+
+  def create_plantbatch_by_size(batch_size, last_size, metrc_tags)
+    plant_batches = []
     # generate plant batch in lot size
     if batch_size&.positive?
       batch_size.times do |i|
@@ -52,18 +133,14 @@ class GenerateBatchLots
     end
 
     # create plant batch record if no existing records found (check metrc_id)
-    if plant_batches.present?
+    if plant_batches.any?
       Metrc::PlantBatch.create(plant_batches)
       used_tags = plant_batches.map { |x| x[:metrc_tag] }
       # Mark tags as "assigned" in db
       Inventory::UpdateMetrcTagsAssigned.call(facility_id: batch.facility_id,
                                               metrc_tags: used_tags)
     end
-
-    #
-    # TODO: Do nothing if batch already active
-    #
-    plant_batches.size
+    plant_batches
   end
 
   def notify_insufficient_tags(tag_required)
@@ -92,7 +169,7 @@ class GenerateBatchLots
     @existing_plant_batches ||= Metrc::PlantBatch.where(batch_id: batch.id).to_a
   end
 
-  def make_plant_batch(lot_no, tag, count)
+  def make_plant_batch(lot_no, tag, count, mother_plant_tag = nil)
     {
       batch_id: batch.id,
       lot_no: lot_no,
@@ -102,11 +179,19 @@ class GenerateBatchLots
       plant_type: plant_type,
       actual_date: start_date,
       room: clone_room_name,
+      metrc_source_plant_label: mother_plant_tag,
     }
   end
 
   def batch
     @batch ||= Cultivation::Batch.find(@batch_id)
+  end
+
+  def clipping_task
+    @clipping_task ||= Cultivation::Task.find_by(
+      batch_id: @batch_id,
+      indelible: Constants::INDELIBLE_CLIP_POT_TAG,
+    )
   end
 
   def clone_room_name

@@ -7,18 +7,22 @@ class GenerateBatchLots
 
   def perform(batch_id)
     @batch_id = batch_id
+    @logger = Logger.new(STDOUT)
 
-    if move_to_clone_task.work_status != Constants::WORK_STATUS_DONE
+    if clipping_task.work_status != Constants::WORK_STATUS_DONE
       # Here we wait for the work complete before pushing to Metrc.
       # In order to push to Metrc. Each PlantBatch would needs to be
       # record together with the Mother Plant tag and total number of
       # clippings from the Mother Plant.
-      return
+      @logger.debug ">>> move to clone task not done"
+      return 0
     end
 
     if batch.batch_source == 'clones_from_mother'
+      @logger.debug ">>> generate_plant_batches_by_clipping"
       generate_plant_batches_by_clipping
     else
+      @logger.debug ">>> generate_plant_batches_by_lot_size"
       generate_plant_batches_by_lot_size
     end
   end
@@ -28,7 +32,7 @@ class GenerateBatchLots
     # PlantBatch lot size == number of clippings from each Mother Plant.
     # 1. count number of tag required (number of mother plants).
     mother_clippings = get_plant_clippings
-    tag_required = get_plant_clippings.mother_clippings.size
+    tag_required = mother_clippings.size
     return 0 if tag_required.zero?
     return 0 if existing_plant_batches.size == tag_required
 
@@ -87,11 +91,14 @@ class GenerateBatchLots
 
   def create_plantbatches_by_clippings(mother_clippings, metrc_tags)
     plant_batches = []
-    mother_clippings.each do |c|
+    mother_clippings.each_with_index do |c, i|
       count = c.plants.size
       if count.positive?
         metrc_tag = metrc_tags.shift(1)[0]
-        plant_batches << make_plant_batch(i + 1, metrc_tag, count)
+        plant_batches << make_plant_batch(i + 1,
+                                          metrc_tag,
+                                          count,
+                                          c.mother_plant_code)
       end
     end
 
@@ -162,7 +169,7 @@ class GenerateBatchLots
     @existing_plant_batches ||= Metrc::PlantBatch.where(batch_id: batch.id).to_a
   end
 
-  def make_plant_batch(lot_no, tag, count)
+  def make_plant_batch(lot_no, tag, count, mother_plant_tag = nil)
     {
       batch_id: batch.id,
       lot_no: lot_no,
@@ -172,6 +179,7 @@ class GenerateBatchLots
       plant_type: plant_type,
       actual_date: start_date,
       room: clone_room_name,
+      metrc_source_plant_label: mother_plant_tag,
     }
   end
 
@@ -179,10 +187,10 @@ class GenerateBatchLots
     @batch ||= Cultivation::Batch.find(@batch_id)
   end
 
-  def move_to_clone_task
-    @move_to_clone_task ||= Cultivation::Task.find_by(
+  def clipping_task
+    @clipping_task ||= Cultivation::Task.find_by(
       batch_id: @batch_id,
-      indelible: Constants::INDELIBLE_MOVING_TO_TRAY,
+      indelible: Constants::INDELIBLE_CLIP_POT_TAG,
     )
   end
 

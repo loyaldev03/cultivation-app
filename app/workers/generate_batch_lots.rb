@@ -14,15 +14,15 @@ class GenerateBatchLots
       # In order to push to Metrc. Each PlantBatch would needs to be
       # record together with the Mother Plant tag and total number of
       # clippings from the Mother Plant.
-      @logger.debug ">>> move to clone task not done"
+      @logger.debug '>>> move to clone task not done'
       return 0
     end
 
     if batch.batch_source == 'clones_from_mother'
-      @logger.debug ">>> generate_plant_batches_by_clipping"
+      @logger.debug '>>> generate_plant_batches_by_clipping'
       generate_plant_batches_by_clipping
     else
-      @logger.debug ">>> generate_plant_batches_by_lot_size"
+      @logger.debug '>>> generate_plant_batches_by_lot_size'
       generate_plant_batches_by_lot_size
     end
   end

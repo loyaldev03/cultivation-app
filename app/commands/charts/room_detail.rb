@@ -66,7 +66,7 @@ module Charts
         plant = plants.last
         batch = plant.cultivation_batch
         date = Time.current.beginning_of_day
-        nutrient_profile = batch.nutrient_profiles.where(phase_name: batch.current_growth_stage).and(:start_date.lte => date, :end_date.gte => date).first
+        nutrient_profile = batch.nutrient_profiles.where(phase_name: batch.current_growth_stage).and(:start_date.lte => date, :end_date.gte => date).first rescue nil
         if nutrient_profile.present?
           {
             room_temperature: Time.current.hour > 19 ? nutrient_profile.temperature_night : nutrient_profile.temperature_day,

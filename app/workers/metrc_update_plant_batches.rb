@@ -26,15 +26,15 @@ class MetrcUpdatePlantBatches
       new_batches = get_new_batches_tags(m_batches, c_batches)
 
       # Create new Plant Batch on Metrc
-      @logger.debug "create_plant_batches_on_metrc"
+      @logger.debug 'create_plant_batches_on_metrc'
       create_plant_batches_on_metrc(new_batches, c_batches)
 
       # Save metrc_id from Metrc to database
-      @logger.debug "update_plant_batches_metrc_ids"
+      @logger.debug 'update_plant_batches_metrc_ids'
       update_plant_batches_metrc_ids(c_batches)
 
       # Mark metrc tags as reported to metrc
-      @logger.debug "mark local metrc tags as reported"
+      @logger.debug 'mark local metrc tags as reported'
       if new_batches.any?
         Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
                                                 metrc_tags: new_batches)
@@ -82,26 +82,26 @@ class MetrcUpdatePlantBatches
   def create_plant_batches_on_metrc(new_batches, db_batches)
     if new_batches.any?
       params = []
-      plantbatch_source = ""
+      plantbatch_source = ''
       new_batches.each do |metrc_tag|
         found = db_batches.detect { |i| i.metrc_tag == metrc_tag }
         # Only create new Metrc Plant Batch if metrc_id not found
         if found&.metrc_id.nil?
           if found.metrc_source_plant_label.present?
-            plantbatch_source = "clipping"
+            plantbatch_source = 'clipping'
             params << generate_plant_plantings_params(found)
           else
-            plantbatch_source = "none"
+            plantbatch_source = 'none'
             params << generate_batch_plantings_params(found)
           end
         end
       end
       # Create all plant batches in Metrc with a single api call
-      if params.any? && plantbatch_source == "none"
-        @logger.debug "create_batch_plantings"
+      if params.any? && plantbatch_source == 'none'
+        @logger.debug 'create_batch_plantings'
         MetrcApi.create_batch_plantings(facility.site_license, params)
-      elsif params.any? && plantbatch_source == "clipping"
-        @logger.debug "create_plant_plantings"
+      elsif params.any? && plantbatch_source == 'clipping'
+        @logger.debug 'create_plant_plantings'
         MetrcApi.create_plant_plantings(facility.site_license, params)
       end
     end
@@ -111,7 +111,7 @@ class MetrcUpdatePlantBatches
     {
       "PlantLabel": plantbatch.metrc_source_plant_label,
       "PlantBatchName": plantbatch.metrc_tag,
-      "PlantBatchType": "Clone",
+      "PlantBatchType": 'Clone',
       "PlantCount": plantbatch.count,
       "StrainName": plantbatch.strain,
       "RoomName": plantbatch.room,

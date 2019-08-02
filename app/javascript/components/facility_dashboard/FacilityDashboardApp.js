@@ -10,6 +10,7 @@ class FacilityDashboardApp extends React.Component {
   constructor(props) {
     super(props)
     FacilityDashboardStore.loadFacilityOverview(this.props.currentFacilityId)
+    FacilityDashboardStore.loadRoomsCapacity(this.props.currentFacilityId)
   }
   render() {
     return (

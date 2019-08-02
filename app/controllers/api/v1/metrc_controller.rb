@@ -12,12 +12,37 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
     if query_cmd.success?
       result = query_cmd.result
       render json: {
-        data: result['data'].as_json,
+        data: result['data'].map { |x|
+          {
+            "id": x['_id'].to_s,
+            "tag": x['tag'],
+            "tag_type": x['tag_type'],
+            "status": x['status'],
+            "u_at": x['u_at'],
+            "reported_to_metrc": x['reported_to_metrc'],
+          }
+        }.as_json,
         metadata: query_cmd.metadata.as_json,
       }
     else
       render json: {errors: query_cmd.errors}
     end
+  end
+
+  def update_metrc_disposed
+    metrc = Inventory::MetrcTag.find(params[:metrc_id].to_s)
+    if metrc.reported_to_metrc == false && metrc.status == 'available'
+      metrc.update(status: Constants::METRC_TAG_STATUS_DISPOSED)
+    end
+    redirect_to inventory_metrc_index_path
+  end
+
+  def update_metrc_reported
+    metrc = Inventory::MetrcTag.find(params[:metrc_id].to_s)
+    if metrc.reported_to_metrc == false && metrc.status == 'disposed'
+      metrc.update(reported_to_metrc: true)
+    end
+    redirect_to inventory_metrc_index_path
   end
 
   def bulk_create

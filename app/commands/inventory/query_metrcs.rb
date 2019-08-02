@@ -2,7 +2,7 @@ module Inventory
   class QueryMetrcs
     prepend SimpleCommand
 
-    MetrcInfo = Struct.new(:id, :tag, :tag_type, :replaced_by, :u_at)
+    MetrcInfo = Struct.new(:id, :tag, :tag_type, :replaced_by, :reported_to_metrc, :u_at)
 
     attr_reader :args, :metadata
 

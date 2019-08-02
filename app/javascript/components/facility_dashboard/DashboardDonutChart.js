@@ -13,6 +13,12 @@ class DashboardDonutChart extends React.Component {
   }
   render() {
     const options = {
+      hover: {
+        events: ['mousemove'], // this is needed, otherwise onHover is not fired
+        onHover: (event, chartElement) => {
+            event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+        }
+      },
       plugins: {
         labels: {
           render: 'label',
@@ -26,11 +32,11 @@ class DashboardDonutChart extends React.Component {
         display: true
       },
       tooltips: {
-        enabled: false,
         displayColors: false,
         callbacks: {
           label: function(tooltipItem, data) {
-            return data.labels[tooltipItem.index]
+            // return data.labels[tooltipItem.index]
+            return "Click for more details"
           }
         }
       },
@@ -49,7 +55,7 @@ class DashboardDonutChart extends React.Component {
         <Doughnut
           data={FacilityDashboardStore.RoomPupose}
           options={options}
-          style={{ cursor: 'pointer' }}
+          cursor={'pointer'}
           onElementsClick={e => {
             let room = FacilityDashboardStore.data_list_rooms.rooms[e[0]._index]
             FacilityDashboardStore.loadRoomsDetail(
@@ -59,6 +65,7 @@ class DashboardDonutChart extends React.Component {
               room.room_name
             )
           }}
+          
         />
       </React.Fragment>
     )

@@ -18,6 +18,7 @@ class FacilityDashboardStore {
   @observable data_room_detail = []
   @observable current_room_purpose = ''
   @observable rooms_detail_loaded = false
+  @observable strain_distribution_loaded = false
   @observable rooms_capacity_loaded = false
   @observable facility_overview_loaded = false
 
@@ -25,12 +26,16 @@ class FacilityDashboardStore {
   async loadRoomsDetail(facility_id, purpose, full_code, name) {
     this.isLoading = true
     this.rooms_detail_loaded = false
+    this.strain_distribution_loaded = false
     const url = `/api/v1/facility_dashboard_charts/room_detail?facility_id=${facility_id}&purpose=${purpose}&full_code=${full_code}&name=${name}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
         this.data_room_detail = response
         this.rooms_detail_loaded = true
+        if (this.data_room_detail.strain_distribution.length > 0){
+          this.strain_distribution_loaded = true
+        }
       } else {
         this.data_room_detail = []
       }

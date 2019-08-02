@@ -1,5 +1,6 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
+import { HorizontalBar } from 'react-chartjs-2'
 import { FacilityRoomDetailsWidget } from '../utils'
 import FacilityDashboardStore from './FacilityDashboardStore'
 import { numberFormatter } from '../utils'
@@ -31,13 +32,98 @@ const RoomDetailWidget = ({
   )
 }
 
+const options = {
+  responsive: false,
+  maintainAspectRatio: false,
+  legend:{
+    display: false
+  },
+  tooltips: {
+    mode: 'nearest',
+    callbacks: {
+      title: function(tooltipItems, data) {
+        return '';
+      },
+      label: function(tooltipItem, data) {
+        var label = data.datasets[tooltipItem.datasetIndex].label;
+        return label +": " + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+      }
+    }
+  },
+  scales: {
+    xAxes: [
+      {
+        ticks: {
+          beginAtZero: true,
+          display: false
+        },
+        scaleLabel: {
+          display: false
+        },
+        gridLines: {
+          display: false,
+          color: '#eeeeee',
+          zeroLineColor: '#eeeeee',
+          zeroLineWidth: 0
+        },
+        stacked: true
+      }
+    ],
+    yAxes: [
+      {
+        barThickness: 12,
+        gridLines: {
+          display: false,
+          color: '#eeeeee',
+          zeroLineColor: '#eeeeee',
+          zeroLineWidth: 0
+        },
+        ticks: {
+          fontSize: 14,
+          fontColor: '#2e3b4e'
+        },
+        stacked: true
+      }
+    ]
+  }
+}
+
 @observer
 class DashboardRoomsDetails extends React.Component {
   constructor(props) {
     super(props)
   }
 
+  parseStrainDistribution = () => {
+    const data = FacilityDashboardStore.data_room_detail.strain_distribution
+    const data2 = {
+      labels: ["Strain DIstribution"],
+      datasets: data.map(e => {
+        let rgb =
+          'rgb(' +
+          Math.floor(Math.random() * 255) +
+          ',' +
+          Math.floor(Math.random() * 255) +
+          ',' +
+          Math.floor(Math.random() * 255) +
+          ')'
+        return {
+          stack: 'stack1',
+          label: e.strain_name,
+          backgroundColor: rgb,
+          borderColor: rgb,
+          borderWidth: 1,
+          hoverBackgroundColor: rgb,
+          hoverBorderColor: rgb,
+          data: [e.count]
+        }
+      })
+    }
+    return data2
+  }
+
   render() {
+    const data = this.parseStrainDistribution()
     return (
       <React.Fragment>
         <div className="flex justify-between">
@@ -126,6 +212,18 @@ class DashboardRoomsDetails extends React.Component {
               </h1>
               <h1 className="f6 fw6 grey dib pl1">Light Hours</h1>
             </div>
+          </div>
+          <div>
+            {FacilityDashboardStore.strain_distribution_loaded ? (
+              <HorizontalBar
+                data={data}
+                height={70}
+                width={500}
+                options={options} 
+              />
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </React.Fragment>

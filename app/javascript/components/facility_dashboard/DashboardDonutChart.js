@@ -16,7 +16,7 @@ class DashboardDonutChart extends React.Component {
       hover: {
         events: ['mousemove'], // this is needed, otherwise onHover is not fired
         onHover: (event, chartElement) => {
-            event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+          event.target.style.cursor = chartElement[0] ? 'pointer' : 'default'
         }
       },
       plugins: {
@@ -36,7 +36,7 @@ class DashboardDonutChart extends React.Component {
         callbacks: {
           label: function(tooltipItem, data) {
             // return data.labels[tooltipItem.index]
-            return "Click for more details"
+            return 'Click for more details'
           }
         }
       },
@@ -65,7 +65,6 @@ class DashboardDonutChart extends React.Component {
               room.room_name
             )
           }}
-          
         />
       </React.Fragment>
     )

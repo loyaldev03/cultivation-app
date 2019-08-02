@@ -33,7 +33,7 @@ class FacilityDashboardStore {
       if (response) {
         this.data_room_detail = response
         this.rooms_detail_loaded = true
-        if (this.data_room_detail.strain_distribution.length > 0){
+        if (this.data_room_detail.strain_distribution.length > 0) {
           this.strain_distribution_loaded = true
         }
       } else {

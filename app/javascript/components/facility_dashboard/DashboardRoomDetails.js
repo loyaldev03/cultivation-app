@@ -35,18 +35,22 @@ const RoomDetailWidget = ({
 const options = {
   responsive: false,
   maintainAspectRatio: false,
-  legend:{
+  legend: {
     display: false
   },
   tooltips: {
     mode: 'nearest',
     callbacks: {
       title: function(tooltipItems, data) {
-        return '';
+        return ''
       },
       label: function(tooltipItem, data) {
-        var label = data.datasets[tooltipItem.datasetIndex].label;
-        return label +": " + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+        var label = data.datasets[tooltipItem.datasetIndex].label
+        return (
+          label +
+          ': ' +
+          data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+        )
       }
     }
   },
@@ -97,7 +101,7 @@ class DashboardRoomsDetails extends React.Component {
   parseStrainDistribution = () => {
     const data = FacilityDashboardStore.data_room_detail.strain_distribution
     const data2 = {
-      labels: ["Strain DIstribution"],
+      labels: ['Strain DIstribution'],
       datasets: data.map(e => {
         let rgb =
           'rgb(' +
@@ -219,7 +223,7 @@ class DashboardRoomsDetails extends React.Component {
                 data={data}
                 height={70}
                 width={500}
-                options={options} 
+                options={options}
               />
             ) : (
               ''

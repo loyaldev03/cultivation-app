@@ -34,24 +34,6 @@ class DashboardMetrcStore {
     }
   }
 
-  @action
-  async updateDisposed(facility_id, metrc_id) {
-    this.isLoading = true
-    this.metrc_tags_loaded = false
-    const url = `/api/v1/metrc/metrc_disposed?facility_id=${facility_id}&&m_id=${metrc_id}`
-    try {
-      const response = await (await fetch(url, httpPutOptions)).json()
-      if (response) {
-        this.data_metrcs_info = response
-        this.batches_info_loaded = true
-      } else {
-        this.data_metrcs_info = []
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-    }
-  }
 }
 
 

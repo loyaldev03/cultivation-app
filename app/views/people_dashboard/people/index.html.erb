@@ -1,9 +1,0 @@
-<% content_for :breadcrumb do %>
-    <%= breadcrumbs ["People",root_path], 'People Dashboard' %>
-<% end %>
-
-<div class="pa4">
-    <%= react_component('people_dashboard/PeopleDashboardApp', {
-        facility_id: current_facility.id.to_s
-    }) %>
-</div>

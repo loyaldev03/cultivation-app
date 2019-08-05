@@ -63,7 +63,6 @@ class PeopleDashboardApp extends React.Component {
             >
               <AttritionWidget
                 facility_id={this.props.currentFacilityId}
-                year_query={this.props.yearsQueries}
               />
             </div>
           </div>

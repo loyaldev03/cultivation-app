@@ -244,6 +244,7 @@ Rails.application.routes.draw do
           get 'reminder'
           get 'worker_attrition'
           get 'get_roles'
+          get 'capacity_planning'
         end
       end
 

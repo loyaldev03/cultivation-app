@@ -52,6 +52,7 @@ class PeopleDashboardStore {
 
   @computed get workerSalary() {
     if (this.worker_salary_loaded) {
+      console.log(this.data_worker_salary)
       for (var i in this.data_worker_salary) {
         coloR.push(dynamicColors())
       }
@@ -93,6 +94,7 @@ class PeopleDashboardStore {
 
   @computed get headCount() {
     if (this.headcount_loaded) {
+      console.log(this.data_headcount)
       for (var i in this.data_headcount) {
         coloR.push(dynamicColors())
       }

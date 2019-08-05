@@ -22,7 +22,7 @@ export default class WorkerSalary extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f4 fw6 dark-grey">Salary</h1>
+          <h1 className="f5 fw6 dark-grey">Salary</h1>
         </div>
         {PeopleDashboardStore.worker_salary_loaded ? (
           <Doughnut

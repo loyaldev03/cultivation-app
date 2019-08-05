@@ -48,11 +48,9 @@ module People
     end
 
     def leaving_employee
-      if @args[:role] == 'All' || !@args[:role].present?
-        Rails.logger.debug('ATSSS')
+      if !@args[:role].present?
         users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       else
-        Rails.logger.debug('BAWAHHH')
         users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
       end
       persons = users.map do |u|

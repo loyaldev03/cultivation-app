@@ -28,4 +28,9 @@ class Api::V1::PeopleController < Api::V1::BaseApiController
     end
     render json: result.to_json, status: 200
   end
+
+  def capacity_planning
+    result = People::CapacityPlanning.call(current_user, {facility_id: params[:facility_id], period: params[:period]}).result
+    render json: result.to_json, status: 200
+  end
 end

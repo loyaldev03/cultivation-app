@@ -22,7 +22,7 @@ export default class HeadCountWidget extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f4 fw6 dark-grey">Headcount</h1>
+          <h1 className="f5 fw6 dark-grey">Headcount</h1>
         </div>
         {PeopleDashboardStore.headcount_loaded ? (
           <Doughnut

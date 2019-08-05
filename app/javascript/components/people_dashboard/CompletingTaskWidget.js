@@ -1,9 +1,9 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { PeopleReminderWidget } from '../utils'
+import { PeopleCompletingWidget } from '../utils'
 
 @observer
-class ReminderWidget extends React.Component {
+class CompletingTaskWidget extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -12,12 +12,12 @@ class ReminderWidget extends React.Component {
     return (
       <React.Fragment>
         {/* <div className="flex justify-between">
-          <h1 className="f5 fw6 dark-grey">Overall Info</h1>
+          <h1 className="f5 fw6 dark-grey">Completing Task On Time</h1>
         </div> */}
-        <img src={PeopleReminderWidget} />
+        <img src={PeopleCompletingWidget} />
       </React.Fragment>
     )
   }
 }
 
-export default ReminderWidget
+export default CompletingTaskWidget

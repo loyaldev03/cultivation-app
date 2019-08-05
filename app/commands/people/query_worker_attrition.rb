@@ -8,13 +8,20 @@ module People
     end
 
     def call
-      result = new_employee
+      months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      result = months.map do |m|
+        {
+          month: m,
+          new_employee_count: new_employee.map { |x| x[:value] if x[:month] == m }.sum,
+          leaving_employee_count: leaving_employee.map { |x| x[:value] if x[:month] == m }.sum,
+        }
+      end
     end
 
     private
 
     def new_employee
-      if @args[:role] == 'All' || !@args[:role].present?
+      if !@args[:role].present?
         Rails.logger.debug('ATSSS')
         users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       else
@@ -50,8 +57,8 @@ module People
       end
       persons = users.map do |u|
         {_id: u.id,
-         month: "#{u&.user_expected_leave_date ? u&.user_expected_leave_date.strftime('%B') : nil}",
-         year: "#{u&.user_expected_leave_date ? u&.user_expected_leave_date.year : nil}",
+         month: "#{u&.expected_leave_date ? u&.expected_leave_date.strftime('%B') : nil}",
+         year: "#{u&.expected_leave_date ? u&.expected_leave_date.year : nil}",
          is_active: u.is_active}
       end
       a = persons.map { |x| x if x[:year] == @args[:period] }.compact

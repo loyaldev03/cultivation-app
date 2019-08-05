@@ -34,7 +34,6 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
     if metrc.reported_to_metrc == false && metrc.status == 'available'
       metrc.update(status: Constants::METRC_TAG_STATUS_DISPOSED)
     end
-    redirect_to inventory_metrc_index_path
   end
 
   def update_metrc_reported

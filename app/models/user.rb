@@ -29,6 +29,7 @@ class User
   field :photo_data, type: String
   field :hourly_rate, type: Float, default: -> { 0.0 }
   field :overtime_hourly_rate, type: Float
+  field :expected_leave_date, type: Time
 
   ## Database authenticatable
   field :email, type: String, default: ''

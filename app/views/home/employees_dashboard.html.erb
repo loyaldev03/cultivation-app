@@ -2,5 +2,11 @@
   <%= breadcrumbs ["Home",root_path], 'Employee' %>
 <% end %>
 <div class="mh4 mt4">
-  <%= image_tag "dummy/main-resources.png", style: 'max-width: 1300px; width: 100%;' %>
+  <%= react_component 'people_dashboard/PeopleDashboardApp',
+    {
+      defaultFacilityId: current_default_facility&.id.to_s,
+      currentFacilityId: current_facility&.id.to_s,
+      currentTime: Time.current,
+    }
+  %>
 </div>

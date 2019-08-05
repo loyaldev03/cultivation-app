@@ -243,6 +243,7 @@ Rails.application.routes.draw do
           get 'employee_salary_chart'
           get 'reminder'
           get 'worker_attrition'
+          get 'capacity_planning'
         end
       end
 

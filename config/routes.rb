@@ -222,10 +222,6 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace 'people_dashboard' do
-    resources :people, only: [:index] 
-  end
-
   resources :daily_tasks, only: [:index]
 
   # API for web pages

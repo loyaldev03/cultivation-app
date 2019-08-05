@@ -1,0 +1,21 @@
+class Api::V1::PeopleController < Api::V1::BaseApiController
+  def head_counts_chart
+    result = People::QueryHeadcount.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
+
+  def employee_salary_chart
+    result = People::QueryEmployeeSalary.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
+
+  def reminder
+    result = People::Reminder.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
+
+  def worker_attrition
+    result = People::QueryWorkerAttrition.call(current_user, {facility_id: params[:facility_id], period: params[:period], role: params[:role]}).result
+    render json: result.to_json, status: 200
+  end
+end

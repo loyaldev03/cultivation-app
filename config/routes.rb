@@ -222,6 +222,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'people_dashboard' do
+    resources :people, only: [:index] 
+  end
+
   resources :daily_tasks, only: [:index]
 
   # API for web pages
@@ -230,6 +234,15 @@ Rails.application.routes.draw do
       resources :notifications, only: [:index] do
         member do
           post 'mark_as_read'
+        end
+      end
+
+      resources :people, only: [:index] do
+        collection do
+          get 'head_counts_chart'
+          get 'employee_salary_chart'
+          get 'reminder'
+          get 'worker_attrition'
         end
       end
 

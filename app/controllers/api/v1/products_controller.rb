@@ -9,7 +9,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     if type == 'raw_materials'
       #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
-      special_type = ['seeds', 'purchased_clones', 'nutrients']
+      special_type = ['seeds', 'purchased_clones']
       catalogue_ids = if special_type.include?(category)
                         # find parent only one
                         Inventory::Catalogue.raw_materials.where(

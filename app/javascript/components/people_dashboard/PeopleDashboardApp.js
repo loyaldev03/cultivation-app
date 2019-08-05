@@ -21,53 +21,53 @@ class PeopleDashboardApp extends React.Component {
     PeopleDashboardStore.loadWorkerSalary(this.props.currentFacilityId)
     PeopleDashboardStore.loadheadCount(this.props.currentFacilityId)
   }
-    
-  render(){
-    return(
+
+  render() {
+    return (
       <React.Fragment>
         <div className="flex justify-between mb3">
           <div className="w-70">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '200px' }}
-                >
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '200px' }}
+            >
               <OverallInfo facility_id={this.props.currentFacilityId} />
             </div>
           </div>
           <div className="w-30">
-          <div
+            <div
               className="ba b--light-gray pa3 bg-white br2"
               style={{ height: '200px' }}
-              >
-              <ReminderWidget  />
+            >
+              <ReminderWidget />
             </div>
           </div>
         </div>
-          
+
         <div className="flex justify-between mb3">
           <div className="w-30">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '300px' }}
-                >
-                <HeadCountWidget />
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '300px' }}
+            >
+              <HeadCountWidget />
             </div>
-          </div>   
+          </div>
           <div className="w-40">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '300px' }}
-                >
-                <AttritionWidget />
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '300px' }}
+            >
+              <AttritionWidget />
             </div>
           </div>
           <div className="w-30">
             <div
-                className="ba b--light-gray pa3 bg-white br2"
-                style={{ height: '300px' }}
-                >
-                <WorkerSalary />
-              </div>
+              className="ba b--light-gray pa3 bg-white br2"
+              style={{ height: '300px' }}
+            >
+              <WorkerSalary />
+            </div>
           </div>
         </div>
 
@@ -78,40 +78,45 @@ class PeopleDashboardApp extends React.Component {
         <div className="flex justify-between mb3">
           <div className="w-50">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '400px' }}
-                >
-                <OntimeArrivalsWidget facility_id={this.props.currentFacilityId} />
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '400px' }}
+            >
+              <OntimeArrivalsWidget
+                facility_id={this.props.currentFacilityId}
+              />
             </div>
-          </div>   
+          </div>
           <div className="w-50">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '400px' }}
-                >
-                <CompletingTaskWidget facility_id={this.props.currentFacilityId} />
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '400px' }}
+            >
+              <CompletingTaskWidget
+                facility_id={this.props.currentFacilityId}
+              />
             </div>
-          </div>   
+          </div>
         </div>
         <div className="flex justify-between mb3">
           <div className="w-50">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '400px' }}
-                >
-                <SkillDistributionWidget facility_id={this.props.currentFacilityId} />
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '400px' }}
+            >
+              <SkillDistributionWidget
+                facility_id={this.props.currentFacilityId}
+              />
             </div>
-          </div>   
+          </div>
           <div className="w-50">
             <div
-                className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: '400px' }}
-                >
-                <JobRoleWidget facility_id={this.props.currentFacilityId} />
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: '400px' }}
+            >
+              <JobRoleWidget facility_id={this.props.currentFacilityId} />
             </div>
-          </div>   
+          </div>
         </div>
-        
       </React.Fragment>
     )
   }

@@ -140,7 +140,7 @@ class MetrcInventoryApp extends React.Component {
     data: [],
     showEditor: false,
     columns: [
-      {Header: 'ID', accessor: 'id', show: false},
+      { Header: 'ID', accessor: 'id', show: false },
       { Header: 'Tag', accessor: 'tag' },
       { Header: 'Type', accessor: 'tag_type' },
       {
@@ -164,16 +164,36 @@ class MetrcInventoryApp extends React.Component {
         Header: 'Action',
         accessor: 'id',
         Cell: props => {
-          if (props.row['reported_to_metrc'] == false && props.row['status'] == 'disposed'){
-            return <a href={`/api/v1/metrc/update_metrc_reported?facility_id=${this.props.facility_id}&&metrc_id=${props.value}`}
-            className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-green b--green white" onClick={this.onUpdateConfirm}
-          >Mark as Reported to Metrc</a>
-          }else if(props.row['reported_to_metrc'] == false && props.row['status'] == 'available'){
-            return <a href={`/api/v1/metrc/update_metrc_disposed?facility_id=${this.props.facility_id}&&metrc_id=${props.value}`}
-            className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white"
-          >Disposed</a>
+          if (
+            props.row['reported_to_metrc'] == false &&
+            props.row['status'] == 'disposed'
+          ) {
+            return (
+              <a
+                href={`/api/v1/metrc/update_metrc_reported?facility_id=${
+                  this.props.facility_id
+                }&&metrc_id=${props.value}`}
+                className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-green b--green white"
+                onClick={this.onUpdateConfirm}
+              >
+                Mark as Reported to Metrc
+              </a>
+            )
+          } else if (
+            props.row['reported_to_metrc'] == false &&
+            props.row['status'] == 'available'
+          ) {
+            return (
+              <a
+                href={`/api/v1/metrc/update_metrc_disposed?facility_id=${
+                  this.props.facility_id
+                }&&metrc_id=${props.value}`}
+                className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white"
+              >
+                Disposed
+              </a>
+            )
           }
-          
         }
       },
 
@@ -181,7 +201,7 @@ class MetrcInventoryApp extends React.Component {
         Header: 'Reported',
         accessor: 'reported_to_metrc',
         Cell: props => {
-          return <span className="">{props.value ? "Yes" : "No"}</span>
+          return <span className="">{props.value ? 'Yes' : 'No'}</span>
         }
       },
 
@@ -199,10 +219,9 @@ class MetrcInventoryApp extends React.Component {
     this.setState({ showEditor: !this.state.showEditor })
   }
 
-  onUpdateConfirm = (e) => {
-    if(confirm('Mark as report?')){
-
-    }else{
+  onUpdateConfirm = e => {
+    if (confirm('Mark as report?')) {
+    } else {
       e.preventDefault()
     }
   }

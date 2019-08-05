@@ -61,9 +61,7 @@ class PeopleDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white mr3"
               style={{ height: '320px' }}
             >
-              <AttritionWidget
-                facility_id={this.props.currentFacilityId}
-              />
+              <AttritionWidget facility_id={this.props.currentFacilityId} />
             </div>
           </div>
           <div className="w-30">

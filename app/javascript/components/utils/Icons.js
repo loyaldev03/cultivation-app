@@ -36,7 +36,6 @@ import FacilityRoomCapacityWidget from '../../../assets/images/dummy/facility-ro
 import FacilityRoomDetailsWidget from '../../../assets/images/dummy/facility-rooms-details.png'
 import FacilityDonutChartWidget from '../../../assets/images/dummy/facility-dashboard-donut.png'
 
-
 import PeopleDashboardWidget from '../../../assets/images/dummy/main-resources.png'
 import PeopleOverallInfoWidget from '../../../assets/images/dummy/people-overall-info.png'
 import PeopleReminderWidget from '../../../assets/images/dummy/people-reminder-widget.png'

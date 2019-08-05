@@ -14,10 +14,7 @@ class CapacityPlanning extends React.Component {
         {/* <div className="flex justify-between">
           <h1 className="f5 fw6 dark-grey">Capacity Planning</h1>
         </div> */}
-        <div
-            className="ba b--light-gray pa3 bg-white br2 mr3"
-            
-            >
+        <div className="ba b--light-gray pa3 bg-white br2 mr3">
           <img src={PeopleCapacityPlanningWidget} />
           <img src={PeopleUserListWidget} />
         </div>

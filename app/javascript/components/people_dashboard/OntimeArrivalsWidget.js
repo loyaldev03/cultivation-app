@@ -21,4 +21,3 @@ class OntimeArrivalsWidget extends React.Component {
 }
 
 export default OntimeArrivalsWidget
-

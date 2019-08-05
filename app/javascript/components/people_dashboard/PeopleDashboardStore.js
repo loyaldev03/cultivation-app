@@ -175,7 +175,6 @@ class PeopleDashboardStore {
     } finally {
     }
   }
-
 }
 
 const peopleStore = new PeopleDashboardStore()

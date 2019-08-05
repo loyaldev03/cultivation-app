@@ -19,8 +19,8 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 }
 const date = new Date()
 const roleInit = {
-  role_id: "",
-  role_name: "All Job Roles"
+  role_id: '',
+  role_name: 'All Job Roles'
 }
 @observer
 export default class AttritionWidget extends React.Component {
@@ -32,27 +32,32 @@ export default class AttritionWidget extends React.Component {
         role_id: ''
       },
       period: '2019'
-      
     }
-    
   }
-  onChangePeriod = (period) => {
-    console.log("Data Role--->"+ this.state.role)
-    console.log("Data Period--->"+ period)
-    this.setState({period: period}, () => {
-      PeopleDashboardStore.loadAttrition(this.props.facility_id, this.state.role.role_id, period)
+  onChangePeriod = period => {
+    console.log('Data Role--->' + this.state.role)
+    console.log('Data Period--->' + period)
+    this.setState({ period: period }, () => {
+      PeopleDashboardStore.loadAttrition(
+        this.props.facility_id,
+        this.state.role.role_id,
+        period
+      )
     })
   }
 
-  onChangeRoles = (role) => {
-    console.log("Data Role--->"+ role.role_id)
-    console.log(" Role--->"+ JSON.stringify(role))
+  onChangeRoles = role => {
+    console.log('Data Role--->' + role.role_id)
+    console.log(' Role--->' + JSON.stringify(role))
 
-    console.log("Data Period--->"+ this.state.period)
-    this.setState({role: role}, () => {
-      PeopleDashboardStore.loadAttrition(this.props.facility_id, role.role_id, this.state.period)
+    console.log('Data Period--->' + this.state.period)
+    this.setState({ role: role }, () => {
+      PeopleDashboardStore.loadAttrition(
+        this.props.facility_id,
+        role.role_id,
+        this.state.period
+      )
     })
-    
   }
 
   render() {
@@ -105,7 +110,6 @@ export default class AttritionWidget extends React.Component {
       }
     }
     return (
-      
       <React.Fragment>
         <div className="flex justify-between mb2">
           <h1 className="f5 fw6 dark-grey">Attrition</h1>
@@ -117,31 +121,30 @@ export default class AttritionWidget extends React.Component {
               content={
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
-                      <MenuButton key={1}
-                        text={'All Job Roles'}
-                        className=""
-                        onClick={() => this.onChangeRoles(roleInit)}
-                      />
-                    {PeopleDashboardStore.roles_loaded ? (
-                        
-                        PeopleDashboardStore.data_roles.map(d =>
-                          <MenuButton key={d.role_id}
+                    <MenuButton
+                      key={1}
+                      text={'All Job Roles'}
+                      className=""
+                      onClick={() => this.onChangeRoles(roleInit)}
+                    />
+                    {PeopleDashboardStore.roles_loaded
+                      ? PeopleDashboardStore.data_roles.map(d => (
+                          <MenuButton
+                            key={d.role_id}
                             text={d.role_name}
                             className=""
                             onClick={() => this.onChangeRoles(d)}
                           />
-                          )
-                        
-                      ) : (
-                        'loading...'
-                    )}
-                    
+                        ))
+                      : 'loading...'}
                   </div>
                 </div>
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey ttc">{this.state.role.role_name}</h1>
+                <h1 className="f6 fw6 ml2 grey ttc">
+                  {this.state.role.role_name}
+                </h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
                 </i>
@@ -154,23 +157,30 @@ export default class AttritionWidget extends React.Component {
               content={
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
-                   
-                  <MenuButton key={date.getFullYear()}
-                            text={date.getFullYear()}
-                            className=""
-                            onClick={() => this.onChangePeriod(`${date.getFullYear()}`)}
-                          />
-                   <MenuButton key={date.getFullYear()-1}
-                            text={date.getFullYear()-1}
-                            className=""
-                            onClick={() => this.onChangePeriod(`${date.getFullYear()-1}`)}
-                          />
-                   <MenuButton key={date.getFullYear()-2}
-                            text={date.getFullYear()-2}
-                            className=""
-                            onClick={() => this.onChangePeriod(`${date.getFullYear()-2}`)}
-                          />
-
+                    <MenuButton
+                      key={date.getFullYear()}
+                      text={date.getFullYear()}
+                      className=""
+                      onClick={() =>
+                        this.onChangePeriod(`${date.getFullYear()}`)
+                      }
+                    />
+                    <MenuButton
+                      key={date.getFullYear() - 1}
+                      text={date.getFullYear() - 1}
+                      className=""
+                      onClick={() =>
+                        this.onChangePeriod(`${date.getFullYear() - 1}`)
+                      }
+                    />
+                    <MenuButton
+                      key={date.getFullYear() - 2}
+                      text={date.getFullYear() - 2}
+                      className=""
+                      onClick={() =>
+                        this.onChangePeriod(`${date.getFullYear() - 2}`)
+                      }
+                    />
                   </div>
                 </div>
               }
@@ -185,7 +195,7 @@ export default class AttritionWidget extends React.Component {
             <br />
           </div>
         </div>
-        
+
         {PeopleDashboardStore.attrition_loaded ? (
           <Bar data={PeopleDashboardStore.attritionCount} options={options} />
         ) : (

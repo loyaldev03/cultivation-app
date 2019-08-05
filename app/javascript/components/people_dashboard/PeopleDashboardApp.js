@@ -11,7 +11,7 @@ class PeopleDashboardApp extends React.Component {
     super(props)
     PeopleDashboardStore.loadWorkerSalary(this.props.facility_id)
     PeopleDashboardStore.loadheadCount(this.props.facility_id)
-    PeopleDashboardStore.loadAttrition(this.props.facility_id, "", 2019)
+    PeopleDashboardStore.loadAttrition(this.props.facility_id, '', 2019)
   }
 
   render() {

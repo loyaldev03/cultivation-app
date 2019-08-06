@@ -19,8 +19,8 @@ import JobRoleWidget from './JobRoleWidget'
 class PeopleDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    PeopleDashboardStore.loadWorkerSalary(this.props.currentFacilityId)
-    PeopleDashboardStore.loadheadCount(this.props.currentFacilityId)
+    PeopleDashboardStore.loadWorkerSalary(this.props.currentFacilityId, 2019)
+    PeopleDashboardStore.loadheadCount(this.props.currentFacilityId, 2019)
     PeopleDashboardStore.loadAttrition(this.props.currentFacilityId, '', 2019)
     PeopleDashboardStore.loadRoles()
   }
@@ -53,7 +53,7 @@ class PeopleDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white mr3"
               style={{ height: '320px' }}
             >
-              <HeadCountWidget />
+              <HeadCountWidget facility_id={this.props.currentFacilityId}/>
             </div>
           </div>
           <div className="w-40">
@@ -69,7 +69,7 @@ class PeopleDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2"
               style={{ height: '320px' }}
             >
-              <WorkerSalary />
+              <WorkerSalary facility_id={this.props.currentFacilityId}/>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import isEmpty from 'lodash.isempty'
 import { observable, action, computed, toJS, set } from 'mobx'
+
 import {
   httpGetOptions,
   httpPostOptions,
@@ -32,10 +33,10 @@ class PeopleDashboardStore {
   //@observable isLoading = false
 
   @action
-  async loadWorkerSalary(facility_id) {
+  async loadWorkerSalary(facility_id, period) {
     this.isLoading = true
     this.worker_salary_loaded = false
-    const url = `/api/v1/people/employee_salary_chart?facility_id=${facility_id}`
+    const url = `/api/v1/people/employee_salary_chart?facility_id=${facility_id}&&period=${period}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -57,10 +58,10 @@ class PeopleDashboardStore {
         coloR.push(dynamicColors())
       }
       let final_result = {
-        labels: this.data_worker_salary.map(e => e.group_title),
+        labels: this.data_worker_salary.map(e => e.title),
         datasets: [
           {
-            data: this.data_worker_salary.map(e => e.value),
+            data: this.data_worker_salary.map(e => e.actual_labor_costs),
             backgroundColor: this.data_worker_salary.map(e => e.color),
             hoverBackgroundColor: this.data_worker_salary.map(e => e.color)
           }
@@ -74,10 +75,10 @@ class PeopleDashboardStore {
   }
 
   @action
-  async loadheadCount(facility_id) {
+  async loadheadCount(facility_id, period) {
     this.isLoading = true
     this.headcount_loaded = false
-    const url = `/api/v1/people/head_counts_chart?facility_id=${facility_id}`
+    const url = `/api/v1/people/head_counts_chart?facility_id=${facility_id}&&period=${period}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -102,7 +103,7 @@ class PeopleDashboardStore {
         labels: this.data_headcount.map(e => e.title),
         datasets: [
           {
-            data: this.data_headcount.map(e => e.value),
+            data: this.data_headcount.map(e => e.user_count),
             backgroundColor: this.data_headcount.map(e => e.color),
             hoverBackgroundColor: this.data_headcount.map(e => e.color)
           }

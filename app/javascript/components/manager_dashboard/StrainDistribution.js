@@ -86,7 +86,13 @@ export default class StrainDistribution extends React.Component {
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
         .attr('dx', d => d.data.name.length)
-        .attr('opacity', d => ((Math.max(0, d.x1 - d.x0 - 1) > 75) ? (d.x1 - d.x0 - d.data.name.length  > 71 ? 1 : 0) : 0))
+        .attr('opacity', d =>
+          Math.max(0, d.x1 - d.x0 - 1) > 75
+            ? d.x1 - d.x0 - d.data.name.length > 71
+              ? 1
+              : 0
+            : 0
+        )
         .selectAll('tspan')
         .data(d => d.data.name.split('/\n/g'))
         .enter()

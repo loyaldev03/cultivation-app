@@ -241,6 +241,7 @@ Rails.application.routes.draw do
           get 'worker_attrition'
           get 'get_roles'
           get 'capacity_planning'
+          get 'overall_info'
         end
       end
 

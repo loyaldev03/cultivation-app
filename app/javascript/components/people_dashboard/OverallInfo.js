@@ -1,6 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
+import PeopleDashboardStore from './PeopleDashboardStore'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -25,9 +26,12 @@ export default class OverallInfo extends React.Component {
   }
 
   onChangeMonthly = range => {
-    this.setState({ selectedMonth: range.split('_').join(' ') })
-    // console.log(range)
-    // ChartStore.cultivationInfo(this.props.facility_id, range)
+    this.setState({ selectedMonth: range.split('_').join(' ') }, () => {
+      PeopleDashboardStore.loadOverallInfo(
+        this.props.facility_id,
+        this.state.selectedMonth
+      )
+    })
   }
 
   render() {
@@ -90,7 +94,11 @@ export default class OverallInfo extends React.Component {
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Employee At Risk</h1>
-                <b className="f2 fw6 dark-grey">3</b>
+                <b className="f2 fw6 dark-grey">
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? PeopleDashboardStore.overall_info.employee_at_risk
+                    : null}
+                </b>
               </div>
             </div>
             <div className="flex mr3" style={{ flex: ' 1 1 auto' }}>
@@ -102,7 +110,11 @@ export default class OverallInfo extends React.Component {
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Tardiness Rate</h1>
-                <b className="f2 fw6 dark-grey">5%</b>
+                <b className="f2 fw6 dark-grey">
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? `${PeopleDashboardStore.overall_info.tardiness_rate}%`
+                    : null}
+                </b>
               </div>
             </div>
             <div className="flex mr3" style={{ flex: ' 1 1 auto' }}>
@@ -114,7 +126,11 @@ export default class OverallInfo extends React.Component {
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Absent Rate</h1>
-                <b className="f2 fw6 dark-grey">2%</b>
+                <b className="f2 fw6 dark-grey">
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? `${PeopleDashboardStore.overall_info.absent_rate}%`
+                    : null}
+                </b>
               </div>
             </div>
             <div className="flex" style={{ flex: ' 1 1 auto' }}>
@@ -126,7 +142,11 @@ export default class OverallInfo extends React.Component {
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Performance Rate</h1>
-                <b className="f2 fw6 dark-grey">95%</b>
+                <b className="f2 fw6 dark-grey">
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? `${PeopleDashboardStore.overall_info.performance}%`
+                    : null}
+                </b>
               </div>
             </div>
           </React.Fragment>

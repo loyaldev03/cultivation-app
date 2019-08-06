@@ -19,6 +19,7 @@ import JobRoleWidget from './JobRoleWidget'
 class PeopleDashboardApp extends React.Component {
   constructor(props) {
     super(props)
+    PeopleDashboardStore.loadOverallInfo(this.props.currentFacilityId, 'All')
     PeopleDashboardStore.loadWorkerSalary(this.props.currentFacilityId, 2019)
     PeopleDashboardStore.loadheadCount(this.props.currentFacilityId, 2019)
     PeopleDashboardStore.loadReminder(this.props.currentFacilityId)

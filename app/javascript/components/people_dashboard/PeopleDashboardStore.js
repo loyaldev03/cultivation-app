@@ -32,6 +32,8 @@ class PeopleDashboardStore {
   @observable roles_loaded = false
   @observable data_reminder = []
   @observable reminder_loaded = false
+  @observable overall_info = {}
+  @observable overall_info_loaded = false
   //@observable isLoading = false
 
   @action
@@ -74,7 +76,6 @@ class PeopleDashboardStore {
 
   @computed get workerSalary() {
     if (this.worker_salary_loaded) {
-      console.log(this.data_worker_salary)
       for (var i in this.data_worker_salary) {
         coloR.push(dynamicColors())
       }
@@ -193,6 +194,25 @@ class PeopleDashboardStore {
         this.roles_loaded = true
       } else {
         this.data_roles = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async loadOverallInfo(facility_id, period) {
+    this.isLoading = true
+    this.roles_loaded = false
+    const url = `/api/v1/people/overall_info?facility_id=${facility_id}&&period=${period}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.overall_info = response
+        this.overall_info_loaded = true
+      } else {
+        this.overall_info = {}
       }
     } catch (error) {
       console.error(error)

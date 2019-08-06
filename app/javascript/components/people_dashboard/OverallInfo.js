@@ -82,33 +82,32 @@ export default class OverallInfo extends React.Component {
         <div className="flex justify-between mt3">
           <React.Fragment>
             <div className="flex mr3" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons white bg-orange md-36 mt3 mb4 mr3"
+              <i
+                className="material-icons white bg-orange md-36 mt3 mb4 mr3"
                 style={{ borderRadius: '50%' }}
               >
                 error
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Employee At Risk</h1>
-                <b className="f2 fw6 dark-grey">
-                  3
-                </b>
+                <b className="f2 fw6 dark-grey">3</b>
               </div>
             </div>
             <div className="flex mr3" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons white bg-orange md-36 mt3 mb4 mr3"
+              <i
+                className="material-icons white bg-orange md-36 mt3 mb4 mr3"
                 style={{ borderRadius: '50%' }}
               >
                 access_time
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Tardiness Rate</h1>
-                <b className="f2 fw6 dark-grey">
-                  5%
-                </b>
+                <b className="f2 fw6 dark-grey">5%</b>
               </div>
             </div>
             <div className="flex mr3" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons white bg-orange md-36 mt3 mb4 mr3"
+              <i
+                className="material-icons white bg-orange md-36 mt3 mb4 mr3"
                 style={{ borderRadius: '50%' }}
               >
                 clear
@@ -119,7 +118,8 @@ export default class OverallInfo extends React.Component {
               </div>
             </div>
             <div className="flex" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons white bg-orange md-36 mt3 mb4 mr3"
+              <i
+                className="material-icons white bg-orange md-36 mt3 mb4 mr3"
                 style={{ borderRadius: '50%' }}
               >
                 autorenew

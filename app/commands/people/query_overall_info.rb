@@ -8,15 +8,47 @@ module People
     end
 
     def call
-      absent_rate = People::QueryAbsentRate.call(@user, @args).result
-      tardiness_rate = People::QueryTardinessRate.call(@user, @args).result
+      period = get_period_date(@args[:period])
+      args = {
+        facility_id: @args[:facility_id],
+        start_date: period[:start_date],
+        end_date: period[:end_date],
+      }
+      absent_rate = People::QueryAbsentRate.call(@user, args).result
+      tardiness_rate = People::QueryTardinessRate.call(@user, args).result
       performance = 100.00 - tardiness_rate
       {
-        employee_at_risk: 0,
+        employee_at_risk: 0, #getting requirements
         tardiness_rate: tardiness_rate,
         absent_rate: absent_rate,
         performance: performance,
       }
+    end
+
+    private
+
+    def get_period_date(period)
+      if period == 'All'
+        {
+          start_date: CompanyInfo.first.created_at,
+          end_date: Time.now,
+        }
+      elsif period == 'This Year'
+        {
+          start_date: Time.current.beginning_of_year,
+          end_date: Time.current.end_of_year,
+        }
+      elsif period == 'This Month'
+        {
+          start_date: Time.current.beginning_of_month,
+          end_date: Time.current.end_of_month,
+        }
+      elsif period == 'This Week'
+        {
+          start_date: Time.current.beginning_of_week,
+          end_date: Time.current.end_of_week,
+        }
+      end
     end
   end
 end

@@ -21,10 +21,11 @@ module People
     private
 
     def new_employee
+      date = Time.parse("#{@args[:period]}-01-01")
       if !@args[:role].present?
-        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+        users = User.where(is_active: true).where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       else
-        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
+        users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
       end
 
       persons = users.map do |u|
@@ -33,8 +34,7 @@ module People
          year: "#{u&.c_at ? u&.c_at.year : nil}",
          is_active: u.is_active}
       end
-      a = persons.map { |x| x if x[:year] == @args[:period] }.compact
-      workers = a.group_by { |x| x[:month] }
+      workers = persons.group_by { |x| x[:month] }
 
       result = workers.map do |x|
         {
@@ -46,10 +46,11 @@ module People
     end
 
     def leaving_employee
+      date = Time.parse("#{@args[:period]}-01-01")
       if !@args[:role].present?
-        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+        users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       else
-        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
+        users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
       end
       persons = users.map do |u|
         {_id: u.id,
@@ -57,8 +58,8 @@ module People
          year: "#{u&.expected_leave_date ? u&.expected_leave_date.year : nil}",
          is_active: u.is_active}
       end
-      a = persons.map { |x| x if x[:year] == @args[:period] }.compact
-      workers = a.group_by { |x| x[:month] }
+
+      workers = persons.group_by { |x| x[:month] }
 
       result = workers.map do |x|
         {

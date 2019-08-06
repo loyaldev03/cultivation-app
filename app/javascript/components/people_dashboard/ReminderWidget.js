@@ -18,20 +18,31 @@ class ReminderWidget extends React.Component {
         {PeopleDashboardStore.reminder_loaded ? (
           <div>
             <div className="flex">
-              <h1 className="f5 fw6 orange dib">{PeopleDashboardStore.data_reminder.time_off_request}</h1>
+              <h1 className="f5 fw6 orange dib">
+                {PeopleDashboardStore.data_reminder.time_off_request}
+              </h1>
               <h1 className="f5 fw6 grey dib ml2">Time off Request</h1>
             </div>
             <div className="flex">
-              <h1 className="f5 fw6 orange dib">{PeopleDashboardStore.data_reminder.employees_leaving}</h1>
-              <h1 className="f5 fw6 grey dib ml2">Employee Leaving This Week</h1>
+              <h1 className="f5 fw6 orange dib">
+                {PeopleDashboardStore.data_reminder.employees_leaving}
+              </h1>
+              <h1 className="f5 fw6 grey dib ml2">
+                Employee Leaving This Week
+              </h1>
             </div>
             <div className="flex">
-              <h1 className="f5 fw6 orange dib">{PeopleDashboardStore.data_reminder.employees_starting}</h1>
-              <h1 className="f5 fw6 grey dib ml2">Employee Starting This Week</h1>
+              <h1 className="f5 fw6 orange dib">
+                {PeopleDashboardStore.data_reminder.employees_starting}
+              </h1>
+              <h1 className="f5 fw6 grey dib ml2">
+                Employee Starting This Week
+              </h1>
             </div>
           </div>
-        ) : ('loading...')}
-        
+        ) : (
+          'loading...'
+        )}
       </React.Fragment>
     )
   }

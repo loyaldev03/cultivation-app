@@ -52,7 +52,7 @@ class PeopleDashboardStore {
     } finally {
     }
   }
-  
+
   @action
   async loadWorkerSalary(facility_id, period) {
     this.isLoading = true

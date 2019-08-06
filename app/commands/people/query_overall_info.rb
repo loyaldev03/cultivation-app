@@ -8,7 +8,7 @@ module People
     end
 
     def call
-      period = get_period_date(@args[:period])
+      period = get_period_date(@args[:period].downcase)
       args = {
         facility_id: @args[:facility_id],
         start_date: period[:start_date],
@@ -28,22 +28,22 @@ module People
     private
 
     def get_period_date(period)
-      if period == 'All'
+      if period == 'all'
         {
           start_date: CompanyInfo.first.created_at,
           end_date: Time.now,
         }
-      elsif period == 'This Year'
+      elsif period == 'this year'
         {
           start_date: Time.current.beginning_of_year,
           end_date: Time.current.end_of_year,
         }
-      elsif period == 'This Month'
+      elsif period == 'this month'
         {
           start_date: Time.current.beginning_of_month,
           end_date: Time.current.end_of_month,
         }
-      elsif period == 'This Week'
+      elsif period == 'this week'
         {
           start_date: Time.current.beginning_of_week,
           end_date: Time.current.end_of_week,

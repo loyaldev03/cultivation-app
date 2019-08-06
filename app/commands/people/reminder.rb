@@ -30,21 +30,24 @@ module People
       @work_requests = []
       @grouping_users.each do |v|
         @work_requests.push(Common::WorkRequest.where(user_id: v.id, status: 'pending'))
-
-        @work_requests
       end
+      return @work_requests
     end
 
     def employees_starting
       @grouping_users = User.where(:expected_start_date => (Time.now.beginning_of_week..Time.now.end_of_week)).where(is_active: false)
 
-      @grouping_users.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+      result = @grouping_users.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+
+      return result
     end
 
     def employees_leaving
       @grouping_users = User.where(is_active: true).ne(expected_leave_date: nil)
 
-      @grouping_users.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+      result = @grouping_users.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+
+      return result
     end
   end
 end

@@ -22,11 +22,9 @@ module People
 
     def new_employee
       if !@args[:role].present?
-        Rails.logger.debug('ATSSS')
-        users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       else
-        Rails.logger.debug('BAWAHHH')
-        users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
+        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
       end
 
       persons = users.map do |u|
@@ -49,9 +47,9 @@ module People
 
     def leaving_employee
       if !@args[:role].present?
-        users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       else
-        users = User.all.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
+        users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
       end
       persons = users.map do |u|
         {_id: u.id,

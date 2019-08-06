@@ -85,6 +85,7 @@ export default class StrainDistribution extends React.Component {
         .append('text')
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
+        .attr('fill', 'white')
         .attr('dx', d => d.data.name.length)
         .attr('opacity', d =>
           Math.max(0, d.x1 - d.x0 - 1) > 75

@@ -52,14 +52,19 @@ module People
       else
         users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
       end
-      persons = users.map do |u|
-        {_id: u.id,
-         month: "#{u&.expected_leave_date ? u&.expected_leave_date.strftime('%B') : nil}",
-         year: "#{u&.expected_leave_date ? u&.expected_leave_date.year : nil}",
-         is_active: u.is_active}
+      user_json = []
+      users.each do |u|
+        if u&.expected_leave_date.present?
+          user_json << {
+            _id: u.id,
+            month: "#{u&.expected_leave_date ? u&.expected_leave_date.strftime('%B') : nil}",
+            year: "#{u&.expected_leave_date ? u&.expected_leave_date.year : nil}",
+            is_active: u.is_active,
+          }
+        end
       end
 
-      workers = persons.group_by { |x| x[:month] }
+      workers = user_json.group_by { |x| x[:month] }
 
       result = workers.map do |x|
         {

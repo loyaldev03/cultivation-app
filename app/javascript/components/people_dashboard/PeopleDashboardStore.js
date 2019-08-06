@@ -29,8 +29,29 @@ class PeopleDashboardStore {
   @observable attrition_loaded = false
   @observable data_roles = []
   @observable roles_loaded = false
+  @observable data_reminder = []
+  @observable reminder_loaded = false
   //@observable isLoading = false
 
+  @action
+  async loadReminder(facility_id) {
+    this.isLoading = true
+    this.reminder_loaded = false
+    const url = `/api/v1/people/reminder?facility_id=${facility_id}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_reminder = response
+        this.reminder_loaded = true
+      } else {
+        this.data_reminder = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+  
   @action
   async loadWorkerSalary(facility_id) {
     this.isLoading = true

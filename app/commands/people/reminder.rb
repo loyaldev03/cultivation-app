@@ -14,13 +14,11 @@ module People
       el = employees_leaving.count
       es = employees_starting.count
 
-      users = [{
+      {
         time_off_request: tor,
         employees_leaving: el,
         employees_starting: es,
-      }]
-
-      users
+      }
     end
 
     private

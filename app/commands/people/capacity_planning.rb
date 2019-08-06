@@ -40,16 +40,16 @@ module People
       json
     end
 
-    def range(work_schedules, range)
+    def range(data, range)
       date = Time.current
       if (range == 'this week')
-        work_schedules.where(:end_time.gt => date.beginning_of_week, :start_time.lt => date.end_of_week)
+        data.where(:end_time.gt => date.beginning_of_week, :start_time.lt => date.end_of_week)
       elsif (range == 'this year')
-        work_schedules.where(:end_time.gt => date.beginning_of_year, :start_time.lt => date.end_of_year)
+        data.where(:end_time.gt => date.beginning_of_year, :start_time.lt => date.end_of_year)
       elsif (range == 'this month')
-        work_schedules.where(:end_time.gt => date.beginning_of_month, :start_time.lt => Time.current.end_of_month)
+        data.where(:end_time.gt => date.beginning_of_month, :start_time.lt => Time.current.end_of_month)
       else
-        work_schedules.all
+        data.all
       end
     end
   end

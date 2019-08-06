@@ -1,5 +1,6 @@
 class User
   include Mongoid::Document
+  include Mongoid::Timestamps::Short
   include ImageUploader::Attachment.new(:photo, store: :avatar)
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -28,6 +29,8 @@ class User
   field :photo_data, type: String
   field :hourly_rate, type: Float, default: -> { 0.0 }
   field :overtime_hourly_rate, type: Float
+  field :expected_start_date, type: Time
+  field :expected_leave_date, type: Time
 
   ## Database authenticatable
   field :email, type: String, default: ''

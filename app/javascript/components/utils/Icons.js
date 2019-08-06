@@ -36,6 +36,16 @@ import FacilityRoomCapacityWidget from '../../../assets/images/dummy/facility-ro
 import FacilityRoomDetailsWidget from '../../../assets/images/dummy/facility-rooms-details.png'
 import FacilityDonutChartWidget from '../../../assets/images/dummy/facility-dashboard-donut.png'
 
+import PeopleDashboardWidget from '../../../assets/images/dummy/main-resources.png'
+import PeopleOverallInfoWidget from '../../../assets/images/dummy/people-overall-info.png'
+import PeopleReminderWidget from '../../../assets/images/dummy/people-reminder-widget.png'
+import PeopleJobRoleWidget from '../../../assets/images/dummy/people-jobrole-widget.png'
+import PeopleCapacityPlanningWidget from '../../../assets/images/dummy/people-capacity-planning.png'
+import PeopleUserListWidget from '../../../assets/images/dummy/people-user-list.png'
+import PeopleOntimeWidget from '../../../assets/images/dummy/people-ontime-arrivals.png'
+import PeopleCompletingWidget from '../../../assets/images/dummy/people-completing-task.png'
+import PeopleSkillDistributionWidget from '../../../assets/images/dummy/people-skill-distribution.png'
+
 import DefaultAvatar from '../../../assets/images/blank-avatar.png'
 export {
   ImgAdd,
@@ -73,5 +83,14 @@ export {
   FacilityDashboardWidget,
   FacilityRoomCapacityWidget,
   FacilityDonutChartWidget,
-  FacilityRoomDetailsWidget
+  FacilityRoomDetailsWidget,
+  PeopleDashboardWidget,
+  PeopleOverallInfoWidget,
+  PeopleReminderWidget,
+  PeopleJobRoleWidget,
+  PeopleCapacityPlanningWidget,
+  PeopleUserListWidget,
+  PeopleOntimeWidget,
+  PeopleCompletingWidget,
+  PeopleSkillDistributionWidget
 }

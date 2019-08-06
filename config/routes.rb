@@ -233,6 +233,17 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :people, only: [:index] do
+        collection do
+          get 'head_counts_chart'
+          get 'employee_salary_chart'
+          get 'reminder'
+          get 'worker_attrition'
+          get 'get_roles'
+          get 'capacity_planning'
+        end
+      end
+
       resources :system, only: [], as: :system do
         collection do
           get 'configuration'

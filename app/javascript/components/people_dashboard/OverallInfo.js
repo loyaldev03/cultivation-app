@@ -27,7 +27,10 @@ export default class OverallInfo extends React.Component {
 
   onChangeMonthly = range => {
     this.setState({ selectedMonth: range.split('_').join(' ') }, () => {
-      PeopleDashboardStore.loadOverallInfo(this.props.facility_id, this.state.selectedMonth)
+      PeopleDashboardStore.loadOverallInfo(
+        this.props.facility_id,
+        this.state.selectedMonth
+      )
     })
   }
 
@@ -92,11 +95,9 @@ export default class OverallInfo extends React.Component {
               <div>
                 <h1 className="f5 fw6 grey">Employee At Risk</h1>
                 <b className="f2 fw6 dark-grey">
-                  {
-                    PeopleDashboardStore.overall_info_loaded ? 
-                    PeopleDashboardStore.overall_info.employee_at_risk : 
-                    null
-                  }
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? PeopleDashboardStore.overall_info.employee_at_risk
+                    : null}
                 </b>
               </div>
             </div>
@@ -110,11 +111,9 @@ export default class OverallInfo extends React.Component {
               <div>
                 <h1 className="f5 fw6 grey">Tardiness Rate</h1>
                 <b className="f2 fw6 dark-grey">
-                  {
-                    PeopleDashboardStore.overall_info_loaded ?
-                      `${PeopleDashboardStore.overall_info.tardiness_rate}%` :
-                  null
-              }
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? `${PeopleDashboardStore.overall_info.tardiness_rate}%`
+                    : null}
                 </b>
               </div>
             </div>
@@ -128,11 +127,9 @@ export default class OverallInfo extends React.Component {
               <div>
                 <h1 className="f5 fw6 grey">Absent Rate</h1>
                 <b className="f2 fw6 dark-grey">
-                  {
-                    PeopleDashboardStore.overall_info_loaded ?
-                      `${PeopleDashboardStore.overall_info.absent_rate}%` :
-                  null
-              }
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? `${PeopleDashboardStore.overall_info.absent_rate}%`
+                    : null}
                 </b>
               </div>
             </div>
@@ -146,11 +143,9 @@ export default class OverallInfo extends React.Component {
               <div>
                 <h1 className="f5 fw6 grey">Performance Rate</h1>
                 <b className="f2 fw6 dark-grey">
-                  {
-                    PeopleDashboardStore.overall_info_loaded ?
-                      `${PeopleDashboardStore.overall_info.performance}%` :
-                      null
-                  }
+                  {PeopleDashboardStore.overall_info_loaded
+                    ? `${PeopleDashboardStore.overall_info.performance}%`
+                    : null}
                 </b>
               </div>
             </div>

@@ -201,7 +201,6 @@ class PeopleDashboardStore {
     }
   }
 
-
   @action
   async loadOverallInfo(facility_id, period) {
     this.isLoading = true
@@ -220,8 +219,6 @@ class PeopleDashboardStore {
     } finally {
     }
   }
-  
-
 }
 
 const peopleStore = new PeopleDashboardStore()

@@ -10,41 +10,34 @@ module People
     end
 
     def call
+      date = Date.parse("#{@args[:period]}-01-01")
+      users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
       bar_colors = ['red', 'blue', 'orange', 'purple', 'yellowgreen', 'mediumvioletred', 'cadetblue', 'dodgerblue', 'sienna', 'palevioletred', 'cornflowerblue']
+      json = []
 
-      result = User.all.group_by(&:title).map do |d|
-        user = []
-        user = d[1].map do |e|
-          {
-            user_id: e[:_id],
-            tasks: user_cult_tasks(e[:_id]),
-            labor_cost_sum: labor_cost_sum(e[:_id]),
-
-          }
-        end
+      Common::Role.all.map do |role|
         bar_colors.shuffle
         color_pick = bar_colors.sample
         bar_colors.delete(color_pick)
-
-        {
-          group_title: d[0],
-          value: user.map { |x| x[:labor_cost_sum] }.sum,
-          color: color_pick,
-
-        }
+        sum_of_labor_costs = 0
+        users.each do |user|
+          if user.roles.include?(role.id)
+            sum_of_labor_costs += user.cultivation_tasks.where(facility_id: @args[:facility_id]).map { |x| x.actual_labor_cost }.sum
+          end
+        end
+        bar_colors = ['red', 'blue', 'orange', 'purple', 'yellowgreen', 'mediumvioletred', 'cadetblue', 'dodgerblue', 'sienna', 'palevioletred', 'cornflowerblue']
+        bar_colors.shuffle
+        color_pick = bar_colors.sample
+        bar_colors.delete(color_pick)
+        if sum_of_labor_costs != 0
+          json << {
+            title: role.name,
+            color: color_pick,
+            actual_labor_costs: sum_of_labor_costs,
+          }
+        end
       end
-
-      result
-    end
-
-    private
-
-    def user_cult_tasks(user_id)
-      tasks = User.find(user_id).cultivation_tasks.map { |x| x if x[:facility_id] == @args[:facility_id].to_bson_id }.compact
-    end
-
-    def labor_cost_sum(user_id)
-      sum = User.find(user_id).cultivation_tasks.map { |x| x[:actual_labor_cost] if x[:facility_id] == @args[:facility_id].to_bson_id }.compact.sum
+      json
     end
   end
 end

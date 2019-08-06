@@ -35,8 +35,6 @@ export default class AttritionWidget extends React.Component {
     }
   }
   onChangePeriod = period => {
-    console.log('Data Role--->' + this.state.role)
-    console.log('Data Period--->' + period)
     this.setState({ period: period }, () => {
       PeopleDashboardStore.loadAttrition(
         this.props.facility_id,
@@ -47,10 +45,6 @@ export default class AttritionWidget extends React.Component {
   }
 
   onChangeRoles = role => {
-    console.log('Data Role--->' + role.role_id)
-    console.log(' Role--->' + JSON.stringify(role))
-
-    console.log('Data Period--->' + this.state.period)
     this.setState({ role: role }, () => {
       PeopleDashboardStore.loadAttrition(
         this.props.facility_id,

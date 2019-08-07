@@ -51,6 +51,7 @@ class User
   field :last_sign_in_ip, type: String
 
   field :roles, type: Array, default: []      # Array of BSON::ObjectId
+  field :skills, type: Array, default: []
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
   field :user_mode, type: String, default: 'worker' # admin | manager | worker
   field :reporting_manager_id, type: BSON::ObjectId

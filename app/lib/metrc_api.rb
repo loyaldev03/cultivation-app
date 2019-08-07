@@ -193,6 +193,12 @@ class MetrcApi
       JSON.parse(res.body)
     end
 
+    def create_harvestplants(lic_no, params)
+      url = "#{BASE_URL}/plants/v1/harvestplants?licenseNumber=#{lic_no}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     # - Harvest
 
     # + Packages

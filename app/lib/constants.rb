@@ -22,6 +22,7 @@ module Constants
   INDELIBLE_MOVING_NEXT_PHASE = 'moving_to_next_phase'.freeze
   INDELIBLE_STAYING = 'staying'.freeze
   INDELIBLE_CLEANING = 'cleaning'.freeze
+  INDELIBLE_MEASURE_HARVEST = 'measure_harvest_weight'.freeze
 
   WORK_STATUS_NEW = 'new'.freeze
   WORK_STATUS_STARTED = 'started'.freeze

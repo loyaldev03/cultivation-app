@@ -25,6 +25,10 @@ module DailyTask
           GenerateBatchLots.perform_async(task.batch_id.to_s)
         end
 
+        if task.indelible == Constants::INDELIBLE_MEASURE_HARVEST
+          MetrcUpdateHarvestPlant.call(task.batch_id.to_s)
+        end
+
         task
       end
     rescue StandardError

@@ -50,7 +50,7 @@ class Cultivation::BatchesController < ApplicationController
     end
     @grow_methods = Common::GrowMethod.active.all.map do |a|
       {
-        value: a[:code],
+        value: a[:name],
         label: a[:name],
       }
     end

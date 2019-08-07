@@ -59,8 +59,6 @@ Rollbar.configure do |config|
 
   # Enable delayed reporting (using Sidekiq)
   config.use_sidekiq
-  # You can supply custom Sidekiq options:
-  config.use_sidekiq 'queue' => 'default'
 
   # If your application runs behind a proxy server, you can set proxy parameters here.
   # If https_proxy is set in your environment, that will be used. Settings here have precedence.

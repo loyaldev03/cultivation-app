@@ -6,13 +6,13 @@ class MetrcCreateAdditives
     #build params here
     task = Cultivation::Task.find(task_id)
     batch = task.batch
-    metrc_batches = Metrc::PlantBatch.where(batch_id: batch.id)
-    nutrients = batch.nutrient_profiles.where(task_id: task_id)
+    metrc_batches = Metrc::PlantBatch.where(batch_id: batch.id).to_a
+    nutrient = batch.nutrient_profiles.where(task_id: task_id).first
     facility = task.facility
     metrc_params = []
     product_params = []
-
-    nutrients.each do |nutrient|
+    byebug
+    nutrient.nutrients.each do |nutrient|
       product = Inventory::Product.find(nutrient.product_id)
       product_params << generate_product_params(product)
     end

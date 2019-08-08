@@ -26,11 +26,11 @@ module DailyTask
         end
 
         if task.indelible == Constants::INDELIBLE_MEASURE_HARVEST
-          MetrcUpdateHarvestPlant.call(task.batch_id.to_s)
+          MetrcUpdateHarvestPlant.perform_async(task.batch_id.to_s)
         end
 
         if task.indelible == Constants::INDELIBLE_MOVING_NEXT_PHASE && task.name == 'Move to flower room'
-          MetrcChangeGrowthPhase.call(task.batch_id.to_s)
+          MetrcChangeGrowthPhase.perform_async(task.batch_id.to_s)
         end
 
         task

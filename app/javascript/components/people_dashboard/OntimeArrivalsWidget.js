@@ -41,17 +41,17 @@ const ProgressBar = React.memo(
 
 const orders = [
   {
-    text: "Most On Time",
-    val: "ontime"
+    text: 'Most On Time',
+    val: 'ontime'
   },
   {
-    text: "Most Late",
-    val: "late"
+    text: 'Most Late',
+    val: 'late'
   }
 ]
 
 const roleInit = {
-  role_name: "All Job Roles",
+  role_name: 'All Job Roles',
   role_id: ''
 }
 
@@ -60,8 +60,8 @@ class OntimeArrivalsWidget extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      order: { text: 'Most On Time', val: 'ontime'},
-      role: {role_name: 'All Job Roles', role_id: ''},
+      order: { text: 'Most On Time', val: 'ontime' },
+      role: { role_name: 'All Job Roles', role_id: '' },
       average: 0
     }
   }
@@ -148,84 +148,83 @@ class OntimeArrivalsWidget extends React.Component {
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
                     {orders.map(d => (
-                          <MenuButton
-                            key={d.val}
-                            text={d.text}
-                            className=""
-                            onClick={() => this.onChangeOrder(d)}
-                          />
-                        ))}
+                      <MenuButton
+                        key={d.val}
+                        text={d.text}
+                        className=""
+                        onClick={() => this.onChangeOrder(d)}
+                      />
+                    ))}
                   </div>
                 </div>
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey ttc">
-                  {this.state.order.text}
-                </h1>
+                <h1 className="f6 fw6 ml2 grey ttc">{this.state.order.text}</h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
                 </i>
               </div>
             </Tippy>
-            </div>
+          </div>
         </div>
-        <div className="flex pb3" >
-          {PeopleDashboardStore.ontime_arrival_loaded ? (PeopleDashboardStore.data_ontime_arrival.average != null ? `Average: ${PeopleDashboardStore.data_ontime_arrival.average.toFixed(2)} %` : 'Average: 0 %') : "Loading.."}
+        <div className="flex pb3">
+          {PeopleDashboardStore.ontime_arrival_loaded
+            ? PeopleDashboardStore.data_ontime_arrival.average != null
+              ? `Average: ${PeopleDashboardStore.data_ontime_arrival.average.toFixed(
+                  2
+                )} %`
+              : 'Average: 0 %'
+            : 'Loading..'}
         </div>
-       {PeopleDashboardStore.ontime_arrival_loaded ? 
-        PeopleDashboardStore.data_ontime_arrival.data.length != 0 ? 
-            PeopleDashboardStore.data_ontime_arrival.data.map((e, i) => (
-              <div className="flex justify-between mb3 pt2">
-                <div className="flex items-center w-40">
-                  {e.user.photo_url ? (
-                    <div>
-                      <img
-                        src={e.user.photo_url}
-                        style={{
-                          width: '36px',
-                          height: '36px',
-                          borderRadius: '18px'
-                        }}
-                        onError={x => {
-                          x.target.onerror = null
-                          x.target.src = DefaultAvatar
-                        }}
+        {PeopleDashboardStore.ontime_arrival_loaded
+          ? PeopleDashboardStore.data_ontime_arrival.data.length != 0
+            ? PeopleDashboardStore.data_ontime_arrival.data.map((e, i) => (
+                <div className="flex justify-between mb3 pt2">
+                  <div className="flex items-center w-40">
+                    {e.user.photo_url ? (
+                      <div>
+                        <img
+                          src={e.user.photo_url}
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '18px'
+                          }}
+                          onError={x => {
+                            x.target.onerror = null
+                            x.target.src = DefaultAvatar
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <LetterAvatar
+                        firstName={e.user.first_name}
+                        lastName={e.user.last_name}
+                        size={36}
+                        radius={18}
                       />
-                    </div>
-                  ) : (
-                    <LetterAvatar
-                      firstName={e.user.first_name}
-                      lastName={e.user.last_name}
-                      size={36}
-                      radius={18}
+                    )}
+                    <span className="f6 fw6 dark-grey ml2">
+                      {e.user.first_name} {e.user.last_name}
+                      <div className="f6 fw6 grey">{e.roles}</div>
+                    </span>
+                  </div>
+                  <div className="flex items-center w-60">
+                    <ProgressBar
+                      key={i}
+                      percent={e.percentage}
+                      height={10}
+                      barColor={this.getProgressBarColor(e.percentage)}
                     />
-                  )}
-                  <span className="f6 fw6 dark-grey ml2">
-                    {e.user.first_name} {e.user.last_name}
-                    <div className="f6 fw6 grey">
-                    {e.roles}
-                    </div>
-                  </span>
+                    <span className="f6 fw6 dark-grey ml2 w-20">
+                      {e.percentage} %
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center w-60">
-                  <ProgressBar
-                    key={i}
-                    percent={e.percentage}
-                    height={10}
-                    barColor={this.getProgressBarColor(e.percentage)}
-                  />
-                  <span className="f6 fw6 dark-grey ml2 w-20">
-                    {e.percentage} %
-                  </span>
-                </div>
-                
-              </div>
-            )) : "No Record Found"
-       
-       : 'Loading...'
-       }
-        
+              ))
+            : 'No Record Found'
+          : 'Loading...'}
       </React.Fragment>
     )
   }

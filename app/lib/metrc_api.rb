@@ -78,6 +78,12 @@ class MetrcApi
       res.code == 200
     end
 
+    def change_growth_phase(facility_license, params)
+      url = "#{BASE_URL}/plantbatches/v1/changegrowthphase?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     # - Plants
 
     # + Strain API

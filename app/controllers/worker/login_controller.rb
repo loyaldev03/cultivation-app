@@ -49,6 +49,6 @@ class Worker::LoginController < ApplicationController
   private
 
   def check_ip_whitelist
-    @ip_included = current_ip_facility.present?
+    @ip_included = current_ip_facility
   end
 end

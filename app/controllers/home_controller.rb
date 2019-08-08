@@ -4,6 +4,11 @@ class HomeController < ApplicationController
   def index
     authorize! :index, HomeController
     @home = HomeSetupStatus.call(current_default_facility).result
+    if !@home.have_company
+      respond_to do |format|
+        format.html {render :layout => 'wizards/facility_setup'}
+      end
+    end
   end
 
   def dashboard

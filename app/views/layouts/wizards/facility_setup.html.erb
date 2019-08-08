@@ -11,13 +11,16 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <%= render 'toast' %>
-      <div class="flex flex-row min-vh-100">
-        <%= render 'layouts/sidebar2' %>
-        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 230px;">
+      <div id="main" class="main flex flex-column flex-auto">
           <%= flash_messages %>
-          <main class="min-vh-100">
+          <% if @home.have_company %>
+            <%= render 'layouts/sidebar2' %>
+            <main class="min-vh-100" style="padding-left: 230px;">
+          <% else %>
+            <main class="min-vh-100">
+          <% end %>
             <div style="height: 50px" 
-              class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
+                 class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
             >
               <% if content_for? :breadcrumb %>
                 <div class="flex items-center">
@@ -44,8 +47,10 @@
                     </span>
                   <% end %>
 
-                  <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
-                  
+                  <i onclick="toggleDropdown()"
+                     id="toggle-dropdown"
+                     class="material-icons dim grey ml2 pointer">keyboard_arrow_down</i>
+
                   <div class="dropdown">
                     <div id="myDropdown" class="dropdown-content box--shadow-header">
                       <%= link_to 'Edit profile', edit_user_registration_path,
@@ -60,7 +65,6 @@
             <%= yield %>
           </main>
         </div>
-      </div>
     </div>
     <%= render "layouts/before_body_end" %>
   </body>

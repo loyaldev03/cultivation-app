@@ -3,7 +3,7 @@ class MetrcOnboardingWorker
 
   def perform
     # download all data from Metrc during onboarding
-    # - call MetrcApi get_facilities to download all facilities
+    # - call MetrcApi to download all facilities
     # - download all items for each facility
     download_for_company
   end

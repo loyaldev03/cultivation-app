@@ -29,6 +29,7 @@ class PeopleDashboardApp extends React.Component {
       'all'
     )
     PeopleDashboardStore.loadRoles()
+    PeopleDashboardStore.loadOnTimeArrival(this.props.currentFacilityId, 'ontime', '')
   }
 
   render() {

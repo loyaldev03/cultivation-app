@@ -242,6 +242,7 @@ Rails.application.routes.draw do
           get 'get_roles'
           get 'capacity_planning'
           get 'overall_info'
+          get 'arrival_on_time'
         end
       end
 

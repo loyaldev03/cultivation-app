@@ -38,4 +38,9 @@ class Api::V1::PeopleController < Api::V1::BaseApiController
     result = People::QueryOverallInfo.call(current_user, {facility_id: params[:facility_id], period: params[:period]}).result
     render json: result.to_json, status: 200
   end
+
+  def arrival_on_time
+    result = People::ArrivalOnTime.call(current_user, {facility_id: params[:facility_id], order: params[:order], role: params[:role]}).result
+    render json: result.to_json, status: 200
+  end
 end

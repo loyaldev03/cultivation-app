@@ -38,6 +38,8 @@ class PeopleDashboardStore {
   @observable capacity_planning_loaded = false
   @observable data_worker_lists = []
   @observable current_workers_length = 0
+  @observable ontime_arrival_loaded = false
+  @observable data_ontime_arrival = []
   //@observable isLoading = false
 
   @action
@@ -244,6 +246,26 @@ class PeopleDashboardStore {
         this.overall_info_loaded = true
       } else {
         this.overall_info = {}
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async loadOnTimeArrival(facility_id, order, role) {
+    this.isLoading = true
+    this.ontime_arrival_loaded = false
+    const url = `/api/v1/people/arrival_on_time?facility_id=${facility_id}&&order=${order}&&role=${role}`
+    console.log(url)
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_ontime_arrival = response
+        this.ontime_arrival_loaded = true
+      } else {
+        this.data_ontime_arrival = []
       }
     } catch (error) {
       console.error(error)

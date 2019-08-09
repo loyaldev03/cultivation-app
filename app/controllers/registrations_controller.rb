@@ -1,20 +1,15 @@
 # app/controllers/registrations_controller.rb
 class RegistrationsController < Devise::RegistrationsController
-  # override devise "create" block
-  def create
-    super do
-      if CompanyInfo.count.zero?
-        resource.user_mode = "admin"
-      end
-      resource.save
-    end
-  end
 
   protected
 
-  def after_sign_up_path_for(_resource)
+  def after_sign_up_path_for(resource)
     if CompanyInfo.count.zero?
-      '/first_setup'
+      resource.user_mode = "admin"
+      resource.save
+      first_setup_path
+    else
+      root_path
     end
   end
 

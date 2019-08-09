@@ -10,7 +10,9 @@
         <p class="mt2 body-1 grey">
           Let's get a few details of your company info.
         </p>
-        <%= form_with model: @company_info, url: settings_company_company_info_path(onboarding_type: params[:onboarding_type], facility_id: params[:facility_id]), local: true do |f| %>
+        <%= form_with model: @company_info,
+          url: settings_company_company_info_path(onboarding_type: params[:onboarding_type],
+                                                  facility_id: params[:facility_id]), local: true do |f| %>
           <div class="flex flex-column mt3">
           <div class="fl w-100-m">
             <a 
@@ -56,7 +58,14 @@
           class: "db pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
       </div>
     </div>
-     
   <% end %>
   </div>
 </div>
+
+<% content_for :before_body_end do %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      setupCollapsible();
+    })
+  </script>
+<% end %>

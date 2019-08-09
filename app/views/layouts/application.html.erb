@@ -5,8 +5,13 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
-        <%= render 'layouts/sidebar2' %>
-        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 230px;">
+        <% if company_info&.is_active %>
+          <%= render 'layouts/sidebar2' %>
+        <% end %>
+        <div
+          id="main"
+          class="main flex flex-column flex-auto"
+          style="<%= (company_info&.is_active ? 'padding-left: 230px;' : '0') %>">
           <%= flash_messages %>
           <main class="min-vh-100 h-100">
             <div 
@@ -14,12 +19,14 @@
               class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
             >
               <div class="flex items-center">
+                <% if company_info&.is_active %>
                 <span class="f5 fw4 gray flex items-center">
                   <i class="material-icons mr2 black-20 md-18">location_on</i>
                   <%= select_tag :facility_id, options_from_collection_for_select(Facility.where(id: {'$in': current_user.facilities}), "id", "name",selected: params[:facility_id]), :onchange => "changeDefaultFacility()"%>
                 </span>
+                <% end %>
               </div>
-              
+
               <% if content_for? :breadcrumb %>
                 <div class="flex flex-row items-center">
                   <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>

@@ -7,7 +7,8 @@ class MetrcChangeGrowthPhase
     @batch = Cultivation::Batch.find(batch_id)
     @move_to_flower_task = get_move_to_flower_task
     @query_locations = get_query_locations
-    license_no = @batch.facility.site_license
+    @facility = @batch.facility
+    license_no = @facility.site_license
 
     movement_histories = @move_to_flower_task.movement_histories
     movement_histories.each do |movement_history|
@@ -32,15 +33,23 @@ class MetrcChangeGrowthPhase
   end
 
   def get_move_to_flower_task
-    puts @batch_id
+    @phase = get_phase
     Cultivation::Task.find_by(
       batch_id: @batch_id,
       indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE,
-      name: 'Move to flower room',
+      phase: @phase,
     )
   end
 
   def get_query_locations
     QueryLocations.call(@batch.facility.id.to_s)
+  end
+
+  def get_phase
+    if @facility.purposes.include?(Constants::CONST_VEG1) && @facility.purposes.include?(Constants::CONST_VEG2)
+      Constants::CONST_VEG2
+    else
+      Constants::CONST_VEG
+    end
   end
 end

@@ -14,7 +14,7 @@ if Rails.env.development?
   require 'sidekiq/testing'
 
   # configure logger
-  Rails.logger = Sidekiq::Logging.logger
+#  Rails.logger = Sidekiq::Logging.logger
   Sidekiq::Testing.inline!
 end
 

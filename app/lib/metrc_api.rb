@@ -185,6 +185,7 @@ class MetrcApi
 
     def create_additives(lic_no, params)
       url = "#{BASE_URL}/plantbatches/v1/additives?licenseNumber=#{lic_no}"
+      # url = "http://beta-reqbin.herokuapp.com/uqddq3uq/v1/additives?licenseNumber=#{lic_no}"
       res = RestClient.post(url, params.to_json, HEADERS)
       res.code == 200
     end

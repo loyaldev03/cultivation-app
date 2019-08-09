@@ -7,21 +7,22 @@ class MetrcCreateAdditives
     task = Cultivation::Task.find(task_id)
     batch = task.batch
     metrc_batches = Metrc::PlantBatch.where(batch_id: batch.id).to_a
-    nutrient = batch.nutrient_profiles.where(task_id: task_id).first
+    nutrient_profile = batch.nutrient_profiles.where(task_id: task_id).first
     facility = task.facility
     metrc_params = []
     product_params = []
-    byebug
-    nutrient.nutrients.each do |nutrient|
+
+    nutrient_profile.nutrients.each do |nutrient|
       product = Inventory::Product.find(nutrient.product_id)
-      product_params << generate_product_params(product)
+      product_params << generate_product_params(product, nutrient)
     end
 
-    metrc_batches.each do |batch|
-      product_params.each do |product|
-        product['PlantBatchName'] = batch.metrc_tag
-        product['ActualDate'] = DateTime.now.utc.strftime('%Y-%m-%d')
-        metrc_params << product
+    product_params.each do |product|
+      metrc_batches.each do |metrc_batch|
+        product_dup = product.dup
+        product_dup[:PlantBatchName] = metrc_batch.metrc_tag
+        product_dup[:ActualDate] = DateTime.now.utc.strftime('%Y-%m-%d')
+        metrc_params << product_dup
       end
     end
 
@@ -36,9 +37,9 @@ class MetrcCreateAdditives
       "AdditiveType": 'Fertilizer',
       "ProductTradeName": product.name,
       "EpaRegistrationNumber": product.epa_number,
-      "ProductSupplier": get_supplier_name(product.id),
-      # "ApplicationDevice": "GreatDistributor 210lb",
-      "TotalAmountApplied": nutrient.amount,
+      "ProductSupplier": product.manufacturer,
+      "ApplicationDevice": 'shovel',
+      "TotalAmountApplied": nutrient.amount.to_f,
       "TotalAmountUnitOfMeasure": nutrient.amount_uom,
       "ActiveIngredients": generate_active_ingredient_params(product.nutrients),
     }
@@ -47,30 +48,21 @@ class MetrcCreateAdditives
   def generate_active_ingredient_params(nutrients)
     active_ingredient_params = []
     nutrients.each do |nutrient|
+      next unless nutrient.value.present?
       active_ingredient_params << {
-        "Name": nutrient.element,
-        "Percentage": nutrient.value,
+        "Name": nutrient.element.capitalize,
+        "Percentage": nutrient.value, # cannot be zero
       }
     end
     active_ingredient_params
   end
-
-  def get_supplier_name(product_id)
-    purchase_order_item = Inventory::PurchaseOrderItem.where(product_id: product_id).first
-    if purchase_order_item.present?
-      return purchase_order_item.purchase_order.vendor.name
-    else
-      return ''
-    end
-  end
 end
 
-# POST /plantbatches/v1/additives?licenseNumber=123-ABC
-# [
+#     dummy_params = [
 #   {
 #     "AdditiveType": "Fertilizer",
 #     "ProductTradeName": "Wonder Sprout",
-#     "EpaRegistrationNumber": null,
+#     "EpaRegistrationNumber": '',
 #     "ProductSupplier": "G Labs",
 #     "ApplicationDevice": "GreatDistributor 210lb",
 #     "TotalAmountApplied": 5.0,
@@ -89,13 +81,13 @@ end
 #         "Percentage": 15.0
 #       }
 #     ],
-#     "PlantBatchName": "AK-47 Clone 1/31/2017",
+#     "PlantBatchName": "1A4FF0000000022000001313",
 #     "ActualDate": "2019-12-15"
 #   },
 #   {
 #     "AdditiveType": "Pesticide",
 #     "ProductTradeName": "Pure Triazine",
-#     "EpaRegistrationNumber": null,
+#     "EpaRegistrationNumber": '',
 #     "ProductSupplier": "G Labs",
 #     "ApplicationDevice": "GreatDistributor 210lb",
 #     "TotalAmountApplied": 5.0,
@@ -114,7 +106,7 @@ end
 #         "Percentage": 15.0
 #       }
 #     ],
-#     "PlantBatchName": "AK-47 Clone 1/31/2017",
+#     "PlantBatchName": "1A4FF0000000022000001106",
 #     "ActualDate": "2019-12-15"
 #   }
 # ]

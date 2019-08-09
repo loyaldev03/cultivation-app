@@ -51,62 +51,9 @@ class MetrcCreateAdditives
       next unless nutrient.value.present?
       active_ingredient_params << {
         "Name": nutrient.element.capitalize,
-        "Percentage": nutrient.value, # cannot be zero
+        "Percentage": nutrient.value,
       }
     end
     active_ingredient_params
   end
 end
-
-#     dummy_params = [
-#   {
-#     "AdditiveType": "Fertilizer",
-#     "ProductTradeName": "Wonder Sprout",
-#     "EpaRegistrationNumber": '',
-#     "ProductSupplier": "G Labs",
-#     "ApplicationDevice": "GreatDistributor 210lb",
-#     "TotalAmountApplied": 5.0,
-#     "TotalAmountUnitOfMeasure": "Gallons",
-#     "ActiveIngredients": [
-#       {
-#         "Name": "Phosphorous",
-#         "Percentage": 30.0
-#       },
-#       {
-#         "Name": "Nitrogen",
-#         "Percentage": 15.0
-#       },
-#       {
-#         "Name": "Potassium",
-#         "Percentage": 15.0
-#       }
-#     ],
-#     "PlantBatchName": "1A4FF0000000022000001313",
-#     "ActualDate": "2019-12-15"
-#   },
-#   {
-#     "AdditiveType": "Pesticide",
-#     "ProductTradeName": "Pure Triazine",
-#     "EpaRegistrationNumber": '',
-#     "ProductSupplier": "G Labs",
-#     "ApplicationDevice": "GreatDistributor 210lb",
-#     "TotalAmountApplied": 5.0,
-#     "TotalAmountUnitOfMeasure": "Gallons",
-#     "ActiveIngredients": [
-#       {
-#         "Name": "Phosphorous",
-#         "Percentage": 30.0
-#       },
-#       {
-#         "Name": "Nitrogen",
-#         "Percentage": 15.0
-#       },
-#       {
-#         "Name": "Potassium",
-#         "Percentage": 15.0
-#       }
-#     ],
-#     "PlantBatchName": "1A4FF0000000022000001106",
-#     "ActualDate": "2019-12-15"
-#   }
-# ]

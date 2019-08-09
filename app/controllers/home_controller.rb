@@ -6,7 +6,7 @@ class HomeController < ApplicationController
     @home = HomeSetupStatus.call(current_default_facility).result
     if !@home.have_company
       respond_to do |format|
-        format.html {render :layout => 'wizards/facility_setup'}
+        format.html { render layout: 'wizards/facility_setup' }
       end
     end
   end
@@ -152,12 +152,11 @@ class HomeController < ApplicationController
     redirect_to root_path, flash: {notice: 'Data has reset.'}
   end
 
-  def qr
-  end
+  def qr; end
 
   def onboarding
     @facility = Facility.find(params[:facility_id])
-    @onboarding_count = @facility.preferences.ne({code: 'ONBOARDING_DONE'}).map { |x| x if x.value == true }.compact.count
+    @onboarding_count = @facility.preferences.ne(code: 'ONBOARDING_DONE').map { |x| x if x.value == true }.compact.count
     Rails.logger.debug("Facility found--->#{@facility.inspect}")
 
     if @facility.onboarding_val('ONBOARDING_DONE') == true
@@ -169,9 +168,9 @@ class HomeController < ApplicationController
 
   def get_date_worker(work_request)
     if work_request.request_type == 'OT'
-      return "#{work_request.start_time.strftime('%D %R')} - #{work_request.end_time.strftime('%D %R')}"
+      "#{work_request.start_time.strftime('%D %R')} - #{work_request.end_time.strftime('%D %R')}"
     else
-      return "#{work_request.start_time.strftime('%D')} - #{work_request.end_time.strftime('%D')}"
+      "#{work_request.start_time.strftime('%D')} - #{work_request.end_time.strftime('%D')}"
     end
   end
 
@@ -181,7 +180,7 @@ class HomeController < ApplicationController
     Cultivation::Task.collection.aggregate(
       [
         {"$match": match},
-      ]
+      ],
     )
   end
 end

@@ -1,11 +1,9 @@
 # app/controllers/registrations_controller.rb
 class RegistrationsController < Devise::RegistrationsController
-
   # override devise "create" block
   def create
     super do
-      if CompanyInfo.count == 0
-        Rails.logger.debug "No company info found!"
+      if CompanyInfo.count.zero?
         resource.user_mode = "admin"
       end
       resource.save
@@ -13,6 +11,12 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   protected
+
+  def after_sign_up_path_for(_resource)
+    if CompanyInfo.count.zero?
+      '/first_setup'
+    end
+  end
 
   def update_resource(resource, params)
     if params[:password]

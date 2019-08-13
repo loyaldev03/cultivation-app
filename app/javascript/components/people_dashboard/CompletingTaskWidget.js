@@ -170,10 +170,10 @@ class CompletingTaskWidget extends React.Component {
         </div>
         <div className="flex pb3">
           {PeopleDashboardStore.completing_task_loaded
-              ? `Average: ${PeopleDashboardStore.data_completing_task.average.toFixed(
-                  2
-                )} %`
-              : 'Loading..'}
+            ? `Average: ${PeopleDashboardStore.data_completing_task.average.toFixed(
+                2
+              )} %`
+            : 'Loading..'}
         </div>
         {PeopleDashboardStore.completing_task_loaded
           ? PeopleDashboardStore.data_completing_task.data.length != 0

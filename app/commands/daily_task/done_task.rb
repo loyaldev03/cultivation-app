@@ -25,10 +25,15 @@ module DailyTask
           GenerateBatchLots.perform_async(task.batch_id.to_s)
         end
 
+        if task.indelible == Constants::INDELIBLE_MOVING_NEXT_PHASE
+          MetrcUpdateHarvestPlant.perform_async(task.batch_id.to_s)
+        end
+
         if task.indelible == Constants::INDELIBLE_MEASURE_HARVEST
           MetrcUpdateHarvestPlant.perform_async(task.batch_id.to_s)
         end
-        @phase = get_phase(task.batch.facility)
+
+        @phase = get_veg_phase(task.batch.facility)
         if task.indelible == Constants::INDELIBLE_MOVING_NEXT_PHASE && phase == @phase
           MetrcChangeGrowthPhase.perform_async(task.batch_id.to_s)
         end
@@ -57,7 +62,7 @@ module DailyTask
       @user ||= User.find(user_id)
     end
 
-    def get_phase(facility)
+    def get_veg_phase(facility)
       if facility.purposes.include?(Constants::CONST_VEG1) && facility.purposes.include?(Constants::CONST_VEG2)
         Constants::CONST_VEG2
       else

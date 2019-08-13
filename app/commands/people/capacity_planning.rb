@@ -27,7 +27,6 @@ module People
             Cultivation::Task.where(facility_id: @args[:facility_id]).includes(:time_logs).map do |x|
               time_logs = range(x.time_logs.where(user_id: user.id.to_s), @args[:period])
               time_logs.map { |time_log| user_actual += time_log.duration_in_hours }
-              actual += user_actual
             end
             work_schedules = range(user.work_schedules, @args[:period])
             work_schedules.map { |work_schedule| user_capacity += ((work_schedule.end_time - work_schedule.start_time) / 3600) }
@@ -40,9 +39,10 @@ module People
               last_name: user.last_name,
               actual: user_actual.round(0),
               capacity: user_capacity.round(0),
-              user_percentage: user_percentage,
+              user_percentage: 100 - user_percentage,
               skills: user.skills,
             }
+            actual += user_actual.round(0)
           end
         end
         percentage = ((capacity - actual) / capacity * 100).ceil unless actual == 0

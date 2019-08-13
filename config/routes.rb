@@ -243,6 +243,7 @@ Rails.application.routes.draw do
           get 'capacity_planning'
           get 'overall_info'
           get 'arrival_on_time'
+          get 'completing_task_ontime'
         end
       end
 

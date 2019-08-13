@@ -10,8 +10,8 @@ module People
     end
 
     def call
-      date = Time.current
       json = []
+      total_percentages = 0
       users = User.where(exempt: false)
       users.map do |user|
         tasks = user.cultivation_tasks.where(facility_id: @facility_id)
@@ -27,7 +27,7 @@ module People
               end
             end
           end
-          percentage = ((tasks.count - count) * 100 / tasks.count).ceil
+          percentage = 100 - (((tasks.count - count) * 100 / tasks.count).ceil)
           if @role.present?
             if user.display_roles.include?(@role)
               json << {
@@ -36,7 +36,7 @@ module People
                 last_name: user.last_name,
                 done: count,
                 tasks_count: tasks.count,
-                percentage: 100 - percentage,
+                percentage: percentage,
                 photo_url: user.photo_url,
                 roles: @role,
               }
@@ -47,7 +47,7 @@ module People
                 last_name: user.last_name,
                 done: count,
                 tasks_count: tasks.count,
-                percentage: 100 - percentage,
+                percentage: percentage,
                 photo_url: user.photo_url,
                 roles: user.display_roles.join(','),
               }
@@ -60,7 +60,7 @@ module People
               last_name: user.last_name,
               done: count,
               tasks_count: tasks.count,
-              percentage: 100 - percentage,
+              percentage: percentage,
               photo_url: user.photo_url,
               roles: user.display_roles.join(','),
             }
@@ -72,10 +72,16 @@ module People
 
     def display(data)
       if @order == 'best'
-        data.sort_by { |e| e[:percentage] }.reverse.first(5)
+        new_data = data.sort_by { |e| e[:percentage] }.reverse.first(5)
       else
-        data.sort_by { |e| e[:percentage] }.first(5)
+        new_data = data.sort_by { |e| e[:percentage] }.first(5)
       end
+      total_percentages = 0
+      new_data.map { |x| total_percentages += x[:percentage] }
+      {
+        average: new_data.count > 0 ? total_percentages / new_data.count : 0,
+        data: new_data,
+      }
     end
   end
 end

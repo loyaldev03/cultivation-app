@@ -169,17 +169,15 @@ class CompletingTaskWidget extends React.Component {
           </div>
         </div>
         <div className="flex pb3">
-          {/* {PeopleDashboardStore.completing_task_loaded
-            ? PeopleDashboardStore.data_completing_task.average != null
+          {PeopleDashboardStore.completing_task_loaded
               ? `Average: ${PeopleDashboardStore.data_completing_task.average.toFixed(
                   2
                 )} %`
-              : 'Average: 0 %'
-            : 'Loading..'} */}
+              : 'Loading..'}
         </div>
         {PeopleDashboardStore.completing_task_loaded
-          ? PeopleDashboardStore.data_completing_task.length != 0
-            ? PeopleDashboardStore.data_completing_task.map((e, i) => (
+          ? PeopleDashboardStore.data_completing_task.data.length != 0
+            ? PeopleDashboardStore.data_completing_task.data.map((e, i) => (
                 <div className="flex justify-between mb3 pt2">
                   <div className="flex items-center w-40">
                     {e.photo_url ? (

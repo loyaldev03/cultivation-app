@@ -40,6 +40,8 @@ class PeopleDashboardStore {
   @observable current_workers_length = 0
   @observable ontime_arrival_loaded = false
   @observable data_ontime_arrival = []
+  @observable completing_task_loaded = false
+  @observable data_completing_task = []
   //@observable isLoading = false
 
   @action
@@ -266,6 +268,26 @@ class PeopleDashboardStore {
         this.ontime_arrival_loaded = true
       } else {
         this.data_ontime_arrival = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async loadCompletingTask(facility_id, order, role) {
+    this.isLoading = true
+    this.completing_task_loaded = false
+    const url = `/api/v1/people/completing_task_ontime?facility_id=${facility_id}&&order=${order}&&role=${role}`
+    console.log(url)
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_completing_task = response
+        this.completing_task_loaded = true
+      } else {
+        this.data_completing_task = []
       }
     } catch (error) {
       console.error(error)

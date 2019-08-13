@@ -16,4 +16,3 @@ if Rails.env.development?
   # configure logger
   Sidekiq::Testing.inline!
 end
-

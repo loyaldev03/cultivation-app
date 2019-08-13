@@ -9,6 +9,7 @@ module RequestScoping
     helper_method :current_default_facility
     helper_method :current_facility
     helper_method :current_ip_facility
+    helper_method :company_info
   end
 
   protected
@@ -53,7 +54,7 @@ module RequestScoping
   end
 
   def current_ip_facility
-    if ENV['ENABLE_WHITELIST_CHECKING']
+    if ENV['ENABLE_WHITELIST_CHECKING'] == 'true'
       @current_ip_facility ||= Facility.where(whitelist_ips: request.remote_ip)
     else
       true
@@ -76,7 +77,7 @@ module RequestScoping
     end
   end
 
-  def enable_metrc_integration?
-    @enable_metrc_integration ||= CompanyInfo.first.enable_metrc_integration
+  def company_info
+    @company_info ||= CompanyInfo.where({}).first
   end
 end

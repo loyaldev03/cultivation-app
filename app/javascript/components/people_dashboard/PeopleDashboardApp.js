@@ -24,7 +24,16 @@ class PeopleDashboardApp extends React.Component {
     PeopleDashboardStore.loadheadCount(this.props.currentFacilityId, 2019)
     PeopleDashboardStore.loadReminder(this.props.currentFacilityId)
     PeopleDashboardStore.loadAttrition(this.props.currentFacilityId, '', 2019)
+    PeopleDashboardStore.loadCapacityPlanning(
+      this.props.currentFacilityId,
+      'all'
+    )
     PeopleDashboardStore.loadRoles()
+    PeopleDashboardStore.loadOnTimeArrival(
+      this.props.currentFacilityId,
+      'ontime',
+      ''
+    )
   }
 
   render() {

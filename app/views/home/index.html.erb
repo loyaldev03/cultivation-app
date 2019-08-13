@@ -9,81 +9,100 @@
     </div>
   <% end %>
 
-  <h3 class="w-100 tc h3--font dark-grey">
-    Welcome to Cannected, <%= @current_user&.first_name %>
-    <br/>
-    Where do you want to start?
-  </h3>
+  <% if !@home.have_company %>
 
-  <div class="flex flex-row-l flex-column items-center justify-center">
-    <div>
-      <% if @home.facility.present? %>
-        <%= link_to facility_setup_new_path(facility_id: @home.facility.id),
-          style: "height: 378px; width: 300px;",
-          class: "tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link" do %>
-          
-          <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
-            <%= image_tag "add-facility.svg" %>
-          </div>
+    <div class="w-100 flex flex-column items-center">
+      <h1 class="grey pt4">
+        Welcome to Cannected, <%= @current_user&.first_name %>
+      </h1>
 
-          <div class="flex flex-column mb3">
-            <h6 class="ttc mt0 mb2 h6--font dark-grey">
-              Continue Setup <br/> 
-              <%= @home.facility.name %>
-            </h6>
-            <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
-          </div>
+      <h3 class="w-100 tc h3--font dark-grey">
+        Let start by setting up your company.
+      </h3>
+
+      <%= link_to "Company Setup",
+        edit_settings_company_company_info_path(id: "my-company"),
+        class:"btn btn--primary btn--large"
+      %>
+    </div>
+
+  <% else %>
+
+    <h3 class="w-100 tc h3--font dark-grey">
+      Welcome to Cannected, <%= @current_user&.first_name %>
+      <br/>
+      Where do you want to start?
+    </h3>
+
+    <div class="flex flex-row-l flex-column items-center justify-center">
+      <div>
+        <% if @home.facility.present? %>
+          <%= link_to facility_setup_new_path(facility_id: @home.facility.id),
+            style: "height: 378px; width: 300px;",
+            class: "tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link" do %>
+            <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
+              <%= image_tag "add-facility.svg" %>
+            </div>
+
+            <div class="flex flex-column mb3">
+              <h6 class="ttc mt0 mb2 h6--font dark-grey">
+                Continue Setup <br/> 
+                <%= @home.facility.name %>
+              </h6>
+              <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+            </div>
+          <% end %>
+        <% else%>
+          <%= link_to facility_setup_new_path,
+            style: "height: 378px; width: 300px;", 
+            class: "tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link" do %>
+            <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
+              <%= image_tag "add-facility.svg" %>
+            </div>
+
+            <div class="flex flex-column mb3">
+              <h6 class="ttc mt0 mb2 h6--font dark-grey">Setting up facility</h6>
+              <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+            </div>
+          <% end %>
         <% end %>
-      <% else%>
-        <%= link_to facility_setup_new_path,
-          style: "height: 378px; width: 300px;", 
-          class: "tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link" do %>
-          
-          <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
-            <%= image_tag "add-facility.svg" %>
-          </div>
+      </div>
 
-          <div class="flex flex-column mb3">
-            <h6 class="ttc mt0 mb2 h6--font dark-grey">Setting up facility</h6>
-            <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
-          </div>
-        <% end %>
+      <%= link_to inventory_setup_path(facility_id: @home.facility&.id), 
+        style: "height: 378px; width: 300px;", 
+        class: "mh3 mv0-l mv4 tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link #{@home.has_facility ? '': 'o-50'}" do %>
+        
+        <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
+          <%= image_tag "add-inventory.svg" %>
+        </div>
+
+        <div class="flex flex-column mb3">
+          <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up inventory</h6>
+          <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+        </div>
+      <% end %>
+
+
+      <%= link_to new_cultivation_batch_path(facility_id: @home.facility&.id),
+        style: "height: 378px; width: 300px;", 
+        class: "mb0-l mb4 tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link #{@home.has_inventories ? '': 'o-50'}" do %>
+        
+        <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
+          <%= image_tag "add-cultivation.svg" %>
+        </div>
+
+        <div class="flex flex-column mb3">
+          <h6 class="mt0 mb2 ttc h6--font dark-grey">Plan your cultivation</h6>
+          <p class="w-100 center grey body-1 ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+        </div>
       <% end %>
     </div>
 
-    <%= link_to inventory_setup_path(facility_id: @home.facility&.id), 
-      style: "height: 378px; width: 300px;", 
-      class: "mh3 mv0-l mv4 tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link #{@home.has_facility ? '': 'o-50'}" do %>
-      
-      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
-        <%= image_tag "add-inventory.svg" %>
-      </div>
-
-      <div class="flex flex-column mb3">
-        <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up inventory</h6>
-        <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    <% if @home.has_inventories && @home.has_batches %>
+      <div class="tc ma4">
+        <%= link_to "Go to Dashboard", dashboard_path, class: 'link grey f4 dim' %>
       </div>
     <% end %>
 
-
-    <%= link_to new_cultivation_batch_path(facility_id: @home.facility&.id),
-      style: "height: 378px; width: 300px;", 
-      class: "mb0-l mb4 tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link #{@home.has_inventories ? '': 'o-50'}" do %>
-      
-      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
-        <%= image_tag "add-cultivation.svg" %>
-      </div>
-
-      <div class="flex flex-column mb3">
-        <h6 class="mt0 mb2 ttc h6--font dark-grey">Plan your cultivation</h6>
-        <p class="w-100 center grey body-1 ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
-      </div>
-    <% end %>
-  </div>
-
-  <% if @home.has_inventories && @home.has_batches %>
-    <div class="tc ma4">
-      <%= link_to "Go to Dashboard", dashboard_path, class: 'link grey f4 dim' %>
-    </div>
   <% end %>
 </div>

@@ -33,7 +33,11 @@ module People
       work_logs = work_logs.where(:user_id.in => users.to_a.pluck(:_id))
       work_log_count = work_logs.count
       work_log_absent_count = work_logs.select { |a| a.status == 'late' }.count
-      tardiness = (work_log_absent_count.to_f / work_log_count.to_f) * 100
+      if work_log_count == 0
+        tardiness = 0
+      else
+        tardiness = (work_log_absent_count.to_f / work_log_count.to_f) * 100
+      end
       return tardiness.round(2)
     end
   end

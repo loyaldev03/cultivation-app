@@ -25,8 +25,8 @@ module DailyTask
           GenerateBatchLots.perform_async(task.batch_id.to_s)
         end
 
-        if task.indelible == Constants::INDELIBLE_MOVING_NEXT_PHASE
-          MetrcUpdateHarvestPlant.perform_async(task.batch_id.to_s)
+        if task.indelible == Constants::INDELIBLE_MOVING_NEXT_PHASE && phase == Constants::CONST_CLONE
+          AssignPlantBatchToPlant.perform_async(task.batch_id.to_s)
         end
 
         if task.indelible == Constants::INDELIBLE_MEASURE_HARVEST

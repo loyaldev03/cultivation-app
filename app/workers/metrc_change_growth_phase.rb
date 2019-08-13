@@ -8,6 +8,7 @@ class MetrcChangeGrowthPhase
     @move_to_flower_task = get_move_to_flower_task
     @query_locations = get_query_locations
     @facility = @batch.facility
+    @plant_batches = Metrc::PlantBatch.where(batch_id: batch_id)
     license_no = @facility.site_license
 
     movement_histories = @move_to_flower_task.movement_histories
@@ -15,7 +16,7 @@ class MetrcChangeGrowthPhase
       location = @query_locations.get_location(movement_history.destination_id.to_s)
       movement_history.plants.each do |plant| #plants here stores plant_tag
         plant_record = @batch.plants.find_by(plant_id: plant) #find plant by plant tag
-        metrc_plant_batch = Metrc::PlantBatch.find_by(batch_id: batch_id)
+        metrc_plant_batch = @plant_batches.detect { |a| a.id.to_s == plant_record.plant_batch_id.to_s } #find plant batch by the plant , plant_batch_id
         params = [
           {
             "Name": metrc_plant_batch.metrc_tag,

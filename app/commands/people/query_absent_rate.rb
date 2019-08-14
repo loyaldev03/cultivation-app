@@ -14,82 +14,47 @@ module People
     private
 
     def absent_rate
-      users = User.collection.aggregate([
+      work_schedules = User.collection.aggregate([
         {
           "$match": {
             "facilities": {"$all": [@args[:facility_id].to_bson_id]},
+            "exempt": {"$ne": true},
           },
         },
-      ])
-      clocked_in_count = get_work_logs(users)
-      expected_work_day = get_tasks(users).count
-      total_absent = expected_work_day - clocked_in_count.count
-      absent_rate = (total_absent.to_f / expected_work_day.to_f) * 100
+        {"$lookup": {from: 'time_logs',
+                     localField: 'user_id',
+                     foreignField: '_id',
+                     as: 'time_logs'}},
+        {"$unwind": '$work_schedules'},
+        {"$match": {"work_schedules.date": {"$gte": @args[:start_date], "$lte": @args[:end_date]}}},
 
+        {"$project": {
+          "date": '$work_schedules.date',
+          "start_time": '$work_schedules.start_time',
+          "end_time": '$work_schedules.end_time',
+          "arrival_status": '$work_schedules.arrival_status',
+        }},
+      ])
+      clocked_in_count = work_schedules.count
+      expected_work_day = work_schedules.count
+      total_absent = work_schedules.select { |a| a['arrival_status'] == 'absent' }.count
+
+      if expected_work_day == 0
+        absent_rate = 0
+      else
+        absent_rate = (total_absent.to_f / expected_work_day.to_f) * 100
+      end
+
+      Rails.logger.debug "Arriva status man ==> #{work_schedules.map { |a| a['arrival_status'] }}"
+      Rails.logger.debug "expected_work_day #{expected_work_day}"
+
+      Rails.logger.debug "total_absent #{total_absent}"
       {
-        clocked_in_count: clocked_in_count.count,
+        clocked_in_count: clocked_in_count,
         total_absent: total_absent,
         expected_work_day: expected_work_day,
         absent_rate: absent_rate.round(2),
       }
-    end
-
-    def get_work_logs(users)
-      work_logs_grouped = Common::WorkLog.collection.aggregate([
-        {
-          "$match": {
-            "user_id": {"$in": users.to_a.pluck(:_id)},
-          },
-        },
-        {
-          "$match": {"$or": [
-            {"$and": [
-              {"end_time": {"$gte": @args[:start_date]}},
-              {"start_time": {"$lte": @args[:end_date]}},
-            ]},
-            {"$and": [
-              {"start_time": {"$gte": @args[:start_date]}},
-              {"start_time": {"$lte": @args[:end_date]}},
-            ]},
-            {"$and": [
-              {"start_time": {"$lte": @args[:start_date]}},
-              {"end_time": {"$gte": @args[:end_date]}},
-            ]},
-          ]},
-        },
-        {"$group": {"_id": {"user_id": '$user_id', "start_time": {"$dateToString": {"format": '%Y-%m-%d', "date": '$start_time'}}}, "count": {"$sum": 1}}},
-
-      ])
-      work_logs_grouped
-    end
-
-    def get_tasks(users)
-      tasks_grouped = Cultivation::Task.collection.aggregate([
-        {
-          "$match": {
-            "user_ids": {"$in": users.to_a.pluck(:_id)},
-          },
-        },
-        {
-          "$match": {"$or": [
-            {"$and": [
-              {"end_date": {"$gte": @args[:start_date]}},
-              {"start_date": {"$lte": @args[:end_date]}},
-            ]},
-            {"$and": [
-              {"start_date": {"$gte": @args[:start_date]}},
-              {"start_date": {"$lte": @args[:end_date]}},
-            ]},
-            {"$and": [
-              {"start_date": {"$lte": @args[:start_date]}},
-              {"end_date": {"$gte": @args[:end_date]}},
-            ]},
-          ]},
-        },
-        {"$group": {"_id": {"user_id": '$user_id', "start_date": {"$dateToString": {"format": '%Y-%m-%d', "date": '$start_date'}}}, "count": {"$sum": 1}}},
-
-      ])
-      tasks_grouped
     end
   end
 end

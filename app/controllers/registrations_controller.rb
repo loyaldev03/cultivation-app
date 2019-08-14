@@ -1,11 +1,10 @@
 # app/controllers/registrations_controller.rb
 class RegistrationsController < Devise::RegistrationsController
-
   protected
 
   def after_sign_up_path_for(resource)
     if CompanyInfo.count.zero?
-      resource.user_mode = "admin"
+      resource.user_mode = 'admin'
       resource.save
       first_setup_path
     else

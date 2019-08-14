@@ -6,6 +6,7 @@ class DailyTaskStore {
   @observable batches = []
   @observable isLoading = false
   @observable otherTasks = {}
+  @observable isShowAllTasks = false
 
   @action
   load(batches) {
@@ -19,6 +20,11 @@ class DailyTaskStore {
     // this.batches.replace(otherTasks)
     set(this.otherTasks, otherTasks)
     // this.batches.replace([...this.batches, otherTasks])
+  }
+
+  @action
+  toggleShowAllTasks() {
+    this.isShowAllTasks = !this.isShowAllTasks
   }
 
   @action

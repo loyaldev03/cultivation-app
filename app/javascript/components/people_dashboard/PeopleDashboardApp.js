@@ -123,7 +123,10 @@ class PeopleDashboardApp extends React.Component {
               style={{ height: '400px' }}
             >
               <SkillDistributionWidget
-                facility_id={this.props.currentFacilityId} url={`api/v1/people/worker_by_skills?facility_id=${this.props.currentFacilityId}`}
+                facility_id={this.props.currentFacilityId}
+                url={`api/v1/people/worker_by_skills?facility_id=${
+                  this.props.currentFacilityId
+                }`}
               />
             </div>
           </div>

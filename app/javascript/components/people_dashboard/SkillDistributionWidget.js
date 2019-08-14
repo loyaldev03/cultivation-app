@@ -108,15 +108,13 @@ export default class SkillDistributionWidget extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <React.Fragment>
         <div className="flex justify-between mb2">
           <h1 className="f5 fw6 dark-grey">Skills Distribution</h1>
         </div>
         <div id="treemap" />
-        
       </React.Fragment>
     )
-    
   }
 }

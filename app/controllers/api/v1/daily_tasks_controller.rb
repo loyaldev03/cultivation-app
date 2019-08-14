@@ -1,25 +1,37 @@
 class Api::V1::DailyTasksController < Api::V1::BaseApiController
   def tasks
-    # TODO: make into command
+    show_all_tasks = params['showAllTasks'] == 'yes'
+
     @tasks_date = Time.current.beginning_of_day
-    match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
+
+    match = if show_all_tasks
+              current_user.cultivation_tasks.selector
+            else
+              current_user.cultivation_tasks.expected_on(@tasks_date).selector
+            end
+
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
       [
         {"$match": match},
+        {"$match": {"batch_id": {"$ne": nil}}},
         {"$group": {_id: '$batch_id', tasks: {"$push": '$_id'}}},
       ],
     ).map do |batch_group|
-      batch = Cultivation::Batch.find(batch_group['_id'])
-      all_tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
-      current_user_tasks = batch_group['tasks']
+        batch = Cultivation::Batch.find(batch_group['_id'])
+        if batch
+          all_tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
+          current_user_tasks = batch_group['tasks']
 
-      {
-        batch: serialized_batch(batch),
-        tasks: serialized_tasks(all_tasks, current_user_tasks, batch.facility_id),
-      }
-    end
+          {
+            batch: serialized_batch(batch),
+            tasks: serialized_tasks(all_tasks,
+                                    current_user_tasks,
+                                    batch.facility_id),
+          }
+        end
+      end
 
-    render json: @tasks_by_batch
+    render json: @tasks_by_batch&.compact
   end
 
   def other_tasks

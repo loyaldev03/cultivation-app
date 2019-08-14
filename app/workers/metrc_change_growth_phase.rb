@@ -10,12 +10,13 @@ class MetrcChangeGrowthPhase
     @facility = @batch.facility
     @plant_batches = Metrc::PlantBatch.where(batch_id: batch_id)
     license_no = @facility.site_license
-
+    metrc_tags = []
     movement_histories = @move_to_flower_task.movement_histories
     movement_histories.each do |movement_history|
       location = @query_locations.get_location(movement_history.destination_id.to_s)
       movement_history.plants.each do |plant| #plants here stores plant_tag
         plant_record = @batch.plants.find_by(plant_id: plant) #find plant by plant tag
+        metrc_tags << plant_record.plant_id
         metrc_plant_batch = @plant_batches.detect { |a| a.id.to_s == plant_record.plant_batch_id.to_s } #find plant batch by the plant , plant_batch_id
         params = [
           {
@@ -23,14 +24,14 @@ class MetrcChangeGrowthPhase
             "Count": 1,
             "StartingTag": plant_record.plant_id,
             "GrowthPhase": 'Flowering',
-            "NewRoom": location['room_name'], #if we have multiple flower rooms what would happen
+            "NewRoom": location['room_name'],
             "GrowthDate": Time.current.strftime('%F'),
           },
         ]
         MetrcApi.change_growth_phase(license_no, params)
-        # will call api 100 times if we have 100 plant, if it exceed more than 100 should we use another plantbatch ?
       end
     end
+    Inventory::UpdateMetrcTagsReported.call(facility_id: @facility.id, metrc_tags: metrc_tags)
   end
 
   def get_move_to_flower_task

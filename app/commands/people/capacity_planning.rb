@@ -31,7 +31,7 @@ module People
             work_schedules = range(user.work_schedules, @args[:period])
             work_schedules.map { |work_schedule| user_capacity += ((work_schedule.end_time - work_schedule.start_time) / 3600) }
             capacity += user_capacity
-            user_percentage = ((user_capacity - user_actual) / user_capacity * 100).ceil unless user_actual == 0
+            user_percentage = ((user_capacity - user_actual) / user_capacity * 100).ceil unless user_actual == 0 or user_capacity == 0
             user_count << {
               email: user.email,
               photo_url: user.photo_url,
@@ -45,7 +45,7 @@ module People
             actual += user_actual.round(0)
           end
         end
-        percentage = ((capacity - actual) / capacity * 100).ceil unless actual == 0
+        percentage = ((capacity - actual) / capacity * 100).ceil unless actual == 0 or capacity == 0
         json << {
           title: role.name,
           color: color_pick,

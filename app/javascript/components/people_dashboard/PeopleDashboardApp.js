@@ -39,6 +39,8 @@ class PeopleDashboardApp extends React.Component {
       'best',
       ''
     )
+    PeopleDashboardStore.loadJobRoles(this.props.currentFacilityId, 2019)
+
   }
 
   render() {

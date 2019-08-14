@@ -42,6 +42,8 @@ class PeopleDashboardStore {
   @observable data_ontime_arrival = []
   @observable completing_task_loaded = false
   @observable data_completing_task = []
+  @observable job_roles_loaded = false
+  @observable data_job_roles = []
   //@observable isLoading = false
 
   @action
@@ -292,6 +294,44 @@ class PeopleDashboardStore {
     } catch (error) {
       console.error(error)
     } finally {
+    }
+  }
+
+  @action
+  async loadJobRoles(facility_id, period) {
+    this.isLoading = true
+    this.job_roles_loaded = false
+    const url = `/api/v1/people/job_roles?facility_id=${facility_id}&&period=${period}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_job_roles = response
+        this.job_roles_loaded = true
+      } else {
+        this.data_job_roles = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @computed get jobRolesCount() {
+    if (this.job_roles_loaded) {
+      let final_result = {
+        labels: this.data_job_roles.data.map(d => d.month),
+        datasets: [
+          {
+            label: 'Duration(Hour)',
+            data: this.data_job_roles.data.map(d => d.total),
+            borderColor: 'orange'
+          }
+         
+        ]
+      }
+      return final_result
+    } else {
+      return {}
     }
   }
 }

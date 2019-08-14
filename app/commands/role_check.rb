@@ -7,6 +7,8 @@ class RoleCheck
     # CREATE = Permission 4
     # DELETE = Permission 8
 
+    # Note: feature is code number from Constants::APP_MOD_XXXXXXXXX
+
     # Exception if missing required params
     raise ArgumentError.new('Missing "current_user"') if current_user.blank?
     raise ArgumentError.new('Missing "feature"') if feature.blank?

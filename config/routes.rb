@@ -244,6 +244,7 @@ Rails.application.routes.draw do
           get 'overall_info'
           get 'arrival_on_time'
           get 'completing_task_ontime'
+          get 'worker_by_skills'
         end
       end
 

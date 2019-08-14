@@ -81,6 +81,11 @@ class Settings::Company::CompanyInfoController < ApplicationController
       @company_info.timezone = company_info_params[:timezone]
     end
 
+    if @company_info.enable_metrc_integration &&
+       @company_info.metrc_user_key
+      MetrcOnboardingWorker.perform_async
+    end
+
     Time.use_zone(@company_info.timezone) do
       if !@company_info.is_active
         set_user_default_timezone(@company_info)

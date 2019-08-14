@@ -23,6 +23,7 @@ module Constants
   INDELIBLE_STAYING = 'staying'.freeze
   INDELIBLE_CLEANING = 'cleaning'.freeze
   INDELIBLE_MEASURE_HARVEST = 'measure_harvest_weight'.freeze
+  INDELIBLE_ADD_NUTRIENT = 'add_nutrient'.freeze
 
   WORK_STATUS_NEW = 'new'.freeze
   WORK_STATUS_STARTED = 'started'.freeze

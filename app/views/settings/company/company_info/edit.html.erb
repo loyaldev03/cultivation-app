@@ -53,10 +53,12 @@
         <%= link_to "Back", settings_path, class: "db tr ttu link button--font light-grey" %>
       </div>
 
-      <div class="flex flex-row items-center">
-       <%= f.submit "Save",
-          class: "db pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
-      </div>
+      <% if params[:type] == "company_info" || params[:type] == "work_schedules" || params[:type] == "holidays" %>
+        <div class="flex flex-row items-center">
+        <%= f.submit "Save",
+            class: "db pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
+        </div>
+      <% end %>
     </div>
   <% end %>
   </div>

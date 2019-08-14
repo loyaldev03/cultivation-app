@@ -189,6 +189,12 @@ class MetrcApi
       res.code == 200
     end
 
+    def create_additives(lic_no, params)
+      url = "#{BASE_URL}/plantbatches/v1/additives?licenseNumber=#{lic_no}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     # - Plant Batch API
 
     # + Harvest

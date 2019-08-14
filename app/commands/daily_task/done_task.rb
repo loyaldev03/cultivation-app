@@ -38,6 +38,10 @@ module DailyTask
           MetrcChangeGrowthPhase.perform_async(task.batch_id.to_s)
         end
 
+        if task.indelible == Constants::INDELIBLE_ADD_NUTRIENT
+          MetrcCreateAdditives.perform_async(@task_id)
+        end
+
         task
       end
     rescue StandardError

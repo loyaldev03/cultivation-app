@@ -47,8 +47,11 @@ const loadDailyTasks = () => {
     }) // if completed, load into current issue store...
 }
 
-const loadAllDailyTasks = () => {
-  Promise.all([loadBatchTasksOnly(), loadOtherTasksOnly()]).then(result => {
+const loadAllDailyTasks = (isShowAllTasks = false) => {
+  Promise.all([
+    loadBatchTasksOnly(isShowAllTasks),
+    loadOtherTasksOnly(isShowAllTasks)
+  ]).then(result => {
     const batches = result[0]
     const otherTasks = result[1]
 
@@ -74,8 +77,12 @@ const loadAllDailyTasks = () => {
   })
 }
 
-const loadBatchTasksOnly = () => {
-  return fetch('/api/v1/daily_tasks/tasks', httpGetOptions)
+const loadBatchTasksOnly = (isShowAllTasks = false) => {
+  let url = '/api/v1/daily_tasks/tasks'
+  if (isShowAllTasks) {
+    url = url + '?showAllTasks=yes'
+  }
+  return fetch(url, httpGetOptions)
     .then(response => {
       return response.json().then(data => ({
         status: response.status,
@@ -102,8 +109,12 @@ const loadBatchTasksOnly = () => {
     })
 }
 
-const loadOtherTasksOnly = () => {
-  return fetch('/api/v1/daily_tasks/other_tasks', httpGetOptions)
+const loadOtherTasksOnly = (isShowAllTasks = false) => {
+  let url = '/api/v1/daily_tasks/other_tasks'
+  if (isShowAllTasks) {
+    url = url + '?showAllTasks=yes'
+  }
+  return fetch(url, httpGetOptions)
     .then(response => {
       return response.json().then(data => ({
         status: response.status,

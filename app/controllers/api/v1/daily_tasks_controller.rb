@@ -17,19 +17,19 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         {"$group": {_id: '$batch_id', tasks: {"$push": '$_id'}}},
       ],
     ).map do |batch_group|
-        batch = Cultivation::Batch.find(batch_group['_id'])
-        if batch
-          all_tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
-          current_user_tasks = batch_group['tasks']
+      batch = Cultivation::Batch.find(batch_group['_id'])
+      if batch
+        all_tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
+        current_user_tasks = batch_group['tasks']
 
-          {
-            batch: serialized_batch(batch),
-            tasks: serialized_tasks(all_tasks,
-                                    current_user_tasks,
-                                    batch.facility_id),
-          }
-        end
+        {
+          batch: serialized_batch(batch),
+          tasks: serialized_tasks(all_tasks,
+                                  current_user_tasks,
+                                  batch.facility_id),
+        }
       end
+    end
 
     render json: @tasks_by_batch&.compact
   end

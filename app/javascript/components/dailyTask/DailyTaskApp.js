@@ -196,13 +196,17 @@ class DailyTaskApp extends React.Component {
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
         <div className="flex items-center justify-end pv2">
-          <label className="grey ph2 f6 pointer" htmlFor="show_all_tasks">Show all</label>
-          <input className="toggle toggle-default"
+          <label className="grey ph2 f6 pointer" htmlFor="show_all_tasks">
+            Show all
+          </label>
+          <input
+            className="toggle toggle-default"
             id="show_all_tasks"
             type="checkbox"
             value={DailyTasksStore.isShowAllTasks}
-            onChange={this.onShowAllTasks} />
-          <label className="toggle-button" htmlFor="show_all_tasks"></label>
+            onChange={this.onShowAllTasks}
+          />
+          <label className="toggle-button" htmlFor="show_all_tasks" />
         </div>
         {DailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks

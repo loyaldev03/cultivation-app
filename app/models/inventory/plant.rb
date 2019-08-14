@@ -48,7 +48,7 @@ module Inventory
     field :metrc_id, type: Integer
     field :metrc_state, type: String
     field :metrc_growth_phase, type: String
-    field :plant_batch_id, type: Integer
+    field :plant_batch_id, type: BSON::ObjectId
     field :plant_batch_name, type: String
     field :metrc_strain_name, type: String
     field :metrc_room_name, type: String

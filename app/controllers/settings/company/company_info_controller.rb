@@ -82,7 +82,7 @@ class Settings::Company::CompanyInfoController < ApplicationController
     end
 
     if @company_info.enable_metrc_integration &&
-        @company_info.metrc_user_key
+       @company_info.metrc_user_key
       MetrcOnboardingWorker.perform_async
     end
 

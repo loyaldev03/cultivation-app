@@ -133,6 +133,29 @@ class QueryLocations
     return res, 'Tray'.freeze if res.any?
   end
 
+  def get_location(location_id) #get all location info instead of only code
+    if !result || !location_id
+      return '--'
+    else
+      location_id = location_id.to_bson_id
+    end
+
+    res = result.detect { |x| x[:room_id] == location_id }
+    return res if res.present?
+
+    res = result.detect { |x| x[:section_id] == location_id }
+    return res if res.present?
+
+    res = result.detect { |x| x[:row_id] == location_id }
+    return res if res.present?
+
+    res = result.detect { |x| x[:shelf_id] == location_id }
+    return res if res.present?
+
+    res = result.detect { |x| x[:tray_id] == location_id }
+    return res if res.present?
+  end
+
   private
 
   def match_purposes

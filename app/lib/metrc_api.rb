@@ -78,6 +78,12 @@ class MetrcApi
       res.code == 200
     end
 
+    def change_growth_phase(facility_license, params)
+      url = "#{BASE_URL}/plantbatches/v1/changegrowthphase?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     # - Plants
 
     # + Strain API
@@ -197,6 +203,12 @@ class MetrcApi
       url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
+    end
+
+    def create_harvestplants(lic_no, params)
+      url = "#{BASE_URL}/plants/v1/harvestplants?licenseNumber=#{lic_no}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
     end
 
     # - Harvest

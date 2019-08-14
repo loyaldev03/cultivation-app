@@ -5,6 +5,7 @@ module Cultivation
 
     field :start_time, type: Time
     field :end_time, type: Time
+    field :status, type: String # late , on-time
 
     belongs_to :task, class_name: 'Cultivation::Task'
     belongs_to :user, class_name: 'User'

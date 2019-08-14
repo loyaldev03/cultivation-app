@@ -326,7 +326,6 @@ class PeopleDashboardStore {
             data: this.data_job_roles.data.map(d => d.total),
             borderColor: 'orange'
           }
-         
         ]
       }
       return final_result

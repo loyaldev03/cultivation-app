@@ -36,7 +36,7 @@ class PeopleDashboardApp extends React.Component {
     )
     PeopleDashboardStore.loadCompletingTask(
       this.props.currentFacilityId,
-      'ontime',
+      'best',
       ''
     )
   }

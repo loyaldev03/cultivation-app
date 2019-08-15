@@ -236,7 +236,7 @@ class EmployeeListApp extends React.Component {
           minWidth: 150,
           Cell: props => {
             return (
-              <div className="flex items-center">
+              <div className="flex items-center w-100">
                 <ProgressBar
                   percent={props.value}
                   height={10}
@@ -258,7 +258,7 @@ class EmployeeListApp extends React.Component {
           minWidth: 150,
           Cell: props => {
             return (
-              <div className="flex items-center">
+              <div className="flex items-center w-100">
                 <ProgressBar
                   percent={props.value}
                   height={10}
@@ -280,7 +280,7 @@ class EmployeeListApp extends React.Component {
           minWidth: 150,
           Cell: props => {
             return (
-              <div className="flex items-center">
+              <div className="flex items-center w-100">
                 <ProgressBar
                   percent={props.value}
                   height={10}
@@ -360,8 +360,9 @@ class EmployeeListApp extends React.Component {
           columns={columns}
           pivotBy={['role_name']}
           defaultPageSize={10}
+          sortable={true}
           loading={activeTaskStore.isLoading}
-          className="-highlight"
+          className="-highlight dashboard-theme"
         />
         <br />
       </div>

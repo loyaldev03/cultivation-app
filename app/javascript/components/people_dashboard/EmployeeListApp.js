@@ -1,9 +1,8 @@
-
 import isEmpty from 'lodash.isempty'
-import React, { memo, useState, lazy, Suspense } from "react"
+import React, { memo, useState, lazy, Suspense } from 'react'
 import _ from 'lodash'
-import ReactTable from "react-table"
-import treeTableHOC from "./treeTableHOC"
+import ReactTable from 'react-table'
+import treeTableHOC from './treeTableHOC'
 import { ProgressBar } from '../utils'
 import PeopleDashboardStore from './PeopleDashboardStore'
 import { DefaultAvatar } from '../utils'
@@ -13,10 +12,10 @@ import {
   ActiveBadge,
   TempPackagesHistory,
   ListingTable,
-  httpGetOptions,
+  httpGetOptions
 } from '../utils'
 import { action, observable, computed, autorun } from 'mobx'
-import { observer } from "mobx-react";
+import { observer } from 'mobx-react'
 const TreeTable = treeTableHOC(ReactTable)
 
 const getProgressBarColor = value => {
@@ -30,37 +29,39 @@ const getProgressBarColor = value => {
     return 'bg-green'
   }
 }
-const dummyData = 
-[
+const dummyData = [
   {
     role_name: 'Gardener',
     total_workers: '10',
-    user: "Steven Alexander",
-    photo_url: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+    user: 'Steven Alexander',
+    photo_url:
+      'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
     ontime_arrival_data: 64,
     task_on_time_data: 100,
     capacity_hours: 40,
     absents: 2,
     ot_hours: 5,
-    reported_to: 'Gilbert Hawkins',
+    reported_to: 'Gilbert Hawkins'
   },
   {
     role_name: 'Gardener',
     total_workers: '10',
-    user: "Maria Alexander",
-    photo_url: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+    user: 'Maria Alexander',
+    photo_url:
+      'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
     ontime_arrival_data: 64,
     task_on_time_data: 100,
     capacity_hours: 40,
     absents: 2,
     ot_hours: 5,
-    reported_to: 'Gilbert Hawkins',
+    reported_to: 'Gilbert Hawkins'
   },
   {
     role_name: 'Finance',
     total_workers: '2',
-    user: "Steven Alexander",
-    photo_url: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+    user: 'Steven Alexander',
+    photo_url:
+      'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
     ontime_arrival_data: 64,
     task_on_time_data: 100,
     capacity_hours: 40,
@@ -71,15 +72,16 @@ const dummyData =
   {
     role_name: 'Trimmer',
     total_workers: '2',
-    user: "Gabs Alexander",
-    photo_url: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+    user: 'Gabs Alexander',
+    photo_url:
+      'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
     ontime_arrival_data: 64,
     task_on_time_data: 100,
     capacity_hours: 40,
     absents: 2,
     ot_hours: 5,
     reported_to: 'Gilbert Hawkins'
-  } 
+  }
 ]
 class ActiveTaskStore {
   @observable tasks = []
@@ -96,12 +98,10 @@ class ActiveTaskStore {
   constructor() {
     autorun(
       () => {
-        
-          if (this.searchTerm === null) {
-            this.searchTerm = ''
-          }
-          this.loadActiveTasks()
-        
+        if (this.searchTerm === null) {
+          this.searchTerm = ''
+        }
+        this.loadActiveTasks()
       },
       { delay: 700 }
     )
@@ -193,56 +193,51 @@ class EmployeeListApp extends React.Component {
       data: dummyData,
       columns: [
         {
-            headerClassName: 'pl3 tl',
-            Header: 'Job Roles',
-            accessor: 'role_name',
-            className: 'dark-grey pl3 fw6',
-            minWidth: 150,
-            show: false
-          },
-          {
-            accessor: 'photo_url',
-            show: false
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'Name',
-            accessor: 'user',
-            className: 'dark-grey pl3 fw6',
-            Cell: props => {
-              return (
-                <div className="flex items-center">
-                  <img
-                    src={props.row['photo_url']}
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '18px'
-                    }}
-                    
-                    onError={x => {
-                      x.target.onerror = null
-                      x.target.src = DefaultAvatar
-                    }}
-                  />
-                  <span className="f6 fw6 dark-grey ml2 w-20">
-                      {props.value}
-                  </span>
-                
-                </div>
-                
-              )
-            }
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'Ontime Arrivals',
-            accessor: 'ontime_arrival_data',
-            className: 'dark-grey pl3 fw6',
-            minWidth: 150,
-            Cell: props => {
-              return(
-                <div className="flex items-center">
+          headerClassName: 'pl3 tl',
+          Header: 'Job Roles',
+          accessor: 'role_name',
+          className: 'dark-grey pl3 fw6',
+          minWidth: 150,
+          show: false
+        },
+        {
+          accessor: 'photo_url',
+          show: false
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'Name',
+          accessor: 'user',
+          className: 'dark-grey pl3 fw6',
+          Cell: props => {
+            return (
+              <div className="flex items-center">
+                <img
+                  src={props.row['photo_url']}
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '18px'
+                  }}
+                  onError={x => {
+                    x.target.onerror = null
+                    x.target.src = DefaultAvatar
+                  }}
+                />
+                <span className="f6 fw6 dark-grey ml2 w-20">{props.value}</span>
+              </div>
+            )
+          }
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'Ontime Arrivals',
+          accessor: 'ontime_arrival_data',
+          className: 'dark-grey pl3 fw6',
+          minWidth: 150,
+          Cell: props => {
+            return (
+              <div className="flex items-center">
                 <ProgressBar
                   percent={props.value}
                   height={10}
@@ -250,79 +245,77 @@ class EmployeeListApp extends React.Component {
                   barColor={getProgressBarColor(props.value)}
                 />
                 <span className="f6 fw6 dark-grey ml2 w-20">
-                      {props.value} %
-                    </span>
-                </div>
-              )
-            }
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'Tasks On Time',
-            className: 'dark-grey pl3 fw6',
-            accessor: 'task_on_time_data',
-            minWidth: 150,
-            Cell: props => {
-              return(
-                <div className="flex items-center">
-                <ProgressBar
-                  percent={props.value}
-                  height={10}
-                  className="w-60 mr2"
-                  barColor={getProgressBarColor(props.value)}
-                />
-                <span className="f6 fw6 dark-grey ml2 w-20">
-                      {props.value} %
-                    </span>
-                </div>
-               
-              )
-            }
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'Capacity/hrs',
-            className: 'dark-grey pl3 fw6',
-            accessor: 'capacity_hours',
-            minWidth: 150,
-            Cell: props => {
-              return(
-                <div className="flex items-center">
-                <ProgressBar
-                  percent={props.value}
-                  height={10}
-                  className="w-60 mr2"
-                  barColor={getProgressBarColor(props.value)}
-                />
-                <span className="f6 fw6 dark-grey ml2 w-20">
-                      {props.value} %
-                    </span>
-                </div>
-              )
-            }
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'Absents',
-            className: 'dark-grey pl3 fw6',
-            accessor: 'absents',
-            minWidth: 150
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'OT(Hours)',
-            className: 'dark-grey pl3 fw6',
-            accessor: 'ot_hours',
-            minWidth: 150
-          },
-          {
-            headerClassName: 'pl3 tl',
-            Header: 'Reported To',
-            className: 'dark-grey pl3 fw6',
-            accessor: 'reported_to',
-            minWidth: 150
+                  {props.value} %
+                </span>
+              </div>
+            )
           }
-
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'Tasks On Time',
+          className: 'dark-grey pl3 fw6',
+          accessor: 'task_on_time_data',
+          minWidth: 150,
+          Cell: props => {
+            return (
+              <div className="flex items-center">
+                <ProgressBar
+                  percent={props.value}
+                  height={10}
+                  className="w-60 mr2"
+                  barColor={getProgressBarColor(props.value)}
+                />
+                <span className="f6 fw6 dark-grey ml2 w-20">
+                  {props.value} %
+                </span>
+              </div>
+            )
+          }
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'Capacity/hrs',
+          className: 'dark-grey pl3 fw6',
+          accessor: 'capacity_hours',
+          minWidth: 150,
+          Cell: props => {
+            return (
+              <div className="flex items-center">
+                <ProgressBar
+                  percent={props.value}
+                  height={10}
+                  className="w-60 mr2"
+                  barColor={getProgressBarColor(props.value)}
+                />
+                <span className="f6 fw6 dark-grey ml2 w-20">
+                  {props.value} %
+                </span>
+              </div>
+            )
+          }
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'Absents',
+          className: 'dark-grey pl3 fw6',
+          accessor: 'absents',
+          minWidth: 150
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'OT(Hours)',
+          className: 'dark-grey pl3 fw6',
+          accessor: 'ot_hours',
+          minWidth: 150
+        },
+        {
+          headerClassName: 'pl3 tl',
+          Header: 'Reported To',
+          className: 'dark-grey pl3 fw6',
+          accessor: 'reported_to',
+          minWidth: 150
+        }
       ]
     }
   }
@@ -348,7 +341,6 @@ class EmployeeListApp extends React.Component {
   render() {
     const { columns } = this.state
     return (
-      
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse" />
         <div className="flex justify-between pb3">
@@ -367,7 +359,7 @@ class EmployeeListApp extends React.Component {
           data={activeTaskStore.filteredList}
           onFetchData={this.onFetchData}
           columns={columns}
-          pivotBy={["role_name"]}
+          pivotBy={['role_name']}
           defaultPageSize={10}
           loading={activeTaskStore.isLoading}
           className="-highlight"

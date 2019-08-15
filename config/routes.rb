@@ -138,6 +138,8 @@ Rails.application.routes.draw do
         get 'flowers'
         get 'harvests'
         get 'harvest_batches'
+        get 'seeds'
+        get 'purchased_clones'
       end
     end
 
@@ -148,8 +150,8 @@ Rails.application.routes.draw do
         get 'grow_lights'
         get 'supplements'
         get 'others'
-        get 'seeds'
-        get 'purchased_clones'
+        # get 'seeds'
+        # get 'purchased_clones'
       end
     end
 

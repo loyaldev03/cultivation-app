@@ -188,7 +188,6 @@ const activeTaskStore = new ActiveTaskStore()
 class EmployeeListApp extends React.Component {
   constructor() {
     super()
-    PeopleDashboardStore.loadEmployeeList('')
     this.state = {
       data: dummyData,
       columns: [

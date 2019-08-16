@@ -41,6 +41,7 @@ module People
         end
         unless total_actual == 0 or total_capacity == 0
           percentage = ((total_capacity - total_actual) / total_capacity * 100).ceil
+          percentage = 100 if percentage > 100
         end
         main << {
           id: role.id,

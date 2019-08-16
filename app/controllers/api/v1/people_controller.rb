@@ -58,4 +58,9 @@ class Api::V1::PeopleController < Api::V1::BaseApiController
     result = People::QueryJobRole.call(current_user, {facility_id: params[:facility_id], period: params[:period]}).result
     render json: result.to_json, status: 200
   end
+
+  def employee_list
+    result = People::QueryEmployee.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
 end

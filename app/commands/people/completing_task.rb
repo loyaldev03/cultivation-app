@@ -14,39 +14,36 @@ module People
       total_percentages = 0
       users = User.where(exempt: false)
       users.map do |user|
-        tasks = user.cultivation_tasks.where(facility_id: @facility_id)
+        tasks = user.cultivation_tasks.where(facility_id: @facility_id, work_status: 'done')
+        tc = 0
         if tasks.count > 0
-          dones = tasks.where(work_status: 'done').compact
           count = 0
-          if dones.count > 0
-            dones.map do |t|
-              if t.time_logs.present?
-                if (t.time_logs.last.end_time.end_of_day <= t.end_date.end_of_day)
-                  count += 1
-                end
+          tasks.map do |t|
+            if t.time_logs.present?
+              t.time_logs.map do |time_log|
+                time_log.breakdowns.map { |breakdown| count += (breakdown.duration / 1.hour) }
               end
             end
+            if count <= t.duration
+              tc += 1
+            end
           end
-          percentage = 100 - (((tasks.count - count) * 100 / tasks.count).ceil)
+          percentage = 100 - (((tasks.count - tc) * 100 / tasks.count).ceil)
           if @role.present?
             if user.display_roles.include?(@role)
               json << {
 
                 first_name: user.first_name,
                 last_name: user.last_name,
-                done: count,
-                tasks_count: tasks.count,
                 percentage: percentage,
                 photo_url: user.photo_url,
                 roles: @role,
               }
-            elsif @role.nil? or @role == 'All Job Roles'
+            elsif @role == 'All Job Roles'
               json << {
 
                 first_name: user.first_name,
                 last_name: user.last_name,
-                done: count,
-                tasks_count: tasks.count,
                 percentage: percentage,
                 photo_url: user.photo_url,
                 roles: user.display_roles.join(','),
@@ -58,8 +55,6 @@ module People
             json << {
               first_name: user.first_name,
               last_name: user.last_name,
-              done: count,
-              tasks_count: tasks.count,
               percentage: percentage,
               photo_url: user.photo_url,
               roles: user.display_roles.join(','),

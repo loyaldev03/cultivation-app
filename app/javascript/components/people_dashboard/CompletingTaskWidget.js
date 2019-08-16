@@ -179,7 +179,7 @@ class CompletingTaskWidget extends React.Component {
           ? PeopleDashboardStore.data_completing_task.data.length != 0
             ? PeopleDashboardStore.data_completing_task.data.map((e, i) => (
                 <div className="flex justify-between mb3 pt2">
-                  <div className="flex items-center w-40">
+                  <div className="flex items-center w-50">
                     {e.photo_url ? (
                       <div>
                         <img
@@ -208,7 +208,7 @@ class CompletingTaskWidget extends React.Component {
                       <div className="f6 fw6 grey">{e.roles}</div>
                     </span>
                   </div>
-                  <div className="flex items-center w-60">
+                  <div className="flex items-center w-50">
                     <ProgressBar
                       key={i}
                       percent={e.percentage}

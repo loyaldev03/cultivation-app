@@ -8,6 +8,7 @@ module RequestScoping
 
     helper_method :current_default_facility
     helper_method :current_facility
+    helper_method :current_shared_facility_ids
     helper_method :current_ip_facility
     helper_method :company_info
   end
@@ -75,6 +76,11 @@ module RequestScoping
     else
       @current_facility
     end
+  end
+
+  def current_shared_facility_ids
+    ids = [current_facility.id]
+    ids << current_facility.shared_facility_ids
   end
 
   def company_info

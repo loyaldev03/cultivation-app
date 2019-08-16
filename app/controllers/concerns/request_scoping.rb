@@ -79,9 +79,8 @@ module RequestScoping
   end
 
   def current_shared_facility_ids
-    @ids = current_facility.shared_facility_ids
-    @ids << current_facility.id
-    @ids
+    ids = [current_facility.id]
+    ids << current_facility.shared_facility_ids
   end
 
   def company_info

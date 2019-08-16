@@ -207,6 +207,7 @@ class EmployeeListApp extends React.Component {
           headerClassName: 'pl3 tl',
           Header: 'Name',
           accessor: 'user',
+          minWidth: 200,
           className: 'dark-grey pl3 fw6',
           Cell: props => {
             return (
@@ -362,7 +363,7 @@ class EmployeeListApp extends React.Component {
           defaultPageSize={10}
           sortable={true}
           loading={activeTaskStore.isLoading}
-          className="-highlight dashboard-theme"
+          className="-highlight dashboard-pivot"
         />
         <br />
       </div>

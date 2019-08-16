@@ -43,6 +43,32 @@
       @extend .f6;
     }
   }
+  &.dashboard-pivot {
+    .rt-tbody .rt-tr-group {
+      border-bottom: none;
+    }
+    .rt-tr .rt-th {
+      @extend .ws-unset;
+      font-size: 0.9rem;
+      height: 3.5rem;
+      outline: none;
+      background-color: var(--grey-smoke);
+
+      .rt-resizer {
+        width: 16px;
+        right: -8px;
+      }
+    }
+    .rt-tr .rt-th,
+    .rt-tr .rt-td {
+      @extend .pa2;
+    }
+    .rt-tr .rt-td {
+      display: inline-flex;
+      align-items: center;
+      @extend .f6;
+    }
+  }
 }
 
 .ReactTable .rt-thead.-header {

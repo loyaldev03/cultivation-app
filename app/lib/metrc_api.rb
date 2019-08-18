@@ -84,6 +84,12 @@ class MetrcApi
       res.code == 200
     end
 
+    def destroy_flower_plant(facility_license, params)
+      url = "#{BASE_URL}/plants/v1/destroyplants?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
     # - Plants
 
     # + Strain API

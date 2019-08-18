@@ -31,20 +31,22 @@ class ReportDestroyedPlants extends React.Component {
   onSave = async () => {
     const plant_tag = this.inputPlantId.value
     let reason = ''
-    if (this.inputReason){
-       reason = this.inputReason.value
+    if (this.inputReason) {
+      reason = this.inputReason.value
     } else {
-       reason = this.state.wasteReason
+      reason = this.state.wasteReason
     }
     const res = await destroyedPlantsStore.addDestroyedPlant(plant_tag, reason)
     if (res && this.props.onClose) {
       // toast('Destroyed plant recorded', 'success')
       this.inputPlantId.value = ''
-      if(this.inputReason) {this.inputReason.value = ''}
+      if (this.inputReason) {
+        this.inputReason.value = ''
+      }
       this.setState({
         wasteReason: '',
         plantExist: false,
-        plantFlower: false,
+        plantFlower: false
       })
       this.props.onClose()
     }
@@ -56,30 +58,36 @@ class ReportDestroyedPlants extends React.Component {
 
   onChange = async () => {
     const plant_tag = this.inputPlantId.value
-    if(plant_tag.length < 8){
+    if (plant_tag.length < 8) {
       return
     }
     const res = await fetchPlant.load(plant_tag)
     if (res && res.data && res.data.id) {
-      this.setState({plantExist: true})
+      this.setState({ plantExist: true })
       if (res.data.attributes.current_growth_stage == 'flower') {
-        this.setState({plantFlower: true})
+        this.setState({ plantFlower: true })
         const response = await fetchPlantWasteReason.load()
         const reasons = []
         response.map(e => {
-          reasons.push({value: e.name, label: e.name})
+          reasons.push({ value: e.name, label: e.name })
         })
-        this.setState({wasteReasons: reasons})
+        this.setState({ wasteReasons: reasons })
       }
     } else {
-      this.setState({plantExist: false})
-      this.setState({plantFlower: false})
+      this.setState({ plantExist: false })
+      this.setState({ plantFlower: false })
     }
   }
 
   render() {
     const { title, onClose, show = true } = this.props
-    const { showAll, plantExist, plantFlower, wasteReasons, wasteReason } = this.state
+    const {
+      showAll,
+      plantExist,
+      plantFlower,
+      wasteReasons,
+      wasteReason
+    } = this.state
     if (!show) {
       return null
     }
@@ -98,7 +106,7 @@ class ReportDestroyedPlants extends React.Component {
             </div>
             <div className="">
               {plantExist && !plantFlower && (
-                < React.Fragment >
+                <React.Fragment>
                   <label className="db pb1">Reason:</label>
                   <textarea
                     ref={input => (this.inputReason = input)}
@@ -107,19 +115,19 @@ class ReportDestroyedPlants extends React.Component {
                 </React.Fragment>
               )}
               {plantExist && plantFlower && (
-                < React.Fragment >
+                <React.Fragment>
                   <label className="db pb1">Reason:</label>
                   <Select
-                      styles={selectStyles}
-                      options={wasteReasons}
-                      onChange={f =>
-                        this.setState({wasteReason: f.value})
-                      }
-                    />
+                    styles={selectStyles}
+                    options={wasteReasons}
+                    onChange={f => this.setState({ wasteReason: f.value })}
+                  />
                 </React.Fragment>
               )}
               {!plantExist && (
-                <React.Fragment><div className="i">No plant found</div></React.Fragment>
+                <React.Fragment>
+                  <div className="i">No plant found</div>
+                </React.Fragment>
               )}
             </div>
             <div className="mt3 f6">
@@ -226,7 +234,6 @@ class FetchPlant {
 }
 
 class FetchPlantWasteReason {
-
   @action
   async load() {
     const url = `/api/v1/plant_waste_reasons`

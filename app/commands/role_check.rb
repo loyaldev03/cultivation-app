@@ -1,7 +1,7 @@
 class RoleCheck
   prepend SimpleCommand
 
-  def initialize(current_user, feature, permissions)
+  def initialize(current_user, feature)
     # READ = Permission 1
     # UPDATE = Permission 2
     # CREATE = Permission 4
@@ -12,11 +12,9 @@ class RoleCheck
     # Exception if missing required params
     raise ArgumentError.new('Missing "current_user"') if current_user.blank?
     raise ArgumentError.new('Missing "feature"') if feature.blank?
-    raise ArgumentError.new('Missing "permissions"') if permissions.blank?
 
     @current_user = current_user
     @feature = feature
-    @permissions = permissions
   end
 
   def call
@@ -35,7 +33,7 @@ class RoleCheck
     roles.each do |role|
       # Is Super Admin
       if role.built_in && role.name == Constants::SUPER_ADMIN
-        return true
+        return {read: true, update: true, create: true, delete: true}
       end
 
       permit = role.permissions.detect { |p| p[:code] == @feature }
@@ -44,10 +42,15 @@ class RoleCheck
 
     if permit.nil?
       # Required feature not assigned to any of the roles
-      return false
+      return {read: false, update: false, create: false, delete: false}
     end
 
     # NOTE: Bitwise AND operation
-    (permit[:value] & @permissions) == @permissions
+    {
+      read: (permit[:value] & CAN_READ) == CAN_READ,
+      update: (permit[:value] & CAN_UPDATE) == CAN_UPDATE,
+      create: (permit[:value] & CAN_CREATE) == CAN_CREATE,
+      delete: (permit[:value] & CAN_DELETE) == CAN_DELETE,
+    }
   end
 end

@@ -114,7 +114,9 @@ class AssignResourceForm extends React.Component {
     const { selectMode } = this.props
     const found = selectedUsers.find(x => x === id)
     if (found) {
-      this.setState({ selectedUsers: selectedUsers.filter(x => x !== id) })
+      this.setState({ selectedUsers: selectedUsers.filter(x => x !== id) }, () => {
+        this.onToggleEmbed()
+      })
     } else {
       if (selectMode === 'multiple') {
         selectedUsers.push(id)
@@ -122,12 +124,26 @@ class AssignResourceForm extends React.Component {
         selectedUsers = [id]
       }
 
-      this.setState({ selectedUsers })
+      this.setState({ selectedUsers }, ()=> {
+        this.onToggleEmbed()
+      })
     }
   }
   onSave = async () => {
     await this.props.onSave(this.state.selectedUsers)
   }
+
+  onToggleEmbed = () => {
+    //if embedded form true, pass changes everytime selected
+    if (this.props.embeddedForm) {
+      this.onChangeEmbed()
+    }
+  }
+
+  onChangeEmbed = async () => {
+    await this.props.onChangeEmbed(this.state.selectedUsers)
+  }
+
 
   render() {
     const { onClose } = this.props
@@ -137,7 +153,12 @@ class AssignResourceForm extends React.Component {
     const showResult = searchResult && searchResult.length
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title={this.props.title} />
+        {
+          !this.props.embeddedForm ? 
+            <SlidePanelHeader onClose={onClose} title={this.props.title} />
+          :
+            null
+        }
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3 flex flex-column">
             <input
@@ -182,7 +203,12 @@ class AssignResourceForm extends React.Component {
               </ul>
             )}
           </div>
-          <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
+          {
+            !this.props.embeddedForm ? 
+              <SlidePanelFooter onSave={this.onSave} onCancel={onClose} /> 
+            : 
+              null
+          }
         </div>
       </div>
     )
@@ -191,15 +217,18 @@ class AssignResourceForm extends React.Component {
 
 AssignResourceForm.propTypes = {
   selectMode: PropTypes.string,
-  facilityId: PropTypes.string.isRequired,
+  facilityId: PropTypes.string,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  embeddedForm: PropTypes.bool,
+  onChangeEmbed: PropTypes.func,
   title: PropTypes.string
 }
 
 AssignResourceForm.defaultProps = {
   selectMode: 'multiple', // or 'single'
-  title: 'Assign Resources'
+  title: 'Assign Resources',
+  embeddedForm: false
 }
 
 export default AssignResourceForm

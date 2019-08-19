@@ -1,10 +1,14 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
-import React, { memo, useState } from 'react'
+import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
+import { SlidePanel } from '../../utils'
+
+const NewTaskForm = lazy(() => import('./tasks/NewTaskForm'))
+
 import {
   decimalFormatter,
   formatDate2,
@@ -133,6 +137,7 @@ class TasksDashboardApp extends React.Component {
     DashboardTaskStore.loadTasks_dashboard(this.props.currentFacilityId)
   }
   state = {
+    showNewTaskPanel: false,
     columns: [
       {
         accessor: 'batch_id',
@@ -309,12 +314,44 @@ class TasksDashboardApp extends React.Component {
     }
   }
 
+
+  onShowTask = () => {
+    this.setState({ showNewTaskPanel: true })
+  }
+
   render() {
     const { currentFacilityId } = this.props
-    const { columns } = this.state
+    const { columns, showNewTaskPanel } = this.state
     return (
+      <React.Fragment>
+      <SlidePanel
+        width="500px"
+        show={showNewTaskPanel}
+        renderBody={props => (
+          <Suspense fallback={<div />}>
+            <NewTaskForm
+              ref={form => (this.NewTaskForm = form)}
+              onClose={() =>
+                this.setState({ showNewTaskPanel: false })
+              }
+              onSave={users => {
+                this.setState({ showNewTaskPanel: false })
+              }}
+              facilityId={this.props.currentFacilityId}
+            />
+          </Suspense>
+        )}
+      />
       <div className="pa4 mw1200">
         <div className="pb4">
+          <div className="flex flex-row-reverse mb4">
+            <a
+              className="btn btn--primary"
+              onClick={this.onShowTask}
+            >
+              Create new task
+          </a>
+          </div>
           <TaskWidget facility_id={currentFacilityId} />
         </div>
         <div className="flex justify-between">
@@ -339,6 +376,7 @@ class TasksDashboardApp extends React.Component {
           />
         </div>
       </div>
+      </React.Fragment>
     )
   }
 }

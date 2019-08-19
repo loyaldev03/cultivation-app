@@ -55,7 +55,11 @@ module Inventory
 
     def update_metrc_destroy_plant
       if plant.present?
-        MetrcDestroyImmaturePlant.perform_async plant.id.to_s
+        if plant.current_growth_stage == 'flower'
+          MetrcDestroyFlowerPlant.perform_async plant.id.to_s
+        else
+          MetrcDestroyImmaturePlant.perform_async plant.id.to_s
+        end
       end
     end
 
@@ -68,7 +72,7 @@ module Inventory
 
     def update_batch_destroyed_plant_count
       if plant.present?
-        batch = plant.batch
+        batch = plant.cultivation_batch
         if batch.present?
           batch.update(destroyed_plants_count: batch.destroyed_plants_count + 1)
         end

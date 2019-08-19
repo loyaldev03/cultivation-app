@@ -2,19 +2,25 @@ import React from 'react'
 import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
+import Select from 'react-select'
 import {
   InputBarcode,
   SlidePanelHeader,
   SlidePanelFooter,
   httpGetOptions,
   httpPostOptions,
-  toast
+  toast,
+  selectStyles
 } from '../../../utils'
 
 @observer
 class ReportDestroyedPlants extends React.Component {
   state = {
-    showAll: false
+    showAll: false,
+    plantExist: false,
+    plantFlower: false,
+    wasteReasons: [],
+    wasteReason: ''
   }
   async componentDidUpdate(prevProps) {
     const { batch_id } = this.props
@@ -24,12 +30,24 @@ class ReportDestroyedPlants extends React.Component {
   }
   onSave = async () => {
     const plant_tag = this.inputPlantId.value
-    const reason = this.inputReason.value
+    let reason = ''
+    if (this.inputReason) {
+      reason = this.inputReason.value
+    } else {
+      reason = this.state.wasteReason
+    }
     const res = await destroyedPlantsStore.addDestroyedPlant(plant_tag, reason)
     if (res && this.props.onClose) {
       // toast('Destroyed plant recorded', 'success')
       this.inputPlantId.value = ''
-      this.inputReason.value = ''
+      if (this.inputReason) {
+        this.inputReason.value = ''
+      }
+      this.setState({
+        wasteReason: '',
+        plantExist: false,
+        plantFlower: false
+      })
       this.props.onClose()
     }
   }
@@ -37,9 +55,39 @@ class ReportDestroyedPlants extends React.Component {
     await destroyedPlantsStore.load(this.props.batch_id)
     this.setState({ showAll: true })
   }
+
+  onChange = async () => {
+    const plant_tag = this.inputPlantId.value
+    if (plant_tag.length < 8) {
+      return
+    }
+    const res = await fetchPlant.load(plant_tag)
+    if (res && res.data && res.data.id) {
+      this.setState({ plantExist: true })
+      if (res.data.attributes.current_growth_stage == 'flower') {
+        this.setState({ plantFlower: true })
+        const response = await fetchPlantWasteReason.load()
+        const reasons = []
+        response.map(e => {
+          reasons.push({ value: e.name, label: e.name })
+        })
+        this.setState({ wasteReasons: reasons })
+      }
+    } else {
+      this.setState({ plantExist: false })
+      this.setState({ plantFlower: false })
+    }
+  }
+
   render() {
     const { title, onClose, show = true } = this.props
-    const { showAll } = this.state
+    const {
+      showAll,
+      plantExist,
+      plantFlower,
+      wasteReasons,
+      wasteReason
+    } = this.state
     if (!show) {
       return null
     }
@@ -53,14 +101,34 @@ class ReportDestroyedPlants extends React.Component {
               <InputBarcode
                 className="w-100"
                 ref={input => (this.inputPlantId = input)}
+                onChange={this.onChange}
               />
             </div>
             <div className="">
-              <label className="db pb1">Reason:</label>
-              <textarea
-                ref={input => (this.inputReason = input)}
-                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              />
+              {plantExist && !plantFlower && (
+                <React.Fragment>
+                  <label className="db pb1">Reason:</label>
+                  <textarea
+                    ref={input => (this.inputReason = input)}
+                    className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+                  />
+                </React.Fragment>
+              )}
+              {plantExist && plantFlower && (
+                <React.Fragment>
+                  <label className="db pb1">Reason:</label>
+                  <Select
+                    styles={selectStyles}
+                    options={wasteReasons}
+                    onChange={f => this.setState({ wasteReason: f.value })}
+                  />
+                </React.Fragment>
+              )}
+              {!plantExist && (
+                <React.Fragment>
+                  <div className="i">No plant found</div>
+                </React.Fragment>
+              )}
             </div>
             <div className="mt3 f6">
               {showAll && (
@@ -152,6 +220,32 @@ class DestroyedPlantsStore {
   }
 }
 
+class FetchPlant {
+  @action
+  async load(plant_tag) {
+    if (plant_tag) {
+      const url = `/api/v1/plants/show_by_plant_tag/${plant_tag}`
+      const res = await (await fetch(url, httpGetOptions)).json()
+      if (res) {
+        return res
+      }
+    }
+  }
+}
+
+class FetchPlantWasteReason {
+  @action
+  async load() {
+    const url = `/api/v1/plant_waste_reasons`
+    const res = await (await fetch(url, httpGetOptions)).json()
+    if (res) {
+      return res
+    }
+  }
+}
+
+const fetchPlantWasteReason = new FetchPlantWasteReason()
+const fetchPlant = new FetchPlant()
 const destroyedPlantsStore = new DestroyedPlantsStore()
 
 export default ReportDestroyedPlants

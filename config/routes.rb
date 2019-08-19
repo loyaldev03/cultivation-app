@@ -269,6 +269,7 @@ Rails.application.routes.draw do
 
       resources :plants, only: [:show] do
         collection do
+          get 'show_by_plant_tag/:plant_tag', action: :show_by_plant_tag
           get 'all/(:current_growth_stage)', action: :all
           get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
           get 'search_by_location'
@@ -282,6 +283,8 @@ Rails.application.routes.draw do
           post 'save_destroyed_plant'
         end
       end
+
+      resources :plant_waste_reasons, only: :index
 
       resources :raw_materials, only: [:index, :show] do
         collection do

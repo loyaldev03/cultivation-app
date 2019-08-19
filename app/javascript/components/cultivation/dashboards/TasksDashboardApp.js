@@ -314,7 +314,6 @@ class TasksDashboardApp extends React.Component {
     }
   }
 
-
   onShowTask = () => {
     this.setState({ showNewTaskPanel: true })
   }
@@ -324,58 +323,53 @@ class TasksDashboardApp extends React.Component {
     const { columns, showNewTaskPanel } = this.state
     return (
       <React.Fragment>
-      <SlidePanel
-        width="500px"
-        show={showNewTaskPanel}
-        renderBody={props => (
-          <Suspense fallback={<div />}>
-            <NewTaskForm
-              ref={form => (this.NewTaskForm = form)}
-              onClose={() =>
-                this.setState({ showNewTaskPanel: false })
-              }
-              onSave={users => {
-                this.setState({ showNewTaskPanel: false })
-              }}
-              facilityId={this.props.currentFacilityId}
-            />
-          </Suspense>
-        )}
-      />
-      <div className="pa4 mw1200">
-        <div className="pb4">
-          <div className="flex flex-row-reverse mb4">
-            <a
-              className="btn btn--primary"
-              onClick={this.onShowTask}
-            >
-              Create new task
-          </a>
+        <SlidePanel
+          width="500px"
+          show={showNewTaskPanel}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <NewTaskForm
+                ref={form => (this.NewTaskForm = form)}
+                onClose={() => this.setState({ showNewTaskPanel: false })}
+                onSave={users => {
+                  this.setState({ showNewTaskPanel: false })
+                }}
+                facilityId={this.props.currentFacilityId}
+              />
+            </Suspense>
+          )}
+        />
+        <div className="pa4 mw1200">
+          <div className="pb4">
+            <div className="flex flex-row-reverse mb4">
+              <a className="btn btn--primary" onClick={this.onShowTask}>
+                Create new task
+              </a>
+            </div>
+            <TaskWidget facility_id={currentFacilityId} />
           </div>
-          <TaskWidget facility_id={currentFacilityId} />
+          <div className="flex justify-between">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Tasks"
+              onChange={e => {
+                activeTaskStore.searchTerm = e.target.value
+              }}
+            />
+            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          </div>
+          <div className="pv3">
+            <ListingTable
+              ajax={true}
+              onFetchData={this.onFetchData}
+              data={activeTaskStore.filteredList}
+              pages={activeTaskStore.metadata.pages}
+              columns={columns}
+              isLoading={activeTaskStore.isLoading}
+            />
+          </div>
         </div>
-        <div className="flex justify-between">
-          <input
-            type="text"
-            className="input w5"
-            placeholder="Search Tasks"
-            onChange={e => {
-              activeTaskStore.searchTerm = e.target.value
-            }}
-          />
-          <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
-        </div>
-        <div className="pv3">
-          <ListingTable
-            ajax={true}
-            onFetchData={this.onFetchData}
-            data={activeTaskStore.filteredList}
-            pages={activeTaskStore.metadata.pages}
-            columns={columns}
-            isLoading={activeTaskStore.isLoading}
-          />
-        </div>
-      </div>
       </React.Fragment>
     )
   }

@@ -1,22 +1,30 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { SlidePanelHeader, SlidePanelFooter, reactSelectStyle, TextInput, NumericInput } from '../../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  reactSelectStyle,
+  TextInput,
+  NumericInput
+} from '../../../utils'
 import Select from 'react-select'
 
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import AssignResourceForm from '../../tasks_setup/components/AssignResourceForm'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
-
 const taskTypes = [
-  { label: 'Normal Task', value: 'normal_task'}, 
-  { label: 'Receiving Inventory Cannabis', value: 'receive_inventory_cannabis'}, 
-  { label: 'Receiving Nutrients', value: 'receive_inventory_nutrients'},
-  { label: 'Receiving Grow Medium', value: 'receive_grow_medium'},
-  { label: 'Receiving Grow Lights', value: 'receive_grow_lights'},
-  { label: 'Receiving Supplements', value: 'receive_supplements'},
-  { label: 'Receiving other inventory', value: 'receive_others'}
+  { label: 'Normal Task', value: 'normal_task' },
+  {
+    label: 'Receiving Inventory Cannabis',
+    value: 'receive_inventory_cannabis'
+  },
+  { label: 'Receiving Nutrients', value: 'receive_inventory_nutrients' },
+  { label: 'Receiving Grow Medium', value: 'receive_grow_medium' },
+  { label: 'Receiving Grow Lights', value: 'receive_grow_lights' },
+  { label: 'Receiving Supplements', value: 'receive_supplements' },
+  { label: 'Receiving other inventory', value: 'receive_others' }
 ]
 
 @observer
@@ -30,13 +38,11 @@ class NewTaskForm extends React.Component {
       start_date: today,
       end_date: tomorrow,
       duration: 1,
-      estimated_hours: 0.0,
+      estimated_hours: 0.0
     }
   }
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   onSave = async () => {
     // await this.props.onSave(this.state.selectedUsers)
@@ -55,19 +61,18 @@ class NewTaskForm extends React.Component {
     }
   }
 
-  handleChangeSelect = (e) => {
-    if (e.value !== 'normal_task'){
+  handleChangeSelect = e => {
+    if (e.value !== 'normal_task') {
       this.setState({
         task_type: e.value,
         name: e.label
       })
-    }else{
+    } else {
       this.setState({
         task_type: e.value
       })
     }
   }
-
 
   handleChangeDate = (fieldName, value) => {
     console.log(value)
@@ -105,9 +110,7 @@ class NewTaskForm extends React.Component {
             </div>
 
             <div className="w-100 mt3">
-              <label className="f6 fw6 db mb1 gray ttc mb2">
-               Task name
-              </label>
+              <label className="f6 fw6 db mb1 gray ttc mb2">Task name</label>
               <input
                 type="text"
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
@@ -134,21 +137,18 @@ class NewTaskForm extends React.Component {
                 />
               </div>
               <div className="w-20 pl3">
-                <label className="f6 fw6 db mb1 gray ttc mb1">
-                  Duration
-                </label>
-                <input 
-                  className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr" 
+                <label className="f6 fw6 db mb1 gray ttc mb1">Duration</label>
+                <input
+                  className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
                   value={duration}
                   onChange={e => this.handleChange('duration', e.target.value)}
-                  type="number" 
-                  min="1" 
-                  max="" 
-                  step="" 
-                  />
+                  type="number"
+                  min="1"
+                  max=""
+                  step=""
+                />
               </div>
             </div>
-
 
             <div className="w-40 mt2">
               <label className="f6 fw6 db mb1 gray ttc mb2">
@@ -158,22 +158,22 @@ class NewTaskForm extends React.Component {
                 type="number"
                 value={estimated_hours}
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-                onChange={e => this.handleChange('estimated_hours', e.target.value)}
+                onChange={e =>
+                  this.handleChange('estimated_hours', e.target.value)
+                }
               />
             </div>
 
-            <div className="bt b--light-grey mt3 mb3"/>
+            <div className="bt b--light-grey mt3 mb3" />
 
             <label className="f6 fw6 db mb1 gray ttc"> Assignee </label>
 
             <AssignResourceForm
               // ref={form => (this.assignResouceForm = form)}
               facilityId={this.props.facilityId}
-              onClose={() =>
-                this.setState({ showAssignResourcePanel: false })
-              }
+              onClose={() => this.setState({ showAssignResourcePanel: false })}
               embeddedForm={true}
-              onChangeEmbed = {users =>{
+              onChangeEmbed={users => {
                 this.setState({
                   user_ids: users
                 })
@@ -185,9 +185,8 @@ class NewTaskForm extends React.Component {
                 //   this.state.taskSelected,
                 //   users
                 // )
-              }} />
-              
-
+              }}
+            />
           </div>
           <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
         </div>

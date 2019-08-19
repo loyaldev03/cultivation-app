@@ -26,7 +26,7 @@ class AddMaterialForm extends React.Component {
     let materialIds = this.state.materials.map(x => x.id)
     materialIds = materialIds.concat(toJS(sidebarStore.omitMaterials.slice()))
 
-    const url = `/api/v1/products/non_nutrients?facility_id=${facilityId}&filter=${filter}&exclude=${materialIds.join(
+    const url = `/api/v1/products/non_nutrients?filter=${filter}&exclude=${materialIds.join(
       ','
     )}`
     const response = await (await fetch(url, httpGetOptions)).json()

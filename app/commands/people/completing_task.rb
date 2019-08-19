@@ -20,11 +20,9 @@ module People
           count = 0
           tasks.map do |t|
             if t.time_logs.present?
-              t.time_logs.map do |time_log|
-                time_log.breakdowns.map { |breakdown| count += (breakdown.duration / 1.hour) }
-              end
+              t.time_logs.where(user_id: user.id).map { |tl| count += (tl.duration_in_hours) }
             end
-            if count <= t.duration
+            if count <= t.estimated_hours
               tc += 1
             end
           end

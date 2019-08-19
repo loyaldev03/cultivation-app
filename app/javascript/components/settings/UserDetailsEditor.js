@@ -1353,7 +1353,7 @@ class UserDetailsEditor extends React.PureComponent {
           )}
 
           <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
-            {canUpdate &&(
+            {canUpdate && (
               <input
                 type="submit"
                 value={saveButtonText}

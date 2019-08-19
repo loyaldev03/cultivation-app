@@ -144,7 +144,7 @@ class RoleDetailsEditor extends React.PureComponent {
           </div>
           {!builtIn ? (
             <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
-              {canDelete &&(
+              {canDelete && (
                 <a
                   href="#0"
                   className="btn btn--secondary"
@@ -153,7 +153,7 @@ class RoleDetailsEditor extends React.PureComponent {
                   Delete
                 </a>
               )}
-              {canUpdate &&(
+              {canUpdate && (
                 <input
                   type="submit"
                   value={saveButtonText}

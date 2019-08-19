@@ -7,10 +7,7 @@ import UserDetailsEditor from './UserDetailsEditor'
 import RoleDetailsEditor from './RoleDetailsEditor'
 import { toast } from '../utils/toast'
 import classNames from 'classnames'
-import {
-  DefaultAvatar,
-  NoPermissionMessage
-} from '../utils'
+import { DefaultAvatar, NoPermissionMessage } from '../utils'
 import GridGroupEmblem from '../utils/GridGroupEmblem'
 
 const build_facilities_options = facilities =>
@@ -250,8 +247,8 @@ class TeamSetttingApp extends React.Component {
               />
               {activeTab === 'usersTab' && (
                 <React.Fragment>
-                  { setting_user_permissions.read && (
-                    <div className = "mt0 ba b--light-grey pa3">
+                  {setting_user_permissions.read && (
+                    <div className="mt0 ba b--light-grey pa3">
                       <div className="pb2 db tr">
                         {setting_user_permissions.create && (
                           <a
@@ -261,7 +258,7 @@ class TeamSetttingApp extends React.Component {
                           >
                             New User
                           </a>
-                          )}
+                        )}
                       </div>
                       <div className="pb2 db tr pa2">
                         <i
@@ -370,7 +367,9 @@ class TeamSetttingApp extends React.Component {
                                 style={{ marginBottom: '2em' }}
                               >
                                 <GridGroupEmblem size={56} />
-                                <span class="pl3 f3 lh-title gray">{x.name}</span>
+                                <span class="pl3 f3 lh-title gray">
+                                  {x.name}
+                                </span>
                               </div>
                               <div className="flex flex-wrap">
                                 {users
@@ -427,7 +426,9 @@ class TeamSetttingApp extends React.Component {
                               style={{ marginBottom: '2em' }}
                             >
                               <GridGroupEmblem size={56} />
-                              <span class="pl3 f3 lh-title gray">Unassigned</span>
+                              <span class="pl3 f3 lh-title gray">
+                                Unassigned
+                              </span>
                             </div>
                             <div className="flex flex-wrap">
                               {users
@@ -476,9 +477,9 @@ class TeamSetttingApp extends React.Component {
                       )}
                     </div>
                   )}
-                  { !setting_user_permissions.read && (
-                    <div className = "mt0 ba b--light-grey pa3">
-                      < NoPermissionMessage/>
+                  {!setting_user_permissions.read && (
+                    <div className="mt0 ba b--light-grey pa3">
+                      <NoPermissionMessage />
                     </div>
                   )}
                 </React.Fragment>
@@ -488,7 +489,7 @@ class TeamSetttingApp extends React.Component {
                   {setting_role_permissions.read && (
                     <div className="mt0 ba b--light-grey pa3">
                       <div className="pb2 db tr">
-                        {setting_role_permissions.create &&(
+                        {setting_role_permissions.create && (
                           <a
                             href="#0"
                             className="btn btn--primary"
@@ -496,8 +497,7 @@ class TeamSetttingApp extends React.Component {
                           >
                             New Role
                           </a>
-                        )
-                        }
+                        )}
                       </div>
                       <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                         <tbody>
@@ -531,8 +531,8 @@ class TeamSetttingApp extends React.Component {
                     </div>
                   )}
                   {!setting_role_permissions.read && (
-                    <div className = "mt0 ba b--light-grey pa3">
-                      < NoPermissionMessage / >
+                    <div className="mt0 ba b--light-grey pa3">
+                      <NoPermissionMessage />
                     </div>
                   )}
                 </React.Fragment>

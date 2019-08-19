@@ -442,7 +442,8 @@ class UserDetailsEditor extends React.PureComponent {
       rolesOptions,
       isSaving,
       userManagerOptions,
-      user
+      user,
+      canUpdate
     } = this.props
     const {
       firstName,
@@ -1352,11 +1353,13 @@ class UserDetailsEditor extends React.PureComponent {
           )}
 
           <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
-            <input
-              type="submit"
-              value={saveButtonText}
-              className="fr btn btn--primary"
-            />
+            {canUpdate && (
+              <input
+                type="submit"
+                value={saveButtonText}
+                className="fr btn btn--primary"
+              />
+            )}
           </div>
         </form>
       </div>

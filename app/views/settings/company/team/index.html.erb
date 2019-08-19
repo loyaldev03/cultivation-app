@@ -2,4 +2,8 @@
   <%= breadcrumbs ["Settings", settings_path], "Team Settings"%>
 <% end %>
 
-<%= react_component 'settings/TeamSettingApp',{userId:current_user.id.to_s} %>
+<%= react_component 'settings/TeamSettingApp',{
+  userId:current_user.id.to_s,
+  setting_role_permissions: RoleCheck.call(current_user, Constants::APP_MOD_TEAM_SETTINGS_ROLES).result,
+  setting_user_permissions: RoleCheck.call(current_user, Constants::APP_MOD_TEAM_SETTINGS_USERS).result
+} %>

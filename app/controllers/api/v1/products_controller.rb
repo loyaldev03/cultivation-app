@@ -58,8 +58,6 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
                     Inventory::FacilityStrain.find(params[:facility_strain_id]).facility_id
                   elsif params[:facility_id].present?
                     params[:facility_id]
-                  else
-                    raise 'Need at least batch id, facility strain id or facility id'
                   end
 
     valid_categories =
@@ -88,12 +86,11 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
-      where(facility_id: facility_id).
       where(name: /^#{params[:filter]}/i).
       where(id: {'$nin': exclude_ids}).
       limit(20).
       order(name: :asc)
-
+    products = products.where(facility_id: facility_id) if facility_id.present?
     # checklist = products.map {|x| x.name }
     # Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
 

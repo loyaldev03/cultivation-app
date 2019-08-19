@@ -34,13 +34,9 @@ export default class MaterialForm extends React.Component {
       this.state.task.indelible &&
       this.state.task.indelible === 'add_nutrient'
     ) {
-      url = `/api/v1/products?type=raw_materials&category=nutrients&facility_id=${
-        this.state.facility_id
-      }&filter=${inputValue}`
+      url = `/api/v1/products?type=raw_materials&category=nutrients&filter=${inputValue}`
     } else {
-      url = `/api/v1/products?facility_id=${
-        this.state.facility_id
-      }&filter=${inputValue}`
+      url = `/api/v1/products?&filter=${inputValue}`
     }
     return fetch(url, httpGetOptions)
       .then(response => response.json())

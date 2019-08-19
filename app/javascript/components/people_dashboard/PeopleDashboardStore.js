@@ -262,7 +262,6 @@ class PeopleDashboardStore {
     this.isLoading = true
     this.ontime_arrival_loaded = false
     const url = `/api/v1/people/arrival_on_time?facility_id=${facility_id}&&order=${order}&&role=${role}`
-    console.log(url)
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -282,7 +281,6 @@ class PeopleDashboardStore {
     this.isLoading = true
     this.completing_task_loaded = false
     const url = `/api/v1/people/completing_task_ontime?facility_id=${facility_id}&&order=${order}&&role=${role}`
-    console.log(url)
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {

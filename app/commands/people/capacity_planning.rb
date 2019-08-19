@@ -8,66 +8,146 @@ module People
     end
 
     def call
-      users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+      result = capacity_planning_aggregate
+      main = []
       bar_colors = ['red', 'blue', 'orange', 'purple', 'yellowgreen', 'mediumvioletred', 'cadetblue', 'dodgerblue', 'sienna', 'palevioletred', 'cornflowerblue']
-      json = []
       Common::Role.all.map do |role|
         bar_colors.shuffle
         color_pick = bar_colors.sample
         bar_colors.delete(color_pick)
-        capacity = 0
-        user_count = []
-        actual = 0
+        user_data = []
+        total_capacity = 0
+        total_actual = 0
         percentage = 0
-        users.each do |user|
-          if user.roles.include?(role.id)
-            user_actual = 0
-            user_capacity = 0
-            user_percentage = 0
-            Cultivation::Task.where(facility_id: @args[:facility_id]).includes(:time_logs).map do |x|
-              time_logs = range(x.time_logs.where(user_id: user.id.to_s), @args[:period])
-              time_logs.map { |time_log| user_actual += time_log.duration_in_hours }
+        result.map do |user|
+          capacities = 0
+          user_percentage = 0
+          if user[:roles].include?(role.id)
+            range(user[:work_schedules]).map do |ws|
+              capacities += ((ws[:end_time] - ws[:start_time]) / 1.hour)
             end
-            work_schedules = range(user.work_schedules, @args[:period])
-            work_schedules.map { |work_schedule| user_capacity += ((work_schedule.end_time - work_schedule.start_time) / 3600) }
-            capacity += user_capacity
-            user_percentage = ((user_capacity - user_actual) / user_capacity * 100).ceil unless user_actual == 0 or user_capacity == 0
-            user_count << {
-              email: user.email,
-              photo_url: user.photo_url,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              actual: user_actual.round(0),
-              capacity: user_capacity.round(0),
-              user_percentage: 100 - user_percentage,
-              skills: user.skills,
+            unless user[:actual] == 0 or capacities == 0
+              user_percentage = 100 - (((capacities.to_f - user[:actual].to_f) / capacities.to_f * 100).ceil)
+            end
+            total_capacity += capacities.round(2)
+            total_actual += user[:actual].round(2)
+            user_data << {
+              first_name: user[:first_name],
+              last_name: user[:last_name],
+              photo_url: user[:photo_data],
+              actual: user[:actual].round(0),
+              capacity: capacities.round(0),
+              user_percentage: user_percentage,
+              skills: user[:skills],
+
             }
-            actual += user_actual.round(0)
           end
         end
-        percentage = ((capacity - actual) / capacity * 100).ceil unless actual == 0 or capacity == 0
-        json << {
+        unless total_actual == 0 or total_capacity == 0
+          percentage = ((total_capacity - total_actual) / total_capacity * 100).ceil
+          percentage = 100 if percentage > 100
+        end
+        main << {
+          id: role.id,
           title: role.name,
           color: color_pick,
-          capacity: capacity.round(0),
-          actual: actual.round(0),
+          capacity: total_capacity.round(0),
+          actual: total_actual.round(0),
           percentage: percentage,
-          users: user_count,
+          users: user_data,
         }
       end
-      json
+      main
     end
 
-    def range(data, range)
+    private
+
+    def capacity_planning_aggregate
+      t_ids = Cultivation::Task.where(facility_id: @args[:facility_id].to_bson_id).pluck(:id)
+      User.collection.aggregate([
+        {"$match": {"facilities": {"$all": [@args[:facility_id].to_bson_id]}}},
+        {"$lookup": {from: 'cultivation_time_logs',
+                     as: 'time_logs',
+                     let: {user_id: '$_id'},
+                     pipeline: [
+          match_time_logs,
+          {"$match": {
+            "$expr": {
+              "$and": [
+                {"$eq": ['$user_id', '$$user_id']},
+              ],
+            },
+          }},
+          {"$match": {
+            "$expr": {
+              "$and": [
+                {"$in": ['$task_id', t_ids]},
+              ],
+            },
+          }},
+        ]}},
+        {"$addFields": {
+          "actual": {
+            "$sum": {
+              "$map": {
+                "input": '$time_logs',
+                "in": {"$divide": [{"$subtract": ['$$this.end_time', '$$this.start_time']}, 3600000]},
+              },
+            },
+
+          },
+        }},
+        {"$project": {
+          "email": 1,
+          "first_name": 1,
+          "last_name": 1,
+          "photo_data": 1,
+          "roles": 1,
+          "skills": 1,
+          "actual": 1,
+          "work_schedules": 1,
+        }},
+
+      ]).to_a
+    end
+
+    def range(data)
       date = Time.current
-      if (range == 'this_week')
-        data.where(:end_time.gt => date.beginning_of_week, :start_time.lt => date.end_of_week)
-      elsif (range == 'this_year')
-        data.where(:end_time.gt => date.beginning_of_year, :start_time.lt => date.end_of_year)
-      elsif (range == 'this_month')
-        data.where(:end_time.gt => date.beginning_of_month, :start_time.lt => Time.current.end_of_month)
+      if (@args[:period] == 'this_week')
+        data.select { |ws| ws[:end_time] >= date.beginning_of_week && ws[:start_time] <= date.end_of_week }
+      elsif (@args[:period] == 'this_year')
+        data.select { |ws| ws[:end_time] >= date.beginning_of_year && ws[:start_time] <= date.end_of_year }
+      elsif (@args[:period] == 'this_month')
+        data.select { |ws| ws[:end_time] >= date.beginning_of_month && ws[:start_time] <= date.end_of_month }
       else
-        data.all
+        data
+      end
+    end
+
+    def match_time_logs
+      date = Time.current
+      if ['this_week', 'this_year', 'this_month'].include?(@args[:period])
+        if @args[:period] == 'this_week'
+          start_date = date.beginning_of_week
+          end_date = date.end_of_week
+        elsif (@args[:period] == 'this_year')
+          start_date = date.beginning_of_year
+          end_date = date.end_of_year
+        elsif (@args[:period] == 'this_month')
+          start_date = date.beginning_of_month
+          end_date = date.end_of_month
+        end
+        {"$match": {
+          "$expr": {
+            "$or": [
+              {"$and": [{"$gte": ['$end_time', start_date]}, {"$lte": ['$start_time', end_date]}]},
+              {"$and": [{"$gte": ['$start_time', start_date]}, {"$lte": ['$start_time', end_date]}]},
+              {"$and": [{"$lte": ['$start_time', start_date]}, {"$gte": ['$end_time', end_date]}]},
+            ],
+          },
+        }}
+      else
+        {"$match": {}}
       end
     end
   end

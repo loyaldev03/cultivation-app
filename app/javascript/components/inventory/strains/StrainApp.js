@@ -22,7 +22,7 @@ class StrainApp extends React.Component {
     const { strain_permission } = this.props
     return (
       <React.Fragment>
-        {strain_permission.read &&(
+        {strain_permission.read && (
           <div>
             <div className="mb3 w-100 mw1200">
               <img src={TempStrainWidgets} />
@@ -30,7 +30,7 @@ class StrainApp extends React.Component {
             <div className="fl w-100 mw1200 bg-white pa3">
               <div className="flex justify-between mt3 mb4">
                 <h1 className="mv0 f3 fw4 dark-gray">Strains</h1>
-                {strain_permission.create &&(
+                {strain_permission.create && (
                   <div>
                     <button
                       className="btn btn--primary btn--small"
@@ -43,12 +43,17 @@ class StrainApp extends React.Component {
               </div>
               <StrainList />
             </div>
-            <StrainEditor isOpened={false} canUpdate={strain_permission.update} canCreate={strain_permission.create} facility_id={this.props.facility_id} />
+            <StrainEditor
+              isOpened={false}
+              canUpdate={strain_permission.update}
+              canCreate={strain_permission.create}
+              facility_id={this.props.facility_id}
+            />
           </div>
         )}
-        {!strain_permission.read &&(
+        {!strain_permission.read && (
           <div>
-            <NoPermissionMessage/>
+            <NoPermissionMessage />
           </div>
         )}
       </React.Fragment>

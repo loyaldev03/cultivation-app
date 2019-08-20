@@ -256,7 +256,7 @@ export default class StrainEditor extends React.Component {
             </select>
           </div>
         </div>
-        { (this.props.canUpdate|| this.props.canCreate) &&(
+        {(this.props.canUpdate || this.props.canCreate) && (
           <div>
             <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
               <a

@@ -80,6 +80,15 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  def create_no_batch
+    cmd = Cultivation::CreateNoBatchTask.call(current_user, params[:task])
+    if cmd.success?
+      render json: {data: {id: cmd.result.id.to_s}}
+    else
+      render json: {errors: cmd.errors}
+    end
+  end
+
   def destroy
     delete_cmd = Cultivation::DestroyTask.call(current_user, params[:id])
     if delete_cmd.success?

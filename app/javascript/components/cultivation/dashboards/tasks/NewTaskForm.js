@@ -38,14 +38,15 @@ class NewTaskForm extends React.Component {
       start_date: today,
       end_date: tomorrow,
       duration: 1,
-      estimated_hours: 0.0
+      estimated_hours: 0.0,
+      facility_id: this.props.facilityId
     }
   }
 
   componentDidMount() {}
 
   onSave = async () => {
-    // await this.props.onSave(this.state.selectedUsers)
+    await this.props.onSave(this.state)
   }
 
   handleChange = (fieldName, value) => {

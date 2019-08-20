@@ -6,7 +6,7 @@ import { differenceInDays } from 'date-fns'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import { SlidePanel } from '../../utils'
-
+import TaskStore from '../tasks_setup/stores/NewTaskStore'
 const NewTaskForm = lazy(() => import('./tasks/NewTaskForm'))
 
 import {
@@ -331,7 +331,9 @@ class TasksDashboardApp extends React.Component {
               <NewTaskForm
                 ref={form => (this.NewTaskForm = form)}
                 onClose={() => this.setState({ showNewTaskPanel: false })}
-                onSave={users => {
+                onSave={params => {
+                  console.log(params)
+                  TaskStore.createNoBatchTask(params)
                   this.setState({ showNewTaskPanel: false })
                 }}
                 facilityId={this.props.currentFacilityId}

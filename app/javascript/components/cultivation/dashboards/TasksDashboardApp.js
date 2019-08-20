@@ -1,10 +1,14 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
-import React, { memo, useState } from 'react'
+import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
+import { SlidePanel } from '../../utils'
+import TaskStore from '../tasks_setup/stores/NewTaskStore'
+const NewTaskForm = lazy(() => import('./tasks/NewTaskForm'))
+
 import {
   decimalFormatter,
   formatDate2,
@@ -133,6 +137,7 @@ class TasksDashboardApp extends React.Component {
     DashboardTaskStore.loadTasks_dashboard(this.props.currentFacilityId)
   }
   state = {
+    showNewTaskPanel: false,
     columns: [
       {
         accessor: 'batch_id',
@@ -309,36 +314,65 @@ class TasksDashboardApp extends React.Component {
     }
   }
 
+  onShowTask = () => {
+    this.setState({ showNewTaskPanel: true })
+  }
+
   render() {
     const { currentFacilityId } = this.props
-    const { columns } = this.state
+    const { columns, showNewTaskPanel } = this.state
     return (
-      <div className="pa4 mw1200">
-        <div className="pb4">
-          <TaskWidget facility_id={currentFacilityId} />
+      <React.Fragment>
+        <SlidePanel
+          width="500px"
+          show={showNewTaskPanel}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <NewTaskForm
+                ref={form => (this.NewTaskForm = form)}
+                onClose={() => this.setState({ showNewTaskPanel: false })}
+                onSave={params => {
+                  console.log(params)
+                  TaskStore.createNoBatchTask(params)
+                  this.setState({ showNewTaskPanel: false })
+                }}
+                facilityId={this.props.currentFacilityId}
+              />
+            </Suspense>
+          )}
+        />
+        <div className="pa4 mw1200">
+          <div className="pb4">
+            <div className="flex flex-row-reverse mb4">
+              <a className="btn btn--primary" onClick={this.onShowTask}>
+                Create new task
+              </a>
+            </div>
+            <TaskWidget facility_id={currentFacilityId} />
+          </div>
+          <div className="flex justify-between">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Tasks"
+              onChange={e => {
+                activeTaskStore.searchTerm = e.target.value
+              }}
+            />
+            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          </div>
+          <div className="pv3">
+            <ListingTable
+              ajax={true}
+              onFetchData={this.onFetchData}
+              data={activeTaskStore.filteredList}
+              pages={activeTaskStore.metadata.pages}
+              columns={columns}
+              isLoading={activeTaskStore.isLoading}
+            />
+          </div>
         </div>
-        <div className="flex justify-between">
-          <input
-            type="text"
-            className="input w5"
-            placeholder="Search Tasks"
-            onChange={e => {
-              activeTaskStore.searchTerm = e.target.value
-            }}
-          />
-          <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
-        </div>
-        <div className="pv3">
-          <ListingTable
-            ajax={true}
-            onFetchData={this.onFetchData}
-            data={activeTaskStore.filteredList}
-            pages={activeTaskStore.metadata.pages}
-            columns={columns}
-            isLoading={activeTaskStore.isLoading}
-          />
-        </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

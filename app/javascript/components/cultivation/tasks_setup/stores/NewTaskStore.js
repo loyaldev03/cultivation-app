@@ -318,6 +318,30 @@ class TaskStore {
   }
 
   @action
+  async createNoBatchTask(params) {
+    this.isLoading = true
+    const task = params
+    const url = `/api/v1/tasks/create_no_batch`
+    try {
+      const response = await (await fetch(
+        url,
+        httpPostOptions({ task })
+      )).json()
+      if (response) {
+        console.log(response)
+        toast('Task added', 'success')
+        // await this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
   async editTask(batchId, taskId, updateObj, isReload = false) {
     this.isLoading = true
     const task = this.getTaskById(taskId)

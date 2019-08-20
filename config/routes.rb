@@ -351,6 +351,13 @@ Rails.application.routes.draw do
         end
       end
 
+      #for task without batch
+      resources :tasks do
+        collection do
+          post 'create_no_batch', to: 'tasks#create_no_batch' #still use same task controller
+        end
+      end
+
       resources :batches, only: [:index, :create] do
         get 'batch_info'
         get 'harvest_batch'
@@ -380,8 +387,8 @@ Rails.application.routes.draw do
             post 'append_material_use'
           end
           collection do
-            get 'actual_hours'
-            get 'load_issues'
+            get  'actual_hours'
+            get  'load_issues'
           end
         end
         

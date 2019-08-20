@@ -94,7 +94,14 @@ class NewTaskForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { name, start_date, end_date, duration, estimated_hours, instruction } = this.state
+    const {
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      instruction
+    } = this.state
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title={this.props.title} />

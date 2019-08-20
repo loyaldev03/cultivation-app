@@ -1,4 +1,3 @@
-
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
 import React, { memo, useState } from 'react'
@@ -23,54 +22,53 @@ import {
 import classnames from 'classnames'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
-    return (
-      <a
-        className={`pa2 flex link dim pointer items-center ${className}`}
-        onClick={onClick}
-      >
-        <i className="material-icons md-17 pr2">{icon}</i>
-        <span className="pr2">{text}</span>
-      </a>
-    )
-  }
+  return (
+    <a
+      className={`pa2 flex link dim pointer items-center ${className}`}
+      onClick={onClick}
+    >
+      <i className="material-icons md-17 pr2">{icon}</i>
+      <span className="pr2">{text}</span>
+    </a>
+  )
+}
 
 const range = [
-{
+  {
     text: 'This Week',
     val: 'this_week'
-},
-{
+  },
+  {
     text: 'This Year',
     val: 'this_year'
-}
+  }
 ]
 const roleInit = {
-    role_id: 'all',
-    role_name: 'All Job Roles'
-  }
-
-const status = [
-{
-    text: 'Select Status',
-    val: 'all'
-},
-{
-    text: 'Open',
-    val: 'open'
-},
-{
-    text: 'Submitted',
-    val: 'submitted'
-},
-{
-    text: 'Approved',
-    val: 'approved'
-},
-{
-    text: 'Declined',
-    val: 'declined'
+  role_id: 'all',
+  role_name: 'All Job Roles'
 }
 
+const status = [
+  {
+    text: 'Select Status',
+    val: 'all'
+  },
+  {
+    text: 'Open',
+    val: 'open'
+  },
+  {
+    text: 'Submitted',
+    val: 'submitted'
+  },
+  {
+    text: 'Approved',
+    val: 'approved'
+  },
+  {
+    text: 'Declined',
+    val: 'declined'
+  }
 ]
 
 class ActiveTaskStore {
@@ -106,10 +104,12 @@ class ActiveTaskStore {
   @action
   async loadActiveTasks() {
     this.isLoading = true
-    let url = `/api/v1/people/timesheet_approval?facility_id=${this.filter.facility_id}`
-    url += `&page=${this.filter.page}&limit=${this.filter.limit}&range=${this.rangeTerm}&role=${this.roleTerm}&status=${this.statusTerm}&search=${
-      this.searchTerm
+    let url = `/api/v1/people/timesheet_approval?facility_id=${
+      this.filter.facility_id
     }`
+    url += `&page=${this.filter.page}&limit=${this.filter.limit}&range=${
+      this.rangeTerm
+    }&role=${this.roleTerm}&status=${this.statusTerm}&search=${this.searchTerm}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -189,9 +189,9 @@ class TimesheetApp extends React.Component {
     PeopleDashboardStore.loadRoles()
   }
   state = {
-    status: {text: 'Select Status', val:'all'},
-    role: {role_id: '', role_name: 'All Job Roles'},
-    range: {text: 'This Week', val: 'this_week'},
+    status: { text: 'Select Status', val: 'all' },
+    role: { role_id: '', role_name: 'All Job Roles' },
+    range: { text: 'This Week', val: 'this_week' },
     search: '',
     page: 0,
     pageSize: 20,
@@ -204,24 +204,24 @@ class TimesheetApp extends React.Component {
         accessor: 'worker_name',
         minWidth: 100,
         Cell: props => {
-            return (
-              <div className="flex items-center">
-                <img
-                  src={props.row['photo_url']}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '18px'
-                  }}
-                  onError={x => {
-                    x.target.onerror = null
-                    x.target.src = DefaultAvatar
-                  }}
-                />
-                <span className="f6 fw6 dark-grey ml2 w-20">{props.value}</span>
-              </div>
-            )
-          }
+          return (
+            <div className="flex items-center">
+              <img
+                src={props.row['photo_url']}
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '18px'
+                }}
+                onError={x => {
+                  x.target.onerror = null
+                  x.target.src = DefaultAvatar
+                }}
+              />
+              <span className="f6 fw6 dark-grey ml2 w-20">{props.value}</span>
+            </div>
+          )
+        }
       },
       {
         headerClassName: 'tl justify-center',
@@ -258,36 +258,34 @@ class TimesheetApp extends React.Component {
         accessor: 'id',
         minWidth: 88,
         Cell: props => <span className="ttc">{props.value}</span>
-      },
-     
+      }
     ]
   }
 
-onChangeRoles = role => {
+  onChangeRoles = role => {
     this.setState({ role: role }, () => {
-        activeTaskStore.roleTerm = role.role_id
-        activeTaskStore.loadActiveTasks()
+      activeTaskStore.roleTerm = role.role_id
+      activeTaskStore.loadActiveTasks()
     })
-}
-onChangeStatus = status => {
+  }
+  onChangeStatus = status => {
     this.setState({ status: status }, () => {
-        activeTaskStore.statusTerm = status.val
-        activeTaskStore.loadActiveTasks()
+      activeTaskStore.statusTerm = status.val
+      activeTaskStore.loadActiveTasks()
     })
-}
-onChangeRange = range => {
+  }
+  onChangeRange = range => {
     this.setState({ range: range }, () => {
-        activeTaskStore.rangeTerm = range.val
-        activeTaskStore.loadActiveTasks()
+      activeTaskStore.rangeTerm = range.val
+      activeTaskStore.loadActiveTasks()
     })
-}
-onChangeSearch = search => {
+  }
+  onChangeSearch = search => {
     this.setState({ search: search }, () => {
-        activeTaskStore.searchTerm = search 
-        //activeTaskStore.loadActiveTasks()
+      activeTaskStore.searchTerm = search
+      //activeTaskStore.loadActiveTasks()
     })
-}
-
+  }
 
   onFetchData = (state, instance) => {
     activeTaskStore.setFilter({
@@ -310,16 +308,15 @@ onChangeSearch = search => {
     }
   }
 
-  
-
   render() {
     const { columns, showEditor } = this.state
     return (
       <div className="w-100 bg-white pa3">
         <div className="flex mb4 mt2">
-          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Timesheets Approval</h1>
+          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
+            Timesheets Approval
+          </h1>
         </div>
-
 
         <div className="flex justify-between pb3">
           <input
@@ -331,97 +328,98 @@ onChangeSearch = search => {
             }}
           />
           <div className="flex justify-between">
-             <Tippy
-                placement="bottom-end"
-                trigger="click"
-                duration="0"
-                content={
-                    <div className="bg-white f6 flex">
-                    <div className="db shadow-4">
-                        <MenuButton
-                        key={1}
-                        text={'All Job Roles'}
-                        className=""
-                        onClick={() => this.onChangeRoles(roleInit)}
-                        />
-                        {PeopleDashboardStore.roles_loaded
-                        ? PeopleDashboardStore.data_roles.map(d => (
-                            <MenuButton
-                                key={d.role_id}
-                                text={d.role_name}
-                                className=""
-                                onClick={() => this.onChangeRoles(d)}
-                            />
-                            ))
-                        : 'loading...'}
-                    </div>
-                    </div>
-                }
-                >
-                <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey ttc">
-                    {this.state.role.role_name}
-                    </h1>
-                    <i className="material-icons grey mr2  md-21 mt2">
-                    keyboard_arrow_down
-                    </i>
-                </div>
-                </Tippy>
-                <Tippy
-                placement="bottom-end"
-                trigger="click"
-                duration="0"
-                content={
-                    <div className="bg-white f6 flex">
-                    <div className="db shadow-4">
-                        {status.map(d => (
-                        <MenuButton
-                            key={d.val}
-                            text={d.text}
-                            className=""
-                            onClick={() => this.onChangeStatus(d)}
-                        />
-                        ))}
-                        
-                    </div>
-                    </div>
-                }
-                >
-                <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey ttc">{this.state.status.text}</h1>
-                    <i className="material-icons grey mr2  md-21 mt2">
-                    keyboard_arrow_down
-                    </i>
-                </div>
-                </Tippy>
             <Tippy
-                placement="bottom-end"
-                trigger="click"
-                duration="0"
-                content={
-                    <div className="bg-white f6 flex">
-                    <div className="db shadow-4">
-                        {range.map(d => (
-                        <MenuButton
-                            key={d.val}
-                            text={d.text}
+              placement="bottom-end"
+              trigger="click"
+              duration="0"
+              content={
+                <div className="bg-white f6 flex">
+                  <div className="db shadow-4">
+                    <MenuButton
+                      key={1}
+                      text={'All Job Roles'}
+                      className=""
+                      onClick={() => this.onChangeRoles(roleInit)}
+                    />
+                    {PeopleDashboardStore.roles_loaded
+                      ? PeopleDashboardStore.data_roles.map(d => (
+                          <MenuButton
+                            key={d.role_id}
+                            text={d.role_name}
                             className=""
-                            onClick={() => this.onChangeRange(d)}
-                        />
-                        ))}
-                    </div>
-                    </div>
-                }
-                >
-                <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey ttc">{this.state.range.text}</h1>
-                    <i className="material-icons grey mr2  md-21 mt2">
-                    keyboard_arrow_down
-                    </i>
+                            onClick={() => this.onChangeRoles(d)}
+                          />
+                        ))
+                      : 'loading...'}
+                  </div>
                 </div>
-                </Tippy>
+              }
+            >
+              <div className="flex ba b--light-silver br2 pointer dim">
+                <h1 className="f6 fw6 ml2 grey ttc">
+                  {this.state.role.role_name}
+                </h1>
+                <i className="material-icons grey mr2  md-21 mt2">
+                  keyboard_arrow_down
+                </i>
+              </div>
+            </Tippy>
+            <Tippy
+              placement="bottom-end"
+              trigger="click"
+              duration="0"
+              content={
+                <div className="bg-white f6 flex">
+                  <div className="db shadow-4">
+                    {status.map(d => (
+                      <MenuButton
+                        key={d.val}
+                        text={d.text}
+                        className=""
+                        onClick={() => this.onChangeStatus(d)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <div className="flex ba b--light-silver br2 pointer dim">
+                <h1 className="f6 fw6 ml2 grey ttc">
+                  {this.state.status.text}
+                </h1>
+                <i className="material-icons grey mr2  md-21 mt2">
+                  keyboard_arrow_down
+                </i>
+              </div>
+            </Tippy>
+            <Tippy
+              placement="bottom-end"
+              trigger="click"
+              duration="0"
+              content={
+                <div className="bg-white f6 flex">
+                  <div className="db shadow-4">
+                    {range.map(d => (
+                      <MenuButton
+                        key={d.val}
+                        text={d.text}
+                        className=""
+                        onClick={() => this.onChangeRange(d)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <div className="flex ba b--light-silver br2 pointer dim">
+                <h1 className="f6 fw6 ml2 grey ttc">{this.state.range.text}</h1>
+                <i className="material-icons grey mr2  md-21 mt2">
+                  keyboard_arrow_down
+                </i>
+              </div>
+            </Tippy>
             {/* <CheckboxSelect options={columns} onChange={this.onToggleColumns} /> */}
-            </div>
+          </div>
         </div>
 
         <ListingTable
@@ -436,10 +434,6 @@ onChangeSearch = search => {
     )
   }
 }
-
-
-
-
 
 export default TimesheetApp
 
@@ -587,10 +581,9 @@ export default TimesheetApp
 //         minWidth: 88,
 //         Cell: props => <span className="ttc">{props.value}</span>
 //       },
-     
+
 //     ]
 //   }
-
 
 // onChangeRoles = role => {
 //     this.setState({ role: role }, () => {
@@ -612,7 +605,7 @@ export default TimesheetApp
 // }
 // onChangeSearch = search => {
 //     this.setState({ search: search }, () => {
-//         timesheetStore.searchTerm = search 
+//         timesheetStore.searchTerm = search
 //         timesheetStore.loadActiveTasks()
 //     })
 // }
@@ -689,7 +682,7 @@ export default TimesheetApp
 //                             onClick={() => this.onChangeStatus(d)}
 //                         />
 //                         ))}
-                        
+
 //                     </div>
 //                     </div>
 //                 }
@@ -730,7 +723,7 @@ export default TimesheetApp
 //             {/* <CheckboxSelect options={columns} onChange={this.onToggleColumns} /> */}
 //             </div>
 //        </div>
-        
+
 //         <div className="pv3">
 //           <ListingTable
 //             ajax={true}
@@ -746,4 +739,3 @@ export default TimesheetApp
 //   }
 // }
 // export default TimesheetApp
-

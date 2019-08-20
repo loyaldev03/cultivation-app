@@ -180,7 +180,7 @@ class OntimeArrivalsWidget extends React.Component {
         {PeopleDashboardStore.ontime_arrival_loaded
           ? PeopleDashboardStore.data_ontime_arrival.data.length != 0
             ? PeopleDashboardStore.data_ontime_arrival.data.map((e, i) => (
-                <div className="flex justify-between mb3 pt2">
+                <div className="flex justify-between mb3 pt2" key={e.user.id}>
                   <div className="flex items-center w-40">
                     {e.user.photo_url ? (
                       <div>

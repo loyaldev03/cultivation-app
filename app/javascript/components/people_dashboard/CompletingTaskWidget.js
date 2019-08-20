@@ -178,7 +178,7 @@ class CompletingTaskWidget extends React.Component {
         {PeopleDashboardStore.completing_task_loaded
           ? PeopleDashboardStore.data_completing_task.data.length != 0
             ? PeopleDashboardStore.data_completing_task.data.map((e, i) => (
-                <div className="flex justify-between mb3 pt2">
+                <div className="flex justify-between mb3 pt2" key={i}>
                   <div className="flex items-center w-50">
                     {e.photo_url ? (
                       <div>

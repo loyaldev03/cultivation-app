@@ -19,26 +19,29 @@ module People
         total_capacity = 0
         total_actual = 0
         percentage = 0
-        result.map do |user|
+        result&.map do |user|
           capacities = 0
           user_percentage = 0
           if user[:roles].include?(role.id)
-            range(user[:work_schedules]).map do |ws|
+            range(user[:work_schedules])&.map do |ws|
               capacities += ((ws[:end_time] - ws[:start_time]) / 1.hour)
             end
             unless user[:actual] == 0 or capacities == 0
               user_percentage = 100 - (((capacities.to_f - user[:actual].to_f) / capacities.to_f * 100).ceil)
+            end
+            if user[:actual] > 0 and capacities == 0
+              user_percentage = 100
             end
             total_capacity += capacities.round(2)
             total_actual += user[:actual].round(2)
             user_data << {
               first_name: user[:first_name],
               last_name: user[:last_name],
-              photo_url: user[:photo_data],
+              photo_url: nil,
               actual: user[:actual].round(0),
               capacity: capacities.round(0),
               user_percentage: user_percentage,
-              skills: user[:skills],
+              skills: user[:skills] || [],
 
             }
           end
@@ -101,7 +104,7 @@ module People
           "email": 1,
           "first_name": 1,
           "last_name": 1,
-          "photo_data": 1,
+          "photo_url": '$user.photo_url',
           "roles": 1,
           "skills": 1,
           "actual": 1,

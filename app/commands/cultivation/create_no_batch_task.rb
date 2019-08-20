@@ -25,6 +25,7 @@ module Cultivation
         estimated_hours: @args[:estimated_hours],
         user_ids: @args[:user_ids],
         facility_id: @args[:facility_id],
+        instruction: @args[:instruction],
       )
       task.save
       task

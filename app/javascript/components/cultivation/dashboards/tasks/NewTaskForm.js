@@ -39,7 +39,8 @@ class NewTaskForm extends React.Component {
       end_date: tomorrow,
       duration: 1,
       estimated_hours: 0.0,
-      facility_id: this.props.facilityId
+      facility_id: this.props.facilityId,
+      instruction: ''
     }
   }
 
@@ -93,7 +94,14 @@ class NewTaskForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { name, start_date, end_date, duration, estimated_hours } = this.state
+    const {
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      instruction
+    } = this.state
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
@@ -162,6 +170,16 @@ class NewTaskForm extends React.Component {
                 onChange={e =>
                   this.handleChange('estimated_hours', e.target.value)
                 }
+              />
+            </div>
+
+            <div className="w-100 mt3">
+              <label className="f6 fw6 db mb1 gray ttc mb2">Instruction</label>
+              <textarea
+                type="text"
+                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+                value={instruction}
+                onChange={e => this.handleChange('instruction', e.target.value)}
               />
             </div>
 

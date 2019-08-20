@@ -213,7 +213,7 @@ class AssignResourceForm extends React.Component {
 
 AssignResourceForm.propTypes = {
   selectMode: PropTypes.string,
-  facilityId: PropTypes.string,
+  facilityId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   embeddedForm: PropTypes.bool,

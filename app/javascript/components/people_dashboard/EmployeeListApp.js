@@ -111,7 +111,9 @@ class ActiveTaskStore {
   @action
   async loadActiveTasks() {
     this.isLoading = true
-    let url = `/api/v1/people/employee_list?facility_id=${this.filter.facility_id}`
+    let url = `/api/v1/people/employee_list?facility_id=${
+      this.filter.facility_id
+    }`
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`

@@ -14,12 +14,9 @@ module People
     end
 
     def call
-
-      # json_array
       result = aggregate_call
       main = []
       data = []
-      # manager = nil
       result.to_a[0][:data].map do |user|
         ontime_arrival_data = ontime_arrival(user[:work_schedules], user[:cultivation_time_logs])
         task_on_time_data = task_on_time(user[:tasks_ontime], user[:cultivation_time_logs], user[:_id])
@@ -47,8 +44,6 @@ module People
         metadata: result.to_a[0]['metadata'][0],
       }
       main.first
-      # json_array
-      # result.to_a[0][:data]
     end
 
     def aggregate_call

@@ -249,6 +249,7 @@ Rails.application.routes.draw do
           get 'worker_by_skills'
           get 'job_roles'
           get 'employee_list'
+          get 'timesheet_approval'
         end
       end
 

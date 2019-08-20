@@ -148,9 +148,10 @@ module Constants
   CURE_METHOD = [
     {code: :highrise_cure_racks, name: 'Hanging high rise curing rack'},
     {code: :curing_racks, name: 'Curing rack'},
-  ]
+  ].freeze
 
   PLANT_SOURCE_TYPES = [
+    {code: :purchased_clones, name: 'Purchased plants'},
     {code: :clones_from_mother, name: 'Clones from Mother plant'},
     {code: :clones_purchased, name: 'Pre-purchased clones'},
     {code: :seeds, name: 'Seeds'},
@@ -219,18 +220,18 @@ module Constants
   ].freeze
 
   # Constants for Catalogue's category fields
-  NUTRIENTS_KEY = 'nutrients'
-  SUPPLEMENTS_KEY = 'supplements'
-  GROW_MEDIUM_KEY = 'grow_medium'
-  GROW_LIGHT_KEY = 'grow_light'
-  OTHERS_KEY = 'others'
-  CONVERTED_PRODUCT_KEY = 'converted_product'
-  PLANTS_KEY = 'plants'
-  SEEDS_KEY = 'seeds'
-  PURCHASED_CLONES_KEY = 'purchased_clones'
-  SALES_KEY = 'sales_products'
-  NON_SALES_KEY = 'non_sales'
-  RAW_MATERIALS_KEY = 'raw_materials'
+  NUTRIENTS_KEY = 'nutrients'.freeze
+  SUPPLEMENTS_KEY = 'supplements'.freeze
+  GROW_MEDIUM_KEY = 'grow_medium'.freeze
+  GROW_LIGHT_KEY = 'grow_light'.freeze
+  OTHERS_KEY = 'others'.freeze
+  CONVERTED_PRODUCT_KEY = 'converted_product'.freeze
+  PLANTS_KEY = 'plants'.freeze
+  SEEDS_KEY = 'seeds'.freeze
+  PURCHASED_CLONES_KEY = 'purchased_clones'.freeze
+  SALES_KEY = 'sales_products'.freeze
+  NON_SALES_KEY = 'non_sales'.freeze
+  RAW_MATERIALS_KEY = 'raw_materials'.freeze
 
   SPECIAL_TYPE = [
     {code: :others, name: 'Others'},

@@ -151,7 +151,7 @@ module Constants
   ].freeze
 
   PLANT_SOURCE_TYPES = [
-    {code: :purchased_clones, name: 'Purchased plants'},
+    {code: :purchased_plants, name: 'Purchased plants'},
     {code: :clones_from_mother, name: 'Clones from Mother plant'},
     {code: :clones_purchased, name: 'Pre-purchased clones'},
     {code: :seeds, name: 'Seeds'},

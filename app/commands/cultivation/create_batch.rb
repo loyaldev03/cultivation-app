@@ -12,7 +12,7 @@ module Cultivation
     def call
       if valid_permission? && valid_data?
         batch = create_new_batch(args)
-        GenerateTasksFromTemplateJob.perform_now(batch.id.to_s)
+        GenerateTasksFromTemplateJob.perform_now(batch.id.to_s, true)
         batch
       else
         args
@@ -53,7 +53,6 @@ module Cultivation
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = get_next_batch_no
-      batch.current_growth_stage = Constants::CONST_CLONE
       batch.save!
       batch
     end

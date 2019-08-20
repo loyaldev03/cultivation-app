@@ -60,6 +60,7 @@ class Cultivation::BatchesController < ApplicationController
     if params[:select_location].present?
       quantity = params[:quantity].blank? ? @batch.quantity : params[:quantity]
       start_date = params[:start_date].blank? ? @batch.start_date : params[:start_date]
+      @phases = Common::GrowPhase.where(is_active: true).pluck(:name)
       @batch_info = OpenStruct.new(
         id: @batch.id.to_s,
         batchSource: @batch.batch_source,

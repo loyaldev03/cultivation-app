@@ -61,7 +61,6 @@ class BatchLocationApp extends React.Component {
   }
 
   onClickSelectionEdit = (phase, plant = null) => {
-    console.log(phase, plant)
     const editingPlant = plant ? this.getSelected(plant.id) : null
     if (editingPlant) {
       this.setState({ editingPlant })
@@ -245,14 +244,40 @@ class BatchLocationApp extends React.Component {
     )
   }
 
+  remainingPhases = (firstPhase, phases) => {
+    const hasMultipleVeg = phases.includes(GROWTH_PHASE.VEG1) && phases.includes(GROWTH_PHASE.VEG2)
+    if (hasMultipleVeg) {
+      if (firstPhase === GROWTH_PHASE.CLONE) {
+        return [GROWTH_PHASE.VEG1, GROWTH_PHASE.VEG2, GROWTH_PHASE.FLOWER]
+      }
+      if (firstPhase === GROWTH_PHASE.VEG1) {
+        return [GROWTH_PHASE.VEG2, GROWTH_PHASE.FLOWER]
+      }
+      if (firstPhase === GROWTH_PHASE.VEG2) {
+        return [GROWTH_PHASE.FLOWER]
+      }
+      return []
+    } else {
+      if (firstPhase === GROWTH_PHASE.CLONE) {
+        return [GROWTH_PHASE.VEG, GROWTH_PHASE.FLOWER]
+      }
+      if (firstPhase === GROWTH_PHASE.VEG) {
+        return [GROWTH_PHASE.FLOWER]
+      }
+      return []
+    }
+  }
+
   render() {
-    const { batchInfo } = this.props
+    const { batchInfo, phases } = this.props
+    const firstPhase = this.props.phases[0]
     const { isLoading, isNotified, editingPlant, quantity } = this.state
-    const sumOfClone = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.CLONE),
+    const sumOfFirstPhase = sumBy(
+      this.getBookingsByPhase(firstPhase),
       'quantity'
     )
-    const isFirstBalance = isNotified ? true : +quantity === sumOfClone
+    const otherPhases = this.remainingPhases(firstPhase, phases)
+    const isFirstBalance = isNotified ? true : +quantity === sumOfFirstPhase
     const isDisableSubmit = this.isDisableNext()
     return (
       <div className="fl ma4 pa4 bg-white" style={{ width: '800px' }}>
@@ -294,7 +319,7 @@ class BatchLocationApp extends React.Component {
             <React.Fragment>
               <div className="mt3 dib w-100">
                 {this.renderBookingsForPhase(
-                  GROWTH_PHASE.CLONE,
+                  firstPhase,
                   batchInfo.strainId,
                   quantity,
                   batchInfo.cloneSelectionType
@@ -303,29 +328,15 @@ class BatchLocationApp extends React.Component {
 
               {isNotified && (
                 <React.Fragment>
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.VEG1,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
-
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.VEG2,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
-
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.FLOWER,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
+                  {otherPhases.map(phase => (
+                    <div className="mt4">
+                      {this.renderBookingsForPhase(
+                        phase,
+                        batchInfo.strainId,
+                        quantity)
+                      }
+                    </div>
+                  )) }
                 </React.Fragment>
               )}
 

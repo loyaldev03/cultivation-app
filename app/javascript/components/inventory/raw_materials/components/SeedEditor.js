@@ -337,7 +337,7 @@ class SeedEditor extends React.Component {
   }
 
   render() {
-    const { facility_strains } = this.props
+    const { facility_strains, canUpdate, canCreate } = this.props
     let facilityStrain = facility_strains.find(
       x => x.value === this.state.facility_strain_id
     )
@@ -588,16 +588,19 @@ class SeedEditor extends React.Component {
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
-
-          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-            <a
-              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-              href="#"
-              onClick={this.onSave}
-            >
-              Save
-            </a>
-          </div>
+          {(canUpdate || canCreate) && (
+            <React.Fragment>
+              <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+                <a
+                  className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+                  href="#"
+                  onClick={this.onSave}
+                >
+                  Save
+                </a>
+              </div>
+            </React.Fragment>
+          )}
         </div>
       </div>
     )

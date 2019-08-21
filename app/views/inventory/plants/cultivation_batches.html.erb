@@ -7,19 +7,30 @@
 <% end %>
 
 <div class="pa4">
-  <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id])%>
-  <%= render partial: 'setupNavigation', locals: { selected: 'cultivation_batch' } %>
-  <div class="flex flex-column">
-    <%= react_component('inventory/simple_cultivation_setup/SimpleCultivationBatchSetupApp', {
-        facility_strains: @facility_strains,
-        batch_sources: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
-        grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
-      }) %>
-    <div class="w-100 bg-white ph3 pt2 pb4">
-      <div class="dim flex flex-row items-center pointer">
-        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
-        <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
-      </div>  
+  <% if RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result[:read] == true %>
+    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id])%>
+    <%= render partial: 'setupNavigation', locals: { selected: 'cultivation_batch' } %>
+    <div class="flex flex-column">
+      <%= react_component('inventory/simple_cultivation_setup/SimpleCultivationBatchSetupApp', {
+          facility_strains: @facility_strains,
+          batch_sources: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
+          grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
+          plantPermission: RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result
+        }) %>
+      <div class="w-100 bg-white ph3 pt2 pb4">
+        <div class="dim flex flex-row items-center pointer">
+          <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+          <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
+        </div>  
+      </div>
     </div>
-  </div>
+  <% else %>
+    <div class="flex flex-column">
+      <div class="w-100 bg-white ph3 pt2 pb4">
+        <div class="dim flex flex-row items-center pointer">
+          <%= render partial: 'layouts/no_permission' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>

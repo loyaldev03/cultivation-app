@@ -399,6 +399,7 @@ export default class HarvestBatchEditor extends React.Component {
 
   render() {
     const { id, plants, cultivation_batch, plant_uom } = this.state
+    const { canUpdate, canCreate } = this.props
     let facility_id = '',
       facility_strain_id = ''
 
@@ -540,16 +541,19 @@ export default class HarvestBatchEditor extends React.Component {
           </div>
 
           {this.renderProcurementInfo(cultivation_batch)}
-
-          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-            <a
-              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-              href="#"
-              onClick={this.onSave}
-            >
-              Save
-            </a>
-          </div>
+          {(canUpdate || canCreate) && (
+            <React.Fragment>
+              <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+                <a
+                  className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+                  href="#"
+                  onClick={this.onSave}
+                >
+                  Save
+                </a>
+              </div>
+            </React.Fragment>
+          )}
         </div>
       </div>
     )

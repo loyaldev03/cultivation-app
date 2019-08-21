@@ -235,6 +235,7 @@ Rails.application.routes.draw do
         end
       end
 
+
       resources :people, only: [:index] do
         collection do
           get 'head_counts_chart'
@@ -425,6 +426,9 @@ Rails.application.routes.draw do
 
       # TODO: items to be removed. Material used for task should be move to batches/tasks api
       #       whereas catalogue related to facility should call catalogues.
+      resources :grow_phases do
+        post ':id/update', on: :collection, action: :update_grow_phase
+      end
       resources :items, only: [:index, :create, :destroy]
       resources :uoms, only: [:index]
       resources :catalogues, only: [] do

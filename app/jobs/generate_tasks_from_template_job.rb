@@ -1,9 +1,20 @@
 class GenerateTasksFromTemplateJob < ApplicationJob
   queue_as :default
 
-  def perform(batch_id)
+  def perform(batch_id, comply_growth_phases_setting = false)
+    @logger = Logger.new(STDOUT)
+    phases = if comply_growth_phases_setting
+               Common::GrowPhase.where(is_active: true).pluck(:name)
+             else
+               []
+             end
+    @logger.debug phases
     batch = Cultivation::Batch.find_by(id: batch_id)
-    new_tasks = generate_tasks(batch, get_tasks_from_template(batch))
+    new_tasks = generate_tasks(
+      batch,
+      get_tasks_from_template(batch, phases),
+    )
+    @logger.debug "total rows qualified: #{new_tasks.size}"
 
     # Insert task to database
     Cultivation::Task.create(new_tasks)
@@ -15,9 +26,17 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
   private
 
-  def get_tasks_from_template(batch)
+  def get_tasks_from_template(batch, phases)
     template_path = "lib/cultivation_templates/#{batch.batch_source}.json"
-    JSON.parse(File.read(template_path), symbolize_names: true)
+    res = JSON.parse(File.read(template_path), symbolize_names: true)
+
+    @logger.debug "total rows in json: #{res.size}"
+    @logger.debug "phases.blank?: #{phases.blank?}"
+    if phases.blank?
+      res
+    else
+      res.select { |x| phases.include? x[:phase] }
+    end
   end
 
   def generate_tasks(batch, template_tasks)

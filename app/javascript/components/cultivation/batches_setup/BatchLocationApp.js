@@ -61,7 +61,6 @@ class BatchLocationApp extends React.Component {
   }
 
   onClickSelectionEdit = (phase, plant = null) => {
-    console.log(phase, plant)
     const editingPlant = plant ? this.getSelected(plant.id) : null
     if (editingPlant) {
       this.setState({ editingPlant })
@@ -153,40 +152,25 @@ class BatchLocationApp extends React.Component {
     return remainingLocations
   }
 
-  isDisableNext = () => {
+  isDisableNext = phases => {
     if (isEmpty(this.state.selectedPlants)) {
       // toast('Please select plants & locations to continue.', 'warning')
       // Plants Location & Quantity is required
       return true
     }
 
-    const quantity = +this.state.quantity
-    const selectedCloneQuantity = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.CLONE),
-      'quantity'
-    )
-    const selectedVeg1Quantity = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.VEG1),
-      'quantity'
-    )
-    const selectedVeg2Quantity = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.VEG2),
-      'quantity'
-    )
-    const selectedFlowerQuantity = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.FLOWER),
-      'quantity'
-    )
-    if (
-      selectedCloneQuantity === quantity &&
-      selectedVeg1Quantity === quantity &&
-      selectedVeg2Quantity === quantity &&
-      selectedFlowerQuantity === quantity
-    ) {
-      return false
-    } else {
+    if (!this.state.isNotified) {
       return true
     }
+
+    const quantity = +this.state.quantity
+
+    const hasIncomplete = phases.some(x => {
+      const sum = sumBy(this.getBookingsByPhase(x), 'quantity')
+      return sum !== quantity
+    })
+
+    return hasIncomplete
   }
 
   locationResolver = (locationType, id) => {
@@ -245,15 +229,42 @@ class BatchLocationApp extends React.Component {
     )
   }
 
+  remainingPhases = (firstPhase, phases) => {
+    const hasMultipleVeg =
+      phases.includes(GROWTH_PHASE.VEG1) && phases.includes(GROWTH_PHASE.VEG2)
+    if (hasMultipleVeg) {
+      if (firstPhase === GROWTH_PHASE.CLONE) {
+        return [GROWTH_PHASE.VEG1, GROWTH_PHASE.VEG2, GROWTH_PHASE.FLOWER]
+      }
+      if (firstPhase === GROWTH_PHASE.VEG1) {
+        return [GROWTH_PHASE.VEG2, GROWTH_PHASE.FLOWER]
+      }
+      if (firstPhase === GROWTH_PHASE.VEG2) {
+        return [GROWTH_PHASE.FLOWER]
+      }
+      return []
+    } else {
+      if (firstPhase === GROWTH_PHASE.CLONE) {
+        return [GROWTH_PHASE.VEG, GROWTH_PHASE.FLOWER]
+      }
+      if (firstPhase === GROWTH_PHASE.VEG) {
+        return [GROWTH_PHASE.FLOWER]
+      }
+      return []
+    }
+  }
+
   render() {
-    const { batchInfo } = this.props
+    const { batchInfo, phases } = this.props
+    const firstPhase = this.props.phases[0]
     const { isLoading, isNotified, editingPlant, quantity } = this.state
-    const sumOfClone = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.CLONE),
+    const sumOfFirstPhase = sumBy(
+      this.getBookingsByPhase(firstPhase),
       'quantity'
     )
-    const isFirstBalance = isNotified ? true : +quantity === sumOfClone
-    const isDisableSubmit = this.isDisableNext()
+    const otherPhases = this.remainingPhases(firstPhase, phases)
+    const isFirstBalance = isNotified ? true : +quantity === sumOfFirstPhase
+    const isDisableSubmit = this.isDisableNext(otherPhases)
     return (
       <div className="fl ma4 pa4 bg-white" style={{ width: '800px' }}>
         <div id="toast" className="toast" />
@@ -294,7 +305,7 @@ class BatchLocationApp extends React.Component {
             <React.Fragment>
               <div className="mt3 dib w-100">
                 {this.renderBookingsForPhase(
-                  GROWTH_PHASE.CLONE,
+                  firstPhase,
                   batchInfo.strainId,
                   quantity,
                   batchInfo.cloneSelectionType
@@ -303,29 +314,15 @@ class BatchLocationApp extends React.Component {
 
               {isNotified && (
                 <React.Fragment>
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.VEG1,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
-
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.VEG2,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
-
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.FLOWER,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
+                  {otherPhases.map(phase => (
+                    <div className="mt4">
+                      {this.renderBookingsForPhase(
+                        phase,
+                        batchInfo.strainId,
+                        quantity
+                      )}
+                    </div>
+                  ))}
                 </React.Fragment>
               )}
 
@@ -334,20 +331,22 @@ class BatchLocationApp extends React.Component {
                   show={!isNotified}
                   render={() => (
                     <div className="w-100 w-80-m w-60-l h-100 center flex flex-column items-center justify-center">
-                      <div className="shadow-1 br2">
+                      <div className="shadow-1 br2 min-w800">
                         <div className="h5 bg-orange w-100 flex justify-center">
                           <img src={ImgPlantGrowth} />
                         </div>
                         <div className="bg-white w-100 pa3 tc">
                           <p className="f3 fw6 dark-grey ma3">
-                            All set up on cloning stage! Just one more thing...
+                            All set up on {firstPhase} stage!{' '}
+                            {!isEmpty(otherPhases) && (
+                              <span>Just one more thing...</span>
+                            )}
                           </p>
-                          <p className="grey ph5">
-                            Proceed to configure location for next phase.
-                            Proceed to configure location for next phaseProceed
-                            to configure location for next phaseProceed to
-                            configure location for next phase
-                          </p>
+                          {!isEmpty(otherPhases) && (
+                            <p className="grey ph5">
+                              Proceed to configure location for next phase.
+                            </p>
+                          )}
                           <a
                             href="#0"
                             onClick={this.onButtonClick('isNotified', true)}

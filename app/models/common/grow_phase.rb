@@ -1,4 +1,3 @@
-
 module Common
   class GrowPhase
     include Mongoid::Document

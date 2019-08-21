@@ -90,6 +90,7 @@ class ActiveTaskStore {
   @observable metadata = {}
   @observable searchTerm = ''
   @observable filter = {
+    facility_id: '',
     page: 0,
     limit: 20
   }
@@ -110,7 +111,9 @@ class ActiveTaskStore {
   @action
   async loadActiveTasks() {
     this.isLoading = true
-    let url = `/api/v1/people/employee_list?`
+    let url = `/api/v1/people/employee_list?facility_id=${
+      this.filter.facility_id
+    }`
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
@@ -137,6 +140,7 @@ class ActiveTaskStore {
   @action
   setFilter(filter) {
     this.filter = {
+      facility_id: filter.facility_id,
       page: filter.page,
       limit: filter.limit
     }
@@ -172,8 +176,9 @@ class ActiveTaskStore {
           return false
         }
         const filterLc = this.searchTerm.toLowerCase()
-        const nameLc = `${b.tag}`.toLowerCase()
-        const results = nameLc.includes(filterLc)
+        const nameLc = `${b.user}`.toLowerCase()
+        const rolesLc = `${b.role_name}`.toLowerCase()
+        const results = nameLc.includes(filterLc) || rolesLc.includes(filterLc)
         return results
       })
     } else {
@@ -332,6 +337,7 @@ class EmployeeListApp extends React.Component {
   }
   onFetchData = (state, instance) => {
     activeTaskStore.setFilter({
+      facility_id: this.props.currentFacilityId,
       page: state.page,
       limit: state.pageSize
     })

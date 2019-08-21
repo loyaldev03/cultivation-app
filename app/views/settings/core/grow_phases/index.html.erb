@@ -1,1 +1,4 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], ["General Settings", settings_core_path], "Unit of Measure" %>
+<% end %>
 <%= react_component 'settings/GrowPhaseSetting' %>

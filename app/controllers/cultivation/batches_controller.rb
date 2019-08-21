@@ -28,13 +28,22 @@ class Cultivation::BatchesController < ApplicationController
     @facility_id = current_facility&.id.to_s
     # Cultivation Phases during batch setup depends on the
     # Facility's (room & section) purposes
-    @phases = current_facility&.purposes || []
+    @phases = Common::GrowPhase.where(is_active: true).pluck(:name)
     @plant_sources = Constants::PLANT_SOURCE_TYPES.map do |a|
       {
         value: a[:code],
         label: a[:name],
       }
     end
+
+    # If Clone growth phase is not enabled in settings, don't allow
+    # user to start batch from Clone
+    if !@phases.include? Constants::CONST_CLONE
+      @plant_sources = Constants::PLANT_SOURCE_TYPES.
+        select { |x| x[:code] == :purchased_plants }.
+        map { |a| {value: a[:code], label: a[:name]} }
+    end
+
     facility_strains = Inventory::QueryFacilityStrains.call(@facility_id).result
     @strains = facility_strains.map do |a|
       {

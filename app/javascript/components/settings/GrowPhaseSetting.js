@@ -16,7 +16,7 @@ class GrowPhaseSetting extends React.Component {
         Header: 'Name',
         accessor: 'name',
         minWidth: 250,
-        className: 'ttc',
+        className: 'ttc'
       },
       {
         Header: (
@@ -53,38 +53,33 @@ class GrowPhaseSetting extends React.Component {
     GrowPhaseStore.loadGrowPhase()
   }
 
-
   onToggleActive = (id, value) => e => {
-      console.log(value)
+    console.log(value)
     GrowPhaseStore.updateCategory(id, !value)
   }
 
   render() {
-    const { columns} = this.state
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 fl w-100">
-            
             <div className="fl w-100-l w-100-m">
-                    
-                  <div className="pb4 ph3">
-                    <h5 className="tl pa0 ma0 h5--font dark-grey ttc pb3">
-                        Grow Phases
-                    </h5>
-                    <p className="grey">
-                      You can
-                      decide which phases to be used by
-                      setting it to "Active"
-                    </p>
-                    <ListingTable
-                      data={GrowPhaseStore.filteredList}
-                      columns={columns}
-                      isLoading={GrowPhaseStore.isLoading}
-                    />
-                  </div>
-                
+              <div className="pb4 ph3">
+                <h5 className="tl pa0 ma0 h5--font dark-grey ttc pb3">
+                  Grow Phases
+                </h5>
+                <p className="grey">
+                  You can decide which phases to be used by setting it to
+                  "Active"
+                </p>
+                <ListingTable
+                  data={GrowPhaseStore.filteredList}
+                  columns={columns}
+                  isLoading={GrowPhaseStore.isLoading}
+                />
+              </div>
             </div>
           </div>
         </div>

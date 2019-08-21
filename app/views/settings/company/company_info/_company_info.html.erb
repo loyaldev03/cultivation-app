@@ -73,7 +73,7 @@
     <div class="flex flex-row">
       <div class="w-40">
         <%= f.label "website", class: "db mb1 grey subtitle-2 ttc" %>
-        <%= f.text_field :website, 
+        <%= f.text_field :website,
             placeholder: "https://www.google.com/",
             value: @company_info.website,
             class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
@@ -81,6 +81,38 @@
     </div>
   </div>
 </div>
+
+<div class="flex flex-row-l flex-column pt4">
+  <div class="w-20">
+    <span class="subtitle-2 grey">METRC Integration</span>
+  </div>
+
+  <div class="w-40">
+    <%= f.check_box :enable_metrc_integration,
+        class: "toggle toggle-default",
+        data: { toggle: 'metric_enabled_options' }
+    %>
+    <label class="toggle-button" for="company_info_enable_metrc_integration"></label>
+    <span class="grey dib pv2">When enabled, item categories will be pulled from Metrc</span>
+  </div>
+</div>
+
+<div class="flex flex-row-l flex-column pt2">
+  <div class="w-20"></div>
+  <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
+    <div class="flex flex-row mb3" data-collapse="metric_enabled_options">
+      <div class="w-40 mr4">
+        <%= f.label "User Key", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :metrc_user_key,
+            placeholder: "a1890a4d99e223co001e2b0f0123aer456c87",
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        <small class="grey">This is required for Cannected to commuicate with METRC's API. Consult METRC to obtain your User Key.</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 </div>
 </div>

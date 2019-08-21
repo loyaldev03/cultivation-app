@@ -6,6 +6,7 @@ module Common
     field :start_time, type: Time
     field :end_time, type: Time
     field :one_signal_id, type: String # to use for removing one signal notification
+    field :status, type: String # late , on-time
     belongs_to :user, class_name: 'User'
 
     validates_presence_of :start_time

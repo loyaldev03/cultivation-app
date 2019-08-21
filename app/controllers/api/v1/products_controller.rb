@@ -9,7 +9,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     if type == 'raw_materials'
       #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
-      special_type = ['seeds', 'purchased_clones', 'nutrients']
+      special_type = ['seeds', 'purchased_clones']
       catalogue_ids = if special_type.include?(category)
                         # find parent only one
                         Inventory::Catalogue.raw_materials.where(
@@ -58,8 +58,6 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
                     Inventory::FacilityStrain.find(params[:facility_strain_id]).facility_id
                   elsif params[:facility_id].present?
                     params[:facility_id]
-                  else
-                    raise 'Need at least batch id, facility strain id or facility id'
                   end
 
     valid_categories =
@@ -88,12 +86,11 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
-      where(facility_id: facility_id).
       where(name: /^#{params[:filter]}/i).
       where(id: {'$nin': exclude_ids}).
       limit(20).
       order(name: :asc)
-
+    products = products.where(facility_id: facility_id) if facility_id.present?
     # checklist = products.map {|x| x.name }
     # Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
 

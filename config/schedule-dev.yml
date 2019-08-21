@@ -6,3 +6,7 @@ system_notification_job:
   cron: "*/1 * * * *" # run worker every hours
   class: "DailySystemNotificationWorker"
   queue: "low"
+update_worker_arrival_job:
+  cron: "*/1 * * * *" # run worker every 15 minutes
+  class: "UpdateWorkerArrivalStatusWorker"
+  queue: "low"

@@ -85,6 +85,14 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     ).serialized_json
   end
 
+  def show_by_plant_tag
+    plant = Inventory::Plant.find_by(plant_tag: params['plant_tag'])
+    render json: Inventory::PlantSerializer.new(
+      plant,
+      include_options,
+    ).serialized_json
+  end
+
   def setup_mother
     command = Inventory::SetupMother.call(current_user, params[:plant].to_unsafe_h)
     if command.success?

@@ -138,6 +138,8 @@ Rails.application.routes.draw do
         get 'flowers'
         get 'harvests'
         get 'harvest_batches'
+        get 'seeds'
+        get 'purchased_clones'
       end
     end
 
@@ -148,8 +150,8 @@ Rails.application.routes.draw do
         get 'grow_lights'
         get 'supplements'
         get 'others'
-        get 'seeds'
-        get 'purchased_clones'
+        # get 'seeds'
+        # get 'purchased_clones'
       end
     end
 
@@ -233,6 +235,24 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :people, only: [:index] do
+        collection do
+          get 'head_counts_chart'
+          get 'employee_salary_chart'
+          get 'reminder'
+          get 'worker_attrition'
+          get 'get_roles'
+          get 'capacity_planning'
+          get 'overall_info'
+          get 'arrival_on_time'
+          get 'completing_task_ontime'
+          get 'worker_by_skills'
+          get 'job_roles'
+          get 'employee_list'
+          get 'timesheet_approval'
+        end
+      end
+
       resources :system, only: [], as: :system do
         collection do
           get 'configuration'
@@ -250,6 +270,7 @@ Rails.application.routes.draw do
 
       resources :plants, only: [:show] do
         collection do
+          get 'show_by_plant_tag/:plant_tag', action: :show_by_plant_tag
           get 'all/(:current_growth_stage)', action: :all
           get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
           get 'search_by_location'
@@ -263,6 +284,8 @@ Rails.application.routes.draw do
           post 'save_destroyed_plant'
         end
       end
+
+      resources :plant_waste_reasons, only: :index
 
       resources :raw_materials, only: [:index, :show] do
         collection do
@@ -328,6 +351,13 @@ Rails.application.routes.draw do
         end
       end
 
+      #for task without batch
+      resources :tasks do
+        collection do
+          post 'create_no_batch', to: 'tasks#create_no_batch' #still use same task controller
+        end
+      end
+
       resources :batches, only: [:index, :create] do
         get 'batch_info'
         get 'harvest_batch'
@@ -357,8 +387,8 @@ Rails.application.routes.draw do
             post 'append_material_use'
           end
           collection do
-            get 'actual_hours'
-            get 'load_issues'
+            get  'actual_hours'
+            get  'load_issues'
           end
         end
         

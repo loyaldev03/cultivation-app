@@ -8,7 +8,7 @@ module Common
 
     #non exempt worker -> hourly worker
     field :date, type: Time
-
+    field :arrival_status, type: String # absent, on-time, late
     field :start_time, type: Time, default: Time.new(2019, 1, 1, 9, 00)
     field :end_time, type: Time, default: Time.new(2019, 1, 1, 17, 00)
 

@@ -60,4 +60,25 @@
       harvest_batches_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
+
+  <% if selected == Constants::SEEDS_KEY %>
+    <div class="<%= selectedStyle %>">
+      Seeds
+    </div>
+  <% else %>
+    <%= link_to 'Seeds',
+      seeds_inventory_plants_path(facility_id: params[:facility_id]), 
+      class: 'scrollable-tab__tab' %>
+  <% end %>
+
+  <% if selected == Constants::PURCHASED_CLONES_KEY %>
+    <div class="<%= selectedStyle %>">
+      Purchased clones
+    </div>
+  <% else %>
+    <%= link_to 'Purchased clones',
+      purchased_clones_inventory_plants_path(facility_id: params[:facility_id]), 
+      class: 'scrollable-tab__tab' %>
+  <% end %>
+
 </div>

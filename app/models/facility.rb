@@ -14,6 +14,7 @@ class Facility
   field :square_foot, type: Float
 
   field :whitelist_ips, type: Array, default: []
+  field :shared_facility_ids, type: Array, default: []
 
   embeds_one :address, as: :addressable, class_name: 'Address'
   embeds_many :rooms, class_name: 'Room'
@@ -43,7 +44,7 @@ class Facility
   end
 
   def onboarding_val(code)
-    self.preferences.find_by(code: code).value
+    self.preferences.find_by(code: code)&.value
   end
 
   def update_onboarding(code)

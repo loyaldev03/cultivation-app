@@ -6,13 +6,13 @@ class HomeSetupStatus
   end
 
   def call
+    have_company = CompanyInfo.where({}).count > 0
     if @facility.present?
-      # TODO: Check if other rooms type too. Cannot add inventory or start cultivation batch without
-      # those rooms setup
       have_mother_rooms = @facility.rooms.detect { |r| r.purpose == Constants::CONST_MOTHER }
       have_strains = @facility.strains.exists?
       have_plants = Inventory::Plant.exists?
       OpenStruct.new({
+        have_company: have_company,
         has_facility: have_mother_rooms ? true : false,
         facility: @facility,
         has_inventories: have_strains && have_plants,
@@ -20,6 +20,7 @@ class HomeSetupStatus
       })
     else
       OpenStruct.new({
+        have_company: have_company,
         has_facility: false,
         facility: nil,
         has_inventories: false,

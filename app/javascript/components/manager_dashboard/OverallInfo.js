@@ -27,7 +27,6 @@ export default class OverallInfo extends React.Component {
 
   onChangeMonthly = range => {
     this.setState({ selectedMonth: range.split('_').join(' ') })
-    console.log(this.props.facility_id)
     ChartStore.cultivationInfo(this.props.facility_id, range)
   }
 

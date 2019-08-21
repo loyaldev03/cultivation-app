@@ -44,7 +44,15 @@
   </div>
 </div>
 -->
-
+<!--
 <div class="mh4 mt4">
   <%= image_tag "dummy/main-employees-cropped.png", style: 'max-width: 1300px; width: 100%;' %>
 </div>
+-->
+<%= react_component 'people_dashboard/EmployeeListApp',
+  {
+    defaultFacilityId: current_default_facility&.id.to_s,
+    currentFacilityId: current_facility&.id.to_s,
+    currentTime: Time.current,
+  }
+%>

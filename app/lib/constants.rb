@@ -22,6 +22,8 @@ module Constants
   INDELIBLE_MOVING_NEXT_PHASE = 'moving_to_next_phase'.freeze
   INDELIBLE_STAYING = 'staying'.freeze
   INDELIBLE_CLEANING = 'cleaning'.freeze
+  INDELIBLE_MEASURE_HARVEST = 'measure_harvest_weight'.freeze
+  INDELIBLE_ADD_NUTRIENT = 'add_nutrient'.freeze
 
   WORK_STATUS_NEW = 'new'.freeze
   WORK_STATUS_STARTED = 'started'.freeze
@@ -346,69 +348,104 @@ module Constants
     {code: :no, name: 'No'},
   ].freeze
 
+  APP_MOD_INVOICES = 1010
+  APP_MOD_PURCHASEORDER = 1020
+  APP_MOD_MANIFEST = 1030
+  APP_MOD_COST = 1040
+  APP_MOD_USER_COSTS = 1050
+  APP_MOD_EXPENSES = 1060
+  APP_MOD_PRODUCT_SALES = 1070
+  APP_MOD_ALL_USERS_PAYROLL = 1080
+  APP_MOD_MY_DIRECT_REPORTS_PAYROLL = 1090
+  APP_MOD_MY_PAYROLL = 1100
+  APP_MOD_INVENTORY_TYPE = 2010
+  APP_MOD_ACTIVE_PLANTS = 2020
+  APP_MOD_SALES_PRODUCTS = 2030
+  APP_MOD_NON_SALES_ITEMS = 2040
+  APP_MOD_STRAIN_TYPE = 2050
+  APP_MOD_TEMPLATES = 3010
+  APP_MOD_ALL_BATCHES = 3020
+  APP_MOD_BATCH_ASSIGNED_TO_MY_DIRECT_REPORTS = 3030
+  APP_MOD_BATCH_ASSIGNED_TO_ME = 3040
+  APP_MOD_ASSSIGN_TASKS_TO_ALL_USERS = 3050
+  APP_MOD_ASSIGN_TASKS_ONLY_TO_MY_DIRECT_REPORTS = 3060
+  APP_MOD_ALL_TASKS = 3070
+  APP_MOD_TASKS_ASSIGNED_TO_MY_DIRECT_REPORTS = 3080
+  APP_MOD_TASKS_ASSIGNED_TO_ME = 3090
+  APP_MOD_ALL_HOURS_WORKED = 3100
+  APP_MOD_HOURS_ASSIGNED_TO_MY_DIRECT_REPORTS = 3110
+  APP_MOD_MY_HOURS_WORKED = 3120
+  APP_MOD_ALL_ISSUES = 4010
+  APP_MOD_ISSUES_REPORTED_BY_MY_DIRECT_REPORTS = 4020
+  APP_MOD_ISSUES_REPORTED_BY_ME = 4030
+  APP_MOD_ASSIGN_TASKS_TO_ALL_ISSUES = 4040
+  APP_MOD_ASSIGN_TASKS_TO_ISSUES_REPORTED_BY_MY_DIRECT_REPORT = 4050
+  APP_MOD_TEAM_SETTINGS_USERS = 9010
+  APP_MOD_TEAM_SETTINGS_ROLES = 9020
+
   APP_MODULES = [
     {
       code: 1000,
       name: 'Finance',
       features: [
-        {code: 1010, name: 'Invoices'},
-        {code: 1020, name: 'Purchase Order'},
-        {code: 1030, name: 'Manifest'},
-        {code: 1040, name: 'Cost'},
-        {code: 1050, name: 'User costs'},
-        {code: 1060, name: 'Expenses'},
-        {code: 1070, name: 'Product Sales'},
-        {code: 1080, name: 'All users payroll'},
-        {code: 1090, name: 'My Direct Reports payroll'},
-        {code: 1100, name: 'My Payroll'},
+        {code: APP_MOD_INVOICES, name: 'Invoices'},
+        {code: APP_MOD_PURCHASEORDER, name: 'Purchase Order'},
+        {code: APP_MOD_MANIFEST, name: 'Manifest'},
+        {code: APP_MOD_COST, name: 'Cost'},
+        {code: APP_MOD_USER_COSTS, name: 'User costs'},
+        {code: APP_MOD_EXPENSES, name: 'Expenses'},
+        {code: APP_MOD_PRODUCT_SALES, name: 'Product Sales'},
+        {code: APP_MOD_ALL_USERS_PAYROLL, name: 'All users payroll'},
+        {code: APP_MOD_MY_DIRECT_REPORTS_PAYROLL, name: 'My Direct Reports payroll'},
+        {code: APP_MOD_MY_PAYROLL, name: 'My Payroll'},
       ],
     },
     {
       code: 2000,
       name: 'Inventory',
       features: [
-        {code: 2010, name: 'Inventory type'},
-        {code: 2020, name: 'Active plants'},
-        {code: 2030, name: 'Sales Products'},
-        {code: 2040, name: 'Non-sales items'},
-        {code: 2050, name: 'Strain type'},
+        {code: APP_MOD_INVENTORY_TYPE, name: 'Inventory type'},
+        {code: APP_MOD_ACTIVE_PLANTS, name: 'Active plants'},
+        {code: APP_MOD_SALES_PRODUCTS, name: 'Sales Products'},
+        {code: APP_MOD_NON_SALES_ITEMS, name: 'Non-sales items'},
+        {code: APP_MOD_STRAIN_TYPE, name: 'Strain type'},
       ],
     },
     {
       code: 3000,
       name: 'Cultivation',
       features: [
-        {code: 3010, name: 'Templates'},
-        {code: 3020, name: 'All batches'},
-        {code: 3030, name: 'Batch assigned to my direct reports'},
-        {code: 3040, name: 'Batch assigned to me'},
-        {code: 3050, name: 'Asssign tasks to all users'},
-        {code: 3060, name: 'Assign tasks only to my direct reports'},
-        {code: 3070, name: 'All Tasks'},
-        {code: 3080, name: 'Tasks assigned to my direct reports'},
-        {code: 3090, name: 'Tasks assigned to me'},
-        {code: 3100, name: 'All hours worked'},
-        {code: 3110, name: 'Hours assigned to my direct reports'},
-        {code: 3120, name: 'My hours worked'},
+        {code: APP_MOD_TEMPLATES, name: 'Templates'},
+        {code: APP_MOD_ALL_BATCHES, name: 'All batches'},
+        {code: APP_MOD_BATCH_ASSIGNED_TO_MY_DIRECT_REPORTS, name: 'Batch assigned to my direct reports'},
+        {code: APP_MOD_BATCH_ASSIGNED_TO_ME, name: 'Batch assigned to me'},
+        {code: APP_MOD_ASSSIGN_TASKS_TO_ALL_USERS, name: 'Asssign tasks to all users'},
+        {code: APP_MOD_ASSIGN_TASKS_ONLY_TO_MY_DIRECT_REPORTS, name: 'Assign tasks only to my direct reports'},
+        {code: APP_MOD_ALL_TASKS, name: 'All Tasks'},
+        {code: APP_MOD_TASKS_ASSIGNED_TO_MY_DIRECT_REPORTS, name: 'Tasks assigned to my direct reports'},
+        {code: APP_MOD_TASKS_ASSIGNED_TO_ME, name: 'Tasks assigned to me'},
+        {code: APP_MOD_ALL_HOURS_WORKED, name: 'All hours worked'},
+        {code: APP_MOD_HOURS_ASSIGNED_TO_MY_DIRECT_REPORTS, name: 'Hours assigned to my direct reports'},
+        {code: APP_MOD_MY_HOURS_WORKED, name: 'My hours worked'},
       ],
     },
     {
       code: 4000,
       name: 'Issues',
       features: [
-        {code: 4010, name: 'All issues'},
-        {code: 4020, name: 'Issues reported by my direct reports'},
-        {code: 4030, name: 'Issues reported by me'},
-        {code: 4040, name: 'Assign tasks to all issues'},
-        {code: 4050, name: 'Assign tasks to issues reported by my direct report'},
+        {code: APP_MOD_ALL_ISSUES, name: 'All issues'},
+        {code: APP_MOD_ISSUES_REPORTED_BY_MY_DIRECT_REPORTS, name: 'Issues reported by my direct reports'},
+        {code: APP_MOD_ISSUES_REPORTED_BY_ME, name: 'Issues reported by me'},
+        {code: APP_MOD_ASSIGN_TASKS_TO_ALL_ISSUES, name: 'Assign tasks to all issues'},
+        {code: APP_MOD_ASSIGN_TASKS_TO_ISSUES_REPORTED_BY_MY_DIRECT_REPORT, name: 'Assign tasks to issues reported by my direct report'},
       ],
     },
     {
       code: 9000,
       name: 'Settings',
       features: [
-        {code: 9010, name: 'Team Settings / Users'},
-        {code: 9020, name: 'Team Settings / Roles'},
+        {code: APP_MOD_TEAM_SETTINGS_USERS, name: 'Team Settings / Users'},
+        {code: APP_MOD_TEAM_SETTINGS_ROLES, name: 'Team Settings / Roles'},
       ],
     },
   ].freeze

@@ -68,7 +68,7 @@ class RoleDetailsEditor extends React.PureComponent {
   }
 
   render() {
-    const { onClose, isSaving, modules } = this.props
+    const { onClose, isSaving, modules, canUpdate, canDelete } = this.props
     const { name, desc, builtIn } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
@@ -144,18 +144,22 @@ class RoleDetailsEditor extends React.PureComponent {
           </div>
           {!builtIn ? (
             <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
-              <a
-                href="#0"
-                className="btn btn--secondary"
-                onClick={this.onDelete}
-              >
-                Delete
-              </a>
-              <input
-                type="submit"
-                value={saveButtonText}
-                className="fr btn btn--primary"
-              />
+              {canDelete && (
+                <a
+                  href="#0"
+                  className="btn btn--secondary"
+                  onClick={this.onDelete}
+                >
+                  Delete
+                </a>
+              )}
+              {canUpdate && (
+                <input
+                  type="submit"
+                  value={saveButtonText}
+                  className="fr btn btn--primary"
+                />
+              )}
             </div>
           ) : (
             <div className="pt4" />

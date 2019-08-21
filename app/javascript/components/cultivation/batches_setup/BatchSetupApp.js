@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import { httpPostOptions, selectStyles } from './../../utils'
+import { httpPostOptions, selectStyles, GROWTH_PHASE } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput } from '../../utils/FormHelpers'
 
@@ -96,7 +96,9 @@ class BatchSetupApp extends React.Component {
       name
     } = this.state
 
-    const hasVeg2phase = phases.includes('veg2')
+    const hasClonePhase = phases.includes(GROWTH_PHASE.CLONE)
+    const hasVegphase = phases.includes(GROWTH_PHASE.VEG)
+    const hasVeg2phase = phases.includes(GROWTH_PHASE.VEG2)
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
     const saveButtonText = isLoading ? 'Saving...' : 'Save and Continue'

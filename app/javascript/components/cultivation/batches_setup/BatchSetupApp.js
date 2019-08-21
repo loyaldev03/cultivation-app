@@ -81,7 +81,6 @@ class BatchSetupApp extends React.Component {
     const {
       plantSources,
       strains,
-      phases,
       growMethods,
       facilities = []
     } = this.props
@@ -91,14 +90,10 @@ class BatchSetupApp extends React.Component {
       batchStrain,
       batchSource,
       batchGrowMethod,
-      errors,
       isLoading,
       name
     } = this.state
 
-    const hasClonePhase = phases.includes(GROWTH_PHASE.CLONE)
-    const hasVegphase = phases.includes(GROWTH_PHASE.VEG)
-    const hasVeg2phase = phases.includes(GROWTH_PHASE.VEG2)
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
     const saveButtonText = isLoading ? 'Saving...' : 'Save and Continue'

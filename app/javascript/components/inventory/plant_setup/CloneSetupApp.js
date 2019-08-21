@@ -74,6 +74,7 @@ class CloneSetupApp extends React.Component {
   }
 
   render() {
+    const { plantPermission } = this.props
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -82,12 +83,16 @@ class CloneSetupApp extends React.Component {
               Clones / Plantings
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="btn btn--primary btn--small"
-                onClick={this.openSidebar}
-              >
-                Add clone/ plantings
-              </button>
+              {plantPermission.create && (
+                <div>
+                  <button
+                    className="btn btn--primary btn--small"
+                    onClick={this.openSidebar}
+                  >
+                    Add clone/ plantings
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -108,6 +113,8 @@ class CloneSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}
+          canUpdate={plantPermission.update}
+          canCreate={plantPermission.create}
         />
       </React.Fragment>
     )

@@ -183,7 +183,7 @@ class BatchEditor extends React.Component {
   }
 
   render() {
-    const { batch_sources, facility_strains, grow_methods } = this.props
+    const { batch_sources, facility_strains, grow_methods, canUpdate, canCreate } = this.props
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -453,23 +453,27 @@ class BatchEditor extends React.Component {
               <span className="f6 gray pl2">days</span>
             </div>
           </div>
-
-          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
-            <a
-              className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
-              href="#"
-              onClick={this.props.onSave}
-            >
-              Save for later
-            </a>
-            <a
-              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-              href="#"
-              onClick={this.onSave}
-            >
-              Save
-            </a>
-          </div>
+          
+          {(canUpdate || canCreate) && (
+            <React.Fragment>
+              <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
+                <a
+                  className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
+                  href="#"
+                  onClick={this.props.onSave}
+                >
+                  Save for later
+                </a>
+                <a
+                  className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+                  href="#"
+                  onClick={this.onSave}
+                >
+                  Save
+                </a>
+              </div>
+            </React.Fragment>
+          )}
         </div>
       </div>
     )

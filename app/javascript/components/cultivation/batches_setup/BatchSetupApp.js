@@ -78,12 +78,7 @@ class BatchSetupApp extends React.Component {
   }
 
   render() {
-    const {
-      plantSources,
-      strains,
-      growMethods,
-      facilities = []
-    } = this.props
+    const { plantSources, strains, growMethods, facilities = [] } = this.props
     const {
       showValidation,
       facilityId,

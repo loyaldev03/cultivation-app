@@ -333,7 +333,7 @@ class MotherEditor extends React.Component {
   }
 
   render() {
-    const {canUpdate, canCreate} = this.props
+    const { canUpdate, canCreate } = this.props
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">

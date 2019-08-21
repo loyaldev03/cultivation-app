@@ -95,7 +95,7 @@ class HarvestbatchSetupApp extends React.Component {
   }
 
   render() {
-    const {plantPermission} = this.props
+    const { plantPermission } = this.props
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">

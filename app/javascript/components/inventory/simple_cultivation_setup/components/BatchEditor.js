@@ -183,7 +183,13 @@ class BatchEditor extends React.Component {
   }
 
   render() {
-    const { batch_sources, facility_strains, grow_methods, canUpdate, canCreate } = this.props
+    const {
+      batch_sources,
+      facility_strains,
+      grow_methods,
+      canUpdate,
+      canCreate
+    } = this.props
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -453,7 +459,7 @@ class BatchEditor extends React.Component {
               <span className="f6 gray pl2">days</span>
             </div>
           </div>
-          
+
           {(canUpdate || canCreate) && (
             <React.Fragment>
               <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">

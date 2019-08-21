@@ -82,7 +82,7 @@ class PlantSetupApp extends React.Component {
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Mother Plants</h1>
             <div style={{ justifySelf: 'end' }}>
               {plantPermission.create && (
-                <div>  
+                <div>
                   <button
                     className="btn btn--primary btn--small"
                     onClick={this.openSidebar}

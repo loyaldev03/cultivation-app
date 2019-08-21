@@ -114,7 +114,7 @@ class PurchasedClonesSetupApp extends React.Component {
               Purchased Clones Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              {this.props.plantPermission.create &&(
+              {this.props.plantPermission.create && (
                 <div>
                   <button
                     className="btn btn--primary btn--small"

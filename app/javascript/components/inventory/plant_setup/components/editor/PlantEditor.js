@@ -552,7 +552,7 @@ class PlantEditor extends React.Component {
   }
 
   render() {
-    const {canCreate, canUpdate} = this.props
+    const { canCreate, canUpdate } = this.props
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">

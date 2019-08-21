@@ -74,14 +74,14 @@ class VegSetupApp extends React.Component {
   }
 
   render() {
-    const {plantPermission} = this.props
+    const { plantPermission } = this.props
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Vegs</h1>
             <div style={{ justifySelf: 'end' }}>
-              {plantPermission.create &&(
+              {plantPermission.create && (
                 <div>
                   <button
                     className="btn btn--primary btn--small"

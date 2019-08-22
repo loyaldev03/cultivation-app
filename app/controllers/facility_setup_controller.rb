@@ -2,6 +2,7 @@ class FacilitySetupController < ApplicationController
   layout 'wizards/facility_setup'
   authorize_resource class: false
   before_action :set_home_status
+  before_action :set_available_purposes, only: [:room_info, :section_info]
 
   # GET new facility - basic info form page - step 1
   def new
@@ -406,6 +407,11 @@ class FacilitySetupController < ApplicationController
 
   def set_home_status
     @home = HomeSetupStatus.call(current_facility).result
+  end
+
+  def set_available_purposes
+    cmd = Common::QueryAvailableRoomPurpose.call
+    @available_purposes = cmd.result_options
   end
 
   def get_row_shelves_trays_form(facility_id, room_id, row_id, shelf_id = nil)

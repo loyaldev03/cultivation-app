@@ -66,7 +66,7 @@ module Constants
     CONST_VEG2,
     CONST_VEG,
     CONST_FLOWER,
-  ]
+  ].freeze
 
   FACILITY_ROOMS_ORDER = [
     CONST_MOTHER,

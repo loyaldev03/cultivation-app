@@ -6,7 +6,6 @@ module Charts
       @user = current_user
       @args = args
       @facility_id = @args[:facility_id].split(',')
-      Rails.logger.debug("FACCCC===>#{@facility_id}")
     end
 
     def call

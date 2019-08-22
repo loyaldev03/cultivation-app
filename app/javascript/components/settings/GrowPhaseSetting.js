@@ -54,7 +54,6 @@ class GrowPhaseSetting extends React.Component {
   }
 
   onToggleActive = (id, value) => e => {
-    console.log(value)
     GrowPhaseStore.updateCategory(id, !value)
   }
 

@@ -26,12 +26,8 @@
       </div>
     </div>
   <% else %>
-    <div class="flex flex-column">
-      <div class="w-100 bg-white ph3 pt2 pb4">
-        <div class="dim flex flex-row items-center pointer">
-          <%= render partial: 'layouts/no_permission' %>
-        </div>
-      </div>
+    <div class="w-100 bg-white ph3 pt2 pb4">
+      <%= render partial: 'layouts/no_permission' %>
     </div>
   <% end %>
 </div>

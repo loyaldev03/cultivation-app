@@ -119,12 +119,16 @@ class RawMaterialSetupApp extends React.Component {
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">{this.title}</h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddRecord}
-              >
-                Add {this.label}
-              </button>
+              {this.props.raw_material_permission.create &&(
+                <React.Fragment>
+                  <button
+                    className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+                    onClick={this.onAddRecord}
+                  >
+                    Add {this.label}
+                  </button>
+                </React.Fragment>
+              )}
             </div>
           </div>
 
@@ -144,6 +148,7 @@ class RawMaterialSetupApp extends React.Component {
   }
 
   render() {
+    const { raw_material_permission } = this.props
     return (
       <React.Fragment>
         {this.renderList()}
@@ -154,6 +159,8 @@ class RawMaterialSetupApp extends React.Component {
           facility_id={this.props.facility_id}
           uoms={this.props.uoms}
           scanditLicense={this.props.scanditLicense}
+          canUpdate={raw_material_permission.update}
+          canCreate={raw_material_permission.create}
         />
       </React.Fragment>
     )

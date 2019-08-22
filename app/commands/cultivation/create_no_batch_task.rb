@@ -26,6 +26,7 @@ module Cultivation
         user_ids: @args[:user_ids],
         facility_id: @args[:facility_id],
         indelible: indelible,
+        instruction: @args[:instruction],
       )
       task.save
       task

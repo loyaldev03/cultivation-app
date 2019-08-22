@@ -8,13 +8,14 @@ module Charts
     end
 
     def call
-      total_plants = Charts::QueryTotalActivePlant.call(@args[:current_user], {facility_id: @args[:facility_id]}).result
-      total_yield = Charts::QueryTotalYield.call(@args[:current_user], {facility_id: @args[:facility_id], period: @args[:period]}).result
-      active_batches_cost = Charts::QueryActiveBatchesCost.call(@args[:current_user], {facility_id: @args[:facility_id], period: @args[:period]}).result
+      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: @args[:facility_id].split(',')}).result
+      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: @args[:facility_id].split(','), period: @args[:period]}).result
+      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: @args[:facility_id].split(','), period: @args[:period]}).result
 
-      result = QueryFacilitySummary.call(facility_id: @args[:facility_id]).result
+      result = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id].split(',')}).result
       total_used = 0
       total_capacity = 0
+      facility_capacity_used = 0
       result.map do |c|
         total_capacity += c[:total_capacity]
         total_used += (c[:total_capacity] - c[:available_capacity])

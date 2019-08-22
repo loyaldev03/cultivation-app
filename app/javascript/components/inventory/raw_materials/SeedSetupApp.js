@@ -118,12 +118,16 @@ class SeedSetupApp extends React.Component {
               Seeds Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddRecord}
-              >
-                Add Seed
-              </button>
+              {this.props.plantPermission.create && (
+                <div>
+                  <button
+                    className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+                    onClick={this.onAddRecord}
+                  >
+                    Add Seed
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -152,6 +156,8 @@ class SeedSetupApp extends React.Component {
           uoms={this.props.uoms}
           facility_id={this.props.facility_id}
           scanditLicense={this.props.scanditLicense}
+          canUpdate={this.props.plantPermission.update}
+          canCreate={this.props.plantPermission.create}
         />
       </React.Fragment>
     )

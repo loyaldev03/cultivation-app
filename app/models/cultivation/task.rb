@@ -16,6 +16,7 @@ module Cultivation
     field :end_date, type: Time
     field :estimated_hours, type: Float, default: -> { 0 }
     field :actual_hours, type: Float, default: -> { 0 }
+    field :instruction, type: String
 
     # Labor  cost
     field :estimated_labor_cost, type: Float, default: -> { 0 }

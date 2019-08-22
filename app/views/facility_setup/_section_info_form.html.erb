@@ -27,7 +27,7 @@
       <%= f.label "Section Purpose", class: "subtitle-2 grey db mb1 ttc" %>
       <%= f.select :purpose,
         options_for_select(
-          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, section.purpose),
+          @available_purposes, section.purpose),
           {},
           { class: "", data: { toggle: "toggle_section_change" } }
       %>

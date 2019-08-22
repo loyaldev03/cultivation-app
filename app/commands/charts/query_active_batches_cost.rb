@@ -8,8 +8,7 @@ module Charts
     end
 
     def call
-      facility = Facility.find(@args[:facility_id])
-      batches = Cultivation::Batch.where(facility_id: facility.id.to_s).in(
+      batches = Cultivation::Batch.where(facility_id: {"$in": @args[:facility_id]}).in(
         status: [
           Constants::BATCH_STATUS_SCHEDULED,
           Constants::BATCH_STATUS_ACTIVE,
@@ -30,9 +29,6 @@ module Charts
         sum_cost += batch.actual_cost
       end
       sum_cost
-      # facility_strain_ids = facility.strains.map { |a| a.id.to_s }
-      # plants = Inventory::Plant.where(facility_strain_id: {'$in': facility_strain_ids})
-      # plants.count
     end
   end
 end

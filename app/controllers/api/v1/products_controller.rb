@@ -98,19 +98,28 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def upc
-    body = {'upc' => params[:upc]}.to_json
-    url = 'https://api.upcitemdb.com/prod/trial/lookup'
-    url_temp = 'http://www.mocky.io/v2/5c99def83200004b00d90ac7'
-
-    response = RestClient.post(url, body) { |response, request, result, &block|
-      Rails.logger.debug "Response Code => #{response.code}"
-      case response.code
-      when 200
-        render json: {data: JSON.parse(response.body)['items'][0]}
-      else
-        render json: {data: 'Error retrieving product'}
-      end
+    # url = 'https://api.upcitemdb.com/prod/v1/lookup'
+    # url = 'http://beta-reqbin.herokuapp.com/rsetners/v1/lookup'
+    url = 'https://api.upcitemdb.com/prod/v1/lookup'
+    url += "?upc=#{params[:upc]}"
+    headers = {
+      Accept: 'application/json',
+      user_key: Rails.application.credentials.upcitemdb[:user_key],
+      key_type: '3scale',
     }
+    # Rails.logger.debug ">>>>> url: #{url}"
+    # Rails.logger.debug ">>>>> UPC Headers"
+    # Rails.logger.debug headers
+    res = RestClient.get(url, headers)
+    # Rails.logger.debug ">>>>> UPC Response"
+    # Rails.logger.debug res
+
+    case res.code
+    when 200
+      render json: {data: JSON.parse(res.body)['items'][0]}
+    else
+      render json: {data: 'Error retrieving product'}
+    end
   end
 
   def item_categories

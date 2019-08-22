@@ -79,8 +79,11 @@ module RequestScoping
   end
 
   def current_shared_facility_ids
-    ids = [current_facility.id]
-    ids << current_facility.shared_facility_ids
+    if current_facility.nil?
+      ids = current_default_facility.shared_facility_ids.push(current_default_facility.id)
+    else
+      ids = current_facility.shared_facility_ids.push(current_facility.id)
+    end
   end
 
   def company_info

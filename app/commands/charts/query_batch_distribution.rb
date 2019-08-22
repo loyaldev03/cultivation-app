@@ -5,13 +5,13 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id]
+      @facility_id = @args[:facility_id].split(',')
     end
 
     def call
       date = Time.current
       range = @args[:range].humanize.downcase
-      batches_with_facility = Cultivation::Batch.where(facility_id: @facility_id)
+      batches_with_facility = Cultivation::Batch.in(facility_id: @facility_id)
       phases = Constants::FACILITY_ROOMS_ORDER - ['mother', 'storage', 'vault']
       if (range == 'this week')
         batches = batches_with_facility.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)

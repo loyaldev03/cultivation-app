@@ -74,18 +74,23 @@ class FlowerSetupApp extends React.Component {
   }
 
   render() {
+    const { plantPermission } = this.props
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Flowers</h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="btn btn--primary btn--small"
-                onClick={this.openSidebar}
-              >
-                Add Flowers
-              </button>
+              {plantPermission.create && (
+                <div>
+                  <button
+                    className="btn btn--primary btn--small"
+                    onClick={this.openSidebar}
+                  >
+                    Add Flowers
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -106,6 +111,8 @@ class FlowerSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}
+          canUpdate={plantPermission.update}
+          canCreate={plantPermission.create}
         />
       </React.Fragment>
     )

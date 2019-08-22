@@ -1,7 +1,8 @@
 class QueryAvailableTrays
   prepend SimpleCommand
 
-  def initialize(args = {})
+  def initialize(current_user, args = {})
+    @user = current_user
     args = {
       facility_id: nil,
       exclude_batch_id: nil,
@@ -10,12 +11,12 @@ class QueryAvailableTrays
       end_date: nil,
     }.merge(args)
 
-    raise ArgumentError, 'facility_id' if args[:facility_id].nil?
+    #raise ArgumentError, 'facility_id' if args[:facility_id].nil?
     raise ArgumentError, 'start_date' if args[:start_date].nil?
     raise ArgumentError, 'end_date' if args[:end_date].nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if args[:end_date] < args[:start_date]
 
-    @facility_id = args[:facility_id]&.to_bson_id
+    @facility_id = args[:facility_id]
     @exclude_batch_id = args[:exclude_batch_id]&.to_bson_id
     @purpose = args[:purpose]
     @start_date = args[:start_date]
@@ -30,7 +31,7 @@ class QueryAvailableTrays
 
   def match_facility
     if @facility_id
-      {"$match": {_id: @facility_id}}
+      {"$match": {_id: {"$in": @facility_id}}}
     else
       {"$match": {}}
     end

@@ -46,5 +46,9 @@
 -->
 
 <div class="mh4 mt4">
-  <%= react_component 'manager_dashboard/ManagerDashboardApp', {batches: @batches, facilityId: current_facility&.id.to_s} %>
+  <%- if params[:facility_id] == "All" || params[:facility_id].blank? %>
+    <%= react_component 'manager_dashboard/ManagerDashboardApp', {batches: @batches, facilityId: current_shared_facility_ids.map{|x| x.to_s}} %>
+  <%-else%>
+    <%= react_component 'manager_dashboard/ManagerDashboardApp', {batches: @batches, facilityId: current_facility&.id.to_s} %>
+  <%end%>
 </div>

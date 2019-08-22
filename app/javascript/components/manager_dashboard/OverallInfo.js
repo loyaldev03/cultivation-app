@@ -2,6 +2,7 @@ import React from 'react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
+import { decimalFormatter } from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -123,9 +124,9 @@ export default class OverallInfo extends React.Component {
                   </i>
                   <div>
                     <h1 className="f5 fw6 grey">Active batches cost to date</h1>
-                    <b className="f2 fw6 dark-grey">{`$ ${
+                    <b className="f2 fw6 dark-grey">{`$ ${decimalFormatter.format(
                       ChartStore.cultivation_info.active_batches_cost
-                    }`}</b>
+                    )}`}</b>
                   </div>
                 </div>
                 <div className="flex" style={{ flex: ' 1 1 auto' }}>

@@ -8,8 +8,7 @@ module Charts
     end
 
     def call
-      facility = Facility.find(@args[:facility_id])
-      facility_strain_ids = facility.strains.map { |a| a.id.to_s }
+      facility_strain_ids = Inventory::FacilityStrain.where(facility_id: {"$in": @args[:facility_id]}).map { |a| a.id.to_s }
       plants = Inventory::Plant.where(facility_strain_id: {'$in': facility_strain_ids})
       plants.count
     end

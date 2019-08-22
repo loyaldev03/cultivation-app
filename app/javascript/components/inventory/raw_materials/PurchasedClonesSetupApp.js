@@ -114,12 +114,16 @@ class PurchasedClonesSetupApp extends React.Component {
               Purchased Clones Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="btn btn--primary btn--small"
-                onClick={this.onAddRecord}
-              >
-                Add Purchased Clones
-              </button>
+              {this.props.plantPermission.create && (
+                <div>
+                  <button
+                    className="btn btn--primary btn--small"
+                    onClick={this.onAddRecord}
+                  >
+                    Add Purchased Clones
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -148,6 +152,8 @@ class PurchasedClonesSetupApp extends React.Component {
           uoms={this.props.uoms}
           facility_id={this.props.facility_id}
           scanditLicense={this.props.scanditLicense}
+          canUpdate={this.props.plantPermission.update}
+          canCreate={this.props.plantPermission.create}
         />
       </React.Fragment>
     )

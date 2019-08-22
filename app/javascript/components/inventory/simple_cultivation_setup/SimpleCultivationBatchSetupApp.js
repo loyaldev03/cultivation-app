@@ -113,12 +113,14 @@ class SimpleCultivationBatchSetupApp extends React.Component {
               Cultivation Batches
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="btn btn--primary btn--small"
-                onClick={this.onAddRecord}
-              >
-                Add batch
-              </button>
+              {this.props.plantPermission.create && (
+                <button
+                  className="btn btn--primary btn--small"
+                  onClick={this.onAddRecord}
+                >
+                  Add batch
+                </button>
+              )}
             </div>
           </div>
 
@@ -146,6 +148,8 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           facility_strains={this.props.facility_strains}
           batch_sources={this.props.batch_sources}
           grow_methods={this.props.grow_methods}
+          canUpdate={this.props.plantPermission.update}
+          canCreate={this.props.plantPermission.create}
         />
       </React.Fragment>
     )

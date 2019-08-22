@@ -5,13 +5,16 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
+      @facility_id = @args[:facility_id].split(',')
     end
 
     def call
       batch_tasks = Cultivation::Task.where(:batch_id.nin => ['', nil])
-                                     .where(user_ids: nil, facility_id: @args[:facility_id])
-                                     .includes(:batch)
-                                     .group_by(&:batch_id)
+        .where(user_ids: nil)
+        .in(facility_id: @facility_id)
+        .includes(:batch)
+        .group_by(&:batch_id)
+
       json_array = []
       batch_tasks.map do |batch, tasks|
         if tasks.last.batch && tasks.last.batch.status == 'ACTIVE'

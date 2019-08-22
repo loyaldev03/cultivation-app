@@ -1,9 +1,11 @@
 import { observable, action, computed, toJS, set } from 'mobx'
-import { httpPostOptions, httpPutOptions, httpDeleteOptions } from '../../utils'
+import { httpPostOptions, httpPutOptions, httpDeleteOptions, httpGetOptions } from '../../utils'
 import taskStore from '../../cultivation/tasks_setup/stores/NewTaskStore'
+import isEmpty from 'lodash.isempty'
 
 class DailyTaskStore {
   @observable batches = []
+  @observable locations = []
   @observable isLoading = false
   @observable otherTasks = {}
   @observable isShowAllTasks = false
@@ -223,6 +225,51 @@ class DailyTaskStore {
       return t.id === batchId ? batch : t
     })
   }
+
+  @action
+  async loadLocation(facilityId, purposes) {
+    let url = `/api/v1/facilities/${facilityId}/locations?`
+    if (!isEmpty(purposes)) {
+      if (purposes.includes(',')) {
+        url =
+          url +
+          purposes
+            .split(',')
+            .map(p => 'purposes[]=' + p)
+            .join('&')
+      } else {
+        url = url + 'purposes[]=' + purposes
+      }
+    }
+    const res = await (await fetch(url, httpGetOptions)).json()
+    if (res.data) {
+      this.locations = res.data
+    } else {
+      this.locations = []
+    }
+  }
+
+
+  @action
+  async autoSaveReceiveCannabis(payload) {
+    let url = `/api/v1/manifests`
+    const response = await (await fetch(url, httpPostOptions(payload))).json()
+    if (!response.error) {
+    }
+    return response
+  }
+
+  @action
+  async findManifestNo(manifest_no) {
+    let url = `/api/v1/manifests/show?manifest_no=${manifest_no}`
+    const response = await (await fetch(url, httpGetOptions)).json()
+    if (response) {
+      return response
+    } else {
+      this.locations = []
+    }
+  }
+
 }
 
 const dailyTasksStore = new DailyTaskStore()

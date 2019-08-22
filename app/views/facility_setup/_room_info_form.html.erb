@@ -33,7 +33,9 @@
         <%= f.label "Purpose of Room", class:"subtitle-2 db mb1 grey ttc" %>
         <%= f.select :purpose,
           options_for_select(
-            Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose)
+            @available_purposes,
+            room.purpose
+          )
         %> 
       <% end %>
     </div>

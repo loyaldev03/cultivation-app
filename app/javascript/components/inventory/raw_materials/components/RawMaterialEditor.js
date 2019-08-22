@@ -621,7 +621,7 @@ class RawMaterialEditor extends React.Component {
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
-          {( canUpdate || canCreate ) &&(
+          {(canUpdate || canCreate) && (
             <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
               <a
                 className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"

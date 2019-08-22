@@ -100,7 +100,7 @@ class NutrientsSetupApp extends React.Component {
               Nutrients Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              { raw_material_permission.create && (
+              {raw_material_permission.create && (
                 <React.Fragment>
                   <button
                     className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"

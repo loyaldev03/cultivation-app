@@ -450,7 +450,13 @@ class NutrientEditor extends React.Component {
   }
 
   render() {
-    const { facility_id, catalogue_id, catalogues, canUpdate, canCreate } = this.props
+    const {
+      facility_id,
+      catalogue_id,
+      catalogues,
+      canUpdate,
+      canCreate
+    } = this.props
     const catalogue_child = this.state.catalogue_parent
       ? this.state.catalogue_parent.children
       : []
@@ -840,16 +846,16 @@ class NutrientEditor extends React.Component {
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
-          {( canUpdate || canCreate ) &&(
-              <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-                <a
-                  className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-                  href="#"
-                  onClick={this.onSave}
-                >
-                  Save
-                </a>
-              </div>
+          {(canUpdate || canCreate) && (
+            <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+              <a
+                className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+                href="#"
+                onClick={this.onSave}
+              >
+                Save
+              </a>
+            </div>
           )}
         </div>
       </div>

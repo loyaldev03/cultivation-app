@@ -5,6 +5,7 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
+      @facility_id = @args[:facility_id].split(',')
     end
 
     def call
@@ -40,7 +41,7 @@ module Charts
         start_date = 'all'
       end
 
-      tasks = Cultivation::Task.where(facility_id: @args[:facility_id]).in(id: low_levelquery_tasks).includes(:time_logs)
+      tasks = Cultivation::Task.in(facility_id: @facility_id).in(id: low_levelquery_tasks).includes(:time_logs)
       if start_date == 'all'
         tasks
       else

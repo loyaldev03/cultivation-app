@@ -86,6 +86,7 @@ class ChartStore {
         this.unassigned_task = true
       } else {
         this.data_unassigned_task = []
+        this.unassigned_task = false
       }
     } catch (error) {
       console.error(error)

@@ -8,8 +8,7 @@ module Charts
     end
 
     def call
-      facility = Facility.find(@args[:facility_id])
-      batches = Cultivation::Batch.where(facility_id: facility.id).includes(:harvest_batch)
+      batches = Cultivation::Batch.where(facility_id: {"$in": @args[:facility_id]}).includes(:harvest_batch)
       date = Time.zone.now
       batches_sum = 0
       batches.each do |b|

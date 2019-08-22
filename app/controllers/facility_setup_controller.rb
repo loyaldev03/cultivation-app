@@ -1,6 +1,7 @@
 class FacilitySetupController < ApplicationController
   layout 'wizards/facility_setup'
   authorize_resource class: false
+  before_action :set_home_status
 
   # GET new facility - basic info form page - step 1
   def new
@@ -379,11 +380,6 @@ class FacilitySetupController < ApplicationController
     @row_id = params[:row_id]
     @target_rows = params[:target_rows].split(',')
 
-    # Rails.logger.debug ">>> >>> >>>"
-    # Rails.logger.debug @facility_id
-    # Rails.logger.debug @room_id
-    # Rails.logger.debug @row_id
-    # Rails.logger.debug @target_rows
     duplicate_cmd = SaveRowByDuplicating.call(@facility_id,
                                               @room_id,
                                               @row_id,
@@ -407,6 +403,10 @@ class FacilitySetupController < ApplicationController
   end
 
   private
+
+  def set_home_status
+    @home = HomeSetupStatus.call(current_facility).result
+  end
 
   def get_row_shelves_trays_form(facility_id, room_id, row_id, shelf_id = nil)
     @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(

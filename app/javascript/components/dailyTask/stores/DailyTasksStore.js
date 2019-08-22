@@ -1,5 +1,10 @@
 import { observable, action, computed, toJS, set } from 'mobx'
-import { httpPostOptions, httpPutOptions, httpDeleteOptions, httpGetOptions } from '../../utils'
+import {
+  httpPostOptions,
+  httpPutOptions,
+  httpDeleteOptions,
+  httpGetOptions
+} from '../../utils'
 import taskStore from '../../cultivation/tasks_setup/stores/NewTaskStore'
 import isEmpty from 'lodash.isempty'
 
@@ -249,7 +254,6 @@ class DailyTaskStore {
     }
   }
 
-
   @action
   async autoSaveReceiveCannabis(payload) {
     let url = `/api/v1/manifests`
@@ -269,7 +273,6 @@ class DailyTaskStore {
       this.locations = []
     }
   }
-
 }
 
 const dailyTasksStore = new DailyTaskStore()

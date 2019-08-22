@@ -100,12 +100,12 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   def upc
     # url = 'https://api.upcitemdb.com/prod/v1/lookup'
     # url = 'http://beta-reqbin.herokuapp.com/rsetners/v1/lookup'
-    url = "https://api.upcitemdb.com/prod/v1/lookup"
+    url = 'https://api.upcitemdb.com/prod/v1/lookup'
     url += "?upc=#{params[:upc]}"
     headers = {
-      Accept: "application/json",
+      Accept: 'application/json',
       user_key: Rails.application.credentials.upcitemdb[:user_key],
-      key_type: "3scale",
+      key_type: '3scale',
     }
     # Rails.logger.debug ">>>>> url: #{url}"
     # Rails.logger.debug ">>>>> UPC Headers"

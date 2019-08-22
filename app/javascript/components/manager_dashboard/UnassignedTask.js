@@ -24,24 +24,32 @@ export default class UnassignedTask extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {ChartStore.unassigned_task ? 
+              {ChartStore.unassigned_task ? (
                 ChartStore.data_unassigned_task.map((e, y) => (
                   <React.Fragment>
                     <tr key={y}>
                       <td className="f4 b">
-                        <div className="mb3 mt2 dark-grey" key={`ut_${y}`} >Batch {e.batch}</div>
+                        <div className="mb3 mt2 dark-grey" key={`ut_${y}`}>
+                          Batch {e.batch}
+                        </div>
                       </td>
                     </tr>
                     {e.tasks.map((u, i) => (
                       <tr className="grey" key={i}>
                         <td className="w-50 ">
-                          <div className="fw6 mb3 dark-grey" key={i} >{u.name}</div>
+                          <div className="fw6 mb3 dark-grey" key={i}>
+                            {u.name}
+                          </div>
                         </td>
                         <td>
-                          <div className="fw6 mb3" key={i} >{u.start_date}</div>
+                          <div className="fw6 mb3" key={i}>
+                            {u.start_date}
+                          </div>
                         </td>
                         <td>
-                          <div className="fw6 mb3" key={i} >{u.end_date}</div>
+                          <div className="fw6 mb3" key={i}>
+                            {u.end_date}
+                          </div>
                         </td>
                         {/* <td className="tc">
                           <a
@@ -58,9 +66,11 @@ export default class UnassignedTask extends React.Component {
                     ))}
                   </React.Fragment>
                 ))
-              : <tr className="grey pt2"><td>No data found</td></tr>
-              }
-              
+              ) : (
+                <tr className="grey pt2">
+                  <td>No data found</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

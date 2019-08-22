@@ -4,11 +4,18 @@
 
 
 <div class="pa4">
-  <div class="flex flex-column">
-    <%= react_component('inventory/metrc/MetrcInventoryApp',
-    { 
-      facility_id: @facility_id
-    }) 
-    %>
-  </div>
+  <% if RoleCheck.call(current_user, Constants::APP_MOD_METRC_TAG).result[:read] == true %>
+    <div class="flex flex-column">
+      <%= react_component('inventory/metrc/MetrcInventoryApp',
+      {
+        facility_id: @facility_id,
+        metrc_permission: RoleCheck.call(current_user, Constants::APP_MOD_METRC_TAG).result
+      })
+      %>
+    </div>
+  <% else %>
+    <div class="w-100 bg-white ph3 pt2 pb4">
+      <%= render partial: 'layouts/no_permission' %>
+    </div>
+  <% end %>
 </div>

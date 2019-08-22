@@ -12,7 +12,7 @@ module Common
     end
 
     def result_options
-      self.result.collect {|p| [p.capitalize, p]}
+      self.result.collect { |p| [p.capitalize, p] }
     end
   end
 end

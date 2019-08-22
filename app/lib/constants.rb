@@ -106,6 +106,8 @@ module Constants
 
   PLANT_GROWTH_PHASE_FLOWERING = 'Flowering'.freeze
 
+  GROW_PHASES = ['mother', 'clone', 'veg1', 'veg2', 'veg', 'flower', 'harvest', 'dry', 'cure'].freeze
+
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},
     {code: CONST_MOTHER, name: 'Mother'},

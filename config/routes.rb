@@ -251,6 +251,8 @@ Rails.application.routes.draw do
           get 'job_roles'
           get 'employee_list'
           get 'timesheet_approval'
+          post 'timesheet_update_status'
+
         end
       end
 

@@ -2,7 +2,7 @@ import React from 'react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { decimalFormatter } from '../utils'
+import { MiniBoxWidget, Loading, numberFormatter, decimalFormatter } from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -34,10 +34,10 @@ export default class OverallInfo extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="ba b--light-gray pa3 bg-white br2">
-          <div className="flex justify-between">
+        <div className="ba b--light-gray bg-white br2">
+          <div className="ph4 pt3 flex justify-between">
             <div>
-              <h1 className="f5 fw6 ml4 dark-grey">Overall Info</h1>
+              <span className="f5 fw6 dark-grey">Overall Info</span>
             </div>
             <Tippy
               placement="bottom-end"
@@ -74,75 +74,52 @@ export default class OverallInfo extends React.Component {
                 <h1 className="f6 fw6 ml2 grey ttc">
                   {this.state.selectedMonth}
                 </h1>
-                <i className="material-icons grey mr2  md-21 mt2">
+                <i className="material-icons grey mr2 md-21 mt2">
                   keyboard_arrow_down
                 </i>
               </div>
             </Tippy>
           </div>
 
-          <div className="flex justify-between mt2">
-            <div className="flex" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                check_circle
-              </i>
-              <div>
-                <h1 className="f5 fw6 grey">Total plants</h1>
-                <b className="f2 fw6 dark-grey">
-                  {ChartStore.cultivation_info.total_plants}
-                </b>
-              </div>
-            </div>
-
+          <div className="ph4 pv3 mb2 flex justify-between bg-white">
             {ChartStore.cultivation_info_loaded ? (
               <React.Fragment>
-                <div className="flex" style={{ flex: ' 1 1 auto' }}>
-                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                    location_on
-                  </i>
-                  <div>
-                    <h1 className="f5 fw6 grey">Total yield</h1>
-                    <b className="f2 fw6 dark-grey">
-                      {ChartStore.cultivation_info.total_yield}
-                    </b>
-                  </div>
-                </div>
-                <div className="flex" style={{ flex: ' 1 1 auto' }}>
-                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                    assignment
-                  </i>
-                  <div>
-                    <h1 className="f5 fw6 grey">Projected yield</h1>
-                    <b className="f2 fw6 dark-grey">
-                      {ChartStore.cultivation_info.facility_capacity}
-                    </b>
-                  </div>
-                </div>
-                <div className="flex" style={{ flex: ' 1 1 auto' }}>
-                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                    assignment_turned_in
-                  </i>
-                  <div>
-                    <h1 className="f5 fw6 grey">Active batches cost to date</h1>
-                    <b className="f2 fw6 dark-grey">{`$ ${decimalFormatter.format(
-                      ChartStore.cultivation_info.active_batches_cost
-                    )}`}</b>
-                  </div>
-                </div>
-                <div className="flex" style={{ flex: ' 1 1 auto' }}>
-                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                    home
-                  </i>
-                  <div>
-                    <h1 className="f5 fw6 grey">Facility capacity</h1>
-                    <b className="f2 fw6 dark-grey">{`${
-                      ChartStore.cultivation_info.facility_capacity
-                    }%`}</b>
-                  </div>
-                </div>
+                <MiniBoxWidget
+                  icon="spa"
+                  title="Total plants"
+                  value={numberFormatter.format(
+                    ChartStore.cultivation_info.total_plants
+                  )}
+                />
+                <MiniBoxWidget
+                  icon="amp_stories"
+                  title="Total yield"
+                  value={numberFormatter.format(
+                    ChartStore.cultivation_info.total_yield
+                  )}
+                />
+                <MiniBoxWidget
+                  icon="amp_stories"
+                  title="Projected yield"
+                  value={decimalFormatter.format(
+                    ChartStore.cultivation_info.facility_capacity
+                  )}
+                />
+                <MiniBoxWidget
+                  icon="monetization_on"
+                  title="Active batches cost to date"
+                  value={`$ ${decimalFormatter.format(
+                    ChartStore.cultivation_info.active_batches_cost
+                  )}`}
+                />
+                <MiniBoxWidget
+                  icon="home"
+                  title="Facility capacity"
+                  value={`${ChartStore.cultivation_info.facility_capacity}%`}
+                />
               </React.Fragment>
             ) : (
-              'loading...'
+              <Loading />
             )}
           </div>
         </div>

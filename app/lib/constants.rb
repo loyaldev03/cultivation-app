@@ -66,7 +66,7 @@ module Constants
     CONST_VEG2,
     CONST_VEG,
     CONST_FLOWER,
-  ]
+  ].freeze
 
   FACILITY_ROOMS_ORDER = [
     CONST_MOTHER,
@@ -105,6 +105,8 @@ module Constants
   BATCH_TYPES_SEED = 'Seed'.freeze
 
   PLANT_GROWTH_PHASE_FLOWERING = 'Flowering'.freeze
+
+  GROW_PHASES = ['mother', 'clone', 'veg1', 'veg2', 'veg', 'flower', 'harvest', 'dry', 'cure'].freeze
 
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},
@@ -364,6 +366,7 @@ module Constants
   APP_MOD_SALES_PRODUCTS = 2030
   APP_MOD_NON_SALES_ITEMS = 2040
   APP_MOD_STRAIN_TYPE = 2050
+  APP_MOD_METRC_TAG = 2060
   APP_MOD_TEMPLATES = 3010
   APP_MOD_ALL_BATCHES = 3020
   APP_MOD_BATCH_ASSIGNED_TO_MY_DIRECT_REPORTS = 3030

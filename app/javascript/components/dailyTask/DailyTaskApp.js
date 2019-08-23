@@ -12,6 +12,7 @@ import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
 import WeightForm from './components/WeightForm'
 import CreatePackageForm from './components/CreatePackageForm'
 import ConvertPackageForm from './components/ConvertPackageForm'
+import ReceiveCannabisForm from './components/ReceiveCannabisForm'
 
 import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
@@ -177,6 +178,22 @@ class DailyTaskApp extends React.Component {
               sidebarName={sidebarName}
               taskId={taskId}
               show={sidebarName === 'convert_product'}
+            />
+          )}
+        />
+        <SlidePanel
+          width="700px"
+          show={sidebarName === 'receive_inventory_cannabis'}
+          renderBody={props => (
+            <ReceiveCannabisForm
+              // scanditLicense={this.props.scanditLicense}
+              show={sidebarName === 'receive_inventory_cannabis'}
+              batchId={batchId}
+              taskId={taskId}
+              phase={taskPhase}
+              indelible={sidebarName}
+              facilityId={this.props.facility_id}
+              growth_stages={this.props.growth_stages}
             />
           )}
         />

@@ -98,32 +98,21 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def upc
-    # Accept: "application/json",
-    # "Content-Type": "application/json",
-    # user_key: "43edece3a67b2be5ed4ff5e82fac8a02",
-    # key_type: "3scale",
-    url = 'https://api.upcitemdb.com/prod/v1/lookup'
-    # url = 'https://api.upcitemdb.com/prod/trial/lookup'
+    # url = 'https://api.upcitemdb.com/prod/v1/lookup'
     # url = 'http://beta-reqbin.herokuapp.com/rsetners/v1/lookup'
-    RestClient.proxy = "http://127.0.0.1:8888"
-    res = RestClient::Request.execute(
-      method: :post,
-      verify_ssl: false,
-      url: url,
-      payload: {upc: params[:upc]}.to_json,
-      headers: {
-        "User_Key": "43edece3a67b2be5ed4ff5e82fac8a02",
-        "Content-Type": :json,
-        "Key_Type": "3scale",
-        "Accept": :json,
-        "Accept-Encoding": "identity",
-      },
-      timeout: 10000,
-    )
-
-    Rails.logger.debug ">>>>>>>>>> 1 response >>>>>>>>>>>>"
-    Rails.logger.debug res
-    Rails.logger.debug ">>>>>>>>>> 2 response >>>>>>>>>>>>"
+    url = 'https://api.upcitemdb.com/prod/v1/lookup'
+    url += "?upc=#{params[:upc]}"
+    headers = {
+      Accept: 'application/json',
+      user_key: Rails.application.credentials.upcitemdb[:user_key],
+      key_type: '3scale',
+    }
+    # Rails.logger.debug ">>>>> url: #{url}"
+    # Rails.logger.debug ">>>>> UPC Headers"
+    # Rails.logger.debug headers
+    res = RestClient.get(url, headers)
+    # Rails.logger.debug ">>>>> UPC Response"
+    # Rails.logger.debug res
 
     case res.code
     when 200
@@ -131,15 +120,6 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     else
       render json: {data: 'Error retrieving product'}
     end
-  rescue RestClient::ExceptionWithResponse => e
-    Rails.logger.debug ">>>>>>>>>> response >>>>>>>>>>>>"
-    Rails.logger.debug ">>>>>>>>>> response >>>>>>>>>>>>"
-    Rails.logger.debug ">>>>>>>>>> response >>>>>>>>>>>>"
-    Rails.logger.debug ">>>>>>>>>> response >>>>>>>>>>>>"
-    Rails.logger.debug ">>>>>>>>>> response >>>>>>>>>>>>"
-    Rails.logger.debug ">>>>>>>>>> response >>>>>>>>>>>>"
-    Rails.logger.debug e
-    raise
   end
 
   def item_categories

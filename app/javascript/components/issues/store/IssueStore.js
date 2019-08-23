@@ -38,7 +38,7 @@ class IssueStore {
         this.load(issues)
         this.isLoading = false
       } else {
-        this.tasks = []
+        this.issues = []
       }
     } catch (error) {
       console.error(error)

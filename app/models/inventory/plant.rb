@@ -7,13 +7,14 @@ module Inventory
     # Seed data for prepurchased clone
 
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
-    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
     belongs_to :vendor_invoice, class_name: 'Inventory::VendorInvoice', optional: true
 
     # plant_id is the internal ID use by cultivator, wher METRC ID isn't available.
     # However, in most cases, plant_id would be same as plant_tag
     field :plant_id, type: String # e.g. MOT-AK47-001
+    field :old_tag, type: String # Tag From Supplier
     field :plant_tag, type: String # METRC Tag
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String
@@ -65,6 +66,8 @@ module Inventory
     field :metrc_destroyed_date, type: String
     # Last time this record was updated from Metrc
     field :last_metrc_update, type: DateTime
+
+    field :manifest_no, type: String
 
     track_history on: [:plant_tag,
                        :location_id,

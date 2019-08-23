@@ -1,24 +1,25 @@
 class QueryFacilitySummary
   prepend SimpleCommand
 
-  attr_reader :facility_id
+  #attr_reader :facility_id
 
-  def initialize(args = {})
-    raise ArgumentError, 'facility_id' if args[:facility_id].nil?
+  def initialize(current_user, args = {})
+    @user = current_user
+    @args = args
+    #raise ArgumentError, 'facility_id' if args[:facility_id].nil?
 
-    args = {
-      facility_id: nil,
-    }.merge(args)
+    # args = {
+    #   facility_id: nil,
+    # }.merge(args)
 
-    @facility_id = args[:facility_id].to_bson_id
+    # @facility_id = args[:facility_id].to_bson_id
   end
 
   def call
-    trays = QueryAvailableTrays.call(
-      facility_id: facility_id,
-      start_date: Time.current.beginning_of_day,
-      end_date: Time.current.end_of_day,
-    ).result
+    trays = QueryAvailableTrays.call(@user,
+                                     {facility_id: @args[:facility_id],
+                                      start_date: Time.current.beginning_of_day,
+                                      end_date: Time.current.end_of_day}).result
 
     trays_by_room = trays.group_by(&:room_code)
     results = trays_by_room.keys.map do |room_code|

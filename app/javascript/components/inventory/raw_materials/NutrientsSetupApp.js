@@ -91,6 +91,7 @@ class NutrientsSetupApp extends React.Component {
   }
 
   render() {
+    const { raw_material_permission } = this.props
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 grey">
@@ -99,12 +100,16 @@ class NutrientsSetupApp extends React.Component {
               Nutrients Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddRecord}
-              >
-                Add nutrient
-              </button>
+              {raw_material_permission.create && (
+                <React.Fragment>
+                  <button
+                    className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+                    onClick={this.onAddRecord}
+                  >
+                    Add nutrient
+                  </button>
+                </React.Fragment>
+              )}
             </div>
           </div>
           <ReactTable
@@ -126,6 +131,8 @@ class NutrientsSetupApp extends React.Component {
           catalogues={this.props.catalogues}
           facility_id={this.props.facility_id}
           scanditLicense={this.props.scanditLicense}
+          canUpdate={raw_material_permission.update}
+          canCreate={raw_material_permission.create}
         />
       </React.Fragment>
     )

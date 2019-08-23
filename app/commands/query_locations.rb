@@ -4,13 +4,13 @@ class QueryLocations
   attr_reader :facility_id, :purposes
 
   def initialize(facility_id, purposes = [])
-    @facility_id = facility_id&.to_bson_id
+    @facility_id = facility_id
     @purposes = purposes
   end
 
   def call
     criteria = Facility.collection.aggregate [
-      {"$match": {_id: facility_id}},
+      match_facility,
       {"$project": {_id: 0, facility_id: '$_id', facility_code: '$code', facility_name: '$name', rooms: 1}},
       {"$unwind": {path: '$rooms', preserveNullAndEmptyArrays: true}},
       {"$unwind": {path: '$rooms.rows', preserveNullAndEmptyArrays: true}},
@@ -168,11 +168,19 @@ class QueryLocations
     end
   end
 
+  def match_facility
+    if @facility_id.is_a?(Array)
+      {"$match": {_id: {"$in": @facility_id}}}
+    else
+      {"$match": {_id: @facility_id}}
+    end
+  end
+
   LocationOption = Struct.new(:label, :value)
 
   class << self
     def select_options(facility_id, purposes)
-      result = QueryLocations.call(facility_id, purposes).result
+      result = QueryLocations.call([facility_id], purposes).result
       result.map do |loc|
         if loc[:tray_id].blank?
           LocationOption.new("#{loc[:room_name]} - #{loc[:room_code]}", loc[:room_id].to_s)

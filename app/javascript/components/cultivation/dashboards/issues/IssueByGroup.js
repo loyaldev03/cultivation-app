@@ -42,7 +42,9 @@ export default class IssueByGroup extends React.Component {
           </div>
         </div>
         {DashboardIssueStore.issue_by_group_loaded ? (
+          DashboardIssueStore.data_issue_by_group.length > 0 ?
           <Line data={DashboardIssueStore.IssueByGroup} options={options} />
+          : "Graph is not available"
         ) : (
           'loading...'
         )}

@@ -8,24 +8,31 @@
 
 
 <div class="pa4">
-  <%= image_tag 'dummy/inventory-overview.png', class: 'mw1200 w-100 mb4' %>
-  <%= render partial: 'setupNavigation', locals: { selected: Constants::OTHERS_KEY } %>
-  <div class="flex flex-column">
-    <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
-      order_uoms: @order_uoms, 
-      uoms: @uoms, 
-      raw_material_type: Constants::OTHERS_KEY, 
-      catalogues: @catalogues, 
-      facility_id: params[:facility_id],
-      scanditLicense: @scanditLicense 
-      }) 
-    %>
-   
-    <div class="w-100 bg-white ph3 pt2 pb4">
-      <div class="dim flex flex-row items-center pointer">
-        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
-        <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
-      </div>  
+  <% if RoleCheck.call(current_user, Constants::APP_MOD_INVENTORY_TYPE).result[:read] == true %>
+    <%= image_tag 'dummy/inventory-overview.png', class: 'mw1200 w-100 mb4' %>
+    <%= render partial: 'setupNavigation', locals: { selected: Constants::OTHERS_KEY } %>
+    <div class="flex flex-column">
+      <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
+        order_uoms: @order_uoms, 
+        uoms: @uoms, 
+        raw_material_type: Constants::OTHERS_KEY, 
+        catalogues: @catalogues, 
+        facility_id: params[:facility_id],
+        scanditLicense: @scanditLicense,
+        raw_material_permission: RoleCheck.call(current_user, Constants::APP_MOD_INVENTORY_TYPE).result
+        }) 
+      %>
+    
+      <div class="w-100 bg-white ph3 pt2 pb4">
+        <div class="dim flex flex-row items-center pointer">
+          <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+          <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
+        </div>  
+      </div>
     </div>
-  </div>
+  <% else %>
+    <div class="w-100 bg-white ph3 pt2 pb4">
+      <%= render partial: 'layouts/no_permission' %>
+    </div>
+  <% end %>
 </div>

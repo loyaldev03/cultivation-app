@@ -43,6 +43,12 @@ class Facility
     end
   end
 
+  def growth_stages_by_settings
+    self.growth_stages.select { |a| self.purposes.include? a }
+    # we assume purposes rooms created by the purpose in setting page
+    # take Constants::CULTIVATION_PHASES_2V and find which is exist in purposes
+  end
+
   def onboarding_val(code)
     self.preferences.find_by(code: code)&.value
   end

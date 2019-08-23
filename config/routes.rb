@@ -520,6 +520,13 @@ Rails.application.routes.draw do
       resources :holidays, only: [:index, :create, :update] do 
         get 'show_by_date', on: :collection
       end
+
+      resources :manifests, only: [:create] do
+        collection do
+          get 'show'
+        end
+      end
+
     end
   end
 end

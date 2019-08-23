@@ -59,7 +59,11 @@ export default class IssueByPriority extends React.Component {
           </div>
         </div>
         {DashboardIssueStore.issue_by_priority_loaded ? (
-          <Bar data={DashboardIssueStore.IssueByPriority} options={options} />
+          DashboardIssueStore.data_issue_by_priority.length > 0 ? (
+            <Bar data={DashboardIssueStore.IssueByPriority} options={options} />
+          ) : (
+            'Graph is not available'
+          )
         ) : (
           'loading...'
         )}

@@ -1,12 +1,24 @@
 <% content_for :breadcrumb do %>
   <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
 <% end %>
-<%= react_component 'cultivation/dashboards/IssuesDashboardApp',
-  {
-    defaultFacilityId: current_default_facility&.id.to_s,
-    currentFacilityId: current_facility&.id.to_s,
-    currentTime: Time.current,
-  }
-%>
+<%- if params[:facility_id].blank? || params[:facility_id] == "All"%>
+ 
+  <%= react_component 'cultivation/dashboards/IssuesDashboardApp',
+    {
+      defaultFacilityId: current_default_facility&.id.to_s,
+      currentFacilityId: current_shared_facility_ids.map{|x| x.to_s},
+      currentTime: Time.current,
+    }
+  %>
+<%-else%>
+  <%= react_component 'cultivation/dashboards/IssuesDashboardApp',
+    {
+      defaultFacilityId: current_default_facility&.id.to_s,
+      currentFacilityId: current_facility&.id.to_s,
+      currentTime: Time.current,
+    }
+  %>
 
+
+<%end%>
 

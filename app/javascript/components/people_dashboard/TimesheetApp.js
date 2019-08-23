@@ -4,6 +4,7 @@ import React, { memo, useState } from 'react'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
+import {toast} from '../utils/toast'
 import PeopleDashboardStore from './PeopleDashboardStore'
 
 import {
@@ -58,16 +59,12 @@ const status = [
     val: 'open'
   },
   {
-    text: 'Submitted',
-    val: 'submitted'
-  },
-  {
     text: 'Approved',
-    val: 'approved'
+    val: 'approve'
   },
   {
     text: 'Declined',
-    val: 'declined'
+    val: 'decline'
   }
 ]
 
@@ -127,6 +124,16 @@ class ActiveTaskStore {
     } finally {
       this.isLoading = false
     }
+  }
+
+  @action
+  async updateStatus(userid, week_number, status) {
+    this.isLoading = true
+    const url = `/api/v1/people/timesheet_update_status?user_id=${userid}&week=${week_number}&status=${status}`
+    const params = { status: status }
+    await (await fetch(url, httpPostOptions(params)))
+    toast('Successfully Update', 'success')
+    this.loadActiveTasks()
   }
 
   @action
@@ -197,12 +204,13 @@ class TimesheetApp extends React.Component {
     pageSize: 20,
 
     columns: [
-      { accessor: 'id', show: false },
+      { accessor: 'user_id', show: false },
+      { accessor: 'week_number', show: false },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tc',
         Header: 'Worker',
         accessor: 'worker_name',
-        minWidth: 100,
+        minWidth: 177.719,
         Cell: props => {
           return (
             <div className="flex items-center">
@@ -224,42 +232,66 @@ class TimesheetApp extends React.Component {
         }
       },
       {
-        headerClassName: 'tl justify-center',
+        headerClassName: 'tc',
         Header: 'Role',
         accessor: 'roles',
-        minWidth: 88,
+        minWidth: 200,
+        className: 'justify-center ttu tc'
+      },
+      {
+        headerClassName: 'tc',
+        Header: 'Week',
+        accessor: 'week',
+        minWidth: 174.578,
         className: 'justify-center ttu'
       },
       {
-        headerClassName: 'tl justify-center',
+        headerClassName: 'tc',
         Header: 'Total Hours',
         accessor: 'total_hours',
-        minWidth: 130,
-        className: 'justify-center ttu'
+        minWidth: 80.8125,
+        className: 'justify-center ttu',
+        Cell: props => <span className="">{decimalFormatter.format(props.value)}</span>
       },
       {
-        headerClassName: 'tl justify-center',
+        headerClassName: 'tc',
         Header: 'OT',
         accessor: 'total_ot',
-        minWidth: 130,
+        minWidth: 80.8125,
         className: 'justify-center ttu',
-        Cell: props => <span className="">{props.value}</span>
+        Cell: props => <span className="">{decimalFormatter.format(props.value)}</span>
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tc',
+        Header: 'Status',
+        accessor: 'status',
+        minWidth: 85.6094,
+        className: 'justify-center ttu',
+      },
+      {
+        headerClassName: 'tc',
         Header: 'Approver',
         accessor: 'approver',
-        minWidth: 88,
+        minWidth: 112.391,
         Cell: props => <span className="ttc">{props.value}</span>
       },
       {
-        headerClassName: 'tl',
-        Header: 'Approve/Decline',
-        accessor: 'id',
-        minWidth: 88,
-        Cell: props => <span className="ttc">{props.value}</span>
+        headerClassName: 'tc',
+        Header: 'Approve / Decline',
+        accessor: 'user_id',
+        minWidth: 130,
+        Cell: props => 
+        <div>
+          <button onClick={this.onToggleActive(props.value, props.row['week_number'], "approve")} className="link f7 fw6 ph2 pv1 ba br2 mr2 dib tc bg-orange b--orange white" > Approve</button>
+          <button onClick={this.onToggleActive(props.value, props.row['week_number'], "decline" )} className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white">Decline</button>
+        </div>
+      
       }
     ]
+  }
+
+  onToggleActive = (userid, week, status) => e => {
+    activeTaskStore.updateStatus(userid, week, status)
   }
 
   onChangeRoles = role => {
@@ -311,7 +343,8 @@ class TimesheetApp extends React.Component {
   render() {
     const { columns, showEditor } = this.state
     return (
-      <div className="w-100 bg-white pa3">
+      <div  className="w-100 bg-white pa3">
+        <div className="toast" id="toast"></div>
         <div className="flex mb4 mt2">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
             Timesheets Approval
@@ -436,306 +469,3 @@ class TimesheetApp extends React.Component {
 }
 
 export default TimesheetApp
-
-// import React from 'react'
-// import { observer } from 'mobx-react'
-// import {
-//   ActiveBadge,
-//   CheckboxSelect,
-//   TempIssueWidgets,
-//   HeaderFilter,
-//   ListingTable,
-//   DefaultAvatar
-// } from '../utils'
-// import classNames from 'classnames'
-// import Tippy from '@tippy.js/react'
-
-// import timesheetStore from './TimesheetStore';
-// import PeopleDashboardStore from './PeopleDashboardStore'
-// const MenuButton = ({ icon, text, onClick, className = '' }) => {
-//     return (
-//       <a
-//         className={`pa2 flex link dim pointer items-center ${className}`}
-//         onClick={onClick}
-//       >
-//         <i className="material-icons md-17 pr2">{icon}</i>
-//         <span className="pr2">{text}</span>
-//       </a>
-//     )
-//   }
-
-// const range = [
-// {
-//     text: 'This Week',
-//     val: 'this_week'
-// },
-// {
-//     text: 'This Year',
-//     val: 'this_year'
-// }
-// ]
-// const roleInit = {
-//     role_id: 'all',
-//     role_name: 'All Job Roles'
-//   }
-
-// const status = [
-// {
-//     text: 'Select Status',
-//     val: 'all'
-// },
-// {
-//     text: 'Open',
-//     val: 'open'
-// },
-// {
-//     text: 'Submitted',
-//     val: 'submitted'
-// },
-// {
-//     text: 'Approved',
-//     val: 'approved'
-// },
-// {
-//     text: 'Declined',
-//     val: 'declined'
-// }
-
-// ]
-
-// @observer
-// class TimesheetApp extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     //timesheetStore.loadActiveTasks()
-//     timesheetStore.loadRoles()
-//   }
-//   state = {
-//     status: {text: 'Select Status', val:'all'},
-//     role: {role_id: '', role_name: 'All Job Roles'},
-//     range: {text: 'This Week', val: 'this_week'},
-//     search: '',
-//     page: 0,
-//     pageSize: 20,
-
-//     columns: [
-//       { accessor: 'id', show: false },
-//       {
-//         headerClassName: 'tl',
-//         Header: 'Worker',
-//         accessor: 'worker_name',
-//         minWidth: 100,
-//         Cell: props => {
-//             return (
-//               <div className="flex items-center">
-//                 <img
-//                   src={props.row['photo_url']}
-//                   style={{
-//                     width: '36px',
-//                     height: '36px',
-//                     borderRadius: '18px'
-//                   }}
-//                   onError={x => {
-//                     x.target.onerror = null
-//                     x.target.src = DefaultAvatar
-//                   }}
-//                 />
-//                 <span className="f6 fw6 dark-grey ml2 w-20">{props.value}</span>
-//               </div>
-//             )
-//           }
-//       },
-//       {
-//         headerClassName: 'tl justify-center',
-//         Header: 'Role',
-//         accessor: 'roles',
-//         minWidth: 88,
-//         className: 'justify-center ttu'
-//       },
-//       {
-//         headerClassName: 'tl justify-center',
-//         Header: 'Total Hours',
-//         accessor: 'total_hours',
-//         minWidth: 130,
-//         className: 'justify-center ttu'
-//       },
-//       {
-//         headerClassName: 'tl justify-center',
-//         Header: 'OT',
-//         accessor: 'total_ot',
-//         minWidth: 130,
-//         className: 'justify-center ttu',
-//         Cell: props => <span className="">{props.value}</span>
-//       },
-//       {
-//         headerClassName: 'tl',
-//         Header: 'Approver',
-//         accessor: 'approver',
-//         minWidth: 88,
-//         Cell: props => <span className="ttc">{props.value}</span>
-//       },
-//       {
-//         headerClassName: 'tl',
-//         Header: 'Approve/Decline',
-//         accessor: 'id',
-//         minWidth: 88,
-//         Cell: props => <span className="ttc">{props.value}</span>
-//       },
-
-//     ]
-//   }
-
-// onChangeRoles = role => {
-//     this.setState({ role: role }, () => {
-//         timesheetStore.roleTerm = role.role_id
-//         timesheetStore.loadActiveTasks()
-//     })
-// }
-// onChangeStatus = status => {
-//     this.setState({ status: status }, () => {
-//         timesheetStore.statusTerm = status.val
-//         timesheetStore.loadActiveTasks()
-//     })
-// }
-// onChangeRange = range => {
-//     this.setState({ range: range }, () => {
-//         timesheetStore.rangeTerm = range.val
-//         timesheetStore.loadActiveTasks()
-//     })
-// }
-// onChangeSearch = search => {
-//     this.setState({ search: search }, () => {
-//         timesheetStore.searchTerm = search
-//         timesheetStore.loadActiveTasks()
-//     })
-// }
-
-// onFetchData = (state, instance) => {
-//     timesheetStore.setFilter({
-//         facility_id: this.props.currentFacilityId,
-//         page: state.page,
-//         limit: state.pageSize
-
-//       })
-//   }
-
-//   render() {
-//     const { columns } = this.state
-//     return (
-//       <div className="pa4 mw1200 bg-white">
-//        <div className="flex justify-between">
-//             <input
-//                 type="text"
-//                 className="input w5"
-//                 placeholder="Search Worker/Approver"
-//                 onChange={e => this.onChangeSearch(e.target.value)}
-//             />
-//         <div className="flex justify-between">
-//             <Tippy
-//                 placement="bottom-end"
-//                 trigger="click"
-//                 duration="0"
-//                 content={
-//                     <div className="bg-white f6 flex">
-//                     <div className="db shadow-4">
-//                         <MenuButton
-//                         key={1}
-//                         text={'All Job Roles'}
-//                         className=""
-//                         onClick={() => this.onChangeRoles(roleInit)}
-//                         />
-//                         {timesheetStore.roles_loaded
-//                         ? timesheetStore.data_roles.map(d => (
-//                             <MenuButton
-//                                 key={d.role_id}
-//                                 text={d.role_name}
-//                                 className=""
-//                                 onClick={() => this.onChangeRoles(d)}
-//                             />
-//                             ))
-//                         : 'loading...'}
-//                     </div>
-//                     </div>
-//                 }
-//                 >
-//                 <div className="flex ba b--light-silver br2 pointer dim">
-//                     <h1 className="f6 fw6 ml2 grey ttc">
-//                     {this.state.role.role_name}
-//                     </h1>
-//                     <i className="material-icons grey mr2  md-21 mt2">
-//                     keyboard_arrow_down
-//                     </i>
-//                 </div>
-//                 </Tippy>
-//                 <Tippy
-//                 placement="bottom-end"
-//                 trigger="click"
-//                 duration="0"
-//                 content={
-//                     <div className="bg-white f6 flex">
-//                     <div className="db shadow-4">
-//                         {status.map(d => (
-//                         <MenuButton
-//                             key={d.val}
-//                             text={d.text}
-//                             className=""
-//                             onClick={() => this.onChangeStatus(d)}
-//                         />
-//                         ))}
-
-//                     </div>
-//                     </div>
-//                 }
-//                 >
-//                 <div className="flex ba b--light-silver br2 pointer dim">
-//                     <h1 className="f6 fw6 ml2 grey ttc">{this.state.status.text}</h1>
-//                     <i className="material-icons grey mr2  md-21 mt2">
-//                     keyboard_arrow_down
-//                     </i>
-//                 </div>
-//                 </Tippy>
-//             <Tippy
-//                 placement="bottom-end"
-//                 trigger="click"
-//                 duration="0"
-//                 content={
-//                     <div className="bg-white f6 flex">
-//                     <div className="db shadow-4">
-//                         {range.map(d => (
-//                         <MenuButton
-//                             key={d.val}
-//                             text={d.text}
-//                             className=""
-//                             onClick={() => this.onChangeRange(d)}
-//                         />
-//                         ))}
-//                     </div>
-//                     </div>
-//                 }
-//                 >
-//                 <div className="flex ba b--light-silver br2 pointer dim">
-//                     <h1 className="f6 fw6 ml2 grey ttc">{this.state.range.text}</h1>
-//                     <i className="material-icons grey mr2  md-21 mt2">
-//                     keyboard_arrow_down
-//                     </i>
-//                 </div>
-//                 </Tippy>
-//             {/* <CheckboxSelect options={columns} onChange={this.onToggleColumns} /> */}
-//             </div>
-//        </div>
-
-//         <div className="pv3">
-//           <ListingTable
-//             ajax={true}
-//             onFetchData={this.onFetchData}
-//             data={timesheetStore.filteredList}
-//             pages={timesheetStore.metadata.pages}
-//             columns={columns}
-//             isLoading={timesheetStore.isLoading}
-//           />
-//         </div>
-//       </div>
-//     )
-//   }
-// }
-// export default TimesheetApp

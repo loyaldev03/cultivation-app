@@ -4,123 +4,146 @@ module People
 
     def initialize(current_user, args = {})
       @current_user = current_user
-      @args = args
+      @args = {
+        page: 0,
+        limit: 20,
+        search: nil,
+      }.merge(args)
+      @args[:page] = @args[:page].to_i
+      @args[:limit] = @args[:limit].to_i
+    end
+
+    def calljjj
+      data = []
+      User.all.map do |user|
+        data << {email: user.email, data: user.work_schedules&.group_by { |d| (DateTime.parse(d[:start_time].strftime('%Y-%m-%d')).strftime('%W').to_i + 1) }}
+      end
+      data
     end
 
     def call
-      json = {
-        data: [
-          {
-            worker_name: 'Bobby Curry',
-            roles: 'Gardener, Trimmer',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Christian Morgan',
-            Status: 'Open',
-          },
-          {
-            worker_name: 'Fannie Snyder',
-            roles: 'Trimmer',
-            photo_url: '',
-            total_hours: 75,
-            total_ot: 11,
-            approver: 'Eula McDonald',
-            Status: 'Submitted',
-          },
-          {
-            worker_name: 'Corey Wong',
-            roles: 'Gardener',
-            photo_url: '',
-            total_hours: 28,
-            total_ot: 11,
-            approver: 'Jesse Sullivan',
-            Status: 'Approved',
-          },
-          {
-            worker_name: 'Eula Stephens',
-            roles: 'Gardener',
-            photo_url: '',
-            total_hours: 15,
-            total_ot: 11,
-            approver: 'Addie Hill',
-            Status: 'Submitted',
-          },
-          {
-            worker_name: 'Cole Fletcher',
-            roles: 'Gardener',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Hattie Watts',
-            Status: 'Open',
-          },
-          {
-            worker_name: 'Jesse Sullivan',
-            roles: 'Gardener, Trimmer',
-            photo_url: '',
-            total_hours: 40,
-            total_ot: 23,
-            approver: 'Corey Wong',
-            Status: 'Approved',
-          },
-          {
-            worker_name: 'Addie Hill',
-            roles: 'Trimmer',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Eula Stephens',
-            Status: 'Submitted',
-          },
-          {
-            worker_name: 'Fannie Snyder',
-            roles: 'Trimmer',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Christian Morgan',
-            Status: 'Open',
-          },
-          {
-            worker_name: 'Christian Morgan',
-            roles: 'Gardener',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Christian Morgan',
-            Status: 'Submitted',
-          },
-          {
-            worker_name: 'Christian Morgan',
-            roles: 'Gardener',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Christian Morgan',
-            Status: 'Submitted',
-          },
-          {
-            worker_name: 'Christian Morgan',
-            roles: 'Gardener',
-            photo_url: '',
-            total_hours: 29,
-            total_ot: 10,
-            approver: 'Christian Morgan',
-            Status: 'Submitted',
-          },
+      date = Date.current
+      main = []
+      data = []
+      result = aggregate_query
+      result[0][:data]&.map do |user|
+        roles = Common::Role.find(user[:roles])&.pluck(:name)
+        manager = User.find(user[:reporting_manager_id]) unless user[:reporting_manager_id].nil?
+        worklogs = user[:work_logs]&.group_by { |d| (DateTime.parse(d[:start_time].strftime('%Y-%m-%d')).strftime('%W').to_i + 1) }
+        workschedules = user[:work_schedules]&.group_by { |d| (DateTime.parse(d[:start_time].strftime('%Y-%m-%d')).strftime('%W').to_i + 1) }
+        if (@args[:role].nil?) || (@args[:role] == 'all') || (user[:roles].include?(@args[:role].to_bson_id))
+          workschedules&.map do |week, work_schedules|
+            if (@args[:status] == 'all') || (work_schedules.first[:timesheet_status] == @args[:status])
+              status = work_schedules.first[:timesheet_status]
+              wlogs = worklogs&.select { |k, v| k == week }
+              wlogs&.map do |weekl, work_logs|
+                total_hours = 0
+                start_week = Date.commercial(date.year, weekl.to_i, 1)
+                end_week = Date.commercial(date.year, weekl.to_i, 7)
+                total_hours += ((work_logs.last[:end_time] - work_logs.first[:start_time]) / 1.hour)
+                data << {
+                  user_id: user[:_id].to_s,
+                  worker_name: "#{user[:first_name]} #{user[:last_name]}",
+                  roles: roles.join(','),
+                  photo_url: nil,
+                  approver: manager.nil? ? manager : "#{manager.first_name} #{manager.last_name}",
+                  status: status,
+                  week: "#{start_week} - #{end_week} ",
+                  week_number: weekl,
+                  total_hours: total_hours.round(2),
+                  total_ot: 0,
 
-        ],
-        "metadata": {
-          "total": 11,
-          "page": 0,
-          "pages": 2,
-          "skip": 0,
-          "limit": 10,
-        },
+                }
+              end
+            end
+          end
+        end
+      end
+      main << {
+        data: data,
+        metadata: result[0]['metadata'][0],
       }
+      main.first
+      # result[0][:data]
+    end
 
-      json
+    def aggregate_query
+      User.collection.aggregate([
+        {"$match": {"facilities": {"$all": [@args[:facility_id].to_bson_id]}}},
+        match_search,
+        {"$lookup": {from: 'common_work_logs',
+                     as: 'work_logs',
+                     let: {user_id: '$_id'},
+                     pipeline: [
+          match_work_logs,
+          {"$match": {
+            "$expr": {
+              "$and": [
+                {"$eq": ['$user_id', '$$user_id']},
+              ],
+            },
+          }},
+        ]}},
+
+        {"$project": {
+          "wl_count": {"$size": '$work_logs'},
+          "email": 1,
+          "first_name": 1,
+          "last_name": 1,
+          "photo_data": 1,
+          "roles": 1,
+          "work_logs": 1,
+          "work_schedules": 1,
+          "reporting_manager_id": 1,
+        }},
+        {"$facet": {
+          metadata: [
+            {"$count": 'total'},
+            {"$addFields": {
+              page: @args[:page],
+              pages: {"$ceil": {"$divide": ['$total', @args[:limit]]}},
+              skip: skip,
+              limit: @args[:limit],
+            }},
+          ],
+          data: [
+            {"$skip": skip},
+            {"$limit": @args[:limit]},
+          ],
+        }},
+      ]).to_a
+    end
+
+    def skip
+      @skip ||= (@args[:page] * @args[:limit])
+    end
+
+    def match_search
+      if !@args[:search].blank?
+        {"$match": {"first_name": Regexp.new(args[:search], Regexp::IGNORECASE)}}
+      else
+        {"$match": {}}
+      end
+    end
+
+    def match_work_logs
+      date = Time.current
+      if @args[:range] == 'this_week'
+        start_date = date.beginning_of_week
+        end_date = date.end_of_week
+      else
+        start_date = date.beginning_of_year
+        end_date = date.end_of_year
+      end
+      {"$match": {
+        "$expr": {
+          "$or": [
+            {"$and": [{"$gte": ['$end_time', start_date]}, {"$lte": ['$start_time', end_date]}]},
+            {"$and": [{"$gte": ['$start_time', start_date]}, {"$lte": ['$start_time', end_date]}]},
+            {"$and": [{"$lte": ['$start_time', start_date]}, {"$gte": ['$end_time', end_date]}]},
+          ],
+        },
+      }}
     end
   end
 end

@@ -98,21 +98,21 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def upc
-    payload = { upc: params[:upc] }
+    payload = {upc: params[:upc]}
     uri = URI.parse('https://api.upcitemdb.com/prod/v1/lookup')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
     request = Net::HTTP::Post.new(uri.path)
     request.body = payload.to_json
-    request["Content-Type"] = "application/json"
-    request[CaseSensitiveString.new("user_key")] = Rails.application.credentials.upcitemdb[:user_key]
-    request[CaseSensitiveString.new("key_type")] = "3scale"
+    request['Content-Type'] = 'application/json'
+    request[CaseSensitiveString.new('user_key')] = Rails.application.credentials.upcitemdb[:user_key]
+    request[CaseSensitiveString.new('key_type')] = '3scale'
 
     res = http.request(request)
 
     case res.code
-    when "200"
+    when '200'
       render json: {data: JSON.parse(res.body)['items'][0]}
     else
       render json: {data: 'Error retrieving product'}

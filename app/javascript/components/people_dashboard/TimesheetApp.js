@@ -4,7 +4,7 @@ import React, { memo, useState } from 'react'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import {toast} from '../utils/toast'
+import { toast } from '../utils/toast'
 import PeopleDashboardStore from './PeopleDashboardStore'
 
 import {
@@ -131,7 +131,7 @@ class ActiveTaskStore {
     this.isLoading = true
     const url = `/api/v1/people/timesheet_update_status?user_id=${userid}&week=${week_number}&status=${status}`
     const params = { status: status }
-    await (await fetch(url, httpPostOptions(params)))
+    await await fetch(url, httpPostOptions(params))
     toast('Successfully Update', 'success')
     this.loadActiveTasks()
   }
@@ -251,7 +251,9 @@ class TimesheetApp extends React.Component {
         accessor: 'total_hours',
         minWidth: 80.8125,
         className: 'justify-center ttu',
-        Cell: props => <span className="">{decimalFormatter.format(props.value)}</span>
+        Cell: props => (
+          <span className="">{decimalFormatter.format(props.value)}</span>
+        )
       },
       {
         headerClassName: 'tc',
@@ -259,14 +261,16 @@ class TimesheetApp extends React.Component {
         accessor: 'total_ot',
         minWidth: 80.8125,
         className: 'justify-center ttu',
-        Cell: props => <span className="">{decimalFormatter.format(props.value)}</span>
+        Cell: props => (
+          <span className="">{decimalFormatter.format(props.value)}</span>
+        )
       },
       {
         headerClassName: 'tc',
         Header: 'Status',
         accessor: 'status',
         minWidth: 85.6094,
-        className: 'justify-center ttu',
+        className: 'justify-center ttu'
       },
       {
         headerClassName: 'tc',
@@ -280,12 +284,31 @@ class TimesheetApp extends React.Component {
         Header: 'Approve / Decline',
         accessor: 'user_id',
         minWidth: 130,
-        Cell: props => 
-        <div>
-          <button onClick={this.onToggleActive(props.value, props.row['week_number'], "approve")} className="link f7 fw6 ph2 pv1 ba br2 mr2 dib tc bg-orange b--orange white" > Approve</button>
-          <button onClick={this.onToggleActive(props.value, props.row['week_number'], "decline" )} className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white">Decline</button>
-        </div>
-      
+        Cell: props => (
+          <div>
+            <button
+              onClick={this.onToggleActive(
+                props.value,
+                props.row['week_number'],
+                'approve'
+              )}
+              className="link f7 fw6 ph2 pv1 ba br2 mr2 dib tc bg-orange b--orange white"
+            >
+              {' '}
+              Approve
+            </button>
+            <button
+              onClick={this.onToggleActive(
+                props.value,
+                props.row['week_number'],
+                'decline'
+              )}
+              className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white"
+            >
+              Decline
+            </button>
+          </div>
+        )
       }
     ]
   }
@@ -343,8 +366,8 @@ class TimesheetApp extends React.Component {
   render() {
     const { columns, showEditor } = this.state
     return (
-      <div  className="w-100 bg-white pa3">
-        <div className="toast" id="toast"></div>
+      <div className="w-100 bg-white pa3">
+        <div className="toast" id="toast" />
         <div className="flex mb4 mt2">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
             Timesheets Approval

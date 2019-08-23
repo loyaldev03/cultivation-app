@@ -307,7 +307,9 @@ class EmployeeListApp extends React.Component {
           className: 'dark-grey pl3 fw6',
           accessor: 'absents',
           minWidth: 150,
-          Cell: props => <span className="">{decimalFormatter.format(props.value)}</span>
+          Cell: props => (
+            <span className="">{decimalFormatter.format(props.value)}</span>
+          )
         },
         {
           headerClassName: 'pl3 tl',
@@ -315,7 +317,9 @@ class EmployeeListApp extends React.Component {
           className: 'dark-grey pl3 fw6',
           accessor: 'ot_hours',
           minWidth: 150,
-          Cell: props => <span className="">{decimalFormatter.format(props.value)}</span>
+          Cell: props => (
+            <span className="">{decimalFormatter.format(props.value)}</span>
+          )
         },
         {
           headerClassName: 'pl3 tl',

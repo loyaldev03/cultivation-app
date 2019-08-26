@@ -2,7 +2,12 @@ import React from 'react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { MiniBoxWidget, Loading, numberFormatter, decimalFormatter } from '../utils'
+import {
+  MiniBoxWidget,
+  Loading,
+  numberFormatter,
+  decimalFormatter
+} from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (

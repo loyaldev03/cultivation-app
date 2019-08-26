@@ -84,7 +84,8 @@ export default class HarvestCostByGramWidget extends React.Component {
         </div>
         {HarvestStore.harvest_cost_list_loaded ? (
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-            {HarvestStore.harvest_cost_list.map((e, i) => (
+            
+            { HarvestStore.harvest_cost_list.length > 0 ? HarvestStore.harvest_cost_list.map((e, i) => (
               <div className="flex items-center" key={i}>
                 <h1 className="f6 fw6 w-20 dark-grey">{e.harvest_batch}</h1>
                 <ProgressBar
@@ -97,7 +98,7 @@ export default class HarvestCostByGramWidget extends React.Component {
                   <span>$ {e.cost}</span>
                 </h1>
               </div>
-            ))}
+            )) : "No Result Found"}
           </div>
         ) : (
           <div>Loading ... </div>

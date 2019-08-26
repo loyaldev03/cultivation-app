@@ -8,8 +8,6 @@ class QueryUserFacilities
   end
 
   def call
-    Facility
-      .completed
-      .where(:_id.in => @current_user.facilities)
+    Facility.where(:_id.in => @current_user.facilities, :is_enabled => true)
   end
 end

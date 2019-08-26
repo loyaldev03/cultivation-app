@@ -69,6 +69,8 @@ class Cultivation::BatchesController < ApplicationController
     if params[:select_location].present?
       quantity = params[:quantity].blank? ? @batch.quantity : params[:quantity]
       start_date = params[:start_date].blank? ? @batch.start_date : params[:start_date]
+      # Default start date to tomorrow if not defined
+      start_date ||= Time.current.beginning_of_day + 1.days
       @phases = Common::GrowPhase.where(is_active: true).pluck(:name)
       @batch_info = OpenStruct.new(
         id: @batch.id.to_s,
@@ -128,15 +130,16 @@ class Cultivation::BatchesController < ApplicationController
     # Get start_date and end_date from batch
     schedules = Cultivation::QueryBatchPhases.call(batch).booking_schedules
     if schedules.any?
-      available_trays_cmd = QueryAvailableTrays.call(
+      args = {
         start_date: start_date,
         end_date: batch.estimated_harvest_date,
         facility_id: batch.facility_id,
         purpose: cultivation_phases,
         exclude_batch_id: batch.id,
-      )
-      if available_trays_cmd.success?
-        available_trays_cmd.result
+      }
+      cmd = QueryAvailableTrays.call(args)
+      if cmd.success?
+        cmd.result
       else
         []
       end

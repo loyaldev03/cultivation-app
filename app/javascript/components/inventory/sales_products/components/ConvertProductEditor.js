@@ -509,7 +509,7 @@ class ConvertProductEditor extends React.Component {
   }
 
   render() {
-    const { sales_catalogue } = this.props
+    const { sales_catalogue, canUpdate, canCreate } = this.props
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []
@@ -718,13 +718,15 @@ class ConvertProductEditor extends React.Component {
           </div>
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-            <a
-              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-              href="#"
-              onClick={this.onSave}
-            >
-              Save
-            </a>
+            {(canUpdate || canCreate) && (
+              <a
+                className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+                href="#"
+                onClick={this.onSave}
+              >
+                Save
+              </a>
+            )}
           </div>
         </div>
       </div>

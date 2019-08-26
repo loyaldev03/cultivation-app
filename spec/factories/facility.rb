@@ -3,6 +3,21 @@ FactoryBot.define do
     name { Faker::Lorem.word }
     code { Faker::Number.number(2) }
 
+    trait :flower_only do
+      site_license { Faker::Address.country }
+      timezone { TZInfo::Timezone.all.sample.name }
+      is_complete { true }
+      address { build(:address) }
+      rooms do
+        [
+          build(:room, :flower, :is_complete),
+          build(:room, :dry, :is_complete),
+          build(:room, :cure, :is_complete),
+          build(:room, :storage, :is_complete),
+        ]
+      end
+    end
+
     trait :is_complete do
       site_license { Faker::Address.country }
       timezone { TZInfo::Timezone.all.sample.name }

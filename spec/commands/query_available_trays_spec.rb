@@ -1,19 +1,88 @@
 require "rails_helper"
 
 RSpec.describe QueryAvailableTrays, type: :command do
-  let(:facility) do
-    facility = create(:facility, :is_complete)
-    facility.rooms.each do |room|
-      room.rows.each do |row|
-        row.shelves.each do |shelf|
-          shelf.trays.each(&:save!)
+  context "facility with only flower phase", focus: true do
+    let(:facility) do
+      facility = create(:facility, :flower_only)
+      facility.rooms.each do |room|
+        room.rows.each do |row|
+          row.shelves.each do |shelf|
+            shelf.trays.each(&:save!)
+          end
         end
       end
+      facility
     end
-    facility
+    let(:first_room) { facility.rooms.detect { |r| r.purpose == Constants::CONST_FLOWER } }
+    let(:last_row) { first_room.rows.last }
+    let(:last_shelf) { last_row.shelves.last }
+    let(:last_tray) { last_shelf.trays.last }
+    let(:start_date) { Time.strptime("2018/08/01", DATE_FORMAT) }
+    let(:end_date) { Time.strptime("2018/08/17", DATE_FORMAT) }
+    let(:batch) do
+      create(:batch, :active,
+             facility_id: facility.id,
+             start_date: start_date,
+             quantity: 5,
+             batch_source: 'purchased_plants')
+    end
+
+    it "Condition A" do
+      # Prepare - Create a booking that overlaps with the start date
+      p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      p1_capacity = 5
+      p1 = create(:tray_plan,
+              facility_id: facility.id,
+              batch: batch,
+              room_id: first_room.id,
+              row_id: last_row.id,
+              shelf_id: last_shelf.id,
+              tray_id: last_tray.id,
+              capacity: p1_capacity,
+              phase: Constants::CONST_FLOWER,
+              start_date: p1_start_date,
+              end_date: p1_end_date)
+
+      # p "------------------"
+      # p batch.start_date
+      # p facility.id == batch.facility_id && facility.id == p1.facility_id
+      # p p1.batch_id == batch.id
+      # p p1.tray_id == last_tray.id
+      # p p1.phase == first_room.purpose # IMPORTANT
+      # p "------------------"
+
+      # Execute
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: facility.id,
+        purpose: [Constants::CONST_FLOWER],
+      )
+
+      # Validate
+      # 2 Rows * 2 Shelves * 2 Trays - result should flatten trays record and
+      # return 8 rows of record
+      expect(query_cmd.result.length).to eq 8
+      target = query_cmd.result.detect { |tp| tp.tray_id.to_s == last_tray.id.to_s }
+      expect(target.planned_capacity).to eq p1_capacity
+      expect(target.remaining_capacity).to eq (10 - p1_capacity)
+    end
+
   end
 
-  context ".call(start_date, end_date)" do
+  context "facility with complete growth phases" do
+    let(:facility) do
+      facility = create(:facility, :is_complete)
+      facility.rooms.each do |room|
+        room.rows.each do |row|
+          row.shelves.each do |shelf|
+            shelf.trays.each(&:save!)
+          end
+        end
+      end
+      facility
+    end
     let(:clone_room) { facility.rooms.detect { |r| r.purpose == Constants::CONST_CLONE } }
     let(:last_row) { clone_room.rows.last }
     let(:last_shelf) { last_row.shelves.last }
@@ -181,7 +250,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
         start_date: start_date,
         end_date: end_date,
         facility_id: facility.id,
-        purpose: 'clone',
+        purpose: ['clone'],
       )
 
       # Validate

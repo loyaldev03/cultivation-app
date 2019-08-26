@@ -7,6 +7,7 @@ import { ProgressBar } from '../utils'
 import PeopleDashboardStore from './PeopleDashboardStore'
 import { DefaultAvatar } from '../utils'
 import {
+  decimalFormatter,
   CheckboxSelect,
   HeaderFilter,
   ActiveBadge,
@@ -305,14 +306,20 @@ class EmployeeListApp extends React.Component {
           Header: 'Absents',
           className: 'dark-grey pl3 fw6',
           accessor: 'absents',
-          minWidth: 150
+          minWidth: 150,
+          Cell: props => (
+            <span className="">{decimalFormatter.format(props.value)}</span>
+          )
         },
         {
           headerClassName: 'pl3 tl',
           Header: 'OT(Hours)',
           className: 'dark-grey pl3 fw6',
           accessor: 'ot_hours',
-          minWidth: 150
+          minWidth: 150,
+          Cell: props => (
+            <span className="">{decimalFormatter.format(props.value)}</span>
+          )
         },
         {
           headerClassName: 'pl3 tl',

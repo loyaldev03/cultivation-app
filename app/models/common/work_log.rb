@@ -1,5 +1,7 @@
 module Common
   class WorkLog
+    #FOR CLOCK IN, CLOCK OUT
+
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 

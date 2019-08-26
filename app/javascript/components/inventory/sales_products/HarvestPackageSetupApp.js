@@ -191,7 +191,7 @@ class HarvestPackageSetupApp extends React.Component {
               Package Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              {salesProductPermission.create &&(
+              {salesProductPermission.create && (
                 <React.Fragment>
                   <button
                     className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"

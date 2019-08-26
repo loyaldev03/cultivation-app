@@ -333,9 +333,7 @@ class ConvertPackagePlanForm extends React.Component {
             <DatePicker value={start_date} onChange={this.onChangeStartDate} />
           </div>
         </div>
-        {(canUpdate || canCreate) && (
-          <SlidePanelFooter onSave={this.onSave} />
-        )}
+        {(canUpdate || canCreate) && <SlidePanelFooter onSave={this.onSave} />}
       </div>
     )
   }

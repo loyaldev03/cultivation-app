@@ -376,9 +376,10 @@ class HarvestPackageEditor extends React.Component {
       canUpdate,
       canCreate
     } = this.props
-    const uoms = (this.state.catalogue && this.state.catalogue.uoms)
-      ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
-      : []
+    const uoms =
+      this.state.catalogue && this.state.catalogue.uoms
+        ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+        : []
     const drawdown_uoms = this.props.drawdown_uoms.map(x => ({
       value: x,
       label: x
@@ -645,7 +646,7 @@ class HarvestPackageEditor extends React.Component {
         </div>
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-          {(canUpdate && canCreate) &&(
+          {canUpdate && canCreate && (
             <a
               className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
               href="#"

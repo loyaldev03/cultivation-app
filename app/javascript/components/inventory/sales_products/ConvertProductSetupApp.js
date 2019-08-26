@@ -97,7 +97,7 @@ class ConvertProductSetupApp extends React.Component {
         <div className="flex mb4 mt2">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Converted Product</h1>
           <div style={{ justifySelf: 'end' }}>
-            { salesProductPermission.create && (
+            {salesProductPermission.create && (
               <React.Fragment>
                 <button
                   className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"

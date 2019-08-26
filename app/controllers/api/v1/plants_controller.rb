@@ -1,7 +1,8 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
-    facility = current_facility || current_default_facility
-    facility_strain_ids = facility.strains.pluck(:id).map(&:to_s)
+    facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
+
+    facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
     excludes = params[:excludes] || []
@@ -11,11 +12,10 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     plants = plants.where(facility_strain_id: params[:facility_strain_id]) if params[:facility_strain_id]
     plants = plants.in(facility_strain_id: facility_strain_ids)
     plants = plants.order(c_at: :desc).to_a
-
     data = Inventory::PlantSerializer.new(
       plants,
       params: {
-        locations: QueryLocations.call(facility.id),
+        locations: QueryLocations.call(facility),
       },
     ).serialized_json
     render json: data

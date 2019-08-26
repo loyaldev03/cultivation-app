@@ -258,7 +258,7 @@ class ConvertPackagePlanForm extends React.Component {
   }
 
   render() {
-    const { onClose } = this.props
+    const { onClose, canCreate, canUpdate } = this.props
     const assignees = this.props.users.map(x => ({
       value: x.id,
       label: x.name
@@ -333,8 +333,9 @@ class ConvertPackagePlanForm extends React.Component {
             <DatePicker value={start_date} onChange={this.onChangeStartDate} />
           </div>
         </div>
-
-        <SlidePanelFooter onSave={this.onSave} />
+        {(canUpdate || canCreate) && (
+          <SlidePanelFooter onSave={this.onSave} />
+        )}
       </div>
     )
   }

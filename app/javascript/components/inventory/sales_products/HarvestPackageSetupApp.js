@@ -179,7 +179,7 @@ class HarvestPackageSetupApp extends React.Component {
   }
 
   render() {
-    const { locations, harvest_batches } = this.props
+    const { locations, harvest_batches, salesProductPermission } = this.props
     const { showEditor, showCreatePackagePlan, idOpen } = this.state
 
     return (
@@ -191,12 +191,16 @@ class HarvestPackageSetupApp extends React.Component {
               Package Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              <button
-                className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddRecord}
-              >
-                Add Package
-              </button>
+              {salesProductPermission.create &&(
+                <React.Fragment>
+                  <button
+                    className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+                    onClick={this.onAddRecord}
+                  >
+                    Add Package
+                  </button>
+                </React.Fragment>
+              )}
             </div>
           </div>
 
@@ -224,6 +228,8 @@ class HarvestPackageSetupApp extends React.Component {
                 onClose={() => {
                   this.setState({ showEditor: false, idOpen: '' })
                 }}
+                canUpdate={salesProductPermission.update}
+                canCreate={salesProductPermission.create}
               />
             )}
           />
@@ -238,6 +244,8 @@ class HarvestPackageSetupApp extends React.Component {
                 onClose={() => this.setState({ showCreatePackagePlan: false })}
                 sales_catalogue={this.props.sales_catalogue}
                 onSave={this.onSave}
+                canUpdate={salesProductPermission.update}
+                canCreate={salesProductPermission.create}
               />
             )}
           />

@@ -91,17 +91,22 @@ class ConvertProductSetupApp extends React.Component {
   }
 
   render() {
+    const { salesProductPermission } = this.props
     return (
       <div className="w-100 bg-white pa3">
         <div className="flex mb4 mt2">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Converted Product</h1>
           <div style={{ justifySelf: 'end' }}>
-            <button
-              className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-              onClick={this.onAddRecord}
-            >
-              Add Converted Product
-            </button>
+            { salesProductPermission.create && (
+              <React.Fragment>
+                <button
+                  className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+                  onClick={this.onAddRecord}
+                >
+                  Add Converted Product
+                </button>
+              </React.Fragment>
+            )}
           </div>
         </div>
 
@@ -120,6 +125,8 @@ class ConvertProductSetupApp extends React.Component {
           breakdown_uoms={this.props.breakdown_uoms}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}
+          canCreate={salesProductPermission.create}
+          canUpdate={salesProductPermission.update}
         />
       </div>
     )

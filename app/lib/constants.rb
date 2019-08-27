@@ -71,9 +71,9 @@ module Constants
   FACILITY_ROOMS_ORDER = [
     CONST_MOTHER,
     CONST_CLONE,
+    CONST_VEG,
     CONST_VEG1,
     CONST_VEG2,
-    CONST_VEG,
     CONST_FLOWER,
     CONST_DRY,
     CONST_CURE,

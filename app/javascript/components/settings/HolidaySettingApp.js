@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import { toast } from '../utils/toast'
 import classNames from 'classnames'
 import Calendar from 'react-calendar/dist/entry.nostyle'
-import { startOfYear, endOfYear, addMonths } from 'date-fns'
+import { startOfYear, addMonths, addYears, subYears, getYear } from 'date-fns'
 import { SlidePanel } from '../utils'
 import HolidayForm from './HolidayForm'
 import HolidayStore from './HolidayStore'
@@ -43,7 +43,8 @@ class HolidaySettingApp extends React.Component {
       { title: 'today', date: new Date() },
       { title: 'Birthday Agong', date: new Date(2019, 4, 21) },
       { title: 'Testing Holiday', date: new Date(2019, 4, 22) }
-    ]
+    ],
+    current_date: new Date()
   }
 
   async componentDidMount() {
@@ -77,6 +78,18 @@ class HolidaySettingApp extends React.Component {
     })
   }
 
+  addCurrentYears = () => {
+    this.setState({
+      current_date: addYears(this.state.current_date, 1)
+    })
+  }
+
+  subCurrentYears = () => {
+    this.setState({
+      current_date: subYears(this.state.current_date, 1)
+    })
+  }
+
   render() {
     const dates = HolidayStore.getHolidays()
     const { showHolidayForm } = this.state
@@ -90,7 +103,7 @@ class HolidaySettingApp extends React.Component {
       ) : null
 
     let row1 = []
-    let date = startOfYear(new Date())
+    let date = startOfYear(this.state.current_date)
     for (let i = 0; i < 4; i++) {
       row1.push(
         <Calendar
@@ -145,6 +158,27 @@ class HolidaySettingApp extends React.Component {
       <React.Fragment>
         <style>{styles}</style>
         <div id="toast" className="toast animated toast--success" />
+        <div className="flex justify-between mb3">
+          <div />
+          <div className="flex justify-center">
+            <i
+              className="material-icons md-gray pointer"
+              onClick={this.subCurrentYears}
+            >
+              keyboard_arrow_left
+            </i>
+            <i
+              className="material-icons md-gray pointer mr2"
+              onClick={this.addCurrentYears}
+            >
+              keyboard_arrow_right
+            </i>
+            <span className="md-gray f4">
+              {getYear(this.state.current_date)}
+            </span>
+          </div>
+        </div>
+
         <SlidePanel
           width="500px"
           show={showHolidayForm}

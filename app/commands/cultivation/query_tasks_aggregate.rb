@@ -127,7 +127,8 @@ module Cultivation
 
     def match_facility
       if args[:facility_id]
-        {"$match": {"batch.facility_id": args[:facility_id].to_bson_id}}
+        f_ids = args[:facility_id].split(',').map { |x| x.to_bson_id }
+        {"$match": {"batch.facility_id": {"$in": f_ids}}}
       else
         {"$match": {}}
       end

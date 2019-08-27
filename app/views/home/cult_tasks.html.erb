@@ -4,7 +4,7 @@
 <%= react_component 'cultivation/dashboards/TasksDashboardApp',
   {
     defaultFacilityId: current_default_facility&.id.to_s,
-    currentFacilityId: current_facility&.id.to_s,
+    currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s),
     currentTime: Time.current,
   }
 %>

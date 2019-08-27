@@ -8,7 +8,8 @@ module Charts
     end
 
     def find_batches(statuses)
-      Cultivation::Batch.where(facility_id: @args[:facility_id]).in(
+      f_ids = @args[:facility_id].split(',')
+      Cultivation::Batch.where(facility_id: {"$in": f_ids}).in(
         status: statuses,
       )
     end

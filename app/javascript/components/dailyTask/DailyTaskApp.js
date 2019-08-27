@@ -16,7 +16,6 @@ import ReceiveCannabisForm from './components/ReceiveCannabisForm'
 import NutrientEditor from '../inventory/raw_materials/components/NutrientEditor'
 import RawMaterialEditor from '../inventory/raw_materials/components/RawMaterialEditor'
 
-
 import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
 import MaterialUsedStore from './stores/MaterialUsedStore'
@@ -225,7 +224,7 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <RawMaterialEditor
               order_uoms={this.props.order_uoms}
-              raw_material_type='grow_medium'
+              raw_material_type="grow_medium"
               catalogues={this.props.grow_medium_catalogues}
               facility_id={this.props.facility_id}
               uoms={this.props.uoms}
@@ -242,7 +241,7 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <RawMaterialEditor
               order_uoms={this.props.order_uoms}
-              raw_material_type='grow_light'
+              raw_material_type="grow_light"
               catalogues={this.props.grow_light_catalogues}
               facility_id={this.props.facility_id}
               uoms={this.props.uoms}
@@ -259,7 +258,7 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <RawMaterialEditor
               order_uoms={this.props.order_uoms}
-              raw_material_type='supplements'
+              raw_material_type="supplements"
               catalogues={this.props.supplement_catalogues}
               facility_id={this.props.facility_id}
               uoms={this.props.uoms}
@@ -276,7 +275,7 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <RawMaterialEditor
               order_uoms={this.props.order_uoms}
-              raw_material_type='others'
+              raw_material_type="others"
               catalogues={this.props.other_catalogues}
               facility_id={this.props.facility_id}
               uoms={this.props.uoms}

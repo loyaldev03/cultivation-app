@@ -489,9 +489,7 @@ class RawMaterialEditor extends React.Component {
 
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">
-              {this.label} Type
-              </label>
+            <label className="f6 fw6 db mb1 gray ttc">{this.label} Type</label>
             <Select
               options={this.props.catalogues}
               value={this.state.catalogue}
@@ -590,9 +588,9 @@ class RawMaterialEditor extends React.Component {
                   {this.state.order_quantity &&
                     this.state.qty_per_package &&
                     parseFloat(this.state.order_quantity) *
-                    parseFloat(this.state.qty_per_package)}
+                      parseFloat(this.state.qty_per_package)}
                   &nbsp;
-                    {this.state.uom && this.state.uom.label}
+                  {this.state.uom && this.state.uom.label}
                 </div>
               </div>
             </div>
@@ -616,7 +614,7 @@ class RawMaterialEditor extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">
               Where are they stored?
-              </label>
+            </label>
             <LocationPicker
               purpose="storage"
               facility_id={facility_id}
@@ -634,7 +632,7 @@ class RawMaterialEditor extends React.Component {
               onClick={this.onSave}
             >
               Save
-              </a>
+            </a>
           </div>
         )}
       </React.Fragment>
@@ -647,12 +645,12 @@ class RawMaterialEditor extends React.Component {
         {this.props.sharedEditor ? (
           this.renderContent()
         ) : (
-            <div className="rc-slide-panel" data-role="sidebar">
-              <div className="rc-slide-panel__body flex flex-column">
-                {this.renderContent()}
-              </div>
+          <div className="rc-slide-panel" data-role="sidebar">
+            <div className="rc-slide-panel__body flex flex-column">
+              {this.renderContent()}
             </div>
-          )}
+          </div>
+        )}
       </React.Fragment>
     )
   }
@@ -661,7 +659,7 @@ class RawMaterialEditor extends React.Component {
 RawMaterialEditor.propTypes = {
   order_uoms: PropTypes.array.isRequired,
   raw_material_type: PropTypes.string.isRequired,
-  sharedEditor: PropTypes.bool,
+  sharedEditor: PropTypes.bool
 }
 
 RawMaterialEditor.defaultProps = {

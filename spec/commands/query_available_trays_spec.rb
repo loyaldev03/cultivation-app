@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe QueryAvailableTrays, type: :command do
-  context "facility with only flower phase", focus: true do
+  context "facility with only flower phase" do
     let(:facility) do
       facility = create(:facility, :flower_only)
       facility.rooms.each do |room|
@@ -27,12 +27,27 @@ RSpec.describe QueryAvailableTrays, type: :command do
              batch_source: 'purchased_plants')
     end
 
-    it "Condition A" do
+    it "Before booking", focus: true do
+      # Execute
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: facility.id,
+        purpose: [Constants::CONST_FLOWER],
+      )
+
+      expect(query_cmd.result.length).to eq 8
+      target = query_cmd.result.detect { |p| p.tray_id == last_tray.id.to_s }
+      expect(target.planned_capacity).to eq 0
+      expect(target.remaining_capacity).to eq 10
+    end
+
+    it "Condition A", focus: true do
       # Prepare - Create a booking that overlaps with the start date
       p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/01", DATE_FORMAT)
       p1_capacity = 5
-      p1 = create(:tray_plan,
+      _p1 = create(:tray_plan,
               facility_id: facility.id,
               batch: batch,
               room_id: first_room.id,
@@ -43,14 +58,6 @@ RSpec.describe QueryAvailableTrays, type: :command do
               phase: Constants::CONST_FLOWER,
               start_date: p1_start_date,
               end_date: p1_end_date)
-
-      # p "------------------"
-      # p batch.start_date
-      # p facility.id == batch.facility_id && facility.id == p1.facility_id
-      # p p1.batch_id == batch.id
-      # p p1.tray_id == last_tray.id
-      # p p1.phase == first_room.purpose # IMPORTANT
-      # p "------------------"
 
       # Execute
       query_cmd = QueryAvailableTrays.call(
@@ -64,7 +71,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       # 2 Rows * 2 Shelves * 2 Trays - result should flatten trays record and
       # return 8 rows of record
       expect(query_cmd.result.length).to eq 8
-      target = query_cmd.result.detect { |tp| tp.tray_id.to_s == last_tray.id.to_s }
+      target = query_cmd.result.detect { |p| p.tray_id == last_tray.id.to_s }
       expect(target.planned_capacity).to eq p1_capacity
       expect(target.remaining_capacity).to eq (10 - p1_capacity)
     end

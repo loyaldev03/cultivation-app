@@ -98,8 +98,8 @@ export default class OverallInfo extends React.Component {
                   {PeopleDashboardStore.overall_info_loaded
                     ? PeopleDashboardStore.overall_info.employee_at_risk != null
                       ? PeopleDashboardStore.overall_info.employee_at_risk
-                      : 0
-                    : 0}
+                      : '--'
+                    : '--'}
                 </b>
               </div>
             </div>
@@ -117,9 +117,9 @@ export default class OverallInfo extends React.Component {
                     ? `${
                         PeopleDashboardStore.overall_info.tardiness_rate != null
                           ? PeopleDashboardStore.overall_info.tardiness_rate
-                          : 0
+                          : '--'
                       }%`
-                    : 0}
+                    : '--'}
                 </b>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default class OverallInfo extends React.Component {
                     ? `${
                         PeopleDashboardStore.overall_info.absent_rate != null
                           ? PeopleDashboardStore.overall_info.absent_rate
-                          : 0
+                          : '--'
                       }%`
                     : 0}
                 </b>
@@ -157,9 +157,9 @@ export default class OverallInfo extends React.Component {
                     ? `${
                         PeopleDashboardStore.overall_info.performance != null
                           ? PeopleDashboardStore.overall_info.performance
-                          : 0
+                          : '--'
                       }%`
-                    : 0}
+                    : '--'}
                 </b>
               </div>
             </div>

@@ -768,6 +768,7 @@ class TaskList extends React.Component {
               <CultivationCalendar
                 batchId={batchId}
                 facilityId={this.props.batch.facility_id}
+                growthStages={TaskStore.facilityPhases}
                 batchStartDate={TaskStore.batchStartDate}
                 totalDuration={TaskStore.totalDuration}
                 phaseDuration={TaskStore.phaseDuration}

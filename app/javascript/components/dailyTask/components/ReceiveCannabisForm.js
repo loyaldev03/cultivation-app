@@ -143,6 +143,18 @@ class ReceiveCannabisForm extends React.Component {
     this.setState({ [fieldName]: value })
   }
 
+  onClearManifest = () => {
+    this.setState({
+      errors: {},
+      validatingManifest: false,
+      isReadOnly: false,
+      manifest_no: '',
+      validatedManifest: false,
+      plants: [],
+      phase: 'clone'
+    })
+  }
+
   render() {
     const { show = true, facilityId } = this.props
     const {
@@ -169,11 +181,12 @@ class ReceiveCannabisForm extends React.Component {
 
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3 flex flex-column">
-            <div className="w-60 mt3">
+            <div className="w-40 mt3">
               <label className="f6 fw6 db mb1 gray ttc mb2">Manifest No.</label>
               <div className="flex justify-between">
                 <InputBarcode
                   readOnly={isReadOnly}
+                  className="w-100"
                   value={manifest_no}
                   onChange={e =>
                     this.onChangeText('manifest_no', e.target.value)
@@ -188,6 +201,14 @@ class ReceiveCannabisForm extends React.Component {
                     onClick={this.onManifestValidate}
                   >
                     {this.state.validatingManifest ? 'Loading...' : 'Send'}
+                  </a>
+                )}
+                {isReadOnly && (
+                  <a
+                    class="fr btn btn--primary ml3"
+                    onClick={this.onClearManifest}
+                  >
+                    Clear
                   </a>
                 )}
               </div>

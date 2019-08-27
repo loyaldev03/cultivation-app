@@ -11,7 +11,16 @@ class DailyTasksController < ApplicationController
     @total_tasks = get_tasks_today.count
     @next_payment_date = QueryNextPaymentDate.call(Time.current).result
     @hours_worked = get_hours_worked
-
+    #for add inventory nutrient task
+    @order_uoms = Common::UnitOfMeasure.where(:dimension.in => %w(piece)).pluck(:unit)
+    @uoms = Common::UnitOfMeasure.all.pluck(:unit)
+    @catalogue_id = Inventory::QueryCatalogue.call(Constants::NUTRIENTS_KEY).result&.id.to_s
+    @catalogues = get_tasks_today.pluck(:indelible).include?('receive_inventory_nutrients') ? Inventory::QueryCatalogueTree.call('raw_materials', Constants::NUTRIENTS_KEY).result : []
+    @grow_medium_catalogues = get_tasks_today.pluck(:indelible).include?('receive_grow_medium') ? Inventory::QueryCatalogueTree.call('raw_materials', Constants::GROW_MEDIUM_KEY).result : []
+    @grow_light_catalogues = get_tasks_today.pluck(:indelible).include?('receive_grow_lights') ? Inventory::QueryCatalogueTree.call('raw_materials', Constants::GROW_LIGHT_KEY).result : []
+    @supplement_catalogues = get_tasks_today.pluck(:indelible).include?('receive_supplements') ? Inventory::QueryCatalogueTree.call('raw_materials', Constants::SUPPLEMENTS_KEY).result : []
+    @other_catalogues = get_tasks_today.pluck(:indelible).include?('receive_others') ? Inventory::QueryCatalogueTree.call('raw_materials', Constants::OTHERS_KEY).result : []
+    #end add inventory nutrient task
     render 'index', layout: 'worker'
   end
 
@@ -20,10 +29,17 @@ class DailyTasksController < ApplicationController
   def get_tasks_today
     @tasks_date = Time.current.beginning_of_day
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
-    Cultivation::Task.collection.aggregate(
+    tasks_by_batch = Cultivation::Task.collection.aggregate(
       [
         {"$match": match},
       ]
     )
+
+    other_tasks = current_user.cultivation_tasks.
+      expected_on(@tasks_date).
+      in(user_ids: current_user.id).
+      where(batch_id: nil)
+
+    tasks_by_batch.to_a + other_tasks.to_a
   end
 end

@@ -19,23 +19,18 @@ const RoomCapcitySpot = ({ text, height, purpose, rooms, color, onClick }) => {
           style={{ height: `${height}%`, background: 'white', opacity: 0.5 }}
         >
           {height > 60.5 ? (
-            <span className="f6 fw6 black tc pa1 ">
-              {text} spots free
-            </span>
+            <span className="f6 fw6 black tc pa1 ">{text} spots free</span>
           ) : (
             ''
           )}
         </div>
         {height <= 60.5 ? (
-          <span className="f6 fw6 white tc pa1">
-            {text} spots free
-          </span>
+          <span className="f6 fw6 white tc pa1">{text} spots free</span>
         ) : (
           ''
         )}
       </div>
-      
-      
+
       <div>
         <h1 className="f5 fw6 grey ttc tc">{purpose}</h1>
         <h1 className="f5 fw6 grey tc">{rooms} rooms</h1>

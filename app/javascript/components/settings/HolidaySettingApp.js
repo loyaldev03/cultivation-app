@@ -157,17 +157,27 @@ class HolidaySettingApp extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
-        <div id="toast" className="toast animated toast--success"/>
+        <div id="toast" className="toast animated toast--success" />
         <div className="flex justify-between mb3">
-          <div></div>
+          <div />
           <div className="flex justify-center">
-            <i className="material-icons md-gray pointer" onClick={this.subCurrentYears}>keyboard_arrow_left</i>
-            <i className="material-icons md-gray pointer mr2" onClick={this.addCurrentYears}>keyboard_arrow_right</i>
-            <span className="md-gray f4">{getYear(this.state.current_date)}</span>
+            <i
+              className="material-icons md-gray pointer"
+              onClick={this.subCurrentYears}
+            >
+              keyboard_arrow_left
+            </i>
+            <i
+              className="material-icons md-gray pointer mr2"
+              onClick={this.addCurrentYears}
+            >
+              keyboard_arrow_right
+            </i>
+            <span className="md-gray f4">
+              {getYear(this.state.current_date)}
+            </span>
           </div>
-
         </div>
-
 
         <SlidePanel
           width="500px"

@@ -210,7 +210,7 @@ class DailyTaskStore {
       console.log(this.otherTasks)
       let task = this.otherTasks.tasks.find(x => x.id === taskId)
       task.work_status = status
-    }else{
+    } else {
       // for task that have batchId
       if (batchId.length > 0) {
         let batch = this.batches.find(x => x.id === batchId)

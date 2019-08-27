@@ -278,7 +278,14 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   render() {
-    const { startDate, locations, plantConfig, onSave, onClose, phases } = this.props
+    const {
+      startDate,
+      locations,
+      plantConfig,
+      onSave,
+      onClose,
+      phases
+    } = this.props
     const {
       tabIndex,
       showRowList,

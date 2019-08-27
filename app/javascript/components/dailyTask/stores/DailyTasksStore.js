@@ -205,19 +205,21 @@ class DailyTaskStore {
 
   @action
   updateTaskWorkStatus(batchId, taskId, status) {
-    if (batchId.length > 0) {
-      let batch = this.batches.find(x => x.id === batchId)
-      let task = batch.tasks.find(x => x.id === taskId)
-      task.work_status = status
-      this.batches = this.batches.map(t => {
-        return t.id === batchId ? batch : t
-      })
-    }
-
-    // For other tasks where batchId is empty
-    if (batchId.length == 0) {
+    // For other tasks where batchId is others
+    if (batchId === 'others') {
+      console.log(this.otherTasks)
       let task = this.otherTasks.tasks.find(x => x.id === taskId)
       task.work_status = status
+    }else{
+      // for task that have batchId
+      if (batchId.length > 0) {
+        let batch = this.batches.find(x => x.id === batchId)
+        let task = batch.tasks.find(x => x.id === taskId)
+        task.work_status = status
+        this.batches = this.batches.map(t => {
+          return t.id === batchId ? batch : t
+        })
+      }
     }
   }
 

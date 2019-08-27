@@ -15,10 +15,10 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def list_infos
-    facility_id = params[:facility_id]
+    facility_id = params[:facility_id].split(',')
     batches = Cultivation::Batch.
       includes(:facility_strain).
-      where(facility_id: facility_id).
+      where(facility_id: {"$in": facility_id}).
       order(c_at: :desc)
     render json: BatchInfoSerializer.new(batches).serialized_json
   end

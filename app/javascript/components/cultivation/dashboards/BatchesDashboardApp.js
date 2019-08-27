@@ -6,6 +6,7 @@ import DahboardBatchStore from './batches/DahboardBatchStore'
 import BatchStore from '../batches/BatchStore'
 import {
   decimalFormatter,
+  numberFormatter,
   formatDate2,
   ActiveBadge,
   CheckboxSelect,
@@ -14,14 +15,24 @@ import {
   TempBatchWidgets
 } from '../../utils'
 
-const Batcheslist = ({ title, count, className = '', loaded = false }) => {
+const Batcheslist = ({
+  title,
+  count,
+  className = '',
+  loaded = false,
+  dataclassName = 'f2',
+  headerClassName = ''
+}) => {
   return (
     <div
       className="flex items-center ba b--light-gray pa3 bg-white br2 mr1 mb1 "
       style={{ height: 210 + 'px', width: '50%' }}
     >
       {loaded ? (
-        <div className="flex" style={{ flex: ' 1 1 auto' }}>
+        <div
+          className={`flex ${headerClassName}`}
+          style={{ flex: ' 1 1 auto' }}
+        >
           <i
             className={`material-icons white bg-orange md-48 ${className}`}
             style={{ borderRadius: '50%' }}
@@ -30,7 +41,7 @@ const Batcheslist = ({ title, count, className = '', loaded = false }) => {
           </i>
           <div className="tc">
             <h1 className="f5 fw6 grey">{title}</h1>
-            <b className="f2 fw6 dark-grey">{count}</b>
+            <b className={`${dataclassName} fw6 dark-grey`}>{count}</b>
           </div>
         </div>
       ) : (
@@ -237,14 +248,19 @@ class BatchesDashboardApp extends React.Component {
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
-        <div className="flex flex-row-reverse">
-          <a
-            href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
-            className="btn btn--primary"
-          >
-            Create new batch
-          </a>
-        </div>
+        {Array.isArray(this.props.currentFacilityId) ? (
+          ''
+        ) : (
+          <div className="flex flex-row-reverse">
+            <a
+              href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
+              className="btn btn--primary"
+            >
+              Create new batch
+            </a>
+          </div>
+        )}
+
         <div className="flex h-50 pv4">
           <div className="w-50">
             <div
@@ -258,13 +274,17 @@ class BatchesDashboardApp extends React.Component {
             <div className="flex justify-between">
               <Batcheslist
                 title="Active Batches"
-                count={DahboardBatchStore.data_batches_info.active_batches}
+                count={numberFormatter.format(
+                  DahboardBatchStore.data_batches_info.active_batches
+                )}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Batches In Draft"
-                count={DahboardBatchStore.data_batches_info.draft_batches}
+                count={numberFormatter.format(
+                  DahboardBatchStore.data_batches_info.draft_batches
+                )}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
@@ -273,17 +293,21 @@ class BatchesDashboardApp extends React.Component {
             <div className="flex justify-between">
               <Batcheslist
                 title="Scheduled Batches"
-                count={DahboardBatchStore.data_batches_info.scheduled_batches}
+                count={numberFormatter.format(
+                  DahboardBatchStore.data_batches_info.scheduled_batches
+                )}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Cost of Active Batches to Date"
-                count={`$ ${
+                count={`$ ${decimalFormatter.format(
                   DahboardBatchStore.data_batches_info.active_batches_cost
-                }`}
-                className="mt4 mb4"
+                )}`}
+                className="mt4 mb5"
                 loaded={DahboardBatchStore.batches_info_loaded}
+                dataclassName="f3"
+                headerClassName="mt4"
               />
             </div>
           </div>

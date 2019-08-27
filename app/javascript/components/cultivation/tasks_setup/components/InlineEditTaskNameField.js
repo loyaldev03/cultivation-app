@@ -21,7 +21,8 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
       isCollapsed,
       onClick,
       onCollapseClick,
-      issues
+      issues,
+      editable
     } = this.props
     return (
       <div
@@ -58,7 +59,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               done
             </i>
           </React.Fragment>
-        ) : (
+        ) : (editable ? 
           <React.Fragment>
             <a
               href="#0"
@@ -77,6 +78,18 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               edit
             </i>
           </React.Fragment>
+        : (
+          <React.Fragment>
+            <span
+              className={classNames('pa1', {
+                orange: hasChild,
+                grey: !hasChild
+              })}
+            >
+              {text}
+            </span>
+          </React.Fragment>
+        )
         )}
       </div>
     )

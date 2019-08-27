@@ -1,9 +1,17 @@
 <% content_for :breadcrumb do %>
   <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
 <% end %>
-<%= react_component 'cultivation/dashboards/BatchesDashboardApp',
-  {
-    currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s),
-    currentTime: Time.current,
-  }
-%>
+
+<% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result[:read] == true %>
+  <%= react_component 'cultivation/dashboards/BatchesDashboardApp',
+    {
+      currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s),
+      currentTime: Time.current,
+      batchesPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result
+    }
+  %>
+<% else %>
+  <div class="w-100 bg-white ph3 pt2 pb4">
+    <%= render partial: 'layouts/no_permission' %>
+  </div>
+<% end %>

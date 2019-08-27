@@ -79,7 +79,7 @@ class TaskSetup extends React.Component {
   }
 
   render() {
-    const { batch } = this.props
+    const { batch, batchesPermission } = this.props
     const { showDestroyedPlants } = this.state
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
@@ -93,6 +93,7 @@ class TaskSetup extends React.Component {
           {...batch}
           total_estimated_cost={TaskStore.totalEstimatedCost}
           total_estimated_hour={TaskStore.totalEstimatedHours}
+          canUpdate={batchesPermission.update}
         />
         <div className="flex justify-between">
           <BatchTabs
@@ -285,7 +286,7 @@ class TaskSetup extends React.Component {
         </div>
 
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
-          <TaskList batch={batch} columns={this.state.columns} />
+          <TaskList batch={batch} columns={this.state.columns} canUpdate={batchesPermission.update}/>
         </div>
         <SlidePanel
           show={showDestroyedPlants}

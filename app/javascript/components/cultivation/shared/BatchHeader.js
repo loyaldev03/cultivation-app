@@ -39,7 +39,8 @@ class BatchHeader extends React.PureComponent {
       estimated_harvest_date,
       current_growth_stage,
       actual_hours,
-      actual_cost
+      actual_cost,
+      canUpdate
     } = this.props
     const { name } = this.state
     const batchQuantity = quantity ? quantity : 0
@@ -80,13 +81,18 @@ class BatchHeader extends React.PureComponent {
                       </div>
                       <div className="w-40">
                         <div className="">
-                          <InlineEditBatchNameField
+                          {canUpdate ?(
+                            <InlineEditBatchNameField
                             text={name}
                             indent={0}
                             onDoneClick={value => {
                               this.updateBatchName(value, id)
                             }}
                           />
+                          ) : (
+                            <React.Fragment>{name}</React.Fragment>
+                          )}
+                          
                         </div>
                       </div>
                     </div>
@@ -169,13 +175,19 @@ class BatchHeader extends React.PureComponent {
                   <hr />
                   <div className=" flex">
                     <div className="w-50">
-                      <a
-                        href={`/cultivation/batches/${id}?select_location=1`}
-                        className="link grey underline"
-                        title="Click to change location"
-                      >
-                        Number of Plants
-                      </a>
+                      {canUpdate ?(
+                        <a
+                          href={`/cultivation/batches/${id}?select_location=1`}
+                          className="link grey underline"
+                          title="Click to change location"
+                        >
+                          Number of Plants
+                        </a>
+                      ): (
+                        <React.Fragment>
+                          Number of Plants
+                        </React.Fragment>
+                      )}
                     </div>
                     <div className="w-50">
                       <div className="tr">

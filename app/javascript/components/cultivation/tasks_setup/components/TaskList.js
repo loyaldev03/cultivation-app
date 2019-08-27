@@ -164,6 +164,7 @@ class TaskList extends React.Component {
   renderTaskNameColumn = data => {
     const { id, wbs, indent, issues, deletable, indelible, items } = data.row
     const batchId = this.props.batch.id
+    const canUpdate = this.props.canUpdate
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
@@ -174,6 +175,7 @@ class TaskList extends React.Component {
           indent={indent}
           hasChild={hasChild}
           isCollapsed={isCollapsed}
+          editable={canUpdate}
           onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
           onClick={e => {
             this.handleShowSidebar(id)
@@ -183,120 +185,122 @@ class TaskList extends React.Component {
             TaskStore.editTask(batchId, id, { name: value })
           }}
         />
-        <Tippy
-          placement="bottom-end"
-          trigger="click"
-          content={
-            this.state.idOpen === id ? (
-              <div className="bg-white f6 flex grey">
-                <div className="db shadow-4">
-                  <MenuButton
-                    icon="format_indent_increase"
-                    text="Indent In"
-                    onClick={e => this.handleIndent(id, 'in')}
-                  />
-                  <MenuButton
-                    icon="format_indent_decrease"
-                    text="Indent Out"
-                    onClick={e => this.handleIndent(id, 'out')}
-                  />
-                  <MenuButton
-                    icon="vertical_align_top"
-                    text="Insert Task Above"
-                    onClick={e => this.handleAddTask(id, 'add-above')}
-                  />
-                  <MenuButton
-                    icon="vertical_align_bottom"
-                    text="Insert Task Below"
-                    onClick={e => this.handleAddTask(id, 'add-below')}
-                  />
-                  <MenuButton
-                    icon="edit"
-                    text="Edit Task Details"
-                    onClick={e => this.handleShowSidebar(id)}
-                  />
-                  {deletable ? (
+        {canUpdate && (
+          <Tippy
+            placement="bottom-end"
+            trigger="click"
+            content={
+              this.state.idOpen === id ? (
+                <div className="bg-white f6 flex grey">
+                  <div className="db shadow-4">
                     <MenuButton
-                      icon="delete_outline"
-                      text="Delete Task"
-                      className="red"
-                      onClick={e => this.handleDelete(data)}
+                      icon="format_indent_increase"
+                      text="Indent In"
+                      onClick={e => this.handleIndent(id, 'in')}
                     />
-                  ) : null}
-                  {indelible === 'add_nutrient' ? (
-                    <div className="bt bw1">
-                      <p className="i tc silver">Special Task</p>
-
+                    <MenuButton
+                      icon="format_indent_decrease"
+                      text="Indent Out"
+                      onClick={e => this.handleIndent(id, 'out')}
+                    />
+                    <MenuButton
+                      icon="vertical_align_top"
+                      text="Insert Task Above"
+                      onClick={e => this.handleAddTask(id, 'add-above')}
+                    />
+                    <MenuButton
+                      icon="vertical_align_bottom"
+                      text="Insert Task Below"
+                      onClick={e => this.handleAddTask(id, 'add-below')}
+                    />
+                    <MenuButton
+                      icon="edit"
+                      text="Edit Task Details"
+                      onClick={e => this.handleShowSidebar(id)}
+                    />
+                    {deletable ? (
                       <MenuButton
-                        text="Add nutrients"
-                        indelible={indelible}
-                        onClick={() => this.handleShowMaterialForm(id, items)}
+                        icon="delete_outline"
+                        text="Delete Task"
+                        className="red"
+                        onClick={e => this.handleDelete(data)}
                       />
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                  {indelible === 'clip_mother_plant' ? (
-                    <div className="bt bw1">
-                      <p className="i tc silver">Special Task</p>
+                    ) : null}
+                    {indelible === 'add_nutrient' ? (
+                      <div className="bt bw1">
+                        <p className="i tc silver">Special Task</p>
 
-                      <MenuButton
-                        text="Select Mother"
-                        indelible={indelible}
-                        onClick={() => this.handleShowClippingPanel(id, items)}
-                      />
-                    </div>
-                  ) : (
-                    ''
-                  )}
+                        <MenuButton
+                          text="Add nutrients"
+                          indelible={indelible}
+                          onClick={() => this.handleShowMaterialForm(id, items)}
+                        />
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                    {indelible === 'clip_mother_plant' ? (
+                      <div className="bt bw1">
+                        <p className="i tc silver">Special Task</p>
 
-                  {indelible === 'create_harvest_batch' ? (
-                    <div className="bt bw1">
-                      <p className="i tc silver">Create Harvest Batch</p>
+                        <MenuButton
+                          text="Select Mother"
+                          indelible={indelible}
+                          onClick={() => this.handleShowClippingPanel(id, items)}
+                        />
+                      </div>
+                    ) : (
+                      ''
+                    )}
 
-                      <MenuButton
-                        text="Create Harvest Batch"
-                        indelible={indelible}
-                        onClick={() =>
-                          this.handleShowHarvestBatchForm(id, items)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    ''
-                  )}
+                    {indelible === 'create_harvest_batch' ? (
+                      <div className="bt bw1">
+                        <p className="i tc silver">Create Harvest Batch</p>
 
-                  {indelible === 'create_package_plan' ? (
-                    <div className="bt bw1">
-                      <p className="i tc silver">Create packages</p>
+                        <MenuButton
+                          text="Create Harvest Batch"
+                          indelible={indelible}
+                          onClick={() =>
+                            this.handleShowHarvestBatchForm(id, items)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      ''
+                    )}
 
-                      <MenuButton
-                        text="Create Package Plan"
-                        indelible={indelible}
-                        onClick={() =>
-                          this.handleShowPackagePlanForm(id, items)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    ''
-                  )}
+                    {indelible === 'create_package_plan' ? (
+                      <div className="bt bw1">
+                        <p className="i tc silver">Create packages</p>
+
+                        <MenuButton
+                          text="Create Package Plan"
+                          indelible={indelible}
+                          onClick={() =>
+                            this.handleShowPackagePlanForm(id, items)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              ''
-            )
-          }
-        >
-          <i
-            onClick={this.handleEllipsisClick(id)}
-            className={classNames('pointer material-icons', {
-              'show-on-hover': this.state.taskSelected !== id
-            })}
+              ) : (
+                ''
+              )
+            }
           >
-            more_horiz
-          </i>
-        </Tippy>
+            <i
+              onClick={this.handleEllipsisClick(id)}
+              className={classNames('pointer material-icons', {
+                'show-on-hover': this.state.taskSelected !== id
+              })}
+            >
+              more_horiz
+            </i>
+          </Tippy>
+        )}
       </div>
     )
   }
@@ -461,6 +465,7 @@ class TaskList extends React.Component {
         return (
           <InlineEditTextField
             text={taskWbs}
+            editable={this.props.canUpdate}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
               const selectedTask = TaskStore.getTaskByWbs(value)
@@ -492,6 +497,7 @@ class TaskList extends React.Component {
           <InlineEditDateField
             text={start_date}
             onHighlight={() => this.setState({ taskSelected: id })}
+            editable={this.props.canUpdate}
             onDoneClick={value => {
               TaskStore.editStartDate(batchId, id, value)
             }}
@@ -510,7 +516,7 @@ class TaskList extends React.Component {
         const { id, end_date, is_parent } = data.row
         return (
           <InlineEditDateField
-            editable={!is_parent}
+            editable={(!is_parent && this.props.canUpdate)}
             text={end_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
@@ -531,7 +537,7 @@ class TaskList extends React.Component {
         const { id, duration, is_parent } = data.row
         return (
           <InlineEditNumberField
-            editable={!is_parent}
+            editable={(!is_parent && this.props.canUpdate)}
             text={duration}
             min="1"
             step="1"
@@ -554,7 +560,7 @@ class TaskList extends React.Component {
         const { id, estimated_hours, is_parent } = data.row
         return (
           <InlineEditNumberField
-            editable={!is_parent}
+            editable={(!is_parent && this.props.canUpdate)}
             text={estimated_hours}
             min="0"
             step=".25"
@@ -604,31 +610,55 @@ class TaskList extends React.Component {
           return null
         }
         return (
-          <div
-            className="flex pointer"
-            onClick={() => this.handleShowAssignForm(id, user_ids)}
-          >
-            {user_ids &&
-              user_ids.map(u => {
-                const user = UserStore.getUserById(u)
-                if (user) {
-                  return (
-                    <Avatar
-                      size={24}
-                      key={user.id}
-                      firstName={user.first_name}
-                      lastName={user.last_name}
-                      photoUrl={user.photo_url}
-                    />
-                  )
-                } else {
-                  return null
-                }
-              })}
-            <i className="ml2 material-icons icon--medium icon--rounded">
-              person_add
-            </i>
-          </div>
+          <React.Fragment>
+            {this.props.canUpdate ? (
+              <div
+                className="flex pointer"
+                onClick={() => this.handleShowAssignForm(id, user_ids)}
+              >
+                {user_ids &&
+                  user_ids.map(u => {
+                    const user = UserStore.getUserById(u)
+                    if (user) {
+                      return (
+                        <Avatar
+                          size={24}
+                          key={user.id}
+                          firstName={user.first_name}
+                          lastName={user.last_name}
+                          photoUrl={user.photo_url}
+                        />
+                      )
+                    } else {
+                      return null
+                    }
+                  })}
+                <i className="ml2 material-icons icon--medium icon--rounded">
+                  person_add
+                </i>
+              </div>
+            ) : (
+              <div className="flex">
+                {user_ids &&
+                  user_ids.map(u => {
+                    const user = UserStore.getUserById(u)
+                    if (user) {
+                      return (
+                        <Avatar
+                          size={24}
+                          key={user.id}
+                          firstName={user.first_name}
+                          lastName={user.last_name}
+                          photoUrl={user.photo_url}
+                        />
+                      )
+                    } else {
+                      return null
+                    }
+                  })}
+              </div>
+            )}
+          </React.Fragment>
         )
       }
     },
@@ -645,13 +675,17 @@ class TaskList extends React.Component {
           return null
         }
         return (
-          <div
-            className="flex pointer items-center"
-            onClick={() => this.handleShowMaterialForm(id, items)}
-          >
-            {items && <span className="pa1">{items.length}</span>}
-            <i className="ml2 material-icons icon--medium icon--rounded">add</i>
-          </div>
+          <React.Fragment>
+            {this.props.canUpdate && (
+              <div
+                className="flex pointer items-center"
+                onClick={() => this.handleShowMaterialForm(id, items)}
+              >
+                {items && <span className="pa1">{items.length}</span>}
+                <i className="ml2 material-icons icon--medium icon--rounded">add</i>
+              </div>
+          )}
+          </React.Fragment>
         )
       }
     }

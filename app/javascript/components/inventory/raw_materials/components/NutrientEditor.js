@@ -13,7 +13,8 @@ import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import UpcStore from '../store/UpcStore'
-import { launchBarcodeScanner } from '../../../utils/BarcodeScanner'
+
+import SidebarStore from '../../../dailyTask/stores/SidebarStore' //used for closing sidebar in dailytask, somehow passing prop func doesnt close the sidebar in dailytask
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -175,7 +176,11 @@ class NutrientEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
-          window.editorSidebar.close()
+          if(this.props.sharedEditor){
+            SidebarStore.closeSidebar()
+          }else{
+            window.editorSidebar.close()
+          }
         }
       })
     }
@@ -350,6 +355,8 @@ class NutrientEditor extends React.Component {
           product_name: product.name,
           manufacturer: product.manufacturer || '',
           description: product.description || '',
+          catalogue: { label: product.catalogue.label, value: product.catalogue_id},
+          catalogue_parent: this.props.catalogues.find(e => e.key === product.catalogue.sub_category),
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
@@ -449,7 +456,7 @@ class NutrientEditor extends React.Component {
     this.setState({ location_id: event.location_id })
   }
 
-  render() {
+  renderContent() {
     const {
       facility_id,
       catalogue_id,
@@ -471,24 +478,26 @@ class NutrientEditor extends React.Component {
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
     const showTotalPrice = price_per_package && order_quantity
     return (
-      <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column">
-          <div
-            className="ph4 pv2 bb b--light-gray flex items-center"
-            style={{ height: '51px' }}
-          >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              Add Nutrient Inventory
-            </h1>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={() => {
+      <React.Fragment>
+        <div
+          className="ph4 pv2 bb b--light-gray flex items-center"
+          style={{ height: '51px' }}
+        >
+          <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+            Add Nutrient Inventory
+          </h1>
+          <span
+            className="rc-slide-panel__close-button dim"
+            onClick={() => {
+              this.props.sharedEditor ? 
+                SidebarStore.closeSidebar()
+              :
                 window.editorSidebar.close()
-              }}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
-          </div>
+            }}
+          >
+            <i className="material-icons mid-gray md-18">close</i>
+          </span>
+        </div>
 
           <div className="ph4 mv3 flex">
             <div className="w-100">
@@ -583,9 +592,7 @@ class NutrientEditor extends React.Component {
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Usage Instructions
-              </label>
+              <label className="f6 fw6 db mb1 gray ttc">Usage Instructions</label>
               <FileUploader
                 attachments={attachments}
                 onChange={this.onChangeAttachments}
@@ -594,36 +601,31 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
           <hr className="mt3 m b--light-gray w-100" />
-          {/* <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db dark-gray">Nutrient Type</label>
-            </div>
-          </div> */}
-          <div className="ph4 mb3 flex mt2">
-            <div className="w-50">
-              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
-              <Select
-                value={this.state.catalogue_parent}
-                options={catalogues}
-                styles={reactSelectStyle}
-                onChange={x => this.setState({ catalogue_parent: x })}
-              />
-              <FieldError errors={this.state.errors} field="order_uom" />
-            </div>
-
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">
-                {this.state.catalogue_parent.key} Type
-              </label>
-              <Select
-                value={this.state.catalogue}
-                options={catalogue_child}
-                styles={reactSelectStyle}
-                onChange={x => this.setState({ catalogue: x })}
-              />
-              <FieldError errors={this.state.errors} field="order_uom" />
-            </div>
+        <div className="ph4 mb3 flex mt2">
+          <div className="w-50">
+            <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
+            <Select
+              value={this.state.catalogue_parent}
+              options={catalogues}
+              styles={reactSelectStyle}
+              onChange={x => this.setState({ catalogue_parent: x })}
+            />
+            <FieldError errors={this.state.errors} field="order_uom" />
           </div>
+
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">
+              {this.state.catalogue_parent.key} Type
+            </label>
+            <Select
+              value={this.state.catalogue}
+              options={catalogue_child}
+              styles={reactSelectStyle}
+              onChange={x => this.setState({ catalogue: x })}
+            />
+            <FieldError errors={this.state.errors} field="order_uom" />
+          </div>
+        </div>
 
           <hr className="mt3 m b--light-gray w-100" />
 
@@ -705,9 +707,7 @@ class NutrientEditor extends React.Component {
                         <td className="ph3 w-10 tr pt1">
                           <span
                             className="dim pointer"
-                            onClick={e =>
-                              this.removeNutrient(x.nutrient_element)
-                            }
+                            onClick={e => this.removeNutrient(x.nutrient_element)}
                           >
                             <i className="material-icons red md-14">delete</i>
                           </span>
@@ -766,7 +766,8 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
 
-          {this.state.uom && (
+            {
+          this.state.uom && (
             <React.Fragment>
               <hr className="mt3 m b--light-gray w-100" />
               <div className="ph4 mt3 mb3 flex">
@@ -808,17 +809,18 @@ class NutrientEditor extends React.Component {
                       this.state.order_quantity &&
                       this.state.qty_per_package &&
                       parseFloat(this.state.product_size) *
-                        parseFloat(this.state.order_quantity) *
-                        parseFloat(this.state.qty_per_package)}
+                      parseFloat(this.state.order_quantity) *
+                      parseFloat(this.state.qty_per_package)}
                     &nbsp;
-                    {this.state.uom && this.state.uom.label}
+                      {this.state.uom && this.state.uom.label}
                   </div>
                 </div>
               </div>
             </React.Fragment>
-          )}
+          )
+        }
 
-          <hr className="mt3 m b--light-gray w-100" />
+        <hr className="mt3 m b--light-gray w-100" />
 
           <PurchaseInfo
             key={this.state.id}
@@ -836,7 +838,7 @@ class NutrientEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">
                 Where are they stored?
-              </label>
+                </label>
               <LocationPicker
                 purpose="storage"
                 facility_id={facility_id}
@@ -846,25 +848,49 @@ class NutrientEditor extends React.Component {
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
-          {(canUpdate || canCreate) && (
-            <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-              <a
-                className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-                href="#"
-                onClick={this.onSave}
-              >
-                Save
-              </a>
+            {
+        (canUpdate || canCreate) && (
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+            <a
+              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+              href="#"
+              onClick={this.onSave}
+            >
+              Save
+                </a>
+          </div>
+        )
+        }
+      </React.Fragment >
+  )}
+
+
+  render() {
+    return (
+      <React.Fragment>
+        {
+          this.props.sharedEditor ? 
+            this.renderContent()
+          :
+          <div className="rc-slide-panel" data-role="sidebar">
+            <div className="rc-slide-panel__body flex flex-column">
+              {this.renderContent()}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        }
+      </React.Fragment>
     )
   }
 }
 
 NutrientEditor.propTypes = {
-  order_uoms: PropTypes.array.isRequired
+  order_uoms: PropTypes.array.isRequired,
+  sharedEditor: PropTypes.bool,
+  onClose: PropTypes.func
+}
+
+NutrientEditor.defaultProps = {
+  sharedEditor: false
 }
 
 export default NutrientEditor

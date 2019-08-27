@@ -13,6 +13,7 @@ import WeightForm from './components/WeightForm'
 import CreatePackageForm from './components/CreatePackageForm'
 import ConvertPackageForm from './components/ConvertPackageForm'
 import ReceiveCannabisForm from './components/ReceiveCannabisForm'
+import NutrientEditor from '../inventory/raw_materials/components/NutrientEditor'
 
 import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
@@ -20,6 +21,7 @@ import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
 import IssueSidebar from '../issues/IssueSidebar2'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
+
 import {
   formatDate3,
   SlidePanel,
@@ -194,6 +196,24 @@ class DailyTaskApp extends React.Component {
               indelible={sidebarName}
               facilityId={this.props.facility_id}
               growth_stages={this.props.growth_stages}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'receive_inventory_nutrients'}
+          renderBody={props => (
+            <NutrientEditor
+              order_uoms={this.props.order_uoms}
+              uoms={this.props.uoms}
+              catalogue_id={this.props.catalogue_id}
+              catalogues={this.props.catalogues}
+              facility_id={this.props.facility_id}
+              // scanditLicense={this.props.scanditLicense}
+              canUpdate={true}
+              canCreate={true}
+              sharedEditor={true}
+              onClose={() => SidebarStore.closeSidebar()}
             />
           )}
         />

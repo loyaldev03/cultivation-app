@@ -143,7 +143,7 @@ class ReceiveCannabisForm extends React.Component {
     this.setState({ [fieldName]: value })
   }
 
-  onClearManifest = () =>{
+  onClearManifest = () => {
     this.setState({
       errors: {},
       validatingManifest: false,

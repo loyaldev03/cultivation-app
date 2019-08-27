@@ -309,6 +309,27 @@ class ExpandedRow extends React.Component {
                 Receiving Inventory Cannabis
               </a>
             )}
+            {indelible == 'receive_inventory_nutrients' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('receive_inventory_nutrients')}
+              >
+                Receiving Nutrients
+              </a>
+            )}
 
             {showDoneButton ? (
               <a

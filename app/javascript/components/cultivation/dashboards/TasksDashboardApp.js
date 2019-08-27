@@ -330,7 +330,7 @@ class TasksDashboardApp extends React.Component {
             <Suspense fallback={<div />}>
               {Array.isArray(this.props.currentFacilityId) ? (
                 ''
-                ) : (
+              ) : (
                 <NewTaskForm
                   ref={form => (this.NewTaskForm = form)}
                   onClose={() => this.setState({ showNewTaskPanel: false })}
@@ -340,14 +340,15 @@ class TasksDashboardApp extends React.Component {
                     this.setState({ showNewTaskPanel: false })
                   }}
                   facilityId={this.props.currentFacilityId}
-                />)}
+                />
+              )}
             </Suspense>
           )}
         />
         <div className="pa4 mw1200">
           <div className="pb4">
             {Array.isArray(this.props.currentFacilityId) ? (
-            ''
+              ''
             ) : (
               <div className="flex flex-row-reverse mb4">
                 <a className="btn btn--primary" onClick={this.onShowTask}>

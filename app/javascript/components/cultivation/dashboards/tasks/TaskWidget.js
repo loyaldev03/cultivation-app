@@ -24,7 +24,11 @@ const TaskWidgetList = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          {loaded ? <b className="f2 fw6 dark-grey">{numberFormatter.format(count)}</b> : 'loading...'}
+          {loaded ? (
+            <b className="f2 fw6 dark-grey">{numberFormatter.format(count)}</b>
+          ) : (
+            'loading...'
+          )}
         </div>
       </div>
     </div>

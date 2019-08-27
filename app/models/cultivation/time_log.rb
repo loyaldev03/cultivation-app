@@ -1,5 +1,7 @@
 module Cultivation
   class TimeLog
+    #FOR TASK LOG START TIME, END TIME
+
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 

@@ -16,10 +16,9 @@ class QueryFacilitySummary
   end
 
   def call
-    trays = QueryAvailableTrays.call(@user,
-                                     {facility_id: @args[:facility_id],
-                                      start_date: Time.current.beginning_of_day,
-                                      end_date: Time.current.end_of_day}).result
+    trays = QueryAvailableTrays.call(facility_id: @args[:facility_id],
+                                     start_date: Time.current.beginning_of_day,
+                                     end_date: Time.current.end_of_day).result
 
     trays_by_room = trays.group_by(&:room_code)
     results = trays_by_room.keys.map do |room_code|

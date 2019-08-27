@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { subMonths, format, startOfMonth, endOfMonth } from 'date-fns'
+import { subMonths, startOfMonth, endOfMonth } from 'date-fns'
 
 import OverallInfo from './OverallInfo'
 import ChartStore from './ChartStore'
@@ -16,7 +16,7 @@ import BatchDistribution from './BatchDistribution'
 import HighestCostTaskList from './HighestCostTaskList'
 import StrainDistribution from './StrainDistribution'
 
-import { formatYDM } from '../utils/DateHelper'
+import { formatYDM } from '../utils'
 
 @observer
 class ManagerDashboardApp extends React.Component {

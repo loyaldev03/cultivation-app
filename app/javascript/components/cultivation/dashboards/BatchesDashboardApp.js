@@ -59,7 +59,7 @@ class BatchesDashboardApp extends React.Component {
         Header: 'Batch ID',
         accessor: 'name',
         className: 'dark-grey pl3 fw6',
-        minWidth: 138,
+        minWidth: 160,
         Cell: props => (
           <a
             className="link dark-grey truncate"

@@ -48,7 +48,8 @@ class BatchLocationApp extends React.Component {
       const hasStartDate = window.location.href.includes('start_date')
       const hasQuantity = window.location.href.includes('quantity')
       if (hasStartDate && hasQuantity) {
-        this.onClickSelectionEdit('clone')
+        const firstPhase = this.props.phases[0]
+        this.onClickSelectionEdit(firstPhase)
       }
     })
   }
@@ -384,6 +385,7 @@ class BatchLocationApp extends React.Component {
             {editingPlant.id && (
               <BatchLocationEditor
                 key={editingPlant.id}
+                phases={phases}
                 plantConfig={editingPlant}
                 batchId={batchInfo.id}
                 quantity={quantity}

@@ -8,7 +8,7 @@
 
 
 <div class="pa4">
-  <% if RoleCheck.call(current_user, Constants::APP_MOD_INVENTORY_TYPE).result[:read] == true %>
+  <% if RoleCheck.call(current_user, Constants::APP_MOD_NON_SALES_ITEMS).result[:read] == true %>
     <%= image_tag 'dummy/inventory-overview.png', class: 'mw1200 w-100 mb4' %>
     <%= render partial: 'setupNavigation', locals: { selected: Constants::GROW_MEDIUM_KEY } %>
     <div class="flex flex-column">
@@ -19,7 +19,7 @@
         catalogues: @catalogues, 
         facility_id: params[:facility_id],
         scanditLicense: @scanditLicense,
-        raw_material_permission: RoleCheck.call(current_user, Constants::APP_MOD_INVENTORY_TYPE).result
+        raw_material_permission: RoleCheck.call(current_user, Constants::APP_MOD_NON_SALES_ITEMS).result
         })
       %>
     

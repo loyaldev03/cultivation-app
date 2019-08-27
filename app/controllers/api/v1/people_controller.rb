@@ -68,4 +68,14 @@ class Api::V1::PeopleController < Api::V1::BaseApiController
     result = People::QueryTimesheetApproval.call(current_user, {facility_id: params[:facility_id], role: params[:role], status: params[:status], range: params[:range]}).result
     render json: result.to_json, status: 200
   end
+
+  def timesheet_update_status
+    date = Date.current
+    date_find = Date.commercial(date.year, params[:week].to_i, 1)
+    user = User.find(params[:user_id])
+    work_schedules = user.work_schedules.where(start_time: date_find.beginning_of_week..date_find.end_of_week)
+    work_schedules.each do |x|
+      u = x.update(timesheet_status: params[:status])
+    end
+  end
 end

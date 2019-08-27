@@ -6,7 +6,7 @@ import DahboardBatchStore from './batches/DahboardBatchStore'
 import BatchStore from '../batches/BatchStore'
 import {
   decimalFormatter,
-  moneyFormatter,
+  numberFormatter,
   formatDate2,
   ActiveBadge,
   CheckboxSelect,
@@ -274,13 +274,13 @@ class BatchesDashboardApp extends React.Component {
             <div className="flex justify-between">
               <Batcheslist
                 title="Active Batches"
-                count={DahboardBatchStore.data_batches_info.active_batches}
+                count={numberFormatter.format(DahboardBatchStore.data_batches_info.active_batches)}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Batches In Draft"
-                count={DahboardBatchStore.data_batches_info.draft_batches}
+                count={numberFormatter.format(DahboardBatchStore.data_batches_info.draft_batches)}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
@@ -289,7 +289,7 @@ class BatchesDashboardApp extends React.Component {
             <div className="flex justify-between">
               <Batcheslist
                 title="Scheduled Batches"
-                count={DahboardBatchStore.data_batches_info.scheduled_batches}
+                count={numberFormatter.format(DahboardBatchStore.data_batches_info.scheduled_batches)}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />

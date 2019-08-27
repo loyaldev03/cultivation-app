@@ -26,7 +26,7 @@ class QueryFacilitySummary
     end
 
     order = Constants::FACILITY_ROOMS_ORDER
-    results = results.sort_by do |r|
+    results = results.select { |h| h[:purpose] }.sort_by do |r|
       order_i = if r[:purpose].blank?
                   results.size
                 else

@@ -330,6 +330,90 @@ class ExpandedRow extends React.Component {
                 Receiving Nutrients
               </a>
             )}
+            {indelible == 'receive_grow_medium' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('receive_grow_medium')}
+              >
+                Receiving Grow Medium
+              </a>
+            )}
+            {indelible == 'receive_grow_lights' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('receive_grow_lights')}
+              >
+                Receiving Grow Light
+              </a>
+            )}
+            {indelible == 'receive_supplements' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('receive_supplements')}
+              >
+                Receiving Supplements
+              </a>
+            )}
+            {indelible == 'receive_others' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('receive_others')}
+              >
+                Receiving Others Inventory
+              </a>
+            )}
 
             {showDoneButton ? (
               <a

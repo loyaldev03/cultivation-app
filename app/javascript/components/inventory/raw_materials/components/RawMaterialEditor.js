@@ -9,6 +9,7 @@ import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import UpcStore from '../store/UpcStore'
+import SidebarStore from '../../../dailyTask/stores/SidebarStore' //used for closing sidebar in dailytask, somehow passing prop func doesnt close the sidebar in dailytask
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -149,7 +150,11 @@ class RawMaterialEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
-          window.editorSidebar.close()
+          if (this.props.sharedEditor) {
+            SidebarStore.closeSidebar()
+          } else {
+            window.editorSidebar.close()
+          }
         }
       })
     }
@@ -362,7 +367,7 @@ class RawMaterialEditor extends React.Component {
     this.setState({ location_id: event.location_id })
   }
 
-  render() {
+  renderContent() {
     const { facility_id, canUpdate, canCreate } = this.props
     const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
@@ -371,276 +376,296 @@ class RawMaterialEditor extends React.Component {
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
     const hasProductId = this.state.product_id
-
     return (
-      <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column">
-          <div
-            className="ph4 pv2 bb b--light-gray flex items-center"
-            style={{ height: '51px' }}
+      <React.Fragment>
+        <div
+          className="ph4 pv2 bb b--light-gray flex items-center"
+          style={{ height: '51px' }}
+        >
+          <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add {this.label}</h1>
+          <span
+            className="rc-slide-panel__close-button dim"
+            onClick={() => {
+              this.props.sharedEditor
+                ? SidebarStore.closeSidebar()
+                : window.editorSidebar.close()
+            }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add {this.label}</h1>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={() => {
-                window.editorSidebar.close()
-              }}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
-          </div>
+            <i className="material-icons mid-gray md-18">close</i>
+          </span>
+        </div>
 
-          <div className="ph4 mb3 mt3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
-              <AsyncCreatableSelect
-                isClearable
-                placeholder={'Search...'}
-                defaultOptions={this.state.defaultProduct}
-                loadOptions={e => this.loadProducts(e)}
-                onInputChange={handleInputChange}
-                styles={reactSelectStyle}
-                value={this.state.product}
-                onChange={this.onChangeProduct}
-              />
-              <FieldError errors={this.state.errors} field="product" />
-            </div>
+        <div className="ph4 mb3 mt3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+            <AsyncCreatableSelect
+              isClearable
+              placeholder={'Search...'}
+              defaultOptions={this.state.defaultProduct}
+              loadOptions={e => this.loadProducts(e)}
+              onInputChange={handleInputChange}
+              styles={reactSelectStyle}
+              value={this.state.product}
+              onChange={this.onChangeProduct}
+            />
+            <FieldError errors={this.state.errors} field="product" />
           </div>
+        </div>
 
+        <div className="ph4 mb3 flex">
+          <div className="w-40">
+            <TextInput
+              label="Manufacturer"
+              fieldname="manufacturer"
+              value={this.state.manufacturer}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
+          <div className="w-20 pl3">
+            <NumericInput
+              label="Size"
+              fieldname="product_size"
+              value={this.state.product_size}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
+          <div className="w-20 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+            <Select
+              value={this.state.product_uom}
+              options={uoms}
+              styles={reactSelectStyle}
+              onChange={x => this.setState({ product_uom: x })}
+            />
+            <FieldError errors={this.state.errors} field="product_uom" />
+          </div>
+          <div className="w-20 pl3">
+            <NumericInput
+              label="PPM"
+              fieldname="product_ppm"
+              value={this.state.product_ppm}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Description</label>
+            <textarea
+              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+              fieldname="description"
+              value={this.state.description}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">UPC</label>
+            <InputBarcode
+              value={this.state.upc}
+              onChange={this.handleChangeUpc}
+              onKeyPress={this.handleKeyPress}
+              scanditLicense={this.props.scanditLicense}
+              onBarcodeScan={this.onBarcodeScan}
+            />
+          </div>
+        </div>
+
+        {this.props.raw_material_type === 'supplements' && (
           <div className="ph4 mb3 flex">
-            <div className="w-40">
+            <div className="w-100">
               <TextInput
-                label="Manufacturer"
-                fieldname="manufacturer"
-                value={this.state.manufacturer}
-                onChange={this.onChangeGeneric}
-              />
-            </div>
-            <div className="w-20 pl3">
-              <NumericInput
-                label="Size"
-                fieldname="product_size"
-                value={this.state.product_size}
-                onChange={this.onChangeGeneric}
-              />
-            </div>
-            <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
-              <Select
-                value={this.state.product_uom}
-                options={uoms}
-                styles={reactSelectStyle}
-                onChange={x => this.setState({ product_uom: x })}
-              />
-              <FieldError errors={this.state.errors} field="product_uom" />
-            </div>
-            <div className="w-20 pl3">
-              <NumericInput
-                label="PPM"
-                fieldname="product_ppm"
-                value={this.state.product_ppm}
+                label="EPA reg number"
+                fieldname="epa_number"
+                value={this.state.epa_number}
                 onChange={this.onChangeGeneric}
               />
             </div>
           </div>
+        )}
 
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Description</label>
-              <textarea
-                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-                fieldname="description"
-                value={this.state.description}
-                onChange={this.onChangeGeneric}
-              />
-            </div>
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">
+              {this.label} Type
+              </label>
+            <Select
+              options={this.props.catalogues}
+              value={this.state.catalogue}
+              onChange={this.onCatalogueSelected}
+              styles={reactSelectStyle}
+            />
+            <FieldError errors={this.state.errors} field="catalogue" />
           </div>
+        </div>
 
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">UPC</label>
-              <InputBarcode
-                value={this.state.upc}
-                onChange={this.handleChangeUpc}
-                onKeyPress={this.handleKeyPress}
-                scanditLicense={this.props.scanditLicense}
-                onBarcodeScan={this.onBarcodeScan}
-              />
-            </div>
+        <hr className="mt3 m b--light-gray w-100" />
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db dark-gray">Purchase details</label>
           </div>
+        </div>
 
-          {this.props.raw_material_type === 'supplements' && (
-            <div className="ph4 mb3 flex">
+        <div className="ph4 mb3 flex">
+          <div className="w-30">
+            <NumericInput
+              label="Quantity"
+              fieldname="order_quantity"
+              value={this.state.order_quantity}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+            />
+          </div>
+          <div className="w-20 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+            <Select
+              value={this.state.order_uom}
+              options={order_uoms}
+              styles={reactSelectStyle}
+              onChange={x => this.setState({ order_uom: x })}
+            />
+            <FieldError errors={this.state.errors} field="order_uom" />
+          </div>
+          <div className="w-50 pl3">
+            <NumericInput
+              label={`Price per ${this.state.order_uom &&
+                this.state.order_uom.label} before tax`}
+              fieldname="price_per_package"
+              value={this.state.price_per_package}
+              onChange={this.onChangeGeneric}
+            />
+            {showTotalPrice && (
+              <p className="f6 gray mb0">
+                Total ${' '}
+                {(
+                  parseFloat(this.state.price_per_package) *
+                  parseFloat(this.state.order_quantity)
+                ).toFixed(2)}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {this.state.uom && (
+          <React.Fragment>
+            <hr className="mt3 m b--light-gray w-100" />
+            <div className="ph4 mt3 mb3 flex">
               <div className="w-100">
-                <TextInput
-                  label="EPA reg number"
-                  fieldname="epa_number"
-                  value={this.state.epa_number}
+                <label className="f6 fw6 db dark-gray">
+                  Amount of material in each{' '}
+                  {this.state.order_uom.label.toLowerCase()}
+                </label>
+              </div>
+            </div>
+
+            <div className="ph4 mb3 flex">
+              <div className="w-30">
+                <NumericInput
+                  label="Quantity"
+                  fieldname="qty_per_package"
+                  value={this.state.qty_per_package}
                   onChange={this.onChangeGeneric}
+                  errors={this.state.errors}
                 />
               </div>
-            </div>
-          )}
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                {this.label} Type
-              </label>
-              <Select
-                options={this.props.catalogues}
-                value={this.state.catalogue}
-                onChange={this.onCatalogueSelected}
-                styles={reactSelectStyle}
-              />
-              <FieldError errors={this.state.errors} field="catalogue" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db dark-gray">Purchase details</label>
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-30">
-              <NumericInput
-                label="Quantity"
-                fieldname="order_quantity"
-                value={this.state.order_quantity}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
-              <Select
-                value={this.state.order_uom}
-                options={order_uoms}
-                styles={reactSelectStyle}
-                onChange={x => this.setState({ order_uom: x })}
-              />
-              <FieldError errors={this.state.errors} field="order_uom" />
-            </div>
-            <div className="w-50 pl3">
-              <NumericInput
-                label={`Price per ${this.state.order_uom &&
-                  this.state.order_uom.label} before tax`}
-                fieldname="price_per_package"
-                value={this.state.price_per_package}
-                onChange={this.onChangeGeneric}
-              />
-              {showTotalPrice && (
-                <p className="f6 gray mb0">
-                  Total ${' '}
-                  {(
-                    parseFloat(this.state.price_per_package) *
-                    parseFloat(this.state.order_quantity)
-                  ).toFixed(2)}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {this.state.uom && (
-            <React.Fragment>
-              <hr className="mt3 m b--light-gray w-100" />
-              <div className="ph4 mt3 mb3 flex">
-                <div className="w-100">
-                  <label className="f6 fw6 db dark-gray">
-                    Amount of material in each{' '}
-                    {this.state.order_uom.label.toLowerCase()}
-                  </label>
-                </div>
+              <div className="w-20 pl3">
+                <label className="f6 fw6 db mb1 gray ttc">Unit</label>
+                <Select
+                  value={this.state.uom}
+                  options={uoms}
+                  styles={reactSelectStyle}
+                  onChange={x => this.setState({ uom: x })}
+                />
+                <FieldError errors={this.state.errors} field="uom" />
               </div>
-
-              <div className="ph4 mb3 flex">
-                <div className="w-30">
-                  <NumericInput
-                    label="Quantity"
-                    fieldname="qty_per_package"
-                    value={this.state.qty_per_package}
-                    onChange={this.onChangeGeneric}
-                    errors={this.state.errors}
-                  />
-                </div>
-                <div className="w-20 pl3">
-                  <label className="f6 fw6 db mb1 gray ttc">Unit</label>
-                  <Select
-                    value={this.state.uom}
-                    options={uoms}
-                    styles={reactSelectStyle}
-                    onChange={x => this.setState({ uom: x })}
-                  />
-                  <FieldError errors={this.state.errors} field="uom" />
-                </div>
-                <div className="w-50 pl4">
-                  <label className="f6 fw6 db mb1 gray ttc">
-                    Total material in {this.state.order_quantity}{' '}
-                    {this.state.order_uom.label}
-                  </label>
-                  <div className="f6 pv2 fw6">
-                    {this.state.order_quantity &&
-                      this.state.qty_per_package &&
-                      parseFloat(this.state.order_quantity) *
-                        parseFloat(this.state.qty_per_package)}
-                    &nbsp;
+              <div className="w-50 pl4">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Total material in {this.state.order_quantity}{' '}
+                  {this.state.order_uom.label}
+                </label>
+                <div className="f6 pv2 fw6">
+                  {this.state.order_quantity &&
+                    this.state.qty_per_package &&
+                    parseFloat(this.state.order_quantity) *
+                    parseFloat(this.state.qty_per_package)}
+                  &nbsp;
                     {this.state.uom && this.state.uom.label}
-                  </div>
                 </div>
               </div>
-            </React.Fragment>
-          )}
+            </div>
+          </React.Fragment>
+        )}
 
-          <hr className="mt3 m b--light-gray w-100" />
-          <PurchaseInfo
-            key={this.state.id}
-            ref={this.purchaseInfoEditor}
-            label={`Vendor Name`}
-            showVendorLicense={false}
-            vendor={this.state.vendor}
-            purchase_order={this.state.purchase_order}
-            vendor_invoice={this.state.vendor_invoice}
-          />
+        <hr className="mt3 m b--light-gray w-100" />
+        <PurchaseInfo
+          key={this.state.id}
+          ref={this.purchaseInfoEditor}
+          label={`Vendor Name`}
+          showVendorLicense={false}
+          vendor={this.state.vendor}
+          purchase_order={this.state.purchase_order}
+          vendor_invoice={this.state.vendor_invoice}
+        />
 
-          <hr className="mt3 m b--light-gray w-100" />
+        <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Where are they stored?
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">
+              Where are they stored?
               </label>
-              <LocationPicker
-                purpose="storage"
-                facility_id={facility_id}
-                location_id={this.state.location_id}
-                onChange={this.onLocationChanged}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
+            <LocationPicker
+              purpose="storage"
+              facility_id={facility_id}
+              location_id={this.state.location_id}
+              onChange={this.onLocationChanged}
+            />
+            <FieldError errors={this.state.errors} field="location_id" />
           </div>
-          {(canUpdate || canCreate) && (
-            <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-              <a
-                className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-                href="#"
-                onClick={this.onSave}
-              >
-                Save
+        </div>
+        {(canUpdate || canCreate) && (
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+            <a
+              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+              href="#"
+              onClick={this.onSave}
+            >
+              Save
               </a>
+          </div>
+        )}
+      </React.Fragment>
+    )
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        {this.props.sharedEditor ? (
+          this.renderContent()
+        ) : (
+            <div className="rc-slide-panel" data-role="sidebar">
+              <div className="rc-slide-panel__body flex flex-column">
+                {this.renderContent()}
+              </div>
             </div>
           )}
-        </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
 
 RawMaterialEditor.propTypes = {
   order_uoms: PropTypes.array.isRequired,
-  raw_material_type: PropTypes.string.isRequired
+  raw_material_type: PropTypes.string.isRequired,
+  sharedEditor: PropTypes.bool,
+}
+
+RawMaterialEditor.defaultProps = {
+  sharedEditor: false
 }
 
 export default RawMaterialEditor

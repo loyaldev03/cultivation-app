@@ -14,6 +14,8 @@ import CreatePackageForm from './components/CreatePackageForm'
 import ConvertPackageForm from './components/ConvertPackageForm'
 import ReceiveCannabisForm from './components/ReceiveCannabisForm'
 import NutrientEditor from '../inventory/raw_materials/components/NutrientEditor'
+import RawMaterialEditor from '../inventory/raw_materials/components/RawMaterialEditor'
+
 
 import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
@@ -214,6 +216,74 @@ class DailyTaskApp extends React.Component {
               canCreate={true}
               sharedEditor={true}
               onClose={() => SidebarStore.closeSidebar()}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'receive_grow_medium'}
+          renderBody={props => (
+            <RawMaterialEditor
+              order_uoms={this.props.order_uoms}
+              raw_material_type='grow_medium'
+              catalogues={this.props.grow_medium_catalogues}
+              facility_id={this.props.facility_id}
+              uoms={this.props.uoms}
+              scanditLicense={this.props.scanditLicense}
+              canUpdate={true}
+              canCreate={true}
+              sharedEditor={true}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'receive_grow_lights'}
+          renderBody={props => (
+            <RawMaterialEditor
+              order_uoms={this.props.order_uoms}
+              raw_material_type='grow_light'
+              catalogues={this.props.grow_light_catalogues}
+              facility_id={this.props.facility_id}
+              uoms={this.props.uoms}
+              scanditLicense={this.props.scanditLicense}
+              canUpdate={true}
+              canCreate={true}
+              sharedEditor={true}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'receive_supplements'}
+          renderBody={props => (
+            <RawMaterialEditor
+              order_uoms={this.props.order_uoms}
+              raw_material_type='supplements'
+              catalogues={this.props.supplement_catalogues}
+              facility_id={this.props.facility_id}
+              uoms={this.props.uoms}
+              scanditLicense={this.props.scanditLicense}
+              canUpdate={true}
+              canCreate={true}
+              sharedEditor={true}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'receive_others'}
+          renderBody={props => (
+            <RawMaterialEditor
+              order_uoms={this.props.order_uoms}
+              raw_material_type='others'
+              catalogues={this.props.other_catalogues}
+              facility_id={this.props.facility_id}
+              uoms={this.props.uoms}
+              scanditLicense={this.props.scanditLicense}
+              canUpdate={true}
+              canCreate={true}
+              sharedEditor={true}
             />
           )}
         />

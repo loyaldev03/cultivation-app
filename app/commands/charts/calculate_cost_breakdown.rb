@@ -16,7 +16,7 @@ module Charts
         labour_cost += task.actual_labor_cost
         material_cost += task.actual_material_cost
       end
-      [
+      json = [
         {
           cost_type: 'material',
           value: material_cost,
@@ -34,6 +34,8 @@ module Charts
           value: 1200,
         },
       ]
+
+      return json.map { |x| x if x[:value] != 0 }.compact
     end
   end
 end

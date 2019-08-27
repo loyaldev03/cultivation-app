@@ -21,7 +21,7 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   end
 
   def cost_breakdown
-    result = Charts::CalculateCostBreakdown.call(current_user, {month: params[:month]}).result
+    result = Charts::CalculateCostBreakdown.call(current_user, {month: params[:month], year: params[:year]}).result
     render json: result.to_json, status: 200
   end
 

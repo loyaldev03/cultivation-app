@@ -13,13 +13,14 @@ module Charts
       #batches in draft
       #unscheduled batches
       #cost of active batches to date
-      batches = Cultivation::Batch.where(facility_id: @args[:facility_id])
+      facilities = @args[:facility_id].split(',')
+      batches = Cultivation::Batch.where(facility_id: {"$in": facilities})
 
       active_batches = batches.select { |a| a[:status] == Constants::BATCH_STATUS_ACTIVE }.count
       draft_batches = batches.select { |a| a[:status] == Constants::BATCH_STATUS_DRAFT }.count
       scheduled_batches = batches.select { |a| a[:status] == Constants::BATCH_STATUS_SCHEDULED }.count
 
-      active_batches_cost = Charts::QueryActiveBatchesCost.call(@args[:current_user], {facility_id: @args[:facility_id]}).result
+      active_batches_cost = Charts::QueryActiveBatchesCost.call(@args[:current_user], {facility_id: facilities}).result
       json = {
         active_batches: active_batches,
         draft_batches: draft_batches,

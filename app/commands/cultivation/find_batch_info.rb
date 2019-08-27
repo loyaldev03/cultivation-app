@@ -24,6 +24,8 @@ module Cultivation
       total_estimated_hour = children_tasks.sum { |a| a.estimated_hours }
       total_estimated_cost = children_tasks.sum { |a| a.estimated_cost }
 
+      growth_stages = Common::QueryAvailableRoomPurpose.call.active_growth_stages
+
       @batch_attributes = {
         id: @batch.id.to_s,
         batch_no: @batch.batch_no,
@@ -40,7 +42,7 @@ module Cultivation
         total_estimated_hour: total_estimated_hour,
         total_estimated_cost: total_estimated_cost,
         materials: @batch.material_summary,
-        cultivation_phases: @batch&.facility.growth_stages,
+        cultivation_phases: growth_stages,
         actual_cost: @batch.actual_cost,
         actual_hours: @batch.actual_hours,
         status: @batch.status,

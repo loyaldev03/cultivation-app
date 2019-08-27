@@ -15,14 +15,24 @@ import {
   TempBatchWidgets
 } from '../../utils'
 
-const Batcheslist = ({ title, count, className = '', loaded = false, dataclassName= 'f2', headerClassName=''}) => {
+const Batcheslist = ({
+  title,
+  count,
+  className = '',
+  loaded = false,
+  dataclassName = 'f2',
+  headerClassName = ''
+}) => {
   return (
     <div
       className="flex items-center ba b--light-gray pa3 bg-white br2 mr1 mb1 "
       style={{ height: 210 + 'px', width: '50%' }}
     >
       {loaded ? (
-        <div className={`flex ${headerClassName}`} style={{ flex: ' 1 1 auto' }}>
+        <div
+          className={`flex ${headerClassName}`}
+          style={{ flex: ' 1 1 auto' }}
+        >
           <i
             className={`material-icons white bg-orange md-48 ${className}`}
             style={{ borderRadius: '50%' }}
@@ -238,7 +248,9 @@ class BatchesDashboardApp extends React.Component {
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
-        {Array.isArray(this.props.currentFacilityId) ? ('') : (
+        {Array.isArray(this.props.currentFacilityId) ? (
+          ''
+        ) : (
           <div className="flex flex-row-reverse">
             <a
               href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
@@ -246,9 +258,9 @@ class BatchesDashboardApp extends React.Component {
             >
               Create new batch
             </a>
-          </div>)
-        }
-        
+          </div>
+        )}
+
         <div className="flex h-50 pv4">
           <div className="w-50">
             <div
@@ -283,13 +295,13 @@ class BatchesDashboardApp extends React.Component {
               />
               <Batcheslist
                 title="Cost of Active Batches to Date"
-                count={`$ ${
-                  decimalFormatter.format(DahboardBatchStore.data_batches_info.active_batches_cost)
-                }`}
+                count={`$ ${decimalFormatter.format(
+                  DahboardBatchStore.data_batches_info.active_batches_cost
+                )}`}
                 className="mt4 mb5"
                 loaded={DahboardBatchStore.batches_info_loaded}
-                dataclassName='f3'
-                headerClassName='mt4'
+                dataclassName="f3"
+                headerClassName="mt4"
               />
             </div>
           </div>

@@ -286,7 +286,11 @@ class TaskSetup extends React.Component {
         </div>
 
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
-          <TaskList batch={batch} columns={this.state.columns} canUpdate={batchesPermission.update}/>
+          <TaskList
+            batch={batch}
+            columns={this.state.columns}
+            canUpdate={batchesPermission.update}
+          />
         </div>
         <SlidePanel
           show={showDestroyedPlants}

@@ -37,7 +37,7 @@ export default class InlineEditDateField extends InlineEditTextField {
   }
   renderEdit(text) {
     const { value, isEdit } = this.state
-    const {editable} = this.props
+    const { editable } = this.props
     // text is Date Object from Task Store
     return (
       <React.Fragment>
@@ -67,11 +67,10 @@ export default class InlineEditDateField extends InlineEditTextField {
           >
             <span className="flex-auto w2 h1">{formatDate2(value)}</span>
           </Tippy>
-        ):(
+        ) : (
           <span className="flex-auto w2 h1">{formatDate2(value)}</span>
         )}
       </React.Fragment>
-      
     )
   }
 }

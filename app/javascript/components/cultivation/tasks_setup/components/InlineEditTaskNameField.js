@@ -59,7 +59,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               done
             </i>
           </React.Fragment>
-        ) : (editable ? 
+        ) : editable ? (
           <React.Fragment>
             <a
               href="#0"
@@ -78,7 +78,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               edit
             </i>
           </React.Fragment>
-        : (
+        ) : (
           <React.Fragment>
             <span
               className={classNames('pa1', {
@@ -89,7 +89,6 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               {text}
             </span>
           </React.Fragment>
-        )
         )}
       </div>
     )

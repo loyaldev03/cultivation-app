@@ -81,18 +81,17 @@ class BatchHeader extends React.PureComponent {
                       </div>
                       <div className="w-40">
                         <div className="">
-                          {canUpdate ?(
+                          {canUpdate ? (
                             <InlineEditBatchNameField
-                            text={name}
-                            indent={0}
-                            onDoneClick={value => {
-                              this.updateBatchName(value, id)
-                            }}
-                          />
+                              text={name}
+                              indent={0}
+                              onDoneClick={value => {
+                                this.updateBatchName(value, id)
+                              }}
+                            />
                           ) : (
                             <React.Fragment>{name}</React.Fragment>
                           )}
-                          
                         </div>
                       </div>
                     </div>
@@ -175,7 +174,7 @@ class BatchHeader extends React.PureComponent {
                   <hr />
                   <div className=" flex">
                     <div className="w-50">
-                      {canUpdate ?(
+                      {canUpdate ? (
                         <a
                           href={`/cultivation/batches/${id}?select_location=1`}
                           className="link grey underline"
@@ -183,10 +182,8 @@ class BatchHeader extends React.PureComponent {
                         >
                           Number of Plants
                         </a>
-                      ): (
-                        <React.Fragment>
-                          Number of Plants
-                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>Number of Plants</React.Fragment>
                       )}
                     </div>
                     <div className="w-50">

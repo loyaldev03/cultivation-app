@@ -246,7 +246,9 @@ class TaskList extends React.Component {
                         <MenuButton
                           text="Select Mother"
                           indelible={indelible}
-                          onClick={() => this.handleShowClippingPanel(id, items)}
+                          onClick={() =>
+                            this.handleShowClippingPanel(id, items)
+                          }
                         />
                       </div>
                     ) : (
@@ -516,7 +518,7 @@ class TaskList extends React.Component {
         const { id, end_date, is_parent } = data.row
         return (
           <InlineEditDateField
-            editable={(!is_parent && this.props.canUpdate)}
+            editable={!is_parent && this.props.canUpdate}
             text={end_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
@@ -537,7 +539,7 @@ class TaskList extends React.Component {
         const { id, duration, is_parent } = data.row
         return (
           <InlineEditNumberField
-            editable={(!is_parent && this.props.canUpdate)}
+            editable={!is_parent && this.props.canUpdate}
             text={duration}
             min="1"
             step="1"
@@ -560,7 +562,7 @@ class TaskList extends React.Component {
         const { id, estimated_hours, is_parent } = data.row
         return (
           <InlineEditNumberField
-            editable={(!is_parent && this.props.canUpdate)}
+            editable={!is_parent && this.props.canUpdate}
             text={estimated_hours}
             min="0"
             step=".25"
@@ -682,9 +684,11 @@ class TaskList extends React.Component {
                 onClick={() => this.handleShowMaterialForm(id, items)}
               >
                 {items && <span className="pa1">{items.length}</span>}
-                <i className="ml2 material-icons icon--medium icon--rounded">add</i>
+                <i className="ml2 material-icons icon--medium icon--rounded">
+                  add
+                </i>
               </div>
-          )}
+            )}
           </React.Fragment>
         )
       }

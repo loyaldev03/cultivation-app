@@ -252,12 +252,14 @@ class BatchesDashboardApp extends React.Component {
           ''
         ) : (batchesPermission.create &&(
             <React.Fragment>
-              <a
-                href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
-                className="btn btn--primary"
-              >
-                Create new batch
-              </a>
+              <div className="flex flex-row-reverse">
+                <a
+                  href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
+                  className="btn btn--primary"
+                >
+                  Create new batch
+                </a>
+              </div>
             </React.Fragment>  
         ))}
         <div className="flex h-50 pv4">

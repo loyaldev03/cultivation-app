@@ -38,7 +38,6 @@ export default class CostBreakdown extends React.Component {
     const options = {
       maintainAspectRatio: true,
       responsive: true
-
     }
     return (
       <React.Fragment>
@@ -81,7 +80,6 @@ export default class CostBreakdown extends React.Component {
             'loading...'
           )}
         </div>
-        
       </React.Fragment>
     )
   }

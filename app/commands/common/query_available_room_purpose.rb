@@ -12,7 +12,7 @@ module Common
       growth_purposes = Constants::ROOM_ONLY_SETUP
 
       self.active_growth_stages = active_purposes &
-        Constants::REQUIRED_BOOKING_PHASES
+                                  Constants::REQUIRED_BOOKING_PHASES
       active_purposes | growth_purposes
     end
 

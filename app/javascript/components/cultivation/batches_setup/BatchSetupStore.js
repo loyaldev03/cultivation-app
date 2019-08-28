@@ -17,7 +17,6 @@ class BatchSetupStore {
   @observable isReady = false
   @observable growthStages = []
 
-
   @action
   async search(searchParams, phaseDuration) {
     if (

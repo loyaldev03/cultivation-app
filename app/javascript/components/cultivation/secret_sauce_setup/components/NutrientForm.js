@@ -187,7 +187,7 @@ class NutrientForm extends React.Component {
   }
 
   render() {
-    const { onClose } = this.props
+    const { onClose, canUpdate } = this.props
     const {
       light_hours,
       temperature_day,
@@ -244,7 +244,7 @@ class NutrientForm extends React.Component {
                     value={temperature_day}
                   /> */}
 
-                  <div class="inputWithIcon">
+                  <div className="inputWithIcon">
                     <input
                       type="text"
                       style={{ borderRight: 'white' }}
@@ -252,11 +252,11 @@ class NutrientForm extends React.Component {
                       onChange={this.onChangeInput('temperature_day')}
                       value={temperature_day}
                     />
-                    <i class="material-icons " aria-hidden="true">
+                    <i className="material-icons " aria-hidden="true">
                       wb_sunny
                     </i>
                   </div>
-                  <div class="inputWithIcon">
+                  <div className="inputWithIcon">
                     <input
                       type="text"
                       style={{ borderLeft: 'white' }}
@@ -264,7 +264,7 @@ class NutrientForm extends React.Component {
                       onChange={this.onChangeInput('temperature_night')}
                       value={temperature_night}
                     />
-                    <i class="material-icons " aria-hidden="true">
+                    <i className="material-icons " aria-hidden="true">
                       brightness_2
                     </i>
                   </div>
@@ -478,14 +478,16 @@ class NutrientForm extends React.Component {
                       </div>
                       <div className="w-30 mt2">
                         <div className="h1" />
-                        <div className="flex mt3">
-                          <a
-                            className="pointer orange underline"
-                            onClick={f => this.removeDissolveNutrient(e)}
-                          >
-                            Remove
-                          </a>
-                        </div>
+                        {canUpdate && (
+                          <div className="flex mt3">
+                            <a
+                              className="pointer orange underline"
+                              onClick={f => this.removeDissolveNutrient(e)}
+                            >
+                              Remove
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex">
@@ -494,16 +496,20 @@ class NutrientForm extends React.Component {
                     </div>
                   </div>
                 ))}
-              <div
-                className="pointer flex justify-center orange mt3 center items-center"
-                onClick={this.addDissolveNutrient}
-              >
-                <span className="material-icons">add</span>
-                <span>Add nutrient</span>
-              </div>
+              {canUpdate && (
+                <div
+                  className="pointer flex justify-center orange mt3 center items-center"
+                  onClick={this.addDissolveNutrient}
+                >
+                  <span className="material-icons">add</span>
+                  <span>Add nutrient</span>
+                </div>
+              )}
             </div>
           </div>
-          <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
+          {canUpdate && (
+            <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
+          )}
         </div>
       </div>
     )

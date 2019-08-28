@@ -58,6 +58,7 @@ class SecretSauce extends React.Component {
     const { phase, tabIndex, showEditNutrientPanel } = this.state
     const phases = NutrientProfileStore.getPhases()
     const currPhase = NutrientProfileStore.getCurrentPhase()
+    const { canUpdate } = this.props.canUpdate
 
     return (
       <React.Fragment>
@@ -69,6 +70,7 @@ class SecretSauce extends React.Component {
               <NutrientForm
                 ref={form => (this.nutrientForm = form)}
                 title={phase}
+                canUpdate={canUpdate}
                 facility_id={this.props.batch.facility_id}
                 onClose={() => this.setState({ showEditNutrientPanel: false })}
                 onSave={nutrient_data => {
@@ -83,7 +85,7 @@ class SecretSauce extends React.Component {
             </Suspense>
           )}
         />
-        <div class="flex justify-center">
+        <div className="flex justify-center">
           <span className="f6 b flex items-center mr2">Growth Schedule : </span>
           {phases &&
             phases.map(e => (
@@ -146,19 +148,21 @@ class SecretSauce extends React.Component {
                     </div>
                   </div>
                 ) : (
-                  <div className="w5 pa3 mr2 h7 tc">
-                    <div className="f6 h2 mt3">{e.name}</div>
-                    <div className="flex h5 items-center">
-                      <div className="center">
-                        <i
-                          className="material-icons bg-orange white br-100 pa2 pointer"
-                          onClick={() => this.handleShowNutrientForm(e)}
-                        >
-                          edit
-                        </i>
+                  this.props.canUpdate && (
+                    <div className="w5 pa3 mr2 h7 tc">
+                      <div className="f6 h2 mt3">{e.name}</div>
+                      <div className="flex h5 items-center">
+                        <div className="center">
+                          <i
+                            className="material-icons bg-orange white br-100 pa2 pointer"
+                            onClick={() => this.handleShowNutrientForm(e)}
+                          >
+                            edit
+                          </i>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )
                 )}
               </React.Fragment>
             ))}

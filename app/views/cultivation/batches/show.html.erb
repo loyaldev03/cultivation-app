@@ -1,24 +1,31 @@
 <% content_for :breadcrumb do %>
-  <%= breadcrumbs ["Home",root_path], 
-      'Cultivation Batches', 
-      'Locations & Tasks' 
+  <%= breadcrumbs ["Home",root_path],
+      'Cultivation Batches',
+      'Locations & Tasks'
   %>
 <% end %>
-
-<% if params[:select_location].present? %>
-  <%= react_component 'cultivation/batches_setup/BatchLocationApp',
-    {
-      batchInfo: @batch_info,
-      phases: @phases,
-      locations: @locations
-    }
-  %>
+<% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result[:read] == true %>
+  <% if params[:select_location].present? %>
+    <%= react_component 'cultivation/batches_setup/BatchLocationApp',
+      {
+        batchInfo: @batch_info,
+        phases: @phases,
+        locations: @locations
+      }
+    %>
+  <% else %>
+    <%= react_component 'cultivation/tasks_setup/TaskSetup',
+      { batch_id: @batch.id.to_s,
+        batch: @batch_attributes,
+        current_user_first_name: current_user.first_name,
+        current_user_last_name: current_user.last_name,
+        current_user_photo: current_user.photo&.url,
+        batchesPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result
+      },
+      { class: "flex flex-column h-100" } %>
+  <% end %>
 <% else %>
-  <%= react_component 'cultivation/tasks_setup/TaskSetup', 
-    { batch_id: @batch.id.to_s, 
-      batch: @batch_attributes, 
-      current_user_first_name: current_user.first_name,
-      current_user_last_name: current_user.last_name,
-      current_user_photo: current_user.photo&.url}, 
-    { class: "flex flex-column h-100" } %>
+  <div class="w-100 bg-white ph3 pt2 pb4">
+    <%= render partial: 'layouts/no_permission' %>
+  </div>
 <% end %>

@@ -32,7 +32,11 @@ class SecretSauceSetup extends React.Component {
           unresolvedIssueCount={this.state.unresolvedIssueCount}
         />
         <div className="pa4 flex flex-column bg-white">
-          <SecretSauce batchId={this.props.batch.id} batch={this.props.batch} canUpdate={batchPermission.update} />
+          <SecretSauce
+            batchId={this.props.batch.id}
+            batch={this.props.batch}
+            canUpdate={batchPermission.update}
+          />
         </div>
       </div>
     )

@@ -153,7 +153,7 @@ class IssueDetails extends Component {
             Show less
           </a>
 
-          {(!is_archived && !dailyTask  && canUpdate) && (
+          {!is_archived && !dailyTask && canUpdate && (
             <div>
               <a
                 href="#"

@@ -147,21 +147,23 @@ class SecretSauce extends React.Component {
                         .join()}{' '}
                     </div>
                   </div>
-                ) : (this.props.canUpdate && (
-                  <div className="w5 pa3 mr2 h7 tc">
-                    <div className="f6 h2 mt3">{e.name}</div>
-                    <div className="flex h5 items-center">
-                      <div className="center">
-                        <i
-                          className="material-icons bg-orange white br-100 pa2 pointer"
-                          onClick={() => this.handleShowNutrientForm(e)}
-                        >
-                          edit
-                        </i>
+                ) : (
+                  this.props.canUpdate && (
+                    <div className="w5 pa3 mr2 h7 tc">
+                      <div className="f6 h2 mt3">{e.name}</div>
+                      <div className="flex h5 items-center">
+                        <div className="center">
+                          <i
+                            className="material-icons bg-orange white br-100 pa2 pointer"
+                            onClick={() => this.handleShowNutrientForm(e)}
+                          >
+                            edit
+                          </i>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </React.Fragment>
             ))}
         </div>

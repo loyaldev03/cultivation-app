@@ -19,6 +19,7 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
             "tag_type": x['tag_type'],
             "status": x['status'],
             "u_at": x['u_at'],
+            "destroy_reason": x['destroy_reason'],
             "reported_to_metrc": x['reported_to_metrc'],
           }
         }.as_json,
@@ -30,9 +31,27 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
   end
 
   def update_metrc_disposed
-    metrc = Inventory::MetrcTag.find(params[:metrc_id].to_s)
-    if metrc.reported_to_metrc == false && metrc.status == 'available'
-      metrc.update(status: Constants::METRC_TAG_STATUS_DISPOSED)
+    # metrc = Inventory::MetrcTag.find(params[:metrc_id].to_s)
+    # if metrc.reported_to_metrc == false && metrc.status == 'available'
+    #   metrc.update(status: Constants::METRC_TAG_STATUS_DISPOSED)
+    # end
+    facility = Facility.find(params[:facility_id])
+    metrc = facility.metrc_tags.find_by(tag: params[:tag].to_s)
+    if metrc.present?
+      metrc.update(status: Constants::METRC_TAG_STATUS_DISPOSED, destroy_reason: params[:reason])
+      render json: {
+        data: {
+          "id": metrc.id,
+          "tag": metrc.tag,
+          "tag_type": metrc.tag_type,
+          "status": metrc.status,
+          "destroy_reason": metrc.destroy_reason,
+          "u_at": metrc.u_at,
+          "reported_to_metrc": metrc.reported_to_metrc,
+        }.as_json,
+      }
+    else
+      render json: {errors: ['METRC Tag not exist']}, status: 422
     end
   end
 

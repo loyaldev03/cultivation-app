@@ -48,6 +48,8 @@ class FacilityDashboardStore {
   @action
   async loadRoomsCapacity(facility_id) {
     this.isLoading = true
+    this.rooms_detail_loaded = false
+    this.data_room_detail = []
     this.rooms_capacity_loaded = false
     const url = `/api/v1/facility_dashboard_charts/rooms_capacity?facility_id=${facility_id}`
     try {
@@ -66,6 +68,8 @@ class FacilityDashboardStore {
 
   @action
   setRoomPupose(purpose) {
+    this.rooms_detail_loaded = false
+    this.data_room_detail = []
     this.data_list_rooms = this.data_rooms_capacity.find(
       e => e.purpose == purpose
     )

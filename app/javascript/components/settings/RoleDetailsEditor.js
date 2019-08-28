@@ -60,12 +60,12 @@ class RoleDetailsEditor extends React.PureComponent {
     this.props.onSave(roleDetails)
   }
 
-  onDelete = e => {
-    const result = confirm('Confirm delete this role?')
-    if (result) {
-      this.props.onDelete(this.state.roleId)
-    }
-  }
+  // onDelete = e => {
+  //   const result = confirm('Confirm delete this role?')
+  //   if (result) {
+  //     this.props.onDelete(this.state.roleId)
+  //   }
+  // }
 
   render() {
     const { onClose, isSaving, modules, canUpdate, canDelete } = this.props
@@ -144,7 +144,7 @@ class RoleDetailsEditor extends React.PureComponent {
           </div>
           {!builtIn ? (
             <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
-              {canDelete && (
+              {/* {canDelete && (
                 <a
                   href="#0"
                   className="btn btn--secondary"
@@ -152,7 +152,7 @@ class RoleDetailsEditor extends React.PureComponent {
                 >
                   Delete
                 </a>
-              )}
+              )} */}
               {canUpdate && (
                 <input
                   type="submit"

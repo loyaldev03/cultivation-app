@@ -69,6 +69,14 @@ class TeamSetttingApp extends React.Component {
     // TODO: TESTING MODE
   }
 
+  onDeleteRole = (e, x) => {
+    e.stopPropagation()
+    const result = confirm('Confirm delete this role?')
+    if (result) {
+      this.onRoleDelete(x)
+    }
+  }
+
   openSidebar = () => {
     if (!window.editorSidebar || !window.editorSidebar.sidebarNode) {
       window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
@@ -508,6 +516,7 @@ class TeamSetttingApp extends React.Component {
                             <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                               Description
                             </th>
+                            <th></th>
                           </tr>
                           {roles.map(x => (
                             <tr
@@ -524,6 +533,14 @@ class TeamSetttingApp extends React.Component {
                                 )}
                               </td>
                               <td className="tl pv2 ph3">{x.desc}</td>
+                              
+                              <td className="tl pv2 ph3 fr">
+                                {!x.built_in && (<i
+                                className="material-icons md-15 orange dim pointer"
+                                onClick={e => this.onDeleteRole(e, x.id)}
+                              >
+                                delete
+                                </i>)}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -562,7 +579,7 @@ class TeamSetttingApp extends React.Component {
                 key={editingRole.id}
                 role={editingRole}
                 onSave={this.onRoleSave}
-                onDelete={this.onRoleDelete}
+                // onDelete={this.onRoleDelete}
                 onClose={this.closeSidebar}
                 modules={modules}
                 isSaving={isSaving}

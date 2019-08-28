@@ -20,7 +20,7 @@ class SecretSauceSetup extends React.Component {
   }
 
   render() {
-    const { batch } = this.props
+    const { batch, batchPermission } = this.props
 
     return (
       <div className="pa4 w-100 h-100 flex flex-column grey">
@@ -32,7 +32,7 @@ class SecretSauceSetup extends React.Component {
           unresolvedIssueCount={this.state.unresolvedIssueCount}
         />
         <div className="pa4 flex flex-column bg-white">
-          <SecretSauce batchId={this.props.batch.id} batch={this.props.batch} />
+          <SecretSauce batchId={this.props.batch.id} batch={this.props.batch} canUpdate={batchPermission.update} />
         </div>
       </div>
     )

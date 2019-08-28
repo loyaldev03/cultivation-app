@@ -54,12 +54,16 @@ class BatchIssues extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
           <div className="flex mb3 justify-end">
-            <button
-              className="btn btn--primary"
-              onClick={event => this.openSidebar(event, null, 'create')}
-            >
-              Submit an issue
-            </button>
+            {this.props.batchPermission.create && (
+              <React.Fragment>
+                <button
+                  className="btn btn--primary"
+                  onClick={event => this.openSidebar(event, null, 'create')}
+                >
+                  Submit an issue
+                </button>
+              </React.Fragment>
+            )}
           </div>
 
           <div className="flex">
@@ -99,6 +103,7 @@ class BatchIssues extends React.Component {
                   current_user_last_name={this.props.current_user_last_name}
                   current_user_photo={this.props.current_user_photo}
                   onClose={this.onCloseSidebar}
+                  canUpdate={this.props.batchPermission.update}
                 />
               )}
             />

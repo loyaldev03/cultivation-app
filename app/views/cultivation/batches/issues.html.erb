@@ -6,11 +6,19 @@
 <% end %>
 
 <div class="pa4">
-  <div class="fl w-100 flex flex-column grey">
-    <%= react_component 'cultivation/issues/BatchIssues', { 
-      batch: @batch_attributes, 
-      current_user_first_name: current_user.first_name,
-      current_user_last_name: current_user.last_name,
-      current_user_photo: current_user.photo&.url } %>
-  </div>
+  <% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result[:read] == true %>
+    <div class="fl w-100 flex flex-column grey">
+      <%= react_component 'cultivation/issues/BatchIssues', { 
+        batch: @batch_attributes, 
+        current_user_first_name: current_user.first_name,
+        current_user_last_name: current_user.last_name,
+        current_user_photo: current_user.photo&.url,
+        batchPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result
+        } %>
+    </div>
+  <% else %>
+    <div class="w-100 bg-white ph3 pt2 pb4">
+      <%= render partial: 'layouts/no_permission' %>
+    </div>
+  <% end %>
 </div>

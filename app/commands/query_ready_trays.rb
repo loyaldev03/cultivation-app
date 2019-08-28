@@ -16,15 +16,27 @@ class QueryReadyTrays
   end
 
   def call
+    purposes = get_purpose_filter
     cmd = QueryAvailableTrays.call(
       start_date: Date.new(1900, 1, 1),
       end_date: Date.new(1900, 1, 1),
       facility_id: @facility_id,
-      purpose: @purpose,
+      purpose: purposes,
       exclude_batch_id: @exclude_batch_id,
     )
     cmd.result
   rescue StandardError
     errors.add(:error, $!.message)
+  end
+
+  private
+
+  def get_purpose_filter
+    if !@purpose.blank?
+      return @purpose
+    end
+
+    purposes_cmd = Common::QueryAvailableRoomPurpose.call
+    purposes_cmd.active_growth_stages
   end
 end

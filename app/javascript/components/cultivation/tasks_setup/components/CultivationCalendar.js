@@ -21,6 +21,8 @@ class CultivationCalendar extends React.Component {
     this.state = {
       errors: []
     }
+
+    BatchSetupStore.growthStages = this.props.growthStages
     BatchSetupStore.searchMonth = dateToMonthOption(this.props.batchStartDate)
     if (!BatchSetupStore.isReady) {
       this.onSearch(BatchSetupStore.searchMonth)

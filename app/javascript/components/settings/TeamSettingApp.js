@@ -516,7 +516,7 @@ class TeamSetttingApp extends React.Component {
                             <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                               Description
                             </th>
-                            <th></th>
+                            <th />
                           </tr>
                           {roles.map(x => (
                             <tr
@@ -533,14 +533,17 @@ class TeamSetttingApp extends React.Component {
                                 )}
                               </td>
                               <td className="tl pv2 ph3">{x.desc}</td>
-                              
+
                               <td className="tl pv2 ph3 fr">
-                                {!x.built_in && (<i
-                                className="material-icons md-15 orange dim pointer"
-                                onClick={e => this.onDeleteRole(e, x.id)}
-                              >
-                                delete
-                                </i>)}</td>
+                                {!x.built_in && (
+                                  <i
+                                    className="material-icons md-15 orange dim pointer"
+                                    onClick={e => this.onDeleteRole(e, x.id)}
+                                  >
+                                    delete
+                                  </i>
+                                )}
+                              </td>
                             </tr>
                           ))}
                         </tbody>

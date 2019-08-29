@@ -98,27 +98,33 @@ class CustomerSettingApp extends React.Component {
             <div className="fl w-100-l w-100-m">
               <div className="pb4 ph3">
                 <div className="flex justify-between mt3 mb4">
-                  <h1 className="tl pa0 ma0 h5--font dark-grey ttc">Customers</h1>
+                  <h1 className="tl pa0 ma0 h5--font dark-grey ttc">
+                    Customers
+                  </h1>
                   <div class="dim flex flex-row items-center pointer">
                     <i class="material-icons md-gray">keyboard_arrow_left</i>
-                    <a href="/settings/" className= "db tr ttu link button--font grey">Back to Setting</a>
+                    <a
+                      href="/settings/"
+                      className="db tr ttu link button--font grey"
+                    >
+                      Back to Setting
+                    </a>
                   </div>
-                  
                 </div>
                 <div className="flex justify-between mt3 mb2">
-                    <p className="grey">
-                      Click on{' '}
-                      <i className="material-icons md-600 md-17 ph2">create</i> icon
-                      to edit information
-                    </p>
-                    <button
-                      className="btn btn--primary btn--small"
-                      onClick={this.openSidebar}
-                    >
-                      Add Customer
-                    </button>
-                  </div>
-                
+                  <p className="grey">
+                    Click on{' '}
+                    <i className="material-icons md-600 md-17 ph2">create</i>{' '}
+                    icon to edit information
+                  </p>
+                  <button
+                    className="btn btn--primary btn--small"
+                    onClick={this.openSidebar}
+                  >
+                    Add Customer
+                  </button>
+                </div>
+
                 <ListingTable
                   data={CustomerStore.filteredList}
                   columns={columns}

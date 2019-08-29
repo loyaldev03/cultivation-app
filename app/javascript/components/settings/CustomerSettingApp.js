@@ -109,7 +109,7 @@ class CustomerSettingApp extends React.Component {
                   </div>
                 </div>
                 <p className="grey">
-                  Click on the edit icon to edit information
+                  Click on <i className="material-icons md-600 md-17 ph2">create</i> icon to edit information
                 </p>
                 <ListingTable
                   data={CustomerStore.filteredList}

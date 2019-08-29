@@ -347,15 +347,15 @@ class TasksDashboardApp extends React.Component {
         />
         <div className="pa4 mw1200">
           <div className="pb4">
-            {Array.isArray(this.props.currentFacilityId) ? (
-              ''
-            ) : (taskPermission.create && (
-              <div className="flex flex-row-reverse mb4">
-                <a className="btn btn--primary" onClick={this.onShowTask}>
-                  Create new task
-                </a>
-              </div>
-            ))}
+            {Array.isArray(this.props.currentFacilityId)
+              ? ''
+              : taskPermission.create && (
+                  <div className="flex flex-row-reverse mb4">
+                    <a className="btn btn--primary" onClick={this.onShowTask}>
+                      Create new task
+                    </a>
+                  </div>
+                )}
             <TaskWidget facility_id={currentFacilityId} />
           </div>
           <div className="flex justify-between">

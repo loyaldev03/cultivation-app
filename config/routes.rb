@@ -345,7 +345,7 @@ Rails.application.routes.draw do
 
       resources :metrc, only: [:index] do
         collection do
-          get 'update_metrc_disposed', action: 'update_metrc_disposed'
+          put 'update_metrc_disposed', action: 'update_metrc_disposed'
           get 'update_metrc_reported', action: 'update_metrc_reported'
           post 'bulk_create/:facility_id', action: 'bulk_create'
           get 'verify/:facility_id', action: 'verify'

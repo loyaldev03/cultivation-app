@@ -1,0 +1,5 @@
+production:
+  before_processes:
+    - command: mv ../../Procfile.c66 ../../Procfile
+      target: rails
+      execute: true

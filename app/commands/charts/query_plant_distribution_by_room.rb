@@ -33,18 +33,21 @@ module Charts
       array = json_fac.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
 
       #return array
+      if array.present?
+        array2 = array.map { |x| x[1] }
 
-      array2 = array.map { |x| x[1] }
+        group_count = array2.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
 
-      group_count = array2.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
-
-      grouped_plant_json = group_count.group_by { |x| x[:group] }.map do |f|
-        if f[0].present?
-          {
-            name: f[0],
-            value: f[1].map { |x| x[:count] }.sum,
-          }
+        grouped_plant_json = group_count.group_by { |x| x[:group] }.map do |f|
+          if f[0].present?
+            {
+              name: f[0],
+              value: f[1].map { |x| x[:count] }.sum,
+            }
+          end
         end
+      else
+        grouped_plant_json = []
       end
 
       return {children: grouped_plant_json.compact}

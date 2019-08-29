@@ -147,13 +147,12 @@ class MetrcInventoryApp extends React.Component {
     columns: [
       { Header: 'ID', accessor: 'id', show: false },
       { Header: 'Tag', accessor: 'tag' },
-      { 
-        Header: 'Date Applied', 
+      {
+        Header: 'Date Applied',
         accessor: 'u_at',
-        Cell: props =>{
+        Cell: props => {
           return <span className="">{longDate(props.value)}</span>
-        } 
-
+        }
       },
       { Header: 'Type', accessor: 'tag_type' },
 
@@ -213,9 +212,9 @@ class MetrcInventoryApp extends React.Component {
                 Mark as Reported to Metrc
               </a>
             )
-          } 
+          }
         }
-      },
+      }
     ]
   }
 
@@ -233,23 +232,19 @@ class MetrcInventoryApp extends React.Component {
   onSave = data => {
     //console.log(data)
     disposeMetrcs(this.props.facility_id, data).then(({ status, data }) => {
-      
       //const updateData = data.map(x => ({ id: x.id, ...x.attributes }))
-      if(status == 200){
+      if (status == 200) {
         toast('Metrc Tag has been disposed', 'success')
         activeTaskStore.loadActiveTasks()
         this.onToggleSidebar()
         this.editor.reset()
-      }  
-      else{
+      } else {
         toast('Metrc Not Exist', 'error')
       }
 
-      
       //this.setState({ data: [...updateData, ...this.state.data] })
-      
     })
-    
+
     //DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
   }
 
@@ -279,8 +274,8 @@ class MetrcInventoryApp extends React.Component {
     const { metrc_permission } = this.props
     return (
       <div className="w-100 bg-white pa3">
-        <div id="toast" className="toast"></div>
-        <div className="flex mb4 mt2"> 
+        <div id="toast" className="toast" />
+        <div className="flex mb4 mt2">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">METRC Tags</h1>
           <div style={{ justifySelf: 'end' }}>
             {metrc_permission.create && (
@@ -352,7 +347,7 @@ class MetricEditor extends React.Component {
     this.setState({ [key]: event.target.value })
   }
 
-  onChangeTag = () =>{
+  onChangeTag = () => {
     const key = this.inputTagId.value
     this.setState({ tag: this.inputTagId.value })
   }
@@ -376,18 +371,18 @@ class MetricEditor extends React.Component {
           <div className="pv3 ph4 flex flex-column">
             <div className="mb3 f6">
               <label className="f6 fw6 db mb1 gray ttc">Tag ID</label>
-              
+
               <InputBarcode
-                    name="metrc_tag"
-                    className="w-100"
-                    value={tag}
-                    ref={input => (this.inputTagId = input)}
-                    onChange={this.onChangeTag}
+                name="metrc_tag"
+                className="w-100"
+                value={tag}
+                ref={input => (this.inputTagId = input)}
+                onChange={this.onChangeTag}
               />
             </div>
 
             <div className="mb3 f6">
-            <label className="f6 fw6 db mb1 gray ttc">Reason</label>
+              <label className="f6 fw6 db mb1 gray ttc">Reason</label>
               <textarea
                 name="reason"
                 value={reason}
@@ -395,8 +390,6 @@ class MetricEditor extends React.Component {
                 onChange={this.onChange}
                 className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
               />
-                  
-               
             </div>
           </div>
           <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />

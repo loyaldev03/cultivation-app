@@ -57,11 +57,11 @@
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 <script>
   let myCustomUniqueUserId = "<%= current_user.id.to_s%>";
-  let break_time = "<%= @end_break_time%>"
+  let break_time = "<%=@end_break_time%>"
   var OneSignal = window.OneSignal || [];
   OneSignal.push(function() {
     OneSignal.init({
-      appId: "99df0c5a-3c11-41ff-926f-9ee1faca881a",
+      appId: "<%=@opensignal_appid%>",
     });
     OneSignal.on('notificationPermissionChange', function (permissionChange) {
       OneSignal.setExternalUserId(myCustomUniqueUserId);

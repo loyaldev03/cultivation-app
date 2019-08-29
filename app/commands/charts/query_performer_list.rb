@@ -30,7 +30,8 @@ module Charts
         end
 
         batches_json = batches_json.map do |batch|
-          batch.merge({percentage: (batch[:total_dry_weight] / highest_dry_weight) * 100})
+          percentage = highest_dry_weight > 0 ? ((batch[:total_dry_weight] / highest_dry_weight) * 100) : 0
+          batch.merge({percentage: percentage})
         end
       else
         batches_json = batches.map do |batch|

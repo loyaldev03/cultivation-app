@@ -24,7 +24,9 @@ module People
           user_percentage = 0
           if user[:roles].include?(role.id)
             range(user[:work_schedules])&.map do |ws|
-              capacities += ((ws[:end_time] - ws[:start_time]) / 1.hour)
+              if ws[:end_time] and ws[:start_time]
+                capacities += ((ws[:end_time] - ws[:start_time]) / 1.hour)
+              end
             end
             unless user[:actual] == 0 or capacities == 0
               user_percentage = 100 - (((capacities.to_f - user[:actual].to_f) / capacities.to_f * 100).ceil)

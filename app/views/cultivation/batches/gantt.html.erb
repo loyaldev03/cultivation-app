@@ -5,8 +5,14 @@
   %>
 <% end %>
 
-  <div class="pa4">
-      <div class="fl w-100 flex flex-column grey">
-        <%= react_component 'cultivation/gantt_setup/GanttSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
-      </div>
-  </div>
+<div class="pa4">
+  <% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result[:read] == true %>
+    <div class="fl w-100 flex flex-column grey">
+      <%= react_component 'cultivation/gantt_setup/GanttSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
+    </div>
+  <% else %>
+    <div class="w-100 bg-white ph3 pt2 pb4">
+      <%= render partial: 'layouts/no_permission' %>
+    </div>
+  <% end %>
+</div>

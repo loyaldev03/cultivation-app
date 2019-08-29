@@ -6,10 +6,18 @@
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
       <div class="fl w-100 flex flex-column width-100">
-        <h5 class="tl pa0 ma0 h5--font dark-grey ttc">company setup</h5>
-        <p class="mt2 body-1 grey">
-          Let's get a few details of your company info.
-        </p>
+        <div class="flex justify-between">
+          <div>
+            <h5 class="tl pa0 ma0 h5--font dark-grey ttc">company setup</h5>
+            <p class="mt2 body-1 grey">
+              Let's get a few details of your company info.
+            </p>
+          </div>
+          <div class="dim flex flex-row items-center pointer">
+            <i class="material-icons md-gray">keyboard_arrow_left</i>
+            <%= link_to "Back to Setting", settings_path, class: "db tr ttu link button--font grey" %>
+          </div>
+        </div>
         <%= form_with model: @company_info,
           url: settings_company_company_info_path(onboarding_type: params[:onboarding_type],
                                                   facility_id: params[:facility_id]), local: true do |f| %>
@@ -43,14 +51,12 @@
 
                <%= render partial: params[:type] || 'company_info', locals: {f: f} %>
 
-          </div>
+            </div>
       </div>
     </div>
 
     <div class="ph4 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--light-grey" style="height: 86px">
-      <div class="dim flex flex-row items-center pointer">
-        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
-        <%= link_to "Back", settings_path, class: "db tr ttu link button--font light-grey" %>
+      <div>
       </div>
 
       <% if params[:type] == "company_info" || params[:type] == "work_schedules" || params[:type] == "holidays" %>

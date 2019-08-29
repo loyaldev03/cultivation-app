@@ -328,26 +328,34 @@ class TasksDashboardApp extends React.Component {
           show={showNewTaskPanel}
           renderBody={props => (
             <Suspense fallback={<div />}>
-              <NewTaskForm
-                ref={form => (this.NewTaskForm = form)}
-                onClose={() => this.setState({ showNewTaskPanel: false })}
-                onSave={params => {
-                  console.log(params)
-                  TaskStore.createNoBatchTask(params)
-                  this.setState({ showNewTaskPanel: false })
-                }}
-                facilityId={this.props.currentFacilityId}
-              />
+              {Array.isArray(this.props.currentFacilityId) ? (
+                ''
+              ) : (
+                <NewTaskForm
+                  ref={form => (this.NewTaskForm = form)}
+                  onClose={() => this.setState({ showNewTaskPanel: false })}
+                  onSave={params => {
+                    console.log(params)
+                    TaskStore.createNoBatchTask(params)
+                    this.setState({ showNewTaskPanel: false })
+                  }}
+                  facilityId={this.props.currentFacilityId}
+                />
+              )}
             </Suspense>
           )}
         />
         <div className="pa4 mw1200">
           <div className="pb4">
-            <div className="flex flex-row-reverse mb4">
-              <a className="btn btn--primary" onClick={this.onShowTask}>
-                Create new task
-              </a>
-            </div>
+            {Array.isArray(this.props.currentFacilityId) ? (
+              ''
+            ) : (
+              <div className="flex flex-row-reverse mb4">
+                <a className="btn btn--primary" onClick={this.onShowTask}>
+                  Create new task
+                </a>
+              </div>
+            )}
             <TaskWidget facility_id={currentFacilityId} />
           </div>
           <div className="flex justify-between">

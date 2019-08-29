@@ -35,6 +35,10 @@ export default class CostBreakdown extends React.Component {
 
   render() {
     const { arr_months } = this.state
+    const options = {
+      maintainAspectRatio: true,
+      responsive: true
+    }
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
@@ -69,11 +73,13 @@ export default class CostBreakdown extends React.Component {
             </div>
           </Tippy>
         </div>
-        {ChartStore.cost_breakdown_loaded ? (
-          <Doughnut data={ChartStore.costBreakdown} />
-        ) : (
-          'loading...'
-        )}
+        <div className="flex justify-between overflow-y">
+          {ChartStore.cost_breakdown_loaded ? (
+            <Doughnut data={ChartStore.costBreakdown} options={options} />
+          ) : (
+            'loading...'
+          )}
+        </div>
       </React.Fragment>
     )
   }

@@ -220,7 +220,7 @@ class ChartStore {
   @computed get costBreakdown() {
     if (this.cost_breakdown_loaded) {
       let final_result = {
-        labels: ['Materials', 'Labor', 'Water', 'Electricity'],
+        labels: this.data_cost_breakdown.map(e => e.cost_type),
         datasets: [
           {
             data: this.data_cost_breakdown.map(e => e.value),

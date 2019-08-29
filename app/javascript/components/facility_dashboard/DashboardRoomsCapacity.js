@@ -9,16 +9,28 @@ const RoomCapcitySpot = ({ text, height, purpose, rooms, color, onClick }) => {
   return (
     <div
       href="#"
-      className="mr5 grow dib"
+      className="grow dib"
       onClick={onClick}
       style={{ cursor: 'pointer', width: '70px' }}
     >
-      <div style={{ height: '120px', background: `${color}` }}>
+      <div className="tc" style={{ height: '120px', background: `${color}` }}>
         <div
-          style={{ height: `${height}`, background: 'white', opacity: 0.5 }}
-        />
-        <h1 className="f6 fw6 white tc pa1">{text} spots free</h1>
+          className="tc"
+          style={{ height: `${height}%`, background: 'white', opacity: 0.5 }}
+        >
+          {height > 60.5 ? (
+            <span className="f6 fw6 black tc pa1 ">{text} spots free</span>
+          ) : (
+            ''
+          )}
+        </div>
+        {height <= 60.5 ? (
+          <span className="f6 fw6 white tc pa1">{text} spots free</span>
+        ) : (
+          ''
+        )}
       </div>
+
       <div>
         <h1 className="f5 fw6 grey ttc tc">{purpose}</h1>
         <h1 className="f5 fw6 grey tc">{rooms} rooms</h1>
@@ -47,7 +59,7 @@ class DashboardRoomsCapacity extends React.Component {
             <RoomCapcitySpot
               key={i}
               text={e.available_spots}
-              height={`${e.available_spots_percentage + 0.5}%`}
+              height={e.available_spots_percentage + 0.5}
               purpose={e.purpose}
               color={e.color}
               rooms={e.total_rooms}

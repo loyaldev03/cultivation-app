@@ -8,9 +8,6 @@ import {
   httpPostOptions
 } from '../../utils'
 
-// TODO: Handle veg | veg1 & veg2
-const CULTIVATION_PHASES = ['clone', 'veg1', 'veg2', 'flower']
-
 class BatchSetupStore {
   @observable searchMonth
   @observable isLoading = false
@@ -18,6 +15,7 @@ class BatchSetupStore {
   @observable plans = {}
   @observable trayPurposes = []
   @observable isReady = false
+  @observable growthStages = []
 
   @action
   async search(searchParams, phaseDuration) {
@@ -27,12 +25,10 @@ class BatchSetupStore {
       searchParams.total_duration > 0
     ) {
       this.isLoading = true
-      const api1Res = await fetch(
-        `/api/v1/batches/search_locations?facility_id=${
-          searchParams.facility_id
-        }`,
-        httpGetOptions
-      )
+      const url = `/api/v1/batches/search_locations?facility_id=${
+        searchParams.facility_id
+      }`
+      const api1Res = await fetch(url, httpGetOptions)
       const api2Res = await fetch(
         `/api/v1/batches/search_batch_plans`,
         httpPostOptions(searchParams)
@@ -48,7 +44,7 @@ class BatchSetupStore {
           // Facility's trays
           if (response[0].data) {
             const traysData = groupBy(response[0].data, 'tray_purpose')
-            const trayPurposes = CULTIVATION_PHASES.map(phase => ({
+            const trayPurposes = this.growthStages.map(phase => ({
               phase,
               duration: phaseDuration[phase] || 0,
               totalCapacity: sumBy(traysData[phase], 'tray_capacity') // Total capacity for the phase in facility

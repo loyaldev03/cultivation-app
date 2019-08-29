@@ -244,23 +244,24 @@ class BatchesDashboardApp extends React.Component {
   }
 
   render() {
-    const { currentFacilityId } = this.props
+    const { currentFacilityId, batchesPermission } = this.props
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
-        {Array.isArray(this.props.currentFacilityId) ? (
-          ''
-        ) : (
-          <div className="flex flex-row-reverse">
-            <a
-              href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
-              className="btn btn--primary"
-            >
-              Create new batch
-            </a>
-          </div>
-        )}
-
+        {Array.isArray(this.props.currentFacilityId)
+          ? ''
+          : batchesPermission.create && (
+              <React.Fragment>
+                <div className="flex flex-row-reverse">
+                  <a
+                    href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
+                    className="btn btn--primary"
+                  >
+                    Create new batch
+                  </a>
+                </div>
+              </React.Fragment>
+            )}
         <div className="flex h-50 pv4">
           <div className="w-50">
             <div

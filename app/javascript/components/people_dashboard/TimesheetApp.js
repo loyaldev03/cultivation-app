@@ -60,11 +60,11 @@ const status = [
   },
   {
     text: 'Approved',
-    val: 'approve'
+    val: 'approved'
   },
   {
     text: 'Declined',
-    val: 'decline'
+    val: 'declined'
   }
 ]
 
@@ -270,7 +270,7 @@ class TimesheetApp extends React.Component {
         Header: 'Status',
         accessor: 'status',
         minWidth: 85.6094,
-        className: 'justify-center ttu'
+        className: 'justify-center ttc'
       },
       {
         headerClassName: 'tc',
@@ -290,7 +290,7 @@ class TimesheetApp extends React.Component {
               onClick={this.onToggleActive(
                 props.value,
                 props.row['week_number'],
-                'approve'
+                'approved'
               )}
               className="link f7 fw6 ph2 pv1 ba br2 mr2 dib tc bg-orange b--orange white"
             >
@@ -301,7 +301,7 @@ class TimesheetApp extends React.Component {
               onClick={this.onToggleActive(
                 props.value,
                 props.row['week_number'],
-                'decline'
+                'declined'
               )}
               className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white"
             >

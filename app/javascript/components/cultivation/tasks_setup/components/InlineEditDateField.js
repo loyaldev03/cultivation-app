@@ -37,33 +37,40 @@ export default class InlineEditDateField extends InlineEditTextField {
   }
   renderEdit(text) {
     const { value, isEdit } = this.state
+    const { editable } = this.props
     // text is Date Object from Task Store
     return (
-      <Tippy
-        placement="bottom"
-        isVisible={isEdit}
-        trigger="manual"
-        hideOnClick={false}
-        content={
-          <div className="inline_calendar">
-            <Calendar value={value} onChange={this.onChange} />
-            <input
-              type="button"
-              className="btn btn--primary btn--small"
-              value="Ok"
-              onClick={this.switchViewMode}
-            />
-            <input
-              type="button"
-              className="btn btn--secondary btn--small fr"
-              value="Cancel"
-              onClick={this.onCancelEdit}
-            />
-          </div>
-        }
-      >
-        <span className="flex-auto w2 h1">{formatDate2(value)}</span>
-      </Tippy>
+      <React.Fragment>
+        {editable ? (
+          <Tippy
+            placement="bottom"
+            isVisible={isEdit}
+            trigger="manual"
+            hideOnClick={false}
+            content={
+              <div className="inline_calendar">
+                <Calendar value={value} onChange={this.onChange} />
+                <input
+                  type="button"
+                  className="btn btn--primary btn--small"
+                  value="Ok"
+                  onClick={this.switchViewMode}
+                />
+                <input
+                  type="button"
+                  className="btn btn--secondary btn--small fr"
+                  value="Cancel"
+                  onClick={this.onCancelEdit}
+                />
+              </div>
+            }
+          >
+            <span className="flex-auto w2 h1">{formatDate2(value)}</span>
+          </Tippy>
+        ) : (
+          <span className="flex-auto w2 h1">{formatDate2(value)}</span>
+        )}
+      </React.Fragment>
     )
   }
 }

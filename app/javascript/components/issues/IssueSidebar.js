@@ -65,7 +65,8 @@ class IssueSidebar extends React.Component {
       facility_id,
       current_user_first_name,
       current_user_last_name,
-      current_user_photo
+      current_user_photo,
+      canUpdate
     } = this.props
     const { mode } = this.state
 
@@ -76,6 +77,7 @@ class IssueSidebar extends React.Component {
           onToggleMode={this.onToggleMode}
           issueId={this.state.issueId}
           batchId={batch_id}
+          canUpdate={true}
           facilityId={facility_id}
           current_user_first_name={current_user_first_name}
           current_user_last_name={current_user_last_name}
@@ -123,7 +125,8 @@ IssueSidebar.propTypes = {
   facility_id: PropTypes.string.isRequired,
   current_user_first_name: PropTypes.string.isRequired,
   current_user_last_name: PropTypes.string.isRequired,
-  current_user_photo: PropTypes.string
+  current_user_photo: PropTypes.string,
+  canUpdate: PropTypes.bool
 }
 
 export default IssueSidebar

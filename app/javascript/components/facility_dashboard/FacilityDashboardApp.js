@@ -18,7 +18,7 @@ class FacilityDashboardApp extends React.Component {
         <div className="pa4">
           <FacilityOverview facility_id={this.props.currentFacilityId} />
 
-          <div className="flex pv4">
+          <div className="pv4">
             <div className="ba b--light-gray pa3 bg-white br2">
               <DashboardRoomsCapacity
                 facility_id={this.props.currentFacilityId}

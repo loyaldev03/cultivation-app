@@ -8,9 +8,9 @@ import { SlidePanel } from '../utils'
 import HolidayForm from './HolidayForm'
 import HolidayStore from './HolidayStore'
 const styles = `
-.react-calendar, .react-calendar *, .react-calendar *:before, .react-calendar *:after {
+.yearly-calendar .react-calendar, .react-calendar *, .react-calendar *:before, .react-calendar *:after {
 }
-.react-calendar__tile--active {
+.yearly-calendar .react-calendar__tile--active {
     background: none;
     color: initial;
 }
@@ -27,7 +27,7 @@ const styles = `
 .hide-holiday{
   visibility: hidden;
 }
-.react-calendar__tile--active:enabled:hover, .react-calendar__tile--active:enabled:focus {
+.yearly-calendar .react-calendar__tile--active:enabled:hover, .react-calendar__tile--active:enabled:focus {
     background: #1087ff;
     color: white;
 }
@@ -81,13 +81,13 @@ class HolidaySettingApp extends React.Component {
   addCurrentYears = () => {
     this.setState({
       current_date: addYears(this.state.current_date, 1)
-    })
+    }, () => { HolidayStore.loadHolidays(getYear(this.state.current_date))})
   }
 
   subCurrentYears = () => {
     this.setState({
       current_date: subYears(this.state.current_date, 1)
-    })
+    }, () => { HolidayStore.loadHolidays(getYear(this.state.current_date)) })
   }
 
   render() {
@@ -200,7 +200,7 @@ class HolidaySettingApp extends React.Component {
             </Suspense>
           )}
         />
-        <div className="nowrap overflow-x-auto">
+        <div className="nowrap overflow-x-auto yearly-calendar">
           <div className="flex">{row1}</div>
           <div className="flex">{row2}</div>
           <div className="flex">{row3}</div>

@@ -5,7 +5,7 @@ import { SlidePanelHeader, SlidePanelFooter } from '../utils'
 import { TextInput, NumericInput } from '../utils/FormHelpers'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import {parse} from 'date-fns'
+import { parse } from 'date-fns'
 @observer
 class HolidayForm extends React.Component {
   constructor(props) {
@@ -43,8 +43,7 @@ class HolidayForm extends React.Component {
         end_date: addDays(this.state.start_date, e.target.value),
         duration: e.target.value
       })
-    } 
-    else if (fieldName === 'end_date' && this.state.start_date) {
+    } else if (fieldName === 'end_date' && this.state.start_date) {
       this.setState({
         end_date: e,
         duration: differenceInCalendarDays(e, this.state.start_date)
@@ -54,8 +53,7 @@ class HolidayForm extends React.Component {
         start_date: e,
         end_date: addDays(e, this.state.duration)
       })
-    }
-    else {
+    } else {
       this.setState({
         [fieldName]: e
       })
@@ -90,7 +88,6 @@ class HolidayForm extends React.Component {
                 />
               </div>
             </div>
-
 
             <div className="ph3 mb3 flex">
               <div className="w-40">

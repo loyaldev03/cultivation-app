@@ -33,7 +33,7 @@ class HolidayStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        this.holiday = parseTask(response.data) 
+        this.holiday = parseTask(response.data)
         this.isDataLoaded = true
       } else {
         this.holiday = ''

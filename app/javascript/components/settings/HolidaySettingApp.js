@@ -79,15 +79,25 @@ class HolidaySettingApp extends React.Component {
   }
 
   addCurrentYears = () => {
-    this.setState({
-      current_date: addYears(this.state.current_date, 1)
-    }, () => { HolidayStore.loadHolidays(getYear(this.state.current_date))})
+    this.setState(
+      {
+        current_date: addYears(this.state.current_date, 1)
+      },
+      () => {
+        HolidayStore.loadHolidays(getYear(this.state.current_date))
+      }
+    )
   }
 
   subCurrentYears = () => {
-    this.setState({
-      current_date: subYears(this.state.current_date, 1)
-    }, () => { HolidayStore.loadHolidays(getYear(this.state.current_date)) })
+    this.setState(
+      {
+        current_date: subYears(this.state.current_date, 1)
+      },
+      () => {
+        HolidayStore.loadHolidays(getYear(this.state.current_date))
+      }
+    )
   }
 
   render() {

@@ -166,59 +166,53 @@ class ItemApp extends React.Component {
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
-        <div className="pa4">
-          <div className="bg-white box--shadow pa4 fl w-100">
-            <div className="fl w-80-l w-100-m">
-              <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
-                Package Item Setup
-              </h5>
-              <p className="mt2 mb4 db body-1 grey">
-                Manage your facility's product categories &amp; items
-              </p>
-            </div>
-            <div className="fl w-80-l w-100-m">
-              <Tabs
-                className="react-tabs--primary react-tabs--boxed-panel"
-                selectedIndex={tabIndex}
-                onSelect={this.onSelectTab}
-              >
-                <TabList>
-                  <Tab>Item Categories</Tab>
-                  <Tab>Items</Tab>
-                </TabList>
-                <TabPanel>
-                  <div className="pb4 ph3">
-                    <p className="grey pt2">
-                      Item categories that are defined by the State, you can
-                      decide which categories your facility will be producing by
-                      setting it to "Active"
-                    </p>
-                    <ListingTable
-                      data={CategoryStore.filteredList}
-                      columns={categoryColumns}
-                      isLoading={CategoryStore.isLoading}
-                    />
-                  </div>
-                </TabPanel>
-                <TabPanel>
-                  <div className="pb4 ph3">
-                    <p className="grey pt2">
-                      Items that are automatically generated when you create
-                      package plans.
-                    </p>
-                    <ListingTable
-                      data={ItemStore.filteredList}
-                      columns={itemColumns}
-                      isLoading={ItemStore.isLoading}
-                    />
-                  </div>
-                </TabPanel>
-              </Tabs>
-            </div>
+        <div className="mt0 ba b--light-grey pa3">
+          <p className="mt2 mb4 db body-1 grey">
+            Manage your facility's product categories &amp; items
+          </p>
+          {/* <div className="fl w-80-l w-100-m"> */}
+          <Tabs
+            className="react-tabs--primary"
+            selectedIndex={tabIndex}
+            onSelect={this.onSelectTab}
+          >
+            <TabList>
+              <Tab>Item Categories</Tab>
+              <Tab>Items</Tab>
+            </TabList>
+            <TabPanel>
+              <div className="pb4 ph3">
+                <p className="grey pt2">
+                  Item categories that are defined by the State, you can decide
+                  which categories your facility will be producing by setting it
+                  to "Active"
+                </p>
+                <ListingTable
+                  data={CategoryStore.filteredList}
+                  columns={categoryColumns}
+                  isLoading={CategoryStore.isLoading}
+                />
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div className="pb4 ph3">
+                <p className="grey pt2">
+                  Items that are automatically generated when you create package
+                  plans.
+                </p>
+                <ListingTable
+                  data={ItemStore.filteredList}
+                  columns={itemColumns}
+                  isLoading={ItemStore.isLoading}
+                />
+              </div>
+            </TabPanel>
+          </Tabs>
+          {/* </div> */}
+
+          <div data-role="sidebar" className="rc-slide-panel">
+            <div className="rc-slide-panel__body h-100" />
           </div>
-        </div>
-        <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body h-100" />
         </div>
       </React.Fragment>
     )

@@ -1,5 +1,5 @@
 production:
   before_processes:
-    - command: mv $STACK_PATH/.cloud66/Procfile $STACK_PATH/Procfile
+    - command: mv $STACK_PATH/Procfile.c66 $STACK_PATH/Procfile
       target: rails
       execute: true

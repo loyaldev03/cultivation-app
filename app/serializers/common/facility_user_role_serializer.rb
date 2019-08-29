@@ -11,14 +11,18 @@ module Common
       end
     end
 
-    attribute :roles do |object|
+    attribute :roles do |object, params|
       object.roles.map do |role|
+        role_used = false
+        user_roles = params[:users].pluck(:roles).flatten.uniq
+        role_used = true if user_roles.include?(role.id)
         {
           id: role.id.to_s,
           name: role.name,
           desc: role.desc,
           built_in: (role.built_in || false),
           permissions: role.permissions,
+          role_used: role_used,
         }
       end
     end
@@ -44,7 +48,7 @@ module Common
 
         if user.photo_data && user.photo_data != 'null'
           photo_data = user.photo_data
-          photo_url = user.photo_url
+          photo_url = user.photo_url rescue nil
         end
 
         days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']

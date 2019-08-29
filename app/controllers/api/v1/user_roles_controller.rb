@@ -15,7 +15,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       modules: Constants::APP_MODULES,
       company_work_schedules: CompanyInfo.first.nil? ? [] : CompanyInfo.first.work_schedules,
     })
-    data = Common::FacilityUserRoleSerializer.new(result).serialized_json
+    data = Common::FacilityUserRoleSerializer.new(result, params: {users: users}).serialized_json
     render json: data
   end
 

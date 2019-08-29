@@ -51,8 +51,8 @@ class CustomerSettingApp extends React.Component {
         accessor: 'status'
       },
       {
-        headerClassName: 'tl',
-        Header: 'Show Details/Edit',
+        headerClassName: 'tc',
+        Header: 'Action',
         accessor: 'id',
         className: 'ttc',
         Cell: props => {
@@ -109,7 +109,9 @@ class CustomerSettingApp extends React.Component {
                   </div>
                 </div>
                 <p className="grey">
-                  Click on <i className="material-icons md-600 md-17 ph2">create</i> icon to edit information
+                  Click on{' '}
+                  <i className="material-icons md-600 md-17 ph2">create</i> icon
+                  to edit information
                 </p>
                 <ListingTable
                   data={CustomerStore.filteredList}

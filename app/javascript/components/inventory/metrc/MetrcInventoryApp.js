@@ -5,15 +5,20 @@ import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
+import { toast } from './../../utils/toast'
 import {
   SlidePanel,
   SlidePanelFooter,
   SlidePanelHeader
 } from '../../utils/SlidePanel'
 import {
+  longDate,
+  InputBarcode,
   decimalFormatter,
+  formatDate,
   formatDate2,
   httpGetOptions,
+  httpPutOptions,
   ActiveBadge,
   CheckboxSelect,
   HeaderFilter,
@@ -142,7 +147,16 @@ class MetrcInventoryApp extends React.Component {
     columns: [
       { Header: 'ID', accessor: 'id', show: false },
       { Header: 'Tag', accessor: 'tag' },
+      { 
+        Header: 'Date Applied', 
+        accessor: 'u_at',
+        Cell: props =>{
+          return <span className="">{longDate(props.value)}</span>
+        } 
+
+      },
       { Header: 'Type', accessor: 'tag_type' },
+
       {
         Header: 'Status',
         accessor: 'status',
@@ -158,6 +172,26 @@ class MetrcInventoryApp extends React.Component {
               {props.value === 'assigned' ? 'used' : props.value}
             </span>
           )
+        }
+      },
+      {
+        Header: 'Description',
+        accessor: 'destroy_reason'
+      },
+
+      {
+        Header: 'Reported',
+        accessor: 'reported_to_metrc',
+        Cell: props => {
+          return <span className="">{props.value ? 'Yes' : 'No'}</span>
+        }
+      },
+
+      {
+        Header: 'Last Update',
+        accessor: 'u_at',
+        Cell: props => {
+          return <span className="">{formatAgo(props.value)}</span>
         }
       },
       {
@@ -179,39 +213,9 @@ class MetrcInventoryApp extends React.Component {
                 Mark as Reported to Metrc
               </a>
             )
-          } else if (
-            props.row['reported_to_metrc'] == false &&
-            props.row['status'] == 'available'
-          ) {
-            return (
-              <a
-                href={`/api/v1/metrc/update_metrc_disposed?facility_id=${
-                  this.props.facility_id
-                }&&metrc_id=${props.value}`}
-                className="link f7 fw6 ph2 pv1 ba br2 dib tc bg-orange b--orange white"
-              >
-                Disposed
-              </a>
-            )
-          }
+          } 
         }
       },
-
-      {
-        Header: 'Reported',
-        accessor: 'reported_to_metrc',
-        Cell: props => {
-          return <span className="">{props.value ? 'Yes' : 'No'}</span>
-        }
-      },
-
-      {
-        Header: 'Last Update',
-        accessor: 'u_at',
-        Cell: props => {
-          return <span className="">{formatAgo(props.value)}</span>
-        }
-      }
     ]
   }
 
@@ -227,13 +231,26 @@ class MetrcInventoryApp extends React.Component {
   }
 
   onSave = data => {
-    bulkCreateMetrcs(this.props.facility_id, data).then(({ status, data }) => {
-      const newData = data.map(x => ({ id: x.id, ...x.attributes }))
-      this.setState({ data: [...newData, ...this.state.data] })
+    //console.log(data)
+    disposeMetrcs(this.props.facility_id, data).then(({ status, data }) => {
+      
+      //const updateData = data.map(x => ({ id: x.id, ...x.attributes }))
+      if(status == 200){
+        toast('Metrc Tag has been disposed', 'success')
+        activeTaskStore.loadActiveTasks()
+        this.onToggleSidebar()
+        this.editor.reset()
+      }  
+      else{
+        toast('Metrc Not Exist', 'error')
+      }
+
+      
+      //this.setState({ data: [...updateData, ...this.state.data] })
+      
     })
-    this.onToggleSidebar()
-    this.editor.reset()
-    DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
+    
+    //DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
   }
 
   onFetchData = (state, instance) => {
@@ -262,7 +279,8 @@ class MetrcInventoryApp extends React.Component {
     const { metrc_permission } = this.props
     return (
       <div className="w-100 bg-white pa3">
-        <div className="flex mb4 mt2">
+        <div id="toast" className="toast"></div>
+        <div className="flex mb4 mt2"> 
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">METRC Tags</h1>
           <div style={{ justifySelf: 'end' }}>
             {metrc_permission.create && (
@@ -271,7 +289,7 @@ class MetrcInventoryApp extends React.Component {
                   className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
                   onClick={this.onToggleSidebar}
                 >
-                  Add item
+                  Destroy Tag
                 </button>
               </React.Fragment>
             )}
@@ -317,74 +335,68 @@ class MetrcInventoryApp extends React.Component {
 
 class MetricEditor extends React.Component {
   state = {
-    metrcs: '',
-    tag_type: 'plant'
+    tag: '',
+    reason: ''
   }
 
   reset = () => {
     this.setState({
-      metrcs: '',
-      tag_type: 'plant'
+      tag: '',
+      reason: ''
     })
   }
 
   onChange = event => {
     const key = event.target.name
+    //console.log(key)
     this.setState({ [key]: event.target.value })
+  }
+
+  onChangeTag = () =>{
+    const key = this.inputTagId.value
+    this.setState({ tag: this.inputTagId.value })
   }
 
   onSave = event => {
     // console.log('on save...')
     this.props.onSave({
-      metrcs: this.state.metrcs,
-      tag_type: this.state.tag_type
+      tag: this.state.tag,
+      reason: this.state.reason
     })
   }
 
   render() {
     const { onClose } = this.props
-    const { metrcs, tag_type } = this.state
+    const { tag, reason } = this.state
 
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title="Add METRC tags" />
+        <SlidePanelHeader onClose={onClose} title="Destroy METRC tags" />
         <div className="flex flex-column flex-auto justify-between">
           <div className="pv3 ph4 flex flex-column">
             <div className="mb3 f6">
-              <label className="f6 fw6 db mb1 gray ttc">Tag IDs</label>
-              <textarea
-                name="metrcs"
-                value={metrcs}
-                style={{ height: '250px' }}
-                onChange={this.onChange}
-                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+              <label className="f6 fw6 db mb1 gray ttc">Tag ID</label>
+              
+              <InputBarcode
+                    name="metrc_tag"
+                    className="w-100"
+                    value={tag}
+                    ref={input => (this.inputTagId = input)}
+                    onChange={this.onChangeTag}
               />
             </div>
 
             <div className="mb3 f6">
-              <label className="f6 fw6 db mb1 gray ttc">Tag type</label>
-              <div className="w-100 flex  mt2">
-                <label className="mr4">
-                  <input
-                    type="radio"
-                    name="tag_type"
-                    value="plant"
-                    checked={tag_type == 'plant'}
-                    onChange={this.onChange}
-                  />
-                  <span className="ml2">Plant</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="tag_type"
-                    value="package"
-                    checked={tag_type == 'package'}
-                    onChange={this.onChange}
-                  />
-                  <span className="ml2">Package</span>
-                </label>
-              </div>
+            <label className="f6 fw6 db mb1 gray ttc">Reason</label>
+              <textarea
+                name="reason"
+                value={reason}
+                style={{ height: '250px' }}
+                onChange={this.onChange}
+                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+              />
+                  
+               
             </div>
           </div>
           <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
@@ -394,10 +406,10 @@ class MetricEditor extends React.Component {
   }
 }
 
-const bulkCreateMetrcs = (facilityId, data) => {
-  const url = `/api/v1/metrc/bulk_create/${facilityId}`
+const disposeMetrcs = (facilityId, data) => {
+  const url = `/api/v1/metrc/update_metrc_disposed?facility_id=${facilityId}`
 
-  return fetch(url, httpPostOptions(data)).then(response => {
+  return fetch(url, httpPutOptions(data)).then(response => {
     return response.json().then(data => {
       // console.log(data)
       return {

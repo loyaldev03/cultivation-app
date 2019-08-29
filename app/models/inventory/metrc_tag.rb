@@ -14,5 +14,6 @@ module Inventory
     # when this tag has been assigned in Cannected, and corresponding
     # record has been pushed  to METRC, set this flag to true
     field :reported_to_metrc, type: Boolean, default: -> { false }
+    field :destroy_reason, type: String
   end
 end

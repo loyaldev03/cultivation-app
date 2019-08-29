@@ -1,19 +1,22 @@
-import { observable, action, runInAction, toJS } from 'mobx'
+import { observable, action, toJS } from 'mobx'
 import {
   httpGetOptions,
   httpPostOptions,
   httpPutOptions,
   toast
 } from '../utils'
-
-import { addDays, differenceInCalendarDays, parse } from 'date-fns'
+import { parse, getYear } from 'date-fns'
 
 function parseTask(holidayAttributes) {
-  const { date } = holidayAttributes
-  const new_date = new Date(date)
-  console.log(new_date)
+  const { start_date, end_date, date } = holidayAttributes
+  const new_date = parse(date)
+  const new_start_date = parse(start_date)
+  const new_end_date = parse(end_date)
+
   return Object.assign(holidayAttributes, {
-    date: new_date
+    date: new_date,
+    start_date: new_start_date,
+    end_date: new_end_date
   })
 }
 
@@ -30,7 +33,7 @@ class HolidayStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        this.holiday = response.data
+        this.holiday = parseTask(response.data)
         this.isDataLoaded = true
       } else {
         this.holiday = ''
@@ -42,7 +45,6 @@ class HolidayStore {
       console.error(error)
     } finally {
       this.isLoading = false
-      // this.loadIssues(batchId)
     }
   }
 
@@ -57,7 +59,7 @@ class HolidayStore {
       )).json()
       if (response.data) {
         toast('Holiday updated', 'success')
-        await this.loadHolidays(2019)
+        await this.loadHolidays(getYear(holiday.start_date))
       } else {
         console.error(response.errors)
       }
@@ -75,7 +77,7 @@ class HolidayStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        const holidays = response.data.map(res => parseTask(res.attributes))
+        const holidays = response.data.map(res => parseTask(res))
         this.holidays = holidays
         this.isDataLoaded = true
       } else {
@@ -102,7 +104,7 @@ class HolidayStore {
       )).json()
       if (response.data) {
         toast('Holiday added', 'success')
-        await this.loadHolidays(2019)
+        await this.loadHolidays(getYear(holiday.start_date))
       } else {
         console.error(response.errors)
       }

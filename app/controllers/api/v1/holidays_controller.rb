@@ -1,22 +1,26 @@
 class Api::V1::HolidaysController < Api::V1::BaseApiController
   def index
-    holidays = CompanyInfo.last.holidays.year(params[:year].to_i)
-
-    render json: Common::HolidaySerializer.new(holidays).serialized_json
+    cmd = Common::QueryHolidayByYear.call(current_user, params[:year])
+    render json: {data: cmd.result}.to_json
   end
 
   def show_by_date
     if params[:date]
-      daterange = params[:date].to_datetime.at_beginning_of_day..params[:date].to_datetime.at_end_of_day
-      holidays = CompanyInfo.last.holidays.where(date: daterange).first
+      @date = params[:date].to_datetime.at_beginning_of_day
+      @holiday = CompanyInfo.last.holidays.expected_on(@date).first
     end
-    render json: Common::HolidaySerializer.new(holidays).serialized_json
+    render json: Common::HolidaySerializer.new(@holiday).serialized_json
   end
 
   def create
+    start_date = Time.zone.parse(params[:holiday][:start_date], Time.current)
+    duration = params[:holiday][:duration].to_i
+    end_date = start_date + duration.days
     holiday = CompanyInfo.last.holidays.new({
       title: params[:holiday][:title],
-      date: Time.zone.parse(params[:holiday][:date], Time.current),
+      start_date: start_date,
+      duration: duration,
+      end_date: end_date,
     })
     holiday.save
     if holiday
@@ -29,7 +33,9 @@ class Api::V1::HolidaysController < Api::V1::BaseApiController
 
     if holiday
       holiday.title = params[:holiday][:title]
-      holiday.date = Time.zone.parse(params[:holiday][:date], Time.current)
+      holiday.start_date = Time.zone.parse(params[:holiday][:start_date], Time.current)
+      holiday.duration = params[:holiday][:duration]
+      holiday.end_date = holiday.start_date + holiday.duration.to_i.days
     end
     holiday.save
     if holiday

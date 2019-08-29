@@ -62,28 +62,19 @@ class GrowPhaseSetting extends React.Component {
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
-        <div className="pa4">
-          <div className="bg-white box--shadow pa4 fl w-100">
-            <div className="fl w-100-l w-100-m">
-              <div className="pb4 ph3">
-                <h5 className="tl pa0 ma0 h5--font dark-grey ttc pb3">
-                  Grow Phases
-                </h5>
-                <p className="grey">
-                  You can decide which phases to be used by setting it to
-                  "Active"
-                </p>
-                <ListingTable
-                  data={GrowPhaseStore.filteredList}
-                  columns={columns}
-                  isLoading={GrowPhaseStore.isLoading}
-                />
-              </div>
-            </div>
+        <div className="mt0 ba b--light-grey pa3">
+          <p className="grey">
+            You can decide which phases to be used by setting it to "Active"
+          </p>
+          <ListingTable
+            data={GrowPhaseStore.filteredList}
+            columns={columns}
+            isLoading={GrowPhaseStore.isLoading}
+          />
+
+          <div data-role="sidebar" className="rc-slide-panel">
+            <div className="rc-slide-panel__body h-100" />
           </div>
-        </div>
-        <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body h-100" />
         </div>
       </React.Fragment>
     )

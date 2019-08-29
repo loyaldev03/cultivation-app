@@ -5,6 +5,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
       @facility.update_onboarding('ONBOARDING_UOM')
     end
     @list = Common::UnitOfMeasure.all.order_by(name: :asc)
+    @used_uoms = Inventory::Catalogue.pluck(:common_uom).compact.uniq
   end
 
   def new

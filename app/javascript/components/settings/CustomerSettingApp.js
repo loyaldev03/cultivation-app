@@ -5,16 +5,16 @@ import CustomerEditor from './CustomerEditor'
 import { action, observable, computed, autorun } from 'mobx'
 import isEmpty from 'lodash.isempty'
 import {
-    decimalFormatter,
-    formatDate2,
-    httpGetOptions,
-    ActiveBadge,
-    CheckboxSelect,
-    Loading,
-    formatAgo,
-    TempTaskWidgets,
-    httpPostOptions
-  } from '../utils'
+  decimalFormatter,
+  formatDate2,
+  httpGetOptions,
+  ActiveBadge,
+  CheckboxSelect,
+  Loading,
+  formatAgo,
+  TempTaskWidgets,
+  httpPostOptions
+} from '../utils'
 import CustomerStore from './CustomerStore'
 
 @observer
@@ -30,9 +30,7 @@ class CustomerSettingApp extends React.Component {
         Header: 'Account No',
         accessor: 'account_no',
         minWidth: 150,
-        className: 'ttc',
-       
-     
+        className: 'ttc'
       },
       {
         headerClassName: 'tl',
@@ -51,7 +49,6 @@ class CustomerSettingApp extends React.Component {
           />
         ),
         accessor: 'status'
-        
       },
       {
         headerClassName: 'tl',
@@ -59,18 +56,19 @@ class CustomerSettingApp extends React.Component {
         accessor: 'id',
         className: 'ttc',
         Cell: props => {
-            return(
-                <div className="center">
-                    <a href="#0" className="link orange" onClick={e => this.openCustomer(e, props.index)}>
-                        <i className="material-icons md-600 md-17 ph2">
-                            create
-                        </i>
-                    </a>
-                </div>
-               
-            )
+          return (
+            <div className="center">
+              <a
+                href="#0"
+                className="link orange"
+                onClick={e => this.openCustomer(e, props.index)}
+              >
+                <i className="material-icons md-600 md-17 ph2">create</i>
+              </a>
+            </div>
+          )
         }
-      },
+      }
     ]
   }
 
@@ -83,7 +81,6 @@ class CustomerSettingApp extends React.Component {
   openSidebar = () => {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
-
 
   openCustomer(event, index) {
     const id = CustomerStore.items.slice()[index].id
@@ -101,15 +98,15 @@ class CustomerSettingApp extends React.Component {
             <div className="fl w-100-l w-100-m">
               <div className="pb4 ph3">
                 <div className="flex justify-between mt3 mb4">
-                    <h1 className="mv0 f3 fw4 dark-gray">Customers</h1>
-                    <div>
-                        <button
-                        className="btn btn--primary btn--small"
-                        onClick={this.openSidebar}
-                        >
-                        Add Customer
-                        </button>
-                    </div>
+                  <h1 className="mv0 f3 fw4 dark-gray">Customers</h1>
+                  <div>
+                    <button
+                      className="btn btn--primary btn--small"
+                      onClick={this.openSidebar}
+                    >
+                      Add Customer
+                    </button>
+                  </div>
                 </div>
                 <p className="grey">
                   Click on the edit icon to edit information
@@ -125,10 +122,9 @@ class CustomerSettingApp extends React.Component {
           </div>
         </div>
         <CustomerEditor
-              isOpened={false}
-              //facility_id={this.props.facility_id}
+          isOpened={false}
+          //facility_id={this.props.facility_id}
         />
-        
       </React.Fragment>
     )
   }

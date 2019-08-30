@@ -5,6 +5,7 @@ class Settings::Core::GrowMethodsController < ApplicationController
       @facility.update_onboarding('ONBOARDING_GROW_METHOD')
     end
     @grow_methods = Common::GrowMethod.all
+    @used_grow_methods = Cultivation::Batch.pluck(:grow_method).uniq.compact.map(&:downcase)
   end
 
   def new

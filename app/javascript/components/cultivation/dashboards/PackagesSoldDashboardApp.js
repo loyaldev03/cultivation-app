@@ -236,7 +236,7 @@ class PackageDashboardApp extends React.Component {
     columns: [
       {
         headerClassName: 'pl3 tl',
-        Header: 'Package',
+        Header: 'Package Name',
         accessor: 'package',
         className: 'dark-grey pl3 fw6',
         minWidth: 150
@@ -257,7 +257,7 @@ class PackageDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Type',
+        Header: 'Package Type',
         accessor: 'type',
         className: ' pr3 justify-center',
         width: 110
@@ -361,7 +361,7 @@ class PackageDashboardApp extends React.Component {
     // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse" />
         <div className="pv4">
           <img src={TempPackagesSoldWidgets} />
@@ -377,7 +377,7 @@ class PackageDashboardApp extends React.Component {
           /> */}
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
-        <div className="pv3">
+        <div className="pv4">
           <ListingTable
             data={dummyData}
             columns={columns}

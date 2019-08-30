@@ -7,7 +7,7 @@ import {
   HeaderFilter,
   ActiveBadge
 } from '../../utils'
-import { observable } from 'mobx';
+import { observable } from 'mobx'
 
 const dummyData = [
   {
@@ -155,7 +155,7 @@ const dummyData = [
   }
 ]
 
-class ManifestStore{
+class ManifestStore {
   @observable columnFilters = {}
   updateFilterOptions = (propName, filterOptions) => {
     const updated = {
@@ -179,25 +179,25 @@ class ManifestsDashboardApp extends React.Component {
         headerClassName: 'pl3 tl',
         Header: 'Manifest ID',
         accessor: 'manifest_id',
-        className: 'dark-grey pl3 fw6',
+        className: 'dark-grey pl3 fw6'
       },
       {
         headerClassName: '',
         Header: 'Order ID',
         accessor: 'order_id',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Date Created',
         accessor: 'date_created',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Date Delivered',
         accessor: 'date_delivered',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -210,25 +210,25 @@ class ManifestsDashboardApp extends React.Component {
           />
         ),
         accessor: 'customer',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Revenue',
         accessor: 'revenue',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Tax',
         accessor: 'tax',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Subtotal',
         accessor: 'sub_total',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',

@@ -3,18 +3,19 @@ import * as d3 from 'd3'
 
 export default class StrainDistribution extends React.Component {
   componentDidMount() {
+    const element = document.getElementById('strain_chart')
     const margin = { top: 10, right: 10, bottom: 10, left: 10 }
-    const w = 530 - margin.left - margin.right
+    const w = element.offsetWidth - margin.left - margin.right
     const h = 340 - margin.top - margin.bottom
     const padding = 60
     const svg = d3
-      .select('#treemap')
+      .select('#treemapStrain')
       .append('svg')
       .attr('width', w)
       .attr('height', h)
 
     const toolTip = d3
-      .select('#treemap')
+      .select('#treemapStrain')
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)
@@ -38,8 +39,6 @@ export default class StrainDistribution extends React.Component {
       })
       const kx = w / 2,
         ky = h / 1
-
-      console.log('KX' + kx + 'KY' + ky)
 
       const treeMap = d3
         .treemap()
@@ -74,7 +73,7 @@ export default class StrainDistribution extends React.Component {
 
       cell
         .append('rect')
-        .attr('class', 'tile')
+        .attr('classclass', 'tile')
         .attr('data-name', d => d.data.name)
         .attr('data-value', d => d.data.value)
         .attr('width', d => d.x1 - d.x0)
@@ -107,6 +106,6 @@ export default class StrainDistribution extends React.Component {
   }
 
   render() {
-    return <div id="treemap" />
+    return <div id="treemapStrain" />
   }
 }

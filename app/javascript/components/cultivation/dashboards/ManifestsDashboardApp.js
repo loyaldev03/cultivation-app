@@ -1,11 +1,13 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
+import uniq from 'lodash.uniq'
 import {
   CheckboxSelect,
   ListingTable,
   HeaderFilter,
   ActiveBadge
 } from '../../utils'
+import { observable } from 'mobx';
 
 const dummyData = [
   {
@@ -153,6 +155,22 @@ const dummyData = [
   }
 ]
 
+class ManifestStore{
+  @observable columnFilters = {}
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(dummyData.map(x => x[propName]).sort())
+  }
+}
+
+const manifestStore = new ManifestStore()
 @observer
 class ManifestsDashboardApp extends React.Component {
   state = {
@@ -162,56 +180,55 @@ class ManifestsDashboardApp extends React.Component {
         Header: 'Manifest ID',
         accessor: 'manifest_id',
         className: 'dark-grey pl3 fw6',
-        width: 120
       },
       {
         headerClassName: '',
         Header: 'Order ID',
         accessor: 'order_id',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: 'Date Created',
         accessor: 'date_created',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: 'Date Delivered',
         accessor: 'date_delivered',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
-        Header: 'Customer',
+        Header: (
+          <HeaderFilter
+            title="Customer"
+            accessor="customer"
+            getOptions={manifestStore.getUniqPropValues}
+            onUpdate={manifestStore.updateFilterOptions}
+          />
+        ),
         accessor: 'customer',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: 'Revenue',
         accessor: 'revenue',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: 'Tax',
         accessor: 'tax',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: 'Subtotal',
         accessor: 'sub_total',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
@@ -241,7 +258,7 @@ class ManifestsDashboardApp extends React.Component {
     // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse" />
         <div className="flex justify-between">
           <input

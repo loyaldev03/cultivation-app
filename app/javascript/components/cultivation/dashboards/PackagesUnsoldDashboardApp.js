@@ -1,6 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { CheckboxSelect, ListingTable, TempPackagesWidgets } from '../../utils'
+import { CheckboxSelect, ListingTable, TempPackagesWidgets, HeaderFilter } from '../../utils'
+import uniq from 'lodash.uniq'
 
 const dummyData = [
   {
@@ -10,6 +11,7 @@ const dummyData = [
     type: 'lb',
     order_id: '03/12/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'God Bud',
     genome: 'indica',
     thc: '9%',
@@ -26,6 +28,7 @@ const dummyData = [
     type: 'lb',
     order_id: '11/12/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'GLASS VIAL WITH BLACK CHILD RESISTANT CAP',
     genome: 'indica',
     thc: '9%',
@@ -42,6 +45,7 @@ const dummyData = [
     type: 'lb',
     order_id: '12/2/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Alaskan Thunder Fuck',
     genome: 'sativa',
     thc: '9%',
@@ -58,6 +62,7 @@ const dummyData = [
     type: 'lb',
     order_id: '21/6/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Do Si Dos',
     genome: 'indica',
     thc: '9%',
@@ -74,6 +79,7 @@ const dummyData = [
     type: 'lb',
     order_id: '11/1/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Alaskan Thunder Fuck',
     genome: 'sativa',
     thc: '9%',
@@ -90,6 +96,7 @@ const dummyData = [
     type: 'lb',
     order_id: '19/3/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Allen Wrench',
     genome: 'sativa',
     thc: '9%',
@@ -106,6 +113,7 @@ const dummyData = [
     type: 'lb',
     order_id: '26/5/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Allen Wrench',
     genome: 'sativa',
     thc: '9%',
@@ -122,6 +130,7 @@ const dummyData = [
     type: 'lb',
     order_id: '18/9/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Allen Wrench',
     genome: 'sativa',
     thc: '9%',
@@ -138,6 +147,7 @@ const dummyData = [
     type: 'lb',
     order_id: '10/11/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Cherry Pie',
     genome: 'hybrid',
     thc: '9%',
@@ -154,6 +164,7 @@ const dummyData = [
     type: 'lb',
     order_id: '11/12/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Dancehall',
     genome: 'hybrid',
     thc: '9%',
@@ -170,6 +181,7 @@ const dummyData = [
     type: 'lb',
     order_id: '26/3/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Dutch Treat',
     genome: 'hybrid',
     thc: '9%',
@@ -186,6 +198,7 @@ const dummyData = [
     type: 'lb',
     order_id: '29/1/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Gelato',
     genome: 'hyrbid',
     thc: '9%',
@@ -202,6 +215,7 @@ const dummyData = [
     type: 'lb',
     order_id: '11/4/2019',
     manifest: 'medical',
+    use_type: 'medical',
     strain: 'Gelato',
     genome: 'hybrid',
     thc: '9%',
@@ -213,108 +227,148 @@ const dummyData = [
   }
 ]
 
+class PackageStore{
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(dummyData.map(x => x[propName]).sort())
+  }
+
+}
+const packageStore = new PackageStore()
+
 @observer
 class PackageDashboardApp extends React.Component {
   state = {
     columns: [
       {
-        headerClassName: 'pl3 tl',
-        Header: 'Package',
-        accessor: 'package',
-        className: 'dark-grey pl3 fw6',
-        minWidth: 150
+        headerClassName: '',
+        Header: (
+          <HeaderFilter
+            title="Package Group"
+            accessor="group"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'group',
+        className: ' pr3 justify-center',
       },
       {
         headerClassName: '',
         Header: 'Package ID',
         accessor: 'package_id',
         className: '',
-        width: 110
       },
+      
       {
         headerClassName: '',
-        Header: 'Group',
-        accessor: 'group',
-        className: ' pr3 justify-center',
-        width: 110
-      },
-      {
-        headerClassName: '',
-        Header: 'Type',
+        Header: (
+          <HeaderFilter
+            title="Package Type"
+            accessor="type"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'type',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
-        Header: 'Order ID',
+        Header: "Package Date",
         accessor: 'order_id',
         className: ' pr3 justify-center',
-        width: 110
+        
       },
       {
         headerClassName: '',
-        Header: 'Manifest',
-        accessor: 'manifest',
+        Header: (
+          <HeaderFilter
+            title="Use Type"
+            accessor="use_type"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'use_type',
         className: ' pr3 justify-center',
-        width: 110
+        
       },
       {
         headerClassName: '',
-        Header: 'Strain',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'strain',
         className: ' pr3 justify-center',
-        width: 120
       },
       {
         headerClassName: '',
-        Header: 'Genome',
+        Header: (
+          <HeaderFilter
+            title="Genome Type"
+            accessor="genome"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'genome',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: '% THC',
         accessor: 'thc',
         className: ' pr3 justify-center',
-        width: 110
       },
       {
         headerClassName: '',
         Header: '% CBD',
         accessor: 'cbd',
         className: ' pr3 justify-center',
-        width: 110
+      },
+      {
+        headerClassName: '',
+        Header: 'Qty',
+        accessor: 'qty',
+        className: ' pr3 justify-center',
+        
       },
       {
         headerClassName: '',
         Header: 'Total Net Weight',
         accessor: 'total_net_weight',
         className: ' pr3 justify-center',
-        width: 110
+        
       },
       {
         headerClassName: '',
         Header: 'Price per unit ',
         accessor: 'price_per_unit',
         className: ' pr3 justify-center',
-        width: 110
+        
       },
       {
         headerClassName: '',
-        Header: 'Total Price',
+        Header: 'Total Est Revenue',
         accessor: 'total_price',
         className: ' pr3 justify-center',
-        width: 110
+        
       },
-      {
-        headerClassName: '',
-        Header: 'Location',
-        accessor: 'location',
-        className: ' pr3 justify-center',
-        width: 110
-      }
+     
     ]
   }
   componentDidMount() {
@@ -337,7 +391,7 @@ class PackageDashboardApp extends React.Component {
     // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse" />
 
         <div className="flex justify-between">

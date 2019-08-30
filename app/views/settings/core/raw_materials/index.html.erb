@@ -83,6 +83,7 @@
                       <%# <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Uom Dimension</th>
                       <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Default Price</th> %>
                       <th class="pv2 ph3 subtitle-2 dark-grey tr ttu">Active</th>
+                      <th class="pv2 ph3 subtitle-2 dark-grey tr ttu"></th>
                     </tr>
                     <% @raw_materials.each_with_index do |f, i| %>
                       <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%> <%= f.category if f.category != '' and f.sub_category != ''%>">
@@ -119,11 +120,11 @@
                                       data: {remote: true, 'toggle-right': edit_settings_core_raw_material_path(f.id)},
                                       class: 'ttc grey subtitle-2 pv3 tc dim' 
                                 %>
-                                <% unless  @second_levels.include?(f.key.try(:capitalize)) %> 
-                                  <%= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
+                                <%# unless  @second_levels.include?(f.key.try(:capitalize)) %> 
+                                  <%#= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
                                       data: {remote: true, confirm: 'Are you sure?'},
                                       class: 'grey subtitle-2 pv3 tc dim' %>
-                                <%end%>
+                                <%#end%>
                                 <%# <% if @specials.include?(f.key.try(:capitalize)) %> 
                                   <%# <%= link_to 'Add Subcategory', new_settings_core_raw_material_path(parent_id: f.id),
                                         data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
@@ -143,6 +144,19 @@
                           <% else %>
                             <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]">
                           <% end %>
+                        </td>
+                        <td class="pv2 ph3 dark-grey tr ">
+                          <% unless @second_levels.include?(f.key.try(:capitalize)) %> 
+                            <%if @used_rw and @used_rw.include?(f.label.parameterize.underscore)%>
+                              <i class="material-icons md-15 grey dim pointer">lock</i>
+                            <% else%>
+                              <%= link_to settings_core_raw_material_path(f.id), method: :delete, data: {remote: true, confirm: 'Are you sure?'}, class: 'grey subtitle-2 pv3 tc dim' do %>
+                                <i class="material-icons md-15 orange dim pointer">delete</i>
+                              <% end%>
+                            <% end%>
+                          <%else%>
+                            <i class="material-icons md-15 grey dim pointer">lock</i> 
+                          <%end%>
                         </td>
                       </tr>
                     <% end %>

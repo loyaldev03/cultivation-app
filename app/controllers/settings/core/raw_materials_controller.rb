@@ -7,6 +7,7 @@ class Settings::Core::RawMaterialsController < ApplicationController
       @facility.update_onboarding('ONBOARDING_MATERIAL_TYPE')
     end
     @raw_materials = Inventory::QueryRawMaterial.call.result
+    @used_rw = Inventory::Catalogue.where(catalogue_type: 'raw_materials').pluck(:key).uniq.compact.map(&:downcase)
     ###should standardize the name to catalogue example -> Inventory::QueryCatalogue
   end
 

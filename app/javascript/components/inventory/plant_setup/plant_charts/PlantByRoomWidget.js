@@ -39,9 +39,11 @@ class PlantByRoomWidget extends React.Component {
 
     const color = d3.scaleOrdinal(d3.schemeSet2)
 
-    d3.json(`/api/v1/dashboard_charts/plant_distribution_room?facility_id=${
-      this.props.facility_id
-    }`).then(function(data) {
+    d3.json(
+      `/api/v1/dashboard_charts/plant_distribution_room?facility_id=${
+        this.props.facility_id
+      }`
+    ).then(function(data) {
       const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })

@@ -175,7 +175,8 @@ class ManagerDashboardApp extends React.Component {
           </div>
           <div className="w-50">
             <div
-              className="ba b--light-gray pa3 bg-white br2 mr3" id="strain_chart"
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              id="strain_chart"
               style={{ height: 420 + 'px' }}
             >
               <h1 className="f5 fw6 dark-grey">Strain Distribution</h1>

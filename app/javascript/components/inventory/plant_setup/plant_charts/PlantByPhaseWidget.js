@@ -35,7 +35,6 @@ export default class PlantByPhaseWidget extends React.Component {
 
   render() {
     const options = {
-
       legend: {
         display: false
       },

@@ -6,6 +6,7 @@ import getStrain from '../../components/inventory/strains/actions/getStrain'
 import CustomerStore from './CustomerStore'
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
+import { toast } from '../utils';
 
 const defaultSelect = {
   value: '',
@@ -117,9 +118,11 @@ export default class CustomerEditor extends React.Component {
     CustomerStore.saveCustomer(payload).then(result => {
       if (result.data.errors) {
         this.setState({ errors: result.data.errors })
+        toast('Customer details cannot be saved.', 'error')
       } else {
         this.reset()
         this.onCloseEditor()
+        toast('Customer has been saved.', 'success')
         CustomerStore.loadCustomer()
       }
     })

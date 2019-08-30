@@ -84,6 +84,19 @@
 
 <div class="flex flex-row-l flex-column pt4">
   <div class="w-20">
+    <span class="subtitle-2 grey">Share Facility Resouces</span>
+  </div>
+
+  <div class="w-40">
+    <%= f.check_box :enable_resouces_sharing, class: "toggle toggle-default" %>
+    <label class="toggle-button" for="company_info_enable_resouces_sharing"></label>
+    <span class="grey dib pv2">Allow resources to be shared between facilities. E.g. Nutrients, Grow lights etc...</span>
+  </div>
+</div>
+
+
+<div class="flex flex-row-l flex-column pt4">
+  <div class="w-20">
     <span class="subtitle-2 grey">METRC Integration</span>
   </div>
 
@@ -93,7 +106,7 @@
         data: { toggle: 'metric_enabled_options' }
     %>
     <label class="toggle-button" for="company_info_enable_metrc_integration"></label>
-    <span class="grey dib pv2">When enabled, item categories will be pulled from Metrc</span>
+    <span class="grey dib pv2">Enable METRC integration</span>
   </div>
 </div>
 

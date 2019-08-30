@@ -97,11 +97,12 @@
 
 
 .yearly-calendar .react-calendar {
-  width: 350px;
+  width: 300px;
+  margin-left: 1em;
+  margin-bottom: 1em;
   max-width: 100%;
   background: white;
-  border: 1px solid #a0a096;
-  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid $lightGrey;
   line-height: 1.125em;
 }
 .yearly-calendar .react-calendar,
@@ -122,7 +123,7 @@
 }
 .yearly-calendar .react-calendar__navigation {
   height: 44px;
-  margin-bottom: 1em;
+  margin-bottom: 0;
 }
 .yearly-calendar .react-calendar__navigation button {
   min-width: 44px;
@@ -138,7 +139,8 @@
 .yearly-calendar .react-calendar__month-view__weekdays {
   text-align: center;
   text-transform: uppercase;
-  font-weight: bold;
+  text-decoration: none !important;
+  font-weight: 600;
   font-size: 0.75em;
 }
 .yearly-calendar .react-calendar__month-view__weekdays__weekday {

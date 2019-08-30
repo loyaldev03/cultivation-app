@@ -375,7 +375,7 @@ class TeamSetttingApp extends React.Component {
                                 style={{ marginBottom: '2em' }}
                               >
                                 <GridGroupEmblem size={56} />
-                                <span class="pl3 f3 lh-title gray">
+                                <span className="pl3 f3 lh-title gray">
                                   {x.name}
                                 </span>
                               </div>
@@ -434,7 +434,7 @@ class TeamSetttingApp extends React.Component {
                               style={{ marginBottom: '2em' }}
                             >
                               <GridGroupEmblem size={56} />
-                              <span class="pl3 f3 lh-title gray">
+                              <span className="pl3 f3 lh-title gray">
                                 Unassigned
                               </span>
                             </div>
@@ -510,12 +510,8 @@ class TeamSetttingApp extends React.Component {
                       <table className="std-table pv2 ph3 f6 mt1 w-100">
                         <tbody>
                           <tr>
-                            <th>
-                              Role
-                            </th>
-                            <th>
-                              Description
-                            </th>
+                            <th>Role</th>
+                            <th>Description</th>
                             <th />
                           </tr>
                           {roles.map(x => (

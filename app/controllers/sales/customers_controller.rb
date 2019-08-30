@@ -84,7 +84,7 @@ class Sales::CustomersController < ApplicationController
   private
 
   def record_params
-    params.require(:record).permit(:name, :account_no, addresses: [:id, :address, :zipcode, :country, :city, :state, :_destroy], addresses_attributes: [:_id, :address, :zipcode, :country, :city, :_destroy])
+    params.require(:record).permit(:name, :account_no, :state_license, :license_type, addresses: [:id, :address, :zipcode, :country, :city, :state, :_destroy], addresses_attributes: [:_id, :address, :zipcode, :country, :city, :_destroy])
   end
 
   def update_params

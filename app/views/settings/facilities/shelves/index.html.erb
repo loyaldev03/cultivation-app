@@ -3,58 +3,113 @@
 <% end %>
 
 
-<div class="ph4 bg-white ma4 flex items-center pb3 pt3">
-  <div class="w-70">
-    <div class="dropdown">
-      <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
-        <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
-      </a>
-      <div class="dropdown-content">
-        <%= link_to "Show all", settings_facility_shelves_path, class: "dim pv3 ph3 bb b--light-gray f6 gray tc" %>
-        <% Facility.all.each do |f| %>
-          <%= link_to blank(f.name), settings_facility_shelves_path(facility_id: f.id), class: "dim pv3 ph3 bb b--light-gray blue f6 tc" %>
-        <% end %>
+<div class="pa4">
+  <div class="flex flex-column justify-between bg-white box--shadow">
+    <div class="pa4 min-h-600">
+      <div class="fl w-100 flex flex-column width-100">
+        <div class="flex justify-between">
+          <div>
+            <h5 class="tl pa0 ma0 h5--font dark-grey ttc">Facilities Module</h5>
+            <p class="mt2 body-1 grey">Shelves
+            </p>
+          </div>
+          <div class="dim flex flex-row items-center pointer">
+            <i class="material-icons md-gray">keyboard_arrow_left</i>
+            <%= link_to "Back to Setting", settings_path, class: "db tr ttu link button--font grey" %>
+          </div>
+        </div>
+        <div class="flex flex-column mt3">
+          <div class="fl w-100-m">
+            <a 
+              href="<%= settings_facility_facilities_path(type: 'facilities') %>" 
+              class="tab <%= 'tab--active' if params[:type] == 'facilities' || params[:type].nil?%>"
+            >
+              Facilities
+            </a>
+            <a 
+              href="<%= settings_facility_rooms_path(type: 'rooms') %>" 
+              class="tab <%= 'tab--active' if params[:type] == 'rooms'%>"
+            >
+              Rooms
+            </a>
+            <a 
+              href="<%= settings_facility_sections_path(type: 'sections') %>" 
+              class="tab <%= 'tab--active' if params[:type] == 'sections'%>"
+            >
+              Sections
+            </a>
+            <a 
+              href="<%= settings_facility_rows_path(type: 'rows') %>" 
+              class="tab <%= 'tab--active' if params[:type] == 'rows'%>"
+            >
+              Rows
+            </a>
+            <a 
+              href="<%= settings_facility_shelves_path(type: 'shelves') %>" 
+              class="tab <%= 'tab--active' if params[:type] == 'shelves'%>"
+            >
+              Shelves
+            </a>
+            <div class="mt0 ba b--light-grey pa3">
+              <div class="tr mb5">
+                <div class="dropdown">
+                  <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
+                    <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
+                  </a>
+                  <div class="dropdown-content">
+                    <%= link_to "Show all", settings_facility_shelves_path(type: 'shelves'), class: "dim pv3 ph3 bb b--light-gray f6 gray tc" %>
+                    <% Facility.all.each do |f| %>
+                      <%= link_to blank(f.name), settings_facility_shelves_path(facility_id: f.id, type: 'shelves'), class: "dim pv3 ph3 bb b--light-gray blue f6 tc" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
+                <thead>
+                  <tr class="bg-light-gray">
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Code</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Capacity</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purpose</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purpose details</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Facility</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Room</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Rows</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% @shelves.each_with_index do |f, i| %>
+                    <tr data-toggle-right="<%= edit_settings_facility_shelf_path(f)%>" class="dim pointer ">
+                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
+                      <td class="bb b--black-20 pv3 tc">
+                        <%= f.capacity %>
+                      </td>
+                      <td class="bb b--black-20 pv3 tc">
+                        <!-- purpose -->
+                      </td>
+                      <td class="bb b--black-20 pv3 tc">
+                        <!-- purpose details -->
+                      </td>
+                      <td class="bb b--black-20 pv3 tc"><%= f.row.room.facility.name %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f.row.room.name %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f.row.name %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<div class="bg-white mv3 mh4">
-  <table class="w-100 table collapse">
-    <thead>
-      <tr>
-        <th class="f6 dark-grey pv3 tl pl4">#</th>
-        <th class="f6 dark-grey pv3 tl">Code</th>
-        <th class="f6 dark-grey pv3 tl">Capacity</th>
-        <th class="f6 dark-grey pv3 tl ">Purpose</th>
-        <th class="f6 dark-grey pv3 tl w-10">Purpose details</th>
-        <th class="f6 dark-grey pv3 tl ">Facility</th>
-        <th class="f6 dark-grey pv3 tl ">Room</th>
-        <th class="f6 dark-grey pv3 tl ">Rows</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @shelves.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_facility_shelf_path(f)%>" class="pointer striped--light-gray">
-          <td class="f6 pv3 tl pl4 gray"><%= i+1 %></td>
-          <td class="f6 tl"><%= blank(f.code) %></td>
-          <td class="f6 tl ">
-            <%= f.capacity %>
-          </td>
-          <td class="f6 tl ">
-            <!-- purpose -->
-          </td>
-          <td class="f6 tl ">
-            <!-- purpose details -->
-          </td>
-          <td class="f6 tl "><%= f.row.room.facility.name %></td>
-          <td class="f6 tl "><%= f.row.room.name %></td>
-          <td class="f6 tl "><%= f.row.name %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-
+<% content_for :before_body_end do %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      setupCollapsible();
+    })
+  </script>
+<% end %>

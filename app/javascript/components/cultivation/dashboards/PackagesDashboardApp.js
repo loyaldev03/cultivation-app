@@ -15,7 +15,7 @@ import {
 } from '../../utils'
 import BatchStore from '../batches/BatchStore'
 
-class PackageStore{
+class PackageStore {
   @observable columnFilters = {}
 
   updateFilterOptions = (propName, filterOptions) => {
@@ -25,17 +25,16 @@ class PackageStore{
       [propName]: filterOptions
     }
     this.columnFilters = updated
-  } 
+  }
 
   getUniqPropValues = propName => {
     console.log(propName)
     console.log(dummyData.map(x => x[propName]).sort())
     return uniq(dummyData.map(x => x[propName]).sort())
   }
-
 }
 const packageStore = new PackageStore()
- 
+
 const dummyData = [
   {
     package: 'CAMPOS DE KUSH',
@@ -496,7 +495,6 @@ class PackageDashboardApp extends React.Component {
       })
     }
   }
-
 
   render() {
     // const { defaultFacilityId } = this.props

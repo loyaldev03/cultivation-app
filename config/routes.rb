@@ -256,6 +256,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :customers, only: [:index, :show, :create]
+
       resources :system, only: [], as: :system do
         collection do
           get 'configuration'

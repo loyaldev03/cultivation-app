@@ -4,9 +4,14 @@
 
 <%= render 'layouts/right_sidebar' %>
 
-<div class="ph4 bg-white ma4 flex items-center pb3 pt3">
+<%= react_component 'settings/CustomerSettingApp'%>
+<!--
+<div class="pa4">
+<div class="bg-white box--shadow fl w-100">
+<div class="bg-white ma4 mb0 flex items-center pt3">
   <div class="w-70">
-    <h2 class="pa0 ma0">Customers</h2>
+    <h2 class="tl pa0 ma0 h5--font dark-grey ttc">Customers</h2>
+    <p class="mt2 mb4 db body-1 grey">Manage customers </p>
   </div>
   <div class="w-30 tr">
     <a href="#0"
@@ -16,28 +21,34 @@
       + Add New
     </a>
   </div>
+
+  
+
 </div>
 
-<div class="bg-white mv3 mh4">
-  <table class="w-100 table collapse">
-    <thead>
-      <tr>
-        <th class="f6 dark-grey pv3 tl pl4 pr3">#</th>
-        <th class="f6 dark-grey pv3 tl ">Account No</th>
-        <th class="f6 dark-grey pv3 tl ">Name</th>
-        <th class="f6 dark-grey pv3 tl">Status</th>
+<div class="bg-white mv3 mh4 pb4">
+  <table class="w-100 collapse ba b--light-gray">
+    <thead >
+      <tr class="stripe-dark">
+        <th class="f6 dark-grey pv3 tl pl4 pr3 br b--light-gray " style="width:30px">#</th>
+        <th class="f6 dark-grey pv3 tc br b--light-gray pl2 ">Account No</th>
+        <th class="f6 dark-grey pv3 tc br b--light-gray pl2">Name</th>
+        <th class="f6 dark-grey pv3 tc br b--light-gray pl2">Status</th>
       </tr>
     </thead>
     <tbody>
       <% @records.try(:each_with_index) do |f, i| %>
-        <tr data-toggle-right="<%= edit_sales_customer_path(f.id)%>" class="pointer striped--light-gray">
-          <td class="f6 pv3 tl pl4 pr3 gray"><%= i+1 %></td>
-          <td class="f6 tl"><%= blank(f.account_no) %></td>
-          <td class="f6 tl"><%= blank(f.name) %></td>
-          <td class="f6 tl"><%= blank(f.status) %></td>
+        <tr data-toggle-right="<%= edit_sales_customer_path(f.id)%>" class="pointer">
+          <td class="f6 pv3 tc pl4 pr3 gray"><%= i+1 %></td>
+          <td class="f6 tc"><%= blank(f.account_no) %></td>
+          <td class="f6 tc"><%= blank(f.name) %></td>
+          <td class="f6 tc"><%= blank(f.status) %></td>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
+</div>
+</div>
+-->

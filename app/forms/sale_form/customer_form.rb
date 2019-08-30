@@ -2,9 +2,9 @@ module SaleForm
   class CustomerForm
     include ActiveModel::Model
 
-    attr_accessor :id, :name, :account_no, :addresses
+    attr_accessor :id, :name, :account_no, :addresses, :state_license, :license_type
 
-    validates :name, presence: true
+    validates :name, :state_license, presence: true
 
     def initialize(record_id = nil)
       set_record(record_id)
@@ -25,6 +25,8 @@ module SaleForm
       self.id = record[:id] if record[:id]
       self.name = record[:name] if record[:name]
       self.account_no = record[:account_no] if record[:account_no]
+      self.license_type = record[:license_type] if record[:license_type]
+      self.state_license = record[:state_license] if record[:state_license]
       if record[:addresses]
         self.addresses = []
         self.addresses.build({

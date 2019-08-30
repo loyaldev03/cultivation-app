@@ -507,13 +507,13 @@ class TeamSetttingApp extends React.Component {
                           </a>
                         )}
                       </div>
-                      <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
+                      <table className="std-table pv2 ph3 f6 mt1 w-100">
                         <tbody>
-                          <tr className="striped--light-gray">
-                            <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                          <tr>
+                            <th>
                               Role
                             </th>
-                            <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                            <th>
                               Description
                             </th>
                             <th />
@@ -521,10 +521,10 @@ class TeamSetttingApp extends React.Component {
                           {roles.map(x => (
                             <tr
                               key={x.id}
-                              className={'striped--light-gray dim pointer'}
+                              className="pointer"
                               onClick={this.onClickRoleEdit(x.id)}
                             >
-                              <td className="tl pv2 ph3 w5">
+                              <td className="tl w5">
                                 {x.name}
                                 {x.built_in && (
                                   <span className="f7 bg-light-gray gray br2 ml2 ph2">

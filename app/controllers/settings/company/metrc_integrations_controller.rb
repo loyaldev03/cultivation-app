@@ -11,6 +11,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   def update
     @company_info.metrc_user_key = company_info_params[:metrc_user_key]
     @company_info.enable_metrc_integration = company_info_params[:enable_metrc_integration]
+    @company_info.enable_resouces_sharing = company_info_params[:enable_resouces_sharing]
     if @company_info.save
       flash[:notice] = 'Updated'
       redirect_to metrc_setup_settings_company_metrc_integrations_path
@@ -49,6 +50,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
 
   def company_info_params
     params.require(:company_info).permit(:metrc_user_key,
-                                         :enable_metrc_integration)
+                                         :enable_metrc_integration,
+                                         :enable_resouces_sharing)
   end
 end

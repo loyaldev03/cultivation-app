@@ -75,6 +75,7 @@ class Settings::Company::CompanyInfoController < ApplicationController
     @company_info.state_license = company_info_params[:state_license] if company_info_params[:state_license]
     @company_info.tax_id = company_info_params[:tax_id] if company_info_params[:tax_id]
     @company_info.enable_metrc_integration = company_info_params[:enable_metrc_integration] if company_info_params[:enable_metrc_integration]
+    @company_info.enable_resouces_sharing = company_info_params[:enable_resouces_sharing] if company_info_params[:enable_resouces_sharing]
     @company_info.metrc_user_key = company_info_params[:metrc_user_key] if company_info_params[:metrc_user_key]
     @company_info.first_day_of_week = company_info_params[:first_day_of_week] if company_info_params[:first_day_of_week]
 
@@ -133,6 +134,7 @@ class Settings::Company::CompanyInfoController < ApplicationController
       :tax_id,
       :timezone,
       :enable_metrc_integration,
+      :enable_resouces_sharing,
       :metrc_user_key,
       :first_day_of_week,
       work_schedules: [monday: {},

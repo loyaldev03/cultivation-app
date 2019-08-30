@@ -83,6 +83,7 @@
                     <tr class="striped--light-gray">
                       <th class="pv2 ph3 subtitle-2 dark-grey tl ttu" width="50%">Name</th>
                       <th class="pv2 ph3 subtitle-2 dark-grey tr ttu">Active</th>
+                      <th class="pv2 ph3 subtitle-2 dark-grey tr ttu"></th>
                     </tr>
                   <% @grow_methods.each_with_index do |f, i| %>
                     <tr class="pointer rt-tr-group">
@@ -114,6 +115,15 @@
                           <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="grow_method[ids][]" checked>
                         <% else %>
                           <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="grow_method[ids][]">
+                        <% end %>
+                      </td>
+                      <td class="pv2 ph3 dark-grey tr">
+                        <%if @used_grow_methods and @used_grow_methods.include?(f.name.parameterize.underscore)%>
+                          <i class="material-icons md-15 grey dim pointer">lock</i> 
+                        <% else %>
+                          <%= link_to settings_core_grow_method_path(f.id), method: :delete, data: {remote: true, confirm: 'Are you sure?'}, class: 'grey subtitle-2 pv3 tc dim' do %>
+                            <i class="material-icons md-15 orange dim pointer">delete</i>
+                          <% end%>
                         <% end %>
                       </td>
                     </tr>

@@ -1,6 +1,11 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { CheckboxSelect, ListingTable, TempPackagesWidgets, HeaderFilter } from '../../utils'
+import {
+  CheckboxSelect,
+  ListingTable,
+  TempPackagesWidgets,
+  HeaderFilter
+} from '../../utils'
 import uniq from 'lodash.uniq'
 
 const dummyData = [
@@ -227,8 +232,7 @@ const dummyData = [
   }
 ]
 
-class PackageStore{
-
+class PackageStore {
   updateFilterOptions = (propName, filterOptions) => {
     const updated = {
       ...this.columnFilters,
@@ -240,7 +244,6 @@ class PackageStore{
   getUniqPropValues = propName => {
     return uniq(dummyData.map(x => x[propName]).sort())
   }
-
 }
 const packageStore = new PackageStore()
 
@@ -259,15 +262,15 @@ class PackageDashboardApp extends React.Component {
           />
         ),
         accessor: 'group',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Package ID',
         accessor: 'package_id',
-        className: '',
+        className: ''
       },
-      
+
       {
         headerClassName: '',
         Header: (
@@ -279,14 +282,13 @@ class PackageDashboardApp extends React.Component {
           />
         ),
         accessor: 'type',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
-        Header: "Package Date",
+        Header: 'Package Date',
         accessor: 'order_id',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -299,8 +301,7 @@ class PackageDashboardApp extends React.Component {
           />
         ),
         accessor: 'use_type',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -313,7 +314,7 @@ class PackageDashboardApp extends React.Component {
           />
         ),
         accessor: 'strain',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -326,49 +327,44 @@ class PackageDashboardApp extends React.Component {
           />
         ),
         accessor: 'genome',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: '% THC',
         accessor: 'thc',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: '% CBD',
         accessor: 'cbd',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Qty',
         accessor: 'qty',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Total Net Weight',
         accessor: 'total_net_weight',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Price per unit ',
         accessor: 'price_per_unit',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Total Est Revenue',
         accessor: 'total_price',
-        className: ' pr3 justify-center',
-        
-      },
-     
+        className: ' pr3 justify-center'
+      }
     ]
   }
   componentDidMount() {

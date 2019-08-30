@@ -6,7 +6,7 @@ import getStrain from '../../components/inventory/strains/actions/getStrain'
 import CustomerStore from './CustomerStore'
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
-import { toast } from '../utils';
+import { toast } from '../utils'
 
 const defaultSelect = {
   value: '',

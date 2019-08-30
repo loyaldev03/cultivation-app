@@ -68,14 +68,15 @@ class Settings::Company::CompanyInfoController < ApplicationController
 
   def update
     @company_info = get_company_info
-    @company_info.name = company_info_params[:name]
-    @company_info.phone = company_info_params[:phone]
-    @company_info.fax = company_info_params[:fax]
-    @company_info.website = company_info_params[:website]
-    @company_info.state_license = company_info_params[:state_license]
-    @company_info.tax_id = company_info_params[:tax_id]
-    @company_info.enable_metrc_integration = company_info_params[:enable_metrc_integration]
-    @company_info.metrc_user_key = company_info_params[:metrc_user_key]
+    @company_info.name = company_info_params[:name] if company_info_params[:name]
+    @company_info.phone = company_info_params[:phone] if company_info_params[:phone]
+    @company_info.fax = company_info_params[:fax] if company_info_params[:fax]
+    @company_info.website = company_info_params[:website] if company_info_params[:website]
+    @company_info.state_license = company_info_params[:state_license] if company_info_params[:state_license]
+    @company_info.tax_id = company_info_params[:tax_id] if company_info_params[:tax_id]
+    @company_info.enable_metrc_integration = company_info_params[:enable_metrc_integration] if company_info_params[:enable_metrc_integration]
+    @company_info.metrc_user_key = company_info_params[:metrc_user_key] if company_info_params[:metrc_user_key]
+    @company_info.first_day_of_week = company_info_params[:first_day_of_week] if company_info_params[:first_day_of_week]
 
     if company_info_params[:timezone].present?
       @company_info.timezone = company_info_params[:timezone]
@@ -133,6 +134,7 @@ class Settings::Company::CompanyInfoController < ApplicationController
       :timezone,
       :enable_metrc_integration,
       :metrc_user_key,
+      :first_day_of_week,
       work_schedules: [monday: {},
                        tuesday: {},
                        wednesday: {},

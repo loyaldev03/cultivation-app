@@ -12,7 +12,7 @@ class CompanyInfo
   field :metrc_user_key, type: String
   field :enable_metrc_integration, type: Boolean, default: -> { false }
   field :is_active, type: Boolean, default: -> { false }
-
+  field :first_day_of_week, type: String
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   embeds_many :holidays, class_name: 'Common::Holiday'
 end

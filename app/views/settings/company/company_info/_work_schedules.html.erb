@@ -1,18 +1,41 @@
 <p class="ph3 f5 grey pt3 pb3 ma0">
   <span>Company Timezone: <%= company_info.timezone %></span><br>
 </p>
+
+
 <div class='ph3 w-60'>
   <div class="pt3 flex justify-between">
-    <label class="f6 fw6 db mb1 gray ttc">Sunday</label>
+    <label class="f6 fw6 db mb1 gray ttc">First day of week</label>
     <input type="hidden" name="type" value="<%= params[:type] %>" />
     <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= @sunday[:start_time]%>">
+      <%= select_tag "company_info[first_day_of_week]", options_for_select(["Saturday", "Sunday", "Monday"], @company_info.first_day_of_week), :onchange => "this.form.submit();", style: 'width: 30%' %>
+    </div>
+  </div>
+  <% if @company_info.first_day_of_week == 'Saturday'%>
+  <div class="flex justify-between mt3">
+    <label class="f6 fw6 db mb1 gray ttc">Saturday</label>
+    <div class="flex w-60 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][start_time]" type="time" value="<%= @saturday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= @sunday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][end_time]" type="time" value="<%= @saturday[:end_time]%>">
     </div>
   </div>
+  <% end %>
+  <% if @company_info.first_day_of_week != 'Monday'%>
+    <div class="pt3 flex justify-between">
+      <label class="f6 fw6 db mb1 gray ttc">Sunday</label>
+      <input type="hidden" name="type" value="<%= params[:type] %>" />
+      <div class="flex w-60 justify-between">
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= @sunday[:start_time]%>">
+        <div class="flex items-center">
+          <label class="f4 db mb1 ttc">-</label>
+        </div>
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= @sunday[:end_time]%>">
+      </div>
+    </div>
+  <% end %>
   <div class="flex justify-between mt3">
     <label class="f6 fw6 db mb1 gray ttc">Monday</label>
     <div class="flex w-60 justify-between">
@@ -63,6 +86,7 @@
       <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][friday][end_time]" type="time" value="<%= @friday[:end_time]%>">
     </div>
   </div>
+  <% if @company_info.first_day_of_week != 'Saturday'%>
   <div class="flex justify-between mt3">
     <label class="f6 fw6 db mb1 gray ttc">Saturday</label>
     <div class="flex w-60 justify-between">
@@ -73,6 +97,20 @@
       <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][end_time]" type="time" value="<%= @saturday[:end_time]%>">
     </div>
   </div>
+  <% end %>
+  <% if @company_info.first_day_of_week == 'Monday'%>
+    <div class="pt3 flex justify-between">
+      <label class="f6 fw6 db mb1 gray ttc">Sunday</label>
+      <input type="hidden" name="type" value="<%= params[:type] %>" />
+      <div class="flex w-60 justify-between">
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= @sunday[:start_time]%>">
+        <div class="flex items-center">
+          <label class="f4 db mb1 ttc">-</label>
+        </div>
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= @sunday[:end_time]%>">
+      </div>
+    </div>
+  <% end %>
 
 </div>
 

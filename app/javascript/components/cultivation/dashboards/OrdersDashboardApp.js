@@ -10,7 +10,6 @@ import {
 import classNames from 'classnames'
 import uniq from 'lodash.uniq'
 
-
 const dummyData = [
   {
     order_id: 'ORD12333',
@@ -183,8 +182,7 @@ const dummyData = [
   }
 ]
 
-class OrderStore{
-
+class OrderStore {
   updateFilterOptions = (propName, filterOptions) => {
     const updated = {
       ...this.columnFilters,
@@ -196,10 +194,9 @@ class OrderStore{
   getUniqPropValues = propName => {
     return uniq(dummyData.map(x => x[propName]).sort())
   }
-
 }
 
-const orderStore = new OrderStore
+const orderStore = new OrderStore()
 
 @observer
 class OrdersDashboardApp extends React.Component {

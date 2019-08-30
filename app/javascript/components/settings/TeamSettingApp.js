@@ -236,13 +236,26 @@ class TeamSetttingApp extends React.Component {
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 fl w-100">
-            <div className="fl w-80-l w-100-m">
-              <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
-                Team Settings
-              </h5>
-              <p className="mt2 mb4 db body-1 grey">
-                Browses through your team's information here.
-              </p>
+            <div className="fl w-100-l w-100-m">
+              <div className="flex justify-between">
+                <div>
+                  <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
+                    Team Settings
+                  </h5>
+                  <p className="mt2 body-1 grey">
+                    Browses through your team's information here.
+                  </p>
+                </div>
+                <div className="dim flex flex-row items-center pointer">
+                  <i className="material-icons md-gray">keyboard_arrow_left</i>
+                  <a
+                    href="/settings"
+                    className="db tr ttu link button--font grey"
+                  >
+                    Back to Setting
+                  </a>
+                </div>
+              </div>
               <TabButton
                 title="Roles & Permissions"
                 isActive={activeTab === 'rolesTab'}
@@ -292,7 +305,7 @@ class TeamSetttingApp extends React.Component {
                       {isListView ? (
                         <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                           <tbody>
-                            <tr className="striped--light-gray">
+                            <tr className="bg-light-gray">
                               <th />
                               <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                                 Name
@@ -310,13 +323,12 @@ class TeamSetttingApp extends React.Component {
                             {users.map(x => (
                               <tr
                                 key={x.id}
-                                className={classNames(
-                                  'striped--light-gray dim pointer',
-                                  { grey: !x.is_active }
-                                )}
+                                className={classNames('dim pointer', {
+                                  grey: !x.is_active
+                                })}
                                 onClick={this.onClickUserEdit(x.id)}
                               >
-                                <td className="pa2 tc">
+                                <td className="bb b--black-20 pa2 tc">
                                   {x.photo_url ? (
                                     <div>
                                       <img
@@ -341,7 +353,7 @@ class TeamSetttingApp extends React.Component {
                                     />
                                   )}
                                 </td>
-                                <td className="tl pv2 ph3">
+                                <td className="bb b--black-20  tl pv2 ph3">
                                   {x.first_name} {x.last_name}
                                   <span
                                     className={classNames('db f7', {
@@ -351,13 +363,15 @@ class TeamSetttingApp extends React.Component {
                                     {x.is_active ? 'Active' : 'Deactivated'}
                                   </span>
                                 </td>
-                                <td className="tl pv2 ph3">{x.email}</td>
-                                <td className="tl pv2 ph3">
+                                <td className="bb b--black-20 tl pv2 ph3">
+                                  {x.email}
+                                </td>
+                                <td className="bb b--black-20 tl pv2 ph3">
                                   {x.facilities.map(f => (
                                     <FacilityTag key={f} id={f} />
                                   ))}
                                 </td>
-                                <td className="tl pv2 ph3">
+                                <td className="bb b--black-20 tl pv2 ph3">
                                   {x.roles.map(r => (
                                     <RoleTag key={r} id={r} />
                                   ))}
@@ -375,7 +389,7 @@ class TeamSetttingApp extends React.Component {
                                 style={{ marginBottom: '2em' }}
                               >
                                 <GridGroupEmblem size={56} />
-                                <span class="pl3 f3 lh-title gray">
+                                <span className="pl3 f3 lh-title gray">
                                   {x.name}
                                 </span>
                               </div>
@@ -434,7 +448,7 @@ class TeamSetttingApp extends React.Component {
                               style={{ marginBottom: '2em' }}
                             >
                               <GridGroupEmblem size={56} />
-                              <span class="pl3 f3 lh-title gray">
+                              <span className="pl3 f3 lh-title gray">
                                 Unassigned
                               </span>
                             </div>
@@ -509,7 +523,7 @@ class TeamSetttingApp extends React.Component {
                       </div>
                       <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                         <tbody>
-                          <tr className="striped--light-gray">
+                          <tr className="bg-light-gray">
                             <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                               Role
                             </th>
@@ -521,26 +535,32 @@ class TeamSetttingApp extends React.Component {
                           {roles.map(x => (
                             <tr
                               key={x.id}
-                              className={'striped--light-gray dim pointer'}
+                              className={'bb b--black-20 dim pointer'}
                               onClick={this.onClickRoleEdit(x.id)}
                             >
-                              <td className="tl pv2 ph3 w5">
+                              <td className="bb b--black-20 tl pv2 ph3 w5">
                                 {x.name}
                                 {x.built_in && (
-                                  <span className="f7 bg-light-gray gray br2 ml2 ph2">
+                                  <span className="bb b--black-20 f7 bg-light-gray gray br2 ml2 ph2">
                                     Built-In
                                   </span>
                                 )}
                               </td>
-                              <td className="tl pv2 ph3">{x.desc}</td>
+                              <td className="bb b--black-20 tl pv2 ph3">
+                                {x.desc}
+                              </td>
 
                               <td className="tl pv2 ph3 fr">
-                                {!x.built_in && (
+                                {!x.built_in && !x.role_used ? (
                                   <i
                                     className="material-icons md-15 orange dim pointer"
                                     onClick={e => this.onDeleteRole(e, x.id)}
                                   >
                                     delete
+                                  </i>
+                                ) : (
+                                  <i className="material-icons md-15 grey dim pointer">
+                                    lock
                                   </i>
                                 )}
                               </td>

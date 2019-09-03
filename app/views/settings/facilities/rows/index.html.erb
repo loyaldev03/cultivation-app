@@ -51,8 +51,11 @@
               Shelves
             </a>
             <div class="mt0 ba b--light-grey pa3">
-              <div class="tr mb5">
-                <div class="dropdown">
+              <div class="tr mb4">
+                <a href="<%= facility_setup_rooms_info_path(facility_id: current_facility&.id.to_s) %>" class='btn btn--primary pr3'>
+                  Create New Row
+                </a>
+                <div class="dropdown pl3">
                   <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
                     <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
                   </a>
@@ -72,7 +75,7 @@
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Code</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Facility</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Room</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc "># of shelves</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc "># of levels/shelves</th>
                   </tr>
                 </thead>
 

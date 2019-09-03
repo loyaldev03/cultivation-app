@@ -56,31 +56,31 @@
                 </a>
               </div>
               <div class="bg-white">
-                <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100" cellspacing="0">
+                <table class="std-table pv2 ph3 mt1 w-100">
                   <thead>
-                    <tr class="bg-light-gray">
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">#</th>
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Name</th>
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Unit</th>
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Dimension</th>
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Base Unit</th>
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Conversion</th>
-                      <th class="pv2 ph3 subtitle-2 dark-grey tl ttu"></th>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Unit</th>
+                      <th>Dimension</th>
+                      <th>Base Unit</th>
+                      <th>Conversion</th>
+                      <th></th>
                     </tr>
                   </thead>
 
                   <tbody class="lh-copy">
                     <% @list.each_with_index do |f, i| %>
                       <tr data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="pointer">
-                        <td class="bb b--black-20 tl pv2 ph3 gray"><%= i+1 %></td>
-                        <td class="bb b--black-20 tl pv2 ph3"><%= blank(f.name) %></td>
-                        <td class="bb b--black-20 tl pv2 ph3">
+                        <td class="tl pv2 ph3 gray"><%= i+1 %></td>
+                        <td class="tl pv2 ph3"><%= blank(f.name) %></td>
+                        <td class="tl pv2 ph3">
                           <p class="ma0 mb1"><%= blank(f.unit) %></p>
                         </td>
-                        <td class="bb b--black-20 tl pv2 ph3"><%= blank(f.dimension) %></td>
-                        <td class="bb b--black-20 tl pv2 ph3"><%= blank(f.base_unit) %></td>
-                        <td class="bb b--black-20 tl pv2 ph3"><%= blank(f.conversion) %></td>
-                        <td class="bb b--black-20 tr pv2 ph3">
+                        <td class="tl pv2 ph3"><%= blank(f.dimension) %></td>
+                        <td class="tl pv2 ph3"><%= blank(f.base_unit) %></td>
+                        <td class="tl pv2 ph3"><%= blank(f.conversion) %></td>
+                        <td class="tr pv2 ph3">
                           <%if @used_uoms and @used_uoms.include?(f.unit)%>
                             <i class="material-icons md-15 grey dim pointer">lock</i> 
                           <% else %>
@@ -88,9 +88,7 @@
                               <i class="material-icons md-15 orange dim pointer">delete</i>
                             <% end%>
                           <% end %>
-                          
                         </td>
-
                       </tr>
                     <% end %>
                   </tbody>

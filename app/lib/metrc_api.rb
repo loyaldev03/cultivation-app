@@ -10,7 +10,6 @@ class MetrcApi
   }.freeze
 
   class << self
-
     # + Facility
 
     def get_facilities

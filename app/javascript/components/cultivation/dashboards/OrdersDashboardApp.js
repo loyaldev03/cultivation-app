@@ -8,6 +8,7 @@ import {
   TempPackagesHistory
 } from '../../utils'
 import classNames from 'classnames'
+import uniq from 'lodash.uniq'
 
 const dummyData = [
   {
@@ -181,6 +182,22 @@ const dummyData = [
   }
 ]
 
+class OrderStore {
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(dummyData.map(x => x[propName]).sort())
+  }
+}
+
+const orderStore = new OrderStore()
+
 @observer
 class OrdersDashboardApp extends React.Component {
   state = {
@@ -194,7 +211,14 @@ class OrdersDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
+        Header: (
+          <HeaderFilter
+            title="Status"
+            accessor="status"
+            getOptions={orderStore.getUniqPropValues}
+            onUpdate={orderStore.updateFilterOptions}
+          />
+        ),
         accessor: 'status',
         className: 'justify-center',
         minWidth: 88,
@@ -211,28 +235,56 @@ class OrdersDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Use Type',
+        Header: (
+          <HeaderFilter
+            title="Use Type"
+            accessor="use_type"
+            getOptions={orderStore.getUniqPropValues}
+            onUpdate={orderStore.updateFilterOptions}
+          />
+        ),
         accessor: 'use_type',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Order Date',
+        Header: (
+          <HeaderFilter
+            title="Order Date"
+            accessor="order_date"
+            getOptions={orderStore.getUniqPropValues}
+            onUpdate={orderStore.updateFilterOptions}
+          />
+        ),
         accessor: 'order_date',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Fulfilment Date',
+        Header: (
+          <HeaderFilter
+            title="Fullfilment Date"
+            accessor="fulfilment_date"
+            getOptions={orderStore.getUniqPropValues}
+            onUpdate={orderStore.updateFilterOptions}
+          />
+        ),
         accessor: 'fulfilment_date',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Delivery Date',
+        Header: (
+          <HeaderFilter
+            title="Delivery Date"
+            accessor="delivery_date"
+            getOptions={orderStore.getUniqPropValues}
+            onUpdate={orderStore.updateFilterOptions}
+          />
+        ),
         accessor: 'delivery_date',
         className: ' pr3 justify-center',
         width: 110
@@ -260,7 +312,14 @@ class OrdersDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Customer',
+        Header: (
+          <HeaderFilter
+            title="Customer"
+            accessor="customer"
+            getOptions={orderStore.getUniqPropValues}
+            onUpdate={orderStore.updateFilterOptions}
+          />
+        ),
         accessor: 'customer',
         className: ' pr3 justify-center',
         width: 110
@@ -294,7 +353,7 @@ class OrdersDashboardApp extends React.Component {
     // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse" />
         <div className="flex justify-between">
           <input

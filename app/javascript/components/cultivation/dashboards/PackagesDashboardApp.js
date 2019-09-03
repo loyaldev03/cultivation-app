@@ -1,5 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { differenceInDays } from 'date-fns'
+import uniq from 'lodash.uniq'
+import { observable, action, runInAction, computed, toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import {
   decimalFormatter,
@@ -12,6 +14,26 @@ import {
   TempPackagesWidgets
 } from '../../utils'
 import BatchStore from '../batches/BatchStore'
+
+class PackageStore {
+  @observable columnFilters = {}
+
+  updateFilterOptions = (propName, filterOptions) => {
+    console.log(propName, filterOptions)
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    console.log(propName)
+    console.log(dummyData.map(x => x[propName]).sort())
+    return uniq(dummyData.map(x => x[propName]).sort())
+  }
+}
+const packageStore = new PackageStore()
 
 const dummyData = [
   {
@@ -269,7 +291,14 @@ class PackageDashboardApp extends React.Component {
     columns: [
       {
         headerClassName: 'pl3 tl',
-        Header: 'Package',
+        Header: (
+          <HeaderFilter
+            title="Package Name"
+            accessor="package"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'package',
         className: 'dark-grey pl3 fw6',
         minWidth: 150
@@ -283,42 +312,84 @@ class PackageDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Group',
+        Header: (
+          <HeaderFilter
+            title="Group"
+            accessor="group"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'group',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Type',
+        Header: (
+          <HeaderFilter
+            title="Package Type"
+            accessor="type"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'type',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Package Date',
+        Header: (
+          <HeaderFilter
+            title="Package Date"
+            accessor="package_date"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'package_date',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Use Type',
+        Header: (
+          <HeaderFilter
+            title="Use Type"
+            accessor="use_type"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'use_type',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Strain',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'strain',
         className: ' pr3 justify-center',
         width: 120
       },
       {
         headerClassName: '',
-        Header: 'Genome',
+        Header: (
+          <HeaderFilter
+            title="Genome"
+            accessor="genome"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'genome',
         className: ' pr3 justify-center',
         width: 110
@@ -346,14 +417,28 @@ class PackageDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Qty On Hold',
+        Header: (
+          <HeaderFilter
+            title="Qty on Hold"
+            accessor="qty_hold"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'qty_hold',
         className: ' pr3 justify-center',
         width: 110
       },
       {
         headerClassName: '',
-        Header: 'Unsold',
+        Header: (
+          <HeaderFilter
+            title="Unsold"
+            accessor="unsold"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'unsold',
         className: ' pr3 justify-center',
         width: 110
@@ -381,7 +466,14 @@ class PackageDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Location',
+        Header: (
+          <HeaderFilter
+            title="Location"
+            accessor="location"
+            getOptions={packageStore.getUniqPropValues}
+            onUpdate={packageStore.updateFilterOptions}
+          />
+        ),
         accessor: 'location',
         className: ' pr3 justify-center',
         width: 110
@@ -408,7 +500,7 @@ class PackageDashboardApp extends React.Component {
     // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse" />
         <div className="pv4">
           <img src={TempPackagesWidgets} />

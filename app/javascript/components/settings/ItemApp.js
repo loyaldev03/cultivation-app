@@ -172,7 +172,7 @@ class ItemApp extends React.Component {
           </p>
           {/* <div className="fl w-80-l w-100-m"> */}
           <Tabs
-            className="react-tabs--primary"
+            className="react-tabs--primary react-tabs--boxed-panel react-tabs--no-float"
             selectedIndex={tabIndex}
             onSelect={this.onSelectTab}
           >
@@ -181,7 +181,7 @@ class ItemApp extends React.Component {
               <Tab>Product Subcategory</Tab>
             </TabList>
             <TabPanel>
-              <div className="pb4 ph3">
+              <div className="pv4 ph3">
                 <ListingTable
                   data={CategoryStore.filteredList}
                   columns={categoryColumns}
@@ -190,7 +190,7 @@ class ItemApp extends React.Component {
               </div>
             </TabPanel>
             <TabPanel>
-              <div className="pb4 ph3">
+              <div className="pv4 ph3">
                 <ListingTable
                   data={ItemStore.filteredList}
                   columns={itemColumns}

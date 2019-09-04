@@ -93,6 +93,15 @@
   }
 }
 
+.react-tabs--primary.react-tabs--no-float {
+  .react-tabs__tab-list {
+    margin: 0;
+  }
+  .react-tabs__tab-panel {
+    float: none;
+  }
+}
+
 .react-tabs--secret-sause {
   .react-tabs {
     &__tab-list {

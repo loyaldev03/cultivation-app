@@ -12,6 +12,7 @@ import loadHarvestPackages from './actions/loadHarvestPackages'
 
 import ConvertPackagePlanForm from '../../cultivation/tasks_setup/components/ConvertPackagePlanForm'
 import { SlidePanel, HeaderFilter } from '../../utils'
+import harvestStore from '../../cultivation/dashboards/harvests/HarvestStore';
 
 const resolveBatchName = (harvest_batch_id, other_harvest_batch, batches) => {
   if (harvest_batch_id.length > 0) {
@@ -538,13 +539,13 @@ class HarvestPackageSetupApp extends React.Component {
   }
 
   onSave = data => {
-    console.log("Gay")
+    console.log(data)
     if (data.toast) {
       toast(data.toast.message, data.toast.type)
     }
 
     if (data.hideSidebar) {
-      this.setState({ showCreatePackagePlan: false })
+      this.setState({ showCreatePackagePlan: false, showEditor: false })
     }
   }
 

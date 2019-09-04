@@ -230,11 +230,15 @@ class HarvestPackageEditor extends React.Component {
       } else {
         harvestPackageStore.loadHarvestPackages(this.state.facility_id)
         this.setState(this.resetState())
-        window.editorSidebar.close()
+        this.props.onSave({
+          toast: {message: "Package successfully saved!", type: 'success'},
+          hideSidebar: true
+        })
+        //window.editorSidebar.close()
         
-        //harvestPackageStore.loadHarvestPackages(this.state.facility_id)
       }
     })
+    
     event.preventDefault()
   }
 

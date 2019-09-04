@@ -68,7 +68,11 @@ function SearchBox() {
     <div ref={node}>
       <label>
         <span className="grey">Quick Search </span>
-        <input type="search" className="input min-w200 mr2" placeholder="e.g. 1A4FF0100000022000041" />
+        <input
+          type="search"
+          className="input min-w200 mr2"
+          placeholder="e.g. 1A4FF0100000022000041"
+        />
       </label>
       {expand && (
         <div className="notification shadow-3 ba br2 b--light-grey fixed top-3 right-1">

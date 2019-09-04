@@ -435,7 +435,7 @@ Rails.application.routes.draw do
       end
       resources :items, only: [:index, :create, :destroy]
       resources :uoms, only: [:index]
-      resources :catalogues, only: [] do
+      resources :catalogues, only: [:index, :update] do
         collection do
           get 'raw_material_tree'
           get 'raw_materials'

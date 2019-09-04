@@ -4,6 +4,10 @@ module Inventory
 
     attributes :label, :is_active, :category, :sub_category
 
+    attribute :id do |object|
+      object.id.to_s
+    end
+
     attribute :key do |object|
       object.id.to_s
     end
@@ -12,8 +16,9 @@ module Inventory
       object.label
     end
 
-    attribute :uoms do |object|
-      object.uoms.map { |a| {label: a.name, value: a.name} }
+    attribute :uoms do |object, params|
+      uoms = params[:uoms].select { |u| u.dimension == object.uom_dimension }
+      uoms.map { |x| {label: x.name, value: x.name} }
     end
   end
 end

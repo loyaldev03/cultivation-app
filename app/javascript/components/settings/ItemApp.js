@@ -1,13 +1,8 @@
 import React from 'react'
-import isEmpty from 'lodash.isempty'
-import uniq from 'lodash.uniq'
-import classNames from 'classnames'
-import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
-import { toast } from '../utils/toast'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { HeaderFilter, ListingTable } from '../utils'
-import CategoryStore from './ItemCategoryStore'
+import CatalogStore from '../inventory/stores/CatalogStore'
 import ItemStore from './ItemStore'
 
 @observer
@@ -28,22 +23,10 @@ class ItemApp extends React.Component {
       {
         Header: (
           <HeaderFilter
-            title="Category Type"
-            accessor="product_category_type"
-            getOptions={CategoryStore.getUniqPropValues}
-            onUpdate={CategoryStore.updateFilterOptions}
-          />
-        ),
-        minWidth: 180,
-        accessor: 'product_category_type'
-      },
-      {
-        Header: (
-          <HeaderFilter
             title="Active"
             accessor="is_active"
-            getOptions={CategoryStore.getUniqPropValues}
-            onUpdate={CategoryStore.updateFilterOptions}
+            getOptions={CatalogStore.getUniqPropValues}
+            onUpdate={CatalogStore.updateFilterOptions}
           />
         ),
         accessor: 'is_active',
@@ -148,7 +131,7 @@ class ItemApp extends React.Component {
   }
 
   componentDidMount() {
-    CategoryStore.loadCategories()
+    CatalogStore.loadCatalogues('sales_products', 'raw_sales_product')
     ItemStore.loadItems(this.props.facilityId)
   }
 
@@ -156,50 +139,40 @@ class ItemApp extends React.Component {
     this.setState({ tabIndex })
   }
 
-  onToggleActive = (id, value) => e => {
-    CategoryStore.updateCategory(id, !value)
+  onToggleActive = (id, value) => _e => {
+    CatalogStore.updateCatalog(id, !value)
   }
 
   render() {
-    const { facilityId } = this.props
     const { itemColumns, categoryColumns, tabIndex } = this.state
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">
-            Manage your facility's product categories &amp; items
+            Manage your product types &amp; subcategory
           </p>
           {/* <div className="fl w-80-l w-100-m"> */}
           <Tabs
-            className="react-tabs--primary"
+            className="react-tabs--primary react-tabs--boxed-panel react-tabs--no-float"
             selectedIndex={tabIndex}
             onSelect={this.onSelectTab}
           >
             <TabList>
-              <Tab>Item Categories</Tab>
-              <Tab>Items</Tab>
+              <Tab>Product Type</Tab>
+              <Tab>Product Subcategory</Tab>
             </TabList>
             <TabPanel>
-              <div className="pb4 ph3">
-                <p className="grey pt2">
-                  Item categories that are defined by the State, you can decide
-                  which categories your facility will be producing by setting it
-                  to "Active"
-                </p>
+              <div className="pv4 ph3">
                 <ListingTable
-                  data={CategoryStore.filteredList}
+                  data={CatalogStore.filteredList}
                   columns={categoryColumns}
-                  isLoading={CategoryStore.isLoading}
+                  isLoading={CatalogStore.isLoading}
                 />
               </div>
             </TabPanel>
             <TabPanel>
-              <div className="pb4 ph3">
-                <p className="grey pt2">
-                  Items that are automatically generated when you create package
-                  plans.
-                </p>
+              <div className="pv4 ph3">
                 <ListingTable
                   data={ItemStore.filteredList}
                   columns={itemColumns}

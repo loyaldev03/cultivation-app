@@ -131,7 +131,7 @@ class ItemApp extends React.Component {
   }
 
   componentDidMount() {
-    CatalogStore.loadCatalogues("sales_products", "raw_sales_product")
+    CatalogStore.loadCatalogues('sales_products', 'raw_sales_product')
     ItemStore.loadItems(this.props.facilityId)
   }
 
@@ -139,12 +139,11 @@ class ItemApp extends React.Component {
     this.setState({ tabIndex })
   }
 
-  onToggleActive = (id, value) => e => {
-    CatalogStore.updateCategory(id, !value)
+  onToggleActive = (id, value) => _e => {
+    CatalogStore.updateCatalog(id, !value)
   }
 
   render() {
-    const { facilityId } = this.props
     const { itemColumns, categoryColumns, tabIndex } = this.state
     return (
       <React.Fragment>

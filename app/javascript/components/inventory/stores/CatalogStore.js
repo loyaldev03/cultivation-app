@@ -2,7 +2,7 @@ import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
 import { action, observable, computed } from 'mobx'
 import { toast } from '../../utils/toast'
-import { httpPostOptions, httpGetOptions } from '../../utils'
+import { httpPutOptions, httpPostOptions, httpGetOptions } from '../../utils'
 
 class CatalogStore {
   @observable isLoading = false
@@ -35,10 +35,10 @@ class CatalogStore {
   @action
   async updateCatalog(id, isActive) {
     this.isLoading = true
-    const url = `/api/v1/products/item_categoriesxxxx/${id}/updatexxxxxxx`
+    const url = `/api/v1/catalogues/${id}`
     try {
       const params = { is_active: isActive }
-      const response = await (await fetch(url, httpPostOptions(params))).json()
+      const response = await (await fetch(url, httpPutOptions(params))).json()
       if (response && response.data) {
         this.catalogues = this.catalogues.map(x =>
           x.id === response.data.id ? response.data.attributes : x

@@ -4,7 +4,7 @@ import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import Tippy from '@tippy.js/react'
-import { toast, ListingTable } from '../../utils'
+import { toast, ListingTable, CheckboxSelect } from '../../utils'
 import { formatDate } from '../../utils/DateHelper'
 import HarvestPackageEditor from './components/HarvestPackageEditor'
 import harvestPackageStore from './store/HarvestPackageStore'
@@ -53,216 +53,14 @@ class HarvestPackageSetupApp extends React.Component {
     idOpen: '',
     showCreatePackagePlan: false,
     showEditor: false,
-    columns: (locations, harvest_batches) => [
-      {
-        Header: 'Package Name',
-        accessor: 'name',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Package Group"
-            accessor="package_type"
-            getOptions={harvestPackageStore.getUniqPropValues}
-            onUpdate={harvestPackageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'package_type',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Package Type"
-            accessor="label"
-            getOptions={harvestPackageStore.getUniqPropValues}
-            onUpdate={harvestPackageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'label',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Package ID',
-        accessor: 'package_id',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Use Type"
-            accessor="use_type"
-            getOptions={harvestPackageStore.getUniqPropValues}
-            onUpdate={harvestPackageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'use_type',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Strain"
-            accessor="strain"
-            getOptions={harvestPackageStore.getUniqPropValues}
-            onUpdate={harvestPackageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'strain',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Genome Type"
-            accessor="genome_type"
-            getOptions={harvestPackageStore.getUniqPropValues}
-            onUpdate={harvestPackageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'genome_type',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: '% THC',
-        accessor: 'thc',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: '% CBD',
-        accessor: 'cbd',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Qty Sold',
-        accessor: 'qty_sold',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Qty Unsold',
-        accessor: 'qty_unsold',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Total Net Weight',
-        accessor: 'quantity',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Price per Unit',
-        accessor: 'cost_per_unit',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Total Revenue',
-        accessor: 'total_revenue',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Order Date',
-        accessor: 'order_date',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Order #',
-        accessor: 'order_id',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Manifest #',
-        accessor: 'manifest_id',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Status"
-            accessor="status"
-            getOptions={harvestPackageStore.getUniqPropValues}
-            onUpdate={harvestPackageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'status',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: 'Fullfilment Date',
-        accessor: 'fullfilment_date',
-        headerClassName: 'tl',
-        Cell: props => {
-          return <span>{props.value ? props.value : '-'}</span>
-        }
-      },
-      {
-        Header: '',
-        className: 'tc',
-        filterable: false,
-        maxWidth: 45,
-        Cell: this.renderActions
-      }
-    ]
+   
   }
 
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     //loadHarvestPackages(this.props.facility_id)
-    harvestPackageStore.loadHarvestPackages(this.props.facility_id)
+    harvestPackageStore.loadHarvestPackages()
   }
 
   openHarvestPackage = (event, id) => {
@@ -280,6 +78,7 @@ class HarvestPackageSetupApp extends React.Component {
     // somehow pass the id into the form
     this.setState({ showCreatePackagePlan: true, idOpen: id })
   }
+  
 
   tableColumns = (locations, harvest_batches) => [
     {
@@ -294,21 +93,6 @@ class HarvestPackageSetupApp extends React.Component {
       Header: (
         <HeaderFilter
           title="Package Group"
-          accessor="package_type"
-          getOptions={harvestPackageStore.getUniqPropValues}
-          onUpdate={harvestPackageStore.updateFilterOptions}
-        />
-      ),
-      accessor: 'package_type',
-      headerClassName: 'tl',
-      Cell: props => {
-        return <span>{props.value ? props.value : '-'}</span>
-      }
-    },
-    {
-      Header: (
-        <HeaderFilter
-          title="Package Type"
           accessor="label"
           getOptions={harvestPackageStore.getUniqPropValues}
           onUpdate={harvestPackageStore.updateFilterOptions}
@@ -321,8 +105,23 @@ class HarvestPackageSetupApp extends React.Component {
       }
     },
     {
+      Header: (
+        <HeaderFilter
+          title="Package Type"
+          accessor="uom"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'uom',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
       Header: 'Package ID',
-      accessor: 'package_id',
+      accessor: 'package_tag',
       headerClassName: 'tl',
       Cell: props => {
         return <span>{props.value ? props.value : '-'}</span>
@@ -530,6 +329,14 @@ class HarvestPackageSetupApp extends React.Component {
     )
   }
 
+  onFetchData = (state, instance) => {
+    console.log("sdfsdf")
+    harvestPackageStore.setFilter({
+      facility_id: this.props.facility_id
+    })
+    harvestPackageStore.loadHarvestPackages()
+  }
+
   onSave = data => {
     console.log(data)
     if (data.toast) {
@@ -567,14 +374,26 @@ class HarvestPackageSetupApp extends React.Component {
             </div>
           </div>
 
+          <div className="flex justify-between pb3">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Package Name"
+              onChange={e => {
+                harvestPackageStore.searchTerm = e.target.value
+              }}
+            />
+            {/* <CheckboxSelect options={this.tableColumns(locations, harvest_batches)} onChange={this.onToggleColumns} /> */}
+          </div>
+
           <ListingTable
             columns={this.tableColumns(locations, harvest_batches)}
             className="-highlight std-table"
-            pagination={{ position: 'top' }}
+            ajax={true}
+            onFetchData={this.onFetchData}
             isLoading={harvestPackageStore.isLoading}
             data={harvestPackageStore.filteredList}
-            showPagination={false}
-            pageSize={30}
+            pageSize={20}
             minRows={5}
             className="f6 -highlight"
           />

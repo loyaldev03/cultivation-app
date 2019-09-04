@@ -228,7 +228,7 @@ class HarvestPackageEditor extends React.Component {
         this.setState({ errors: data.errors })
         return
       } else {
-        harvestPackageStore.loadHarvestPackages(this.state.facility_id)
+        harvestPackageStore.loadHarvestPackages()
         this.setState(this.resetState())
         this.props.onSave({
           toast: { message: 'Package successfully saved!', type: 'success' },

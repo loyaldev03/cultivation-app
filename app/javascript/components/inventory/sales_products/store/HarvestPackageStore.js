@@ -1,4 +1,4 @@
-import { observable, action, computed, toJS } from 'mobx'
+import { observable, action, computed, toJS, autorun } from 'mobx'
 import { httpGetOptions, formatDate, formatTime } from '../../../utils'
 import isEmpty from 'lodash.isempty'
 
@@ -8,8 +8,31 @@ class HarvestPackageStore {
   @observable harvestPackages = []
   @observable isLoading = false
   @observable columnFilters = {}
-  @observable filter = ''
+  @observable filter = {
+    facility_id: '',
+  }
   @observable searchTerm = ''
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadHarvestPackages()
+        }
+      },
+      { delay: 700 }
+    )
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id
+    }
+  }
 
   isFiltered = record => {
     let f = Object.keys(this.columnFilters).find(key => {
@@ -33,9 +56,9 @@ class HarvestPackageStore {
   }
 
   @action
-  async loadHarvestPackages(facility_id) {
+  async loadHarvestPackages() {
     this.isLoading = true
-    const url = `/api/v1/sales_products/harvest_packages?facility_id=${facility_id}`
+    const url = `/api/v1/sales_products/harvest_packages?facility_id=${this.filter.facility_id}&&search=${this.searchTerm}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -87,7 +110,9 @@ class HarvestPackageStore {
         }
         const filterLc = this.searchTerm.toLowerCase()
         const nameLc = `${b.package_name}`.toLowerCase()
-        const results = nameLc.includes(filterLc)
+        const strainLc = `${b.strain}`.toLowerCase()
+        const genomeLc = `${b.genome_type}`.toLowerCase()
+        const results = nameLc.includes(filterLc) || strainLc.includes(filterLc) || genomeLc.includes(filterLc)
         return results
       })
     } else {

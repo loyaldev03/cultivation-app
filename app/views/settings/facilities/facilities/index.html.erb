@@ -50,45 +50,12 @@
               Shelves
             </a>
             <div class="mt0 ba b--light-grey pa3">
-              <%= render 'layouts/right_sidebar' %>
               <div class="tr mb3">
                 <%= link_to "+ Setup New Facility", facility_setup_new_path, class: 'btn btn--primary' %>
               </div>
 
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
-                <thead>
-                  <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Name</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">ID</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Rooms</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @facilities.each_with_index do |f, i| %>
-                    <tr>
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.name) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
-                      <td class="bb b--black-20 pv3 tc">
-                        <%= f.rooms&.size %>
-                      </td>
-                      <td class="bb b--black-20 pv3 tr pr2">
-                        <% status = if !f.is_complete 
-                                    "Continue setup"
-                                  elsif f.is_enabled
-                                    "active"
-                                  else
-                                    "disabled"
-                                  end
-                        %>
-                        <%= link_to "Configure", facility_setup_new_path(facility_id: f.id), class: "pv2 ph3 bg-orange white button--font bn box--br3 link dim pointer" %>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
+              <%= render 'settings/facilities/facilities/index'%>
+
             </div>
           </div>
         </div>

@@ -1,14 +1,10 @@
 class Settings::Facilities::RoomsController < ApplicationController
   def index
-    @facilities = Facility.all
-    @rooms = []
-
     if params[:facility_id].present?
-      @rooms = @facilities.find(params[:facility_id]).rooms.reverse
+      @rooms = QueryFacilitySummary.call(facility_id: params[:facility_id])
     else
-      @facilities.each do |f|
-        @rooms.concat f.rooms.reverse
-      end
+      f_ids = Facility.all.pluck(:id)
+      @rooms = QueryFacilitySummary.call(facility_id: f_ids)
     end
   end
 

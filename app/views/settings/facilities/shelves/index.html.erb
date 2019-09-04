@@ -72,6 +72,7 @@
                   <tr class="bg-light-gray">
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Code</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Tables</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Capacity</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purpose</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purpose details</th>
@@ -86,6 +87,7 @@
                     <tr data-toggle-right="<%= edit_settings_facility_shelf_path(f)%>" class="dim pointer ">
                       <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
                       <td class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= blank(f.trays.count) %></td>
                       <td class="bb b--black-20 pv3 tc">
                         <%= f.capacity %>
                       </td>

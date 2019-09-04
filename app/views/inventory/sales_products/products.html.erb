@@ -4,7 +4,7 @@
 
 <div class="pa4">
   <% if RoleCheck.call(current_user, Constants::APP_MOD_SALES_PRODUCTS).result[:read] == true %>
-    <%= image_tag 'dummy/product-packages-widget.png', class: 'mw1200 w-100 mb4' %>
+    <%= image_tag 'dummy/product-packages-widget.png', class: 'w-100 mb4' %>
 
     <%= render partial: 'setup_navigation', locals: { selected: 'packages' } %>
 

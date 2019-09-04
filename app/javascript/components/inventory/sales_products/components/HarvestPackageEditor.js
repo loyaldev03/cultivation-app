@@ -13,6 +13,7 @@ import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { LocationPicker, formatDate } from '../../../utils'
 import setupHarvestPackage from '../actions/setupHarvestPackage'
 import getHarvestPackage from '../actions/getHarvestPackage'
+import harvestPackageStore from '../store/HarvestPackageStore';
 
 // TODO: this function need to re-evaluate if it is still useful
 const coalese = option => {
@@ -56,7 +57,8 @@ class HarvestPackageEditor extends React.Component {
       drawdown_uom: null,
       cost_per_unit: '',
       transaction_limit: '',
-      errors: {}
+      errors: {},
+      form_type: 'Add'
     }
   }
 
@@ -136,7 +138,8 @@ class HarvestPackageEditor extends React.Component {
             other_harvest_batch: attr.other_harvest_batch,
             drawdown_quantity: attr.drawdown_quantity,
             drawdown_uom,
-            cost_per_unit: attr.cost_per_unit || ''
+            cost_per_unit: attr.cost_per_unit || '',
+            form_type: 'Edit'
           })
         })
     }
@@ -223,9 +226,13 @@ class HarvestPackageEditor extends React.Component {
     setupHarvestPackage(payload).then(({ status, data }) => {
       if (status >= 400) {
         this.setState({ errors: data.errors })
+        return
       } else {
+        harvestPackageStore.loadHarvestPackages(this.state.facility_id)
         this.setState(this.resetState())
         window.editorSidebar.close()
+        
+        //harvestPackageStore.loadHarvestPackages(this.state.facility_id)
       }
     })
     event.preventDefault()
@@ -404,7 +411,7 @@ class HarvestPackageEditor extends React.Component {
           className="ph4 pv2 bb b--light-gray flex items-center"
           style={{ height: '51px' }}
         >
-          <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Package</h1>
+          <h1 className="f4 fw6 ma0 flex flex-auto ttc">{this.state.form_type} Package</h1>
           <span className="rc-slide-panel__close-button dim" onClick={onClose}>
             <i className="material-icons mid-gray md-18">close</i>
           </span>

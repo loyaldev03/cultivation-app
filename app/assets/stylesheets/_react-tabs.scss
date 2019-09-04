@@ -85,9 +85,9 @@
     margin: 0;
   }
   .react-tabs__tab-panel {
-    border-left: 1px solid $lightGrey;
-    border-right: 1px solid $lightGrey;
-    border-bottom: 1px solid $lightGrey;
+    border-left: 1px solid var(--light-gray);
+    border-right: 1px solid var(--light-gray);
+    border-bottom: 1px solid var(--light-gray);
     float: left;
     width: 100%;
   }
@@ -109,9 +109,9 @@
     }
 
     &__tab-panel {
-      border-left: 1px solid $lightGrey;
-      border-right: 1px solid $lightGrey;
-      border-bottom: 1px solid $lightGrey;
+      border-left: 1px solid var(--light-gray);
+      border-right: 1px solid var(--light-gray);
+      border-bottom: 1px solid var(--light-gray);
     }
   }
 }

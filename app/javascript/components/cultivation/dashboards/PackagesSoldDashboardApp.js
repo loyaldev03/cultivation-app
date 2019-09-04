@@ -10,7 +10,6 @@ import {
 import uniq from 'lodash.uniq'
 import classNames from 'classnames'
 
-
 const dummyData = [
   {
     package: 'CAMPOS DE KUSH',
@@ -21,7 +20,7 @@ const dummyData = [
     order_date: '03/12/2019',
     manifest: 'IS12345',
     strain: 'God Bud',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'indica',
     thc: '9%',
     cbd: '8%',
@@ -42,7 +41,7 @@ const dummyData = [
     order_date: '11/12/2019',
     manifest: 'IS12345',
     strain: 'GLASS VIAL WITH BLACK CHILD RESISTANT CAP',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'indica',
     thc: '9%',
     cbd: '8%',
@@ -63,7 +62,7 @@ const dummyData = [
     order_date: '12/2/2019',
     manifest: 'IS12333',
     strain: 'Alaskan Thunder Fuck',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'sativa',
     thc: '9%',
     cbd: '8%',
@@ -84,7 +83,7 @@ const dummyData = [
     order_date: '21/6/2019',
     manifest: 'IS12333',
     strain: 'Do Si Dos',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'indica',
     thc: '9%',
     cbd: '8%',
@@ -105,7 +104,7 @@ const dummyData = [
     order_date: '11/1/2019',
     manifest: 'IS12333',
     strain: 'Alaskan Thunder Fuck',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'sativa',
     thc: '9%',
     cbd: '8%',
@@ -126,7 +125,7 @@ const dummyData = [
     order_date: '19/3/2019',
     manifest: 'IS12333',
     strain: 'Allen Wrench',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'sativa',
     thc: '9%',
     cbd: '8%',
@@ -147,7 +146,7 @@ const dummyData = [
     order_date: '26/5/2019',
     manifest: 'IS12333',
     strain: 'Allen Wrench',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'sativa',
     thc: '9%',
     cbd: '8%',
@@ -168,7 +167,7 @@ const dummyData = [
     order_date: '18/9/2019',
     manifest: 'IS12333',
     strain: 'Allen Wrench',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'sativa',
     thc: '9%',
     cbd: '8%',
@@ -189,7 +188,7 @@ const dummyData = [
     order_date: '10/11/2019',
     manifest: 'IS12333',
     strain: 'Cherry Pie',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'hybrid',
     thc: '9%',
     cbd: '8%',
@@ -210,7 +209,7 @@ const dummyData = [
     order_date: '11/12/2019',
     manifest: 'IS12333',
     strain: 'Dancehall',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'hybrid',
     thc: '9%',
     cbd: '8%',
@@ -231,7 +230,7 @@ const dummyData = [
     order_date: '26/3/2019',
     manifest: 'IS12345',
     strain: 'Dutch Treat',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'hybrid',
     thc: '9%',
     cbd: '8%',
@@ -252,7 +251,7 @@ const dummyData = [
     order_date: '29/1/2019',
     manifest: 'IS12333',
     strain: 'Gelato',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'hyrbid',
     thc: '9%',
     cbd: '8%',
@@ -273,7 +272,7 @@ const dummyData = [
     order_date: '11/4/2019',
     manifest: 'IS12345',
     strain: 'Gelato',
-    order_id: "ORD12333",
+    order_id: 'ORD12333',
     genome: 'hybrid',
     thc: '9%',
     cbd: '8%',
@@ -301,7 +300,6 @@ class PackageStore {
   }
 }
 const packageStore = new PackageStore()
-
 
 @observer
 class PackageDashboardApp extends React.Component {
@@ -483,7 +481,7 @@ class PackageDashboardApp extends React.Component {
         accessor: 'fullfilment_date',
         className: ' pr3 justify-center',
         width: 110
-      },
+      }
     ]
   }
   componentDidMount() {

@@ -4,8 +4,11 @@ import PropTypes from 'prop-types'
 import StrainList from './components/StrainList'
 import StrainEditor from './components/StrainEditor'
 import loadStrains from './actions/loadStrains'
-import { TempStrainWidgets, NoPermissionMessage, numberFormatter } from '../../utils'
-
+import {
+  TempStrainWidgets,
+  NoPermissionMessage,
+  numberFormatter
+} from '../../utils'
 
 const Strainlist = ({
   title,
@@ -63,33 +66,25 @@ class StrainApp extends React.Component {
             <div className="mb3 flex jutify-between">
               <Strainlist
                 title="Total Strains"
-                count={numberFormatter.format(
-                  10
-                )}
+                count={numberFormatter.format(10)}
                 className="ma3"
                 loaded={true}
               />
               <Strainlist
                 title="Total Indica Strains"
-                count={numberFormatter.format(
-                  5
-                )}
+                count={numberFormatter.format(5)}
                 className="ma3"
                 loaded={true}
               />
               <Strainlist
                 title="Total Sativa Strains"
-                count={numberFormatter.format(
-                  5
-                )}
+                count={numberFormatter.format(5)}
                 className="ma3"
                 loaded={true}
               />
               <Strainlist
                 title="Total Hybrid Strains"
-                count={numberFormatter.format(
-                  5
-                )}
+                count={numberFormatter.format(5)}
                 className="ma3"
                 loaded={true}
               />

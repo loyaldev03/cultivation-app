@@ -49,7 +49,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def harvest_packages
-    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch).
+    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch, :facility_strain).
       in(catalogue: sales_catalogue_ids('raw_sales_product')).
       order(c_at: :desc)
 

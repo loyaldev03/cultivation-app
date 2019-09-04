@@ -16,6 +16,13 @@ const columns = [
     )
   },
   {
+    Header: 'Facility name',
+    accessor: 'attributes.facility_name',
+    className: 'tl ttc tc',
+    maxWidth: 120,
+    headerClassName: 'tr ttc tc'
+  },
+  {
     Header: 'Type',
     accessor: 'attributes.strain_type',
     className: 'tl ttc',

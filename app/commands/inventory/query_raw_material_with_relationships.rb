@@ -39,11 +39,18 @@ module Inventory
                            ).pluck(:id)
                          end
 
-      item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
-        :facility_id => @facility_id,
-        :event_type.in => @event_types,
-        :catalogue_id.in => raw_material_ids,
-      ).order(c_at: :desc)
+      if resource_shared?
+        item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
+          :event_type.in => @event_types,
+          :catalogue_id.in => raw_material_ids,
+        ).order(c_at: :desc)
+      else
+        item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
+          :facility_id => @facility_id,
+          :event_type.in => @event_types,
+          :catalogue_id.in => raw_material_ids,
+        ).order(c_at: :desc)
+      end
 
       vi_item_ids = item_transactions.
         where(ref_type: 'Inventory::VendorInvoiceItem').pluck(:ref_id)
@@ -74,6 +81,12 @@ module Inventory
         item_transactions: item_transaction,
         vendor_invoice_items: vendor_invoice_items.to_a,
       }
+    end
+
+    private
+
+    def resource_shared?
+      CompanyInfo.last.enable_resouces_sharing
     end
   end
 end

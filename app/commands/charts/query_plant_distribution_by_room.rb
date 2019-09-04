@@ -9,7 +9,11 @@ module Charts
     end
 
     def call
-      facilities = Facility.in(id: @facility_id)
+      if resource_shared?
+        facilities = Facility.all
+      else
+        facilities = Facility.in(id: @facility_id)
+      end
 
       json_fac = []
       facilities.each do |facility|
@@ -51,6 +55,12 @@ module Charts
       end
 
       return {children: grouped_plant_json.compact}
+    end
+
+    private
+
+    def resource_shared?
+      CompanyInfo.last.enable_resouces_sharing
     end
   end
 end

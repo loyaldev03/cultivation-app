@@ -1,12 +1,16 @@
 class Api::V1::StrainsController < Api::V1::BaseApiController
   def index
-    strains = if params[:facility_id]
-                Inventory::FacilityStrain.includes(:facility)
-                                         .where(facility_id: params[:facility_id])
-                                         .order(c_at: :desc)
-              else
-                Inventory::FacilityStrain.all.includes(:facility).order(c_at: :desc)
-              end
+    if resource_shared?
+      strains = Inventory::FacilityStrain.all.includes(:facility).order(c_at: :desc)
+    else
+      strains = if params[:facility_id]
+                  Inventory::FacilityStrain.includes(:facility)
+                    .where(facility_id: params[:facility_id])
+                    .order(c_at: :desc)
+                else
+                  Inventory::FacilityStrain.all.includes(:facility).order(c_at: :desc)
+                end
+    end
 
     data = Inventory::FacilityStrainSerializer.new(strains).serialized_json
     render json: data
@@ -36,5 +40,11 @@ class Api::V1::StrainsController < Api::V1::BaseApiController
   def show
     strain = Inventory::FacilityStrain.find(params[:id])
     render json: Inventory::FacilityStrainSerializer.new(strain).serialized_json
+  end
+
+  private
+
+  def resource_shared?
+    CompanyInfo.last.enable_resouces_sharing
   end
 end

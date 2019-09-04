@@ -11,7 +11,13 @@ module Charts
     def call
       date = Time.current
       range = @args[:range].humanize.downcase
-      batches_with_facility = Cultivation::Batch.in(facility_id: @facility_id).includes(:plants)
+
+      if resource_shared?
+        batches_with_facility = Cultivation::Batch.all.includes(:plants)
+      else
+        batches_with_facility = Cultivation::Batch.in(facility_id: @facility_id).includes(:plants)
+      end
+
       phases = Constants::FACILITY_ROOMS_ORDER - ['mother', 'storage', 'vault']
       if (range == 'this week')
         batches = batches_with_facility.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)
@@ -50,6 +56,10 @@ module Charts
         total_batches: total_batches,
         query_batches: json_array,
       }
+    end
+
+    def resource_shared?
+      CompanyInfo.last.enable_resouces_sharing
     end
   end
 end

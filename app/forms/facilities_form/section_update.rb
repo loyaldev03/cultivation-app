@@ -1,17 +1,17 @@
 module FacilitiesForm
   class SectionUpdate
     include ActiveModel::Model
-    attr_accessor :section
+    attr_accessor :section,
+                  :desc,
+                  :custom_purpose,
+                  :storage_types,
+                  :cultivation_types,
+                  :rows
 
     delegate :id,
              :name,
              :code,
-             :desc,
              :purpose,
-             :custom_purpose,
-             :storage_types,
-             :cultivation_types,
-             :rows,
              to: :section,
              prefix: false
 
@@ -33,7 +33,7 @@ module FacilitiesForm
         end
       end
 
-      FacilitiesForm::SectionUpdate.new(section: section)
+      FacilitiesForm::SectionUpdate.new(section: section, desc: section.room.desc, rows: section.room.rows)
     end
 
     def purpose_details
@@ -55,22 +55,22 @@ module FacilitiesForm
     end
 
     def purpose_editable?
-      section.rows.empty?
+      section.room.rows.empty?
     end
 
     def cultivation_editable?
-      section.rows.empty?
+      section.room.rows.empty?
     end
 
     def storage_editable?
-      section.rows.empty?
+      section.room.rows.empty?
     end
 
     private
 
     def set_attributes(params)
       if purpose_editable?
-        self.section.attributes = params.slice(:name, :code, :desc, :purpose, :custom_purpose)
+        self.section.attributes = params.slice(:name, :code, :purpose, :custom_purpose)
 
         # Clear other values with user switched prupose
         if purpose == 'cultivation'
@@ -79,7 +79,11 @@ module FacilitiesForm
           self.section.storage_types = params[:storage_types].reject { |x| x.blank? }
         end
       else
-        self.section.attributes = params.slice(:name, :code, :desc)
+        self.section.attributes = params.slice(:name, :code)
+      end
+
+      if params[:desc].present?
+        self.section.room.update(desc: params[:desc])
       end
     end
 

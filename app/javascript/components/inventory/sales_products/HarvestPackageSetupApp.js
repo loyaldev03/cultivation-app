@@ -12,7 +12,7 @@ import loadHarvestPackages from './actions/loadHarvestPackages'
 
 import ConvertPackagePlanForm from '../../cultivation/tasks_setup/components/ConvertPackagePlanForm'
 import { SlidePanel, HeaderFilter } from '../../utils'
-import harvestStore from '../../cultivation/dashboards/harvests/HarvestStore';
+import harvestStore from '../../cultivation/dashboards/harvests/HarvestStore'
 
 const resolveBatchName = (harvest_batch_id, other_harvest_batch, batches) => {
   if (harvest_batch_id.length > 0) {
@@ -59,7 +59,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'name',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -74,7 +74,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'package_type',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -89,7 +89,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'label',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -97,7 +97,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'package_id',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -112,7 +112,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'use_type',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -127,8 +127,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'strain',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
-          
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -143,7 +142,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'genome_type',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -151,7 +150,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'thc',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -159,7 +158,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'cbd',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -167,7 +166,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'qty_sold',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -175,7 +174,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'qty_unsold',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -183,7 +182,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'quantity',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -191,7 +190,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'cost_per_unit',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -199,7 +198,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'total_revenue',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -207,7 +206,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'order_date',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -215,7 +214,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'order_id',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -223,7 +222,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'manifest_id',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -238,7 +237,7 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'status',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
       },
       {
@@ -246,9 +245,9 @@ class HarvestPackageSetupApp extends React.Component {
         accessor: 'fullfilment_date',
         headerClassName: 'tl',
         Cell: props => {
-          return(<span>{props.value? props.value : "-"}</span>)
+          return <span>{props.value ? props.value : '-'}</span>
         }
-      }, 
+      },
       {
         Header: '',
         className: 'tc',
@@ -257,7 +256,6 @@ class HarvestPackageSetupApp extends React.Component {
         Cell: this.renderActions
       }
     ]
-    
   }
 
   componentDidMount() {
@@ -265,7 +263,6 @@ class HarvestPackageSetupApp extends React.Component {
     window.editorSidebar.setup(sidebarNode)
     //loadHarvestPackages(this.props.facility_id)
     harvestPackageStore.loadHarvestPackages(this.props.facility_id)
-
   }
 
   openHarvestPackage = (event, id) => {
@@ -285,13 +282,12 @@ class HarvestPackageSetupApp extends React.Component {
   }
 
   tableColumns = (locations, harvest_batches) => [
-
     {
       Header: 'Package Name',
       accessor: 'package_name',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -306,7 +302,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'package_type',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -321,7 +317,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'label',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -329,7 +325,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'package_id',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -344,7 +340,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'use_type',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -359,8 +355,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'strain',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
-        
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -375,7 +370,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'genome_type',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -383,7 +378,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'thc',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -391,7 +386,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'cbd',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -399,7 +394,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'qty_sold',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -407,7 +402,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'qty_unsold',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -415,7 +410,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'quantity',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -423,7 +418,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'cost_per_unit',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -431,7 +426,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'total_revenue',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -439,7 +434,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'order_date',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -447,7 +442,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'order_id',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -455,7 +450,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'manifest_id',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -470,7 +465,7 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'status',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
     },
     {
@@ -478,9 +473,9 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'fullfilment_date',
       headerClassName: 'tl',
       Cell: props => {
-        return(<span>{props.value? props.value : "-"}</span>)
+        return <span>{props.value ? props.value : '-'}</span>
       }
-    }, 
+    },
     {
       Header: 'Actions',
       className: 'tc',
@@ -488,11 +483,8 @@ class HarvestPackageSetupApp extends React.Component {
       filterable: false,
       maxWidth: 45,
       Cell: this.renderActions
-      
     }
   ]
-
-  
 
   renderActions = record => {
     const id = toJS(record.original.id)
@@ -552,7 +544,7 @@ class HarvestPackageSetupApp extends React.Component {
   render() {
     const { locations, harvest_batches, salesProductPermission } = this.props
     const { showEditor, showCreatePackagePlan, idOpen, columns } = this.state
-    
+
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />

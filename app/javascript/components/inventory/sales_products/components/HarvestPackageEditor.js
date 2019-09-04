@@ -13,7 +13,7 @@ import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { LocationPicker, formatDate } from '../../../utils'
 import setupHarvestPackage from '../actions/setupHarvestPackage'
 import getHarvestPackage from '../actions/getHarvestPackage'
-import harvestPackageStore from '../store/HarvestPackageStore';
+import harvestPackageStore from '../store/HarvestPackageStore'
 
 // TODO: this function need to re-evaluate if it is still useful
 const coalese = option => {
@@ -231,14 +231,13 @@ class HarvestPackageEditor extends React.Component {
         harvestPackageStore.loadHarvestPackages(this.state.facility_id)
         this.setState(this.resetState())
         this.props.onSave({
-          toast: {message: "Package successfully saved!", type: 'success'},
+          toast: { message: 'Package successfully saved!', type: 'success' },
           hideSidebar: true
         })
         //window.editorSidebar.close()
-        
       }
     })
-    
+
     event.preventDefault()
   }
 
@@ -415,7 +414,9 @@ class HarvestPackageEditor extends React.Component {
           className="ph4 pv2 bb b--light-gray flex items-center"
           style={{ height: '51px' }}
         >
-          <h1 className="f4 fw6 ma0 flex flex-auto ttc">{this.state.form_type} Package</h1>
+          <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+            {this.state.form_type} Package
+          </h1>
           <span className="rc-slide-panel__close-button dim" onClick={onClose}>
             <i className="material-icons mid-gray md-18">close</i>
           </span>

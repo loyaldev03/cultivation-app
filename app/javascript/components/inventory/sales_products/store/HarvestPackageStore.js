@@ -11,7 +11,6 @@ class HarvestPackageStore {
   @observable filter = ''
   @observable searchTerm = ''
 
-
   isFiltered = record => {
     let f = Object.keys(this.columnFilters).find(key => {
       const filter = this.columnFilters[key].filter(x => x.value === false)
@@ -32,8 +31,6 @@ class HarvestPackageStore {
     console.log(propName)
     return uniq(this.filteredList.map(x => x[propName]).sort())
   }
-
-  
 
   @action
   async loadHarvestPackages(facility_id) {
@@ -80,8 +77,6 @@ class HarvestPackageStore {
   // get bindable() {
   //   return this.harvestPackages.slice()
   // }
-
-  
 
   @computed
   get filteredList() {

@@ -1,13 +1,8 @@
 import React from 'react'
-import isEmpty from 'lodash.isempty'
-import uniq from 'lodash.uniq'
-import classNames from 'classnames'
-import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
-import { toast } from '../utils/toast'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { HeaderFilter, ListingTable } from '../utils'
-import CategoryStore from './ItemCategoryStore'
+import CatalogStore from '../inventory/stores/CatalogStore'
 import ItemStore from './ItemStore'
 
 @observer
@@ -28,22 +23,10 @@ class ItemApp extends React.Component {
       {
         Header: (
           <HeaderFilter
-            title="Category Type"
-            accessor="product_category_type"
-            getOptions={CategoryStore.getUniqPropValues}
-            onUpdate={CategoryStore.updateFilterOptions}
-          />
-        ),
-        minWidth: 180,
-        accessor: 'product_category_type'
-      },
-      {
-        Header: (
-          <HeaderFilter
             title="Active"
             accessor="is_active"
-            getOptions={CategoryStore.getUniqPropValues}
-            onUpdate={CategoryStore.updateFilterOptions}
+            getOptions={CatalogStore.getUniqPropValues}
+            onUpdate={CatalogStore.updateFilterOptions}
           />
         ),
         accessor: 'is_active',
@@ -148,7 +131,7 @@ class ItemApp extends React.Component {
   }
 
   componentDidMount() {
-    CategoryStore.loadCategories()
+    CatalogStore.loadCatalogues("sales_products", "raw_sales_product")
     ItemStore.loadItems(this.props.facilityId)
   }
 
@@ -157,7 +140,7 @@ class ItemApp extends React.Component {
   }
 
   onToggleActive = (id, value) => e => {
-    CategoryStore.updateCategory(id, !value)
+    CatalogStore.updateCategory(id, !value)
   }
 
   render() {
@@ -183,9 +166,9 @@ class ItemApp extends React.Component {
             <TabPanel>
               <div className="pv4 ph3">
                 <ListingTable
-                  data={CategoryStore.filteredList}
+                  data={CatalogStore.filteredList}
                   columns={categoryColumns}
-                  isLoading={CategoryStore.isLoading}
+                  isLoading={CatalogStore.isLoading}
                 />
               </div>
             </TabPanel>

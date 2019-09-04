@@ -4,6 +4,10 @@ module Inventory
 
     attributes :label, :is_active, :category, :sub_category
 
+    attribute :id do |object|
+      object.id.to_s
+    end
+
     attribute :key do |object|
       object.id.to_s
     end

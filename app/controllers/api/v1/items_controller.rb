@@ -5,8 +5,7 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   def index
     batch = Cultivation::Batch.find(params[:batch_id])
     raw_materials = Inventory::Catalogue.raw_materials.where(facility_id: batch.facility_id)
-    options = {}
-    options[:is_collection]
+    options = {params: {uoms: Common::UnitOfMeasure.all.to_a}}
     raw_material_json = Inventory::CatalogueSerializer.new(raw_materials, options).serialized_json
     render json: raw_material_json
   end

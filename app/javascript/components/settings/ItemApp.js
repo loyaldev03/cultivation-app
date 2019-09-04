@@ -168,7 +168,7 @@ class ItemApp extends React.Component {
         <div id="toast" className="toast" />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">
-            Manage your facility's product categories &amp; items
+            Manage your product types &amp; subcategory
           </p>
           {/* <div className="fl w-80-l w-100-m"> */}
           <Tabs
@@ -177,16 +177,11 @@ class ItemApp extends React.Component {
             onSelect={this.onSelectTab}
           >
             <TabList>
-              <Tab>Item Categories</Tab>
-              <Tab>Items</Tab>
+              <Tab>Product Type</Tab>
+              <Tab>Product Subcategory</Tab>
             </TabList>
             <TabPanel>
               <div className="pb4 ph3">
-                <p className="grey pt2">
-                  Item categories that are defined by the State, you can decide
-                  which categories your facility will be producing by setting it
-                  to "Active"
-                </p>
                 <ListingTable
                   data={CategoryStore.filteredList}
                   columns={categoryColumns}
@@ -196,10 +191,6 @@ class ItemApp extends React.Component {
             </TabPanel>
             <TabPanel>
               <div className="pb4 ph3">
-                <p className="grey pt2">
-                  Items that are automatically generated when you create package
-                  plans.
-                </p>
                 <ListingTable
                   data={ItemStore.filteredList}
                   columns={itemColumns}

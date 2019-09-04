@@ -12,8 +12,9 @@ module Inventory
       object.label
     end
 
-    attribute :uoms do |object|
-      object.uoms.map { |a| {label: a.name, value: a.name} }
+    attribute :uoms do |object, params|
+      uoms = params[:uoms].select { |u| u.dimension == object.uom_dimension }
+      uoms.map { |x| {label: x.name, value: x.name} }
     end
   end
 end

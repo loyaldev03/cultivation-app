@@ -1,25 +1,33 @@
 <div class="bg-white">
-  <table class="f6 w-100 center" cellspacing="0">
+  <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2" cellspacing="0">
     <thead>
-      <tr>
-        <th class="f6 dark-grey bb b--black-20 pv3 tl pl4 pr3 w-10">#</th>
-        <th class="f6 dark-grey bb b--black-20 pv3 tl">Name</th>
-        <th class="f6 dark-grey bb b--black-20 pv3 tl w-10">ID</th>
-        <th class="f6 dark-grey bb b--black-20 pv3 tl w-10">License</th>
-        <th class="f6 dark-grey bb b--black-20 pv3 tr w-10">Rooms</th>
-        <th class="f6 dark-grey bb b--black-20 w-20"></th>
+      <tr class="bg-light-gray">
+        <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Name</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey ttu tc ">ID</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey ttu tc ">License</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Rooms</th>
+        <th class="fpv2 ph3 subtitle-2 dark-grey ttu tc"></th>
       </tr>
     </thead>
 
     <tbody class="lh-copy">
       <% @facilities.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>" class="pointer">
-          <td class="f6 tl pv3 bb b--black-20 pl4 pr3 gray"><%= i+1 %></td>
-          <td class="f6 tl pv3 bb b--black-20 "><%= blank(f.name) %></td>
-          <td class="f6 tl pv3 bb b--black-20 "><%= blank(f.code) %></td>
-          <td class="f6 tl pv3 bb b--black-20 "><%= blank(f.site_license) %></td>
-          <td class="f6 tr pv3 bb b--black-20"><%= f.rooms&.size %></td>
-          <td class="f6 tr pv3 pr4  bb b--light-grey">
+        <% if f.is_enabled == true%>
+          <% color = 'pointer'%>
+        <%else%>
+          <% color = 'pointer gray'%>
+        <%end%>
+        <tr class="<%= color %>">
+          <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>" class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
+          <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>" class="bb b--black-20 pv3 tc">
+            <%= blank(f.name) %>
+            <span class ="<%= f.is_enabled ? 'db f7 green' : 'db f7'%>" ><%= f.is_enabled ? 'Active' : 'Deactivated'%></span>
+          </td>
+          <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>" class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
+          <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>" class="bb b--black-20 pv3 tc"><%= blank(f.site_license) %></td>
+          <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>" class="bb b--black-20 pv3 tc"><%= f.rooms&.size %></td>
+          <td class="bb b--black-20 pv3 tc">
             <% status = if !f.is_complete 
                         "Continue setup"
                       elsif f.is_enabled
@@ -28,6 +36,7 @@
                         "disabled"
                       end
             %>
+            <%= link_to "Configure", facility_setup_new_path(facility_id: f.id), class: "pv2 ph3 bg-orange white button--font bn box--br3 link dim pointer" %>
           </td>
 
         </tr>

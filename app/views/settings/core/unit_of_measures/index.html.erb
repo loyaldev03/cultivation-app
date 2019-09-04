@@ -71,15 +71,15 @@
 
                   <tbody class="lh-copy">
                     <% @list.each_with_index do |f, i| %>
-                      <tr data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="pointer">
-                        <td class="tl pv2 ph3 gray"><%= i+1 %></td>
-                        <td class="tl pv2 ph3"><%= blank(f.name) %></td>
-                        <td class="tl pv2 ph3">
+                      <tr class="pointer">
+                        <td data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="tl pv2 ph3 gray"><%= i+1 %></td>
+                        <td data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.name) %></td>
+                        <td data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="tl pv2 ph3">
                           <p class="ma0 mb1"><%= blank(f.unit) %></p>
                         </td>
-                        <td class="tl pv2 ph3"><%= blank(f.dimension) %></td>
-                        <td class="tl pv2 ph3"><%= blank(f.base_unit) %></td>
-                        <td class="tl pv2 ph3"><%= blank(f.conversion) %></td>
+                        <td data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.dimension) %></td>
+                        <td data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.base_unit) %></td>
+                        <td data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.conversion) %></td>
                         <td class="tr pv2 ph3">
                           <%if @used_uoms and @used_uoms.include?(f.unit)%>
                             <i class="material-icons md-15 grey dim pointer">lock</i> 

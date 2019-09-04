@@ -62,11 +62,11 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
 
   def harvest_packages
     if resource_shared?
-      items = Inventory::ItemTransaction.all.includes(:product, :catalogue, :harvest_batch).
+      items = Inventory::ItemTransaction.all.includes(:product, :catalogue, :harvest_batch, :facility_strain).
         in(catalogue: sales_catalogue_ids('raw_sales_product')).
         order(c_at: :desc)
     else
-      items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch).
+      items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch, :facility_strain).
         in(catalogue: sales_catalogue_ids('raw_sales_product')).
         order(c_at: :desc)
     end

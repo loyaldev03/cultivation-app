@@ -21,7 +21,7 @@
               <div class="flex items-center">
                 <% if company_info&.is_active %>
                 <span class="f5 fw4 gray flex items-center">
-                  <i class="material-icons mr2 black-20 md-18">location_on</i>
+                  <i class="material-icons mr2 black-20 md-18">business</i>
                   <%= select_tag :facility_id, options_for_select(['All'] + Facility.where(id: {'$in': current_user.facilities}).pluck(:name, :id), selected: params[:facility_id]), :onchange => "changeDefaultFacility()"%>
 
                 </span>
@@ -30,6 +30,8 @@
 
               <% if content_for? :breadcrumb %>
                 <div class="flex flex-row items-center">
+                  <%= react_component 'utils/SearchBox' %>
+
                   <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>
                     <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
                   <% end %>

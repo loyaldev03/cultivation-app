@@ -50,57 +50,47 @@
               Shelves
             </a>
             <div class="mt0 ba b--light-grey pa3">
-              <%= render 'layouts/right_sidebar' %>
-              <div class="tr mb5">
-                <div class="dropdown pl2">
-                  <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
-                    <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
-                  </a>
-                  <div class="dropdown-content">
-                    <%= link_to "Show all", settings_facility_rooms_path(type: 'rooms'), class: "dim pv3 ph3 bb b--light-gray f6 gray tc" %>
-                    <% Facility.all.each do |f| %>
-                      <%= link_to blank(f.name), settings_facility_rooms_path(facility_id: f.id, type: 'rooms'), class: "dim pv3 ph3 bb b--light-gray blue f6 tc" %>
-                    <% end %>
-                  </div>
-                </div>
 
-                <div class="dropdown ml2">
-                  <a class="dropbtn link ba dib bw1 b b--light-gray  gray pa2 ph3 br4">
-                    <%= params[:filter].present? ? params[:filter] : 'Filter' %>
-                  </a>
-                  <div class="dropdown-content">
-                    <% ["Completed", "Incomplete"].each do |f| %>
-                      <%= link_to f, settings_facility_rooms_path(filter: f, type: 'rooms'), class: "dim pv3 ph3 bb b--light-gray blue f6 tc" %>
-                    <% end %>
-                  </div>
-                </div>
+              <%= render 'layouts/right_sidebar' %>
+              <div class="tr mb4">
+                <a href="<%= facility_setup_rooms_info_path(facility_id: current_facility&.id.to_s) %>" class='btn btn--primary pr3'>
+                  Create New Room
+                </a>
               </div>
 
               <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt4 w-100 mb2">
                 <thead>
                   <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Name</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Code</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Description</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Facility</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Sections</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">#</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Name</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Code</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Purpose</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Facility Name</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Plant Capacity</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Total Used</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Total Available</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Sections</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Rows</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Shelves</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Tables</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <% @rooms.each_with_index do |f, i| %>
-                    <tr data-toggle-right="<%= edit_settings_facility_room_path(f.id)%>" class="dim pointer">
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.name) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
-                      <td class="bb b--black-20 pv3 tc">
-                        <p class="ma0 mb1"><%= f.desc %></p>
-                      </td>
-                      <td class="bb b--black-20 pv3 tc"><%= f.facility.name %></td>
-                      <td class="bb b--black-20 pv3 tc">
-                        <%= f.sections.count %>
-                      </td>
+                  <% @rooms.result.map.each_with_index do |f, i| %>
+                    <tr data-toggle-right="<%= edit_settings_facility_room_path(f[:room_id])%>" class="dim pointer">
+                      <td class="bb b--black-20 pv3 tc gray"><%= i+1%></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:room_name] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:room_code] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:purpose] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:facility_name] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:total_capacity] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:planned_capacity] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:available_capacity] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:section_count] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:row_count] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:shelf_count] %></td>
+                      <td class="bb b--black-20 pv3 tc"><%= f[:tray_count] %></td>
                     </tr>
                   <% end %>
                 </tbody>

@@ -12,6 +12,9 @@ module Inventory
       :cost_per_unit,
       :breakdowns
 
+    attributes :id do |object|
+      object.id&.to_s
+    end
     attribute :harvest_batch_id do |object|
       object.harvest_batch_id.to_s
     end
@@ -35,12 +38,44 @@ module Inventory
       }
     end
 
+    attribute :catalogue_id do |object|
+      object.catalogue_id.to_s
+    end
+
+    attribute :label do |object|
+      object.catalogue.label
+    end
+
     attribute :location_name do |object, params|
       if params[:query] && object.location_id
         params[:query].get_location_code(object.location_id)
       else
         ''
       end
+    end
+
+    attribute :package_name do |object|
+      object.product.name
+    end
+
+    attribute :genome_type do |object|
+      object.product.facility_strain&.strain_type
+    end
+
+    attribute :strain do |object|
+      object.product.facility_strain&.strain_name
+    end
+
+    attribute :thc do |object|
+      object.product.facility_strain&.thc
+    end
+
+    attribute :cbd do |object|
+      object.product.facility_strain&.cbd
+    end
+
+    attribute :package_type do |object|
+      object.product.package_type
     end
 
     attribute :product do |object|

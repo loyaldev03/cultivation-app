@@ -176,7 +176,7 @@ class RoomsDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: '# of Trays',
+        Header: '# of Tables',
         accessor: 'tray_count',
         className: 'justify-end pr3',
         width: 96,
@@ -211,7 +211,7 @@ class RoomsDashboardApp extends React.Component {
     const { currentFacilityId } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className={this.props.className}>
         <div className="flex flex-row-reverse" />
         <div className="mt4 flex justify-between">
           <input

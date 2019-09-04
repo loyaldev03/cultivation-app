@@ -78,8 +78,8 @@
                 </div>
                 <table class="std-table pv2 ph3 w-100">
                   <tbody>
-                    <tr>
-                      <th width="50%">Name</th>
+                    <tr class="striped--light-gray" style="width: auto">
+                      <th>Name</th>
                       <%# <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Uom Dimension</th>
                       <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Default Price</th> %>
                       <th>Active</th>
@@ -87,7 +87,7 @@
                     </tr>
                     <% @raw_materials.each_with_index do |f, i| %>
                       <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%> <%= f.category if f.category != '' and f.sub_category != ''%>">
-                        <td class="dark-grey tl">
+                        <td data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>" class="dark-grey tl">
                           <div class="flex justify-between-ns">
                             <% if f.category == '' and f.sub_category == ''%>
                               <div>
@@ -97,40 +97,18 @@
                                 <%= f.label%>
                               </div>
                             <% elsif f.category != '' and f.sub_category == ''%>
-                              <div class='ml4' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
+                              <div class='ml4'>
                                 <% if @second_levels.include?(f.key.try(:capitalize))%>
                                   <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
                                 <% end %>
                                 <%= f.label%>
                               </div>
                             <% elsif f.category != '' and f.sub_category != ''%>
-                              <div class='ml5' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
+                              <div class='ml5'>
                                 <%= f.label%>
                               </div>
                             <% end %>
-                            <i
-                              class="material-icons pointer dotted" style="font-size: 16px;" data-id="<%= f.id%>"
-                            >
-                              more_horiz
-                            </i>
                           </div>
-                            <div class="dropdown f6">
-                              <div id="<%= f.id%>" class="dropdown-content box--shadow-header">
-                                <%= link_to 'Edit', edit_settings_core_raw_material_path(f.id),
-                                      data: {remote: true, 'toggle-right': edit_settings_core_raw_material_path(f.id)},
-                                      class: 'ttc grey subtitle-2 pv3 tc dim' 
-                                %>
-                                <%# unless  @second_levels.include?(f.key.try(:capitalize)) %> 
-                                  <%#= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
-                                      data: {remote: true, confirm: 'Are you sure?'},
-                                      class: 'grey subtitle-2 pv3 tc dim' %>
-                                <%#end%>
-                                <%# <% if @specials.include?(f.key.try(:capitalize)) %> 
-                                  <%# <%= link_to 'Add Subcategory', new_settings_core_raw_material_path(parent_id: f.id),
-                                        data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
-                                        class: 'ttc grey subtitle-2 pv3 tc dim' %>
-                              </div>
-                            </div>
                         </td>
                         <%# <td class="pv2 ph3 dark-grey tl">
                           <%= f.uom_dimension %>

@@ -80,44 +80,24 @@
 
                 <table class="std-table pv2 ph3 w-100">
                   <tbody>
-                    <tr class="striped--light-gray">
-                      <th width="50%">Name</th>
+                    <tr class="striped--light-gray" style="width: auto">
+                      <th>Name</th>
                       <th>Active</th>
                       <th></th>
                     </tr>
                   <% @grow_methods.each_with_index do |f, i| %>
                     <tr class="pointer rt-tr-group">
-                      <td class="pv2 ph3 dark-grey tl">
-                        <div class="flex justify-between-ns">
-                          <div class='' data-toggle-right="<%= edit_settings_core_grow_method_path(f.id)%>">
-                            <%= f.name%>
-                          </div>
-                          <i
-                            class="material-icons pointer dotted" style="font-size: 16px;" data-id="<%= f.id%>"
-                          >
-                            more_horiz
-                          </i>
-                        </div>
-                          <div class="dropdown f6">
-                            <div id="<%= f.id%>" class="dropdown-content box--shadow-header">
-                              <%= link_to 'Edit', edit_settings_core_grow_method_path(f.id),
-                                    data: {remote: true, 'toggle-right': edit_settings_core_grow_method_path(f.id)},
-                                    class: 'ttc grey subtitle-2 pv3 tc dim' 
-                              %>
-                              <%= link_to "Delete", settings_core_grow_method_path(f.id), method: :delete, 
-                                  data: {remote: true, confirm: 'Are you sure?'},
-                                  class: 'grey subtitle-2 pv3 tc dim' %>
-                            </div>
-                          </div>
+                      <td data-toggle-right="<%= edit_settings_core_grow_method_path(f.id)%>" class="pv2 ph3 dark-grey tl">
+                        <%= f.name%>
                       </td>
-                      <td class="pv2 ph3 dark-grey tr">
+                      <td data-toggle-right="<%= edit_settings_core_grow_method_path(f.id)%>" class="pv2 ph3 dark-grey tc">
                         <% if f.is_active? %>
                           <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="grow_method[ids][]" checked>
                         <% else %>
                           <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="grow_method[ids][]">
                         <% end %>
                       </td>
-                      <td class="pv2 ph3 dark-grey tr">
+                      <td class="pv2 ph3 dark-grey tc">
                         <%if @used_grow_methods and @used_grow_methods.include?(f.name.parameterize.underscore)%>
                           <i class="material-icons md-15 grey dim pointer">lock</i> 
                         <% else %>

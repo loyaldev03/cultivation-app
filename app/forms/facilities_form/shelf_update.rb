@@ -29,11 +29,11 @@ module FacilitiesForm
         end
       end
 
-      FacilitiesForm::ShelfUpdate.new(shelf: shelf, desc: shelf.row.room.desc, capacity: shelf.capacity, code: shelf.code)
+      FacilitiesForm::ShelfUpdate.new(shelf: shelf, desc: shelf.row.room.desc, code: shelf.code)
     end
 
     def update(params)
-      self.shelf.attributes = params.slice(:code, :capacity)
+      self.shelf.attributes = params.slice(:code)
 
       if valid?
         shelf.save!

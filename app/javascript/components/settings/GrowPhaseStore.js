@@ -9,6 +9,7 @@ class GrowPhaseStore {
   @observable isDataLoaded = false
   @observable columnFilters = {}
   @observable items = []
+  @observable grow_phase = []
 
   @action
   async loadGrowPhase() {
@@ -29,6 +30,59 @@ class GrowPhaseStore {
     } finally {
       this.isLoading = false
     }
+  }
+
+  @action
+  async getGrowPhase(id) {
+    this.isLoading = false
+    const url = `/api/v1/grow_phases/${id}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        this.grow_phase = response.data.attributes
+        this.isDataLoaded = true
+      } else {
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.grow_phase = []
+      this.isDataLoaded = false
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async saveGrowPhase(data) {
+    return fetch(`/api/v1/grow_phases/${data.id}/update`, {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data
+          }
+        })
+      })
+      .then(result => {
+        const { status, data } = result
+        if (status == 200) {
+          if (data.id) {
+            this.update(data.data)
+          } else {
+            this.prepend(data.data)
+          }
+        }
+
+        return result
+      })
   }
 
   @action
@@ -57,6 +111,8 @@ class GrowPhaseStore {
     }
   }
 
+  grow_phases = observable([])
+
   /* + column filters */
   isFiltered = record => {
     let f = Object.keys(this.columnFilters).find(key => {
@@ -76,6 +132,11 @@ class GrowPhaseStore {
 
   getUniqPropValues = propName => {
     return uniq(this.filteredList.map(x => x[propName]).sort())
+  }
+  
+  @action
+  prepend(grow_phase) {
+    this.grow_phases.replace([grow_phase, ...this.grow_phases.slice()])
   }
 
   @computed

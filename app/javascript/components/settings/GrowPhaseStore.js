@@ -133,7 +133,7 @@ class GrowPhaseStore {
   getUniqPropValues = propName => {
     return uniq(this.filteredList.map(x => x[propName]).sort())
   }
-  
+
   @action
   prepend(grow_phase) {
     this.grow_phases.replace([grow_phase, ...this.grow_phases.slice()])

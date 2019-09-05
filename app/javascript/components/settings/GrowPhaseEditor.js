@@ -22,7 +22,7 @@ export default class GrowPhaseEditor extends React.Component {
           id,
           name,
           number_of_days,
-          is_active,
+          is_active
         } = GrowPhaseStore.grow_phase
 
         this.setState({
@@ -84,12 +84,7 @@ export default class GrowPhaseEditor extends React.Component {
   }
 
   getValues() {
-    const {
-      id,
-      name,
-      number_of_days,
-      is_active,
-    } = this.state
+    const { id, name, number_of_days, is_active } = this.state
 
     let errors = {}
 
@@ -124,7 +119,8 @@ export default class GrowPhaseEditor extends React.Component {
         <div className="ph4 mt3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray">Name</label>
-            <input readOnly
+            <input
+              readOnly
               type="text"
               name="name"
               value={this.state.name}

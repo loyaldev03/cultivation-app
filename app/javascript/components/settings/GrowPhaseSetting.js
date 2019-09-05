@@ -7,7 +7,6 @@ import classNames from 'classnames'
 
 @observer
 class GrowPhaseSetting extends React.Component {
-
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
@@ -37,31 +36,22 @@ class GrowPhaseSetting extends React.Component {
           <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt4 w-100 mb2">
             <tbody>
               <tr className="bg-light-gray">
-                <th className="pv2 ph3 subtitle-2 dark-grey tc">
-                  Name
-                </th>
+                <th className="pv2 ph3 subtitle-2 dark-grey tc">Name</th>
                 <th className="pv2 ph3 subtitle-2 dark-grey tc">
                   # Days Of Propagation
                 </th>
                 <th className="pv2 ph3 subtitle-2 dark-grey tc">
                   Avg Days of Propagation
                 </th>
-                <th className="pv2 ph3 subtitle-2 dark-grey tc">
-                  Active
-                </th>
+                <th className="pv2 ph3 subtitle-2 dark-grey tc">Active</th>
               </tr>
               {GrowPhaseStore.filteredList.map((x, i) => (
                 <tr
                   key={x.id}
-                  className={classNames(
-                    'dim pointer',
-                    { grey: !x.is_active }
-                  )}
+                  className={classNames('dim pointer', { grey: !x.is_active })}
                   onClick={e => this.openGrowPhase(e, i)}
                 >
-                  <td className="bb b--black-20 pv3 tc ttc">
-                    {x.name}
-                  </td>
+                  <td className="bb b--black-20 pv3 tc ttc">{x.name}</td>
                   <td className="bb b--black-20 pv3 tc">{x.number_of_days}</td>
                   <td className="bb b--black-20 pv3 tc">
                     {x.number_of_days_avg}
@@ -85,9 +75,7 @@ class GrowPhaseSetting extends React.Component {
             </tbody>
           </table>
         </div>
-        <GrowPhaseEditor
-          isOpened={false}
-        />
+        <GrowPhaseEditor isOpened={false} />
       </React.Fragment>
     )
   }

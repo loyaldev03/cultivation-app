@@ -26,7 +26,13 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
 
     catalogue_ids = sales_catalogue_ids(type)
     products = []
-    products = Inventory::Product.where(facility_id: params[:facility_id]).in(catalogue: catalogue_ids)
+
+    if resource_shared?
+      products = Inventory::Product.in(catalogue: catalogue_ids)
+    else
+      products = Inventory::Product.where(facility_id: params[:facility_id]).in(catalogue: catalogue_ids)
+    end
+
     if params[:filter].blank?
       products = products.limit(7).order(name: :asc)
     else
@@ -36,9 +42,15 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def converted_products
-    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue).
-      in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
-      order(c_at: :desc)
+    if resource_shared?
+      items = Inventory::ItemTransaction.all.includes(:product, :catalogue).
+        in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
+        order(c_at: :desc)
+    else
+      items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue).
+        in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
+        order(c_at: :desc)
+    end
 
     serialized_json = Inventory::HarvestPackageSerializer.new(
       items,
@@ -49,9 +61,15 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def harvest_packages
-    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch, :facility_strain).
-      in(catalogue: sales_catalogue_ids('raw_sales_product')).
-      order(c_at: :desc)
+    if resource_shared?
+      items = Inventory::ItemTransaction.all.includes(:product, :catalogue, :harvest_batch, :facility_strain).
+        in(catalogue: sales_catalogue_ids('raw_sales_product')).
+        order(c_at: :desc)
+    else
+      items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch, :facility_strain).
+        in(catalogue: sales_catalogue_ids('raw_sales_product')).
+        order(c_at: :desc)
+    end
 
     serialized_json = Inventory::HarvestPackageSerializer.new(
       items,
@@ -288,5 +306,9 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
 
   def request_with_errors(errors)
     params[:sales_product].to_unsafe_h.merge(errors: errors)
+  end
+
+  def resource_shared?
+    CompanyInfo.last.enable_resouces_sharing
   end
 end

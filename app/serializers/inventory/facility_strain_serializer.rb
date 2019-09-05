@@ -15,7 +15,7 @@ module Inventory
     end
 
     attribute :facility_name do |object|
-      object.facility.name
+      object.facility&.name
     end
 
     attribute :facility_id do |object|
@@ -23,7 +23,7 @@ module Inventory
     end
 
     attribute :label do |object|
-      "#{object.strain_name} (#{object.facility.name})"
+      "#{object&.strain_name} (#{object.facility&.name})"
     end
   end
 end

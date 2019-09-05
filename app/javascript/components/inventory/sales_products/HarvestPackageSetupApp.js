@@ -52,8 +52,7 @@ class HarvestPackageSetupApp extends React.Component {
   state = {
     idOpen: '',
     showCreatePackagePlan: false,
-    showEditor: false,
-   
+    showEditor: false
   }
 
   componentDidMount() {
@@ -78,7 +77,6 @@ class HarvestPackageSetupApp extends React.Component {
     // somehow pass the id into the form
     this.setState({ showCreatePackagePlan: true, idOpen: id })
   }
-  
 
   tableColumns = (locations, harvest_batches) => [
     {
@@ -330,7 +328,7 @@ class HarvestPackageSetupApp extends React.Component {
   }
 
   onFetchData = (state, instance) => {
-    console.log("sdfsdf")
+    console.log('sdfsdf')
     harvestPackageStore.setFilter({
       facility_id: this.props.facility_id
     })

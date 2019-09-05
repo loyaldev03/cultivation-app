@@ -124,6 +124,18 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: ItemCategorySerializer.new(categories).serialized_json
   end
 
+  def product_categories
+    records = Inventory::ProductCategory.all
+    render json: Inventory::ProductCategorySerializer.new(records).serialized_json
+  end
+
+  def update_product_categories
+    category = Inventory::ProductCategory.find_or_create_by(name: params[:name])
+    category.is_active = params[:is_active]
+    category.save!
+    render json: Inventory::ProductCategorySerializer.new(category).serialized_json
+  end
+
   def items
     items = Inventory::Item.
       where(facility_id: params[:facility_id]).

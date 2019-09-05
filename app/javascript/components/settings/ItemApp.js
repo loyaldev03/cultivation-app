@@ -2,11 +2,15 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import { HeaderFilter, ListingTable } from '../utils'
-import CatalogStore from '../inventory/stores/CatalogStore'
+import CategoryStore from '../inventory/stores/ProductCategoryStore'
 import ItemStore from './ItemStore'
 
 @observer
 class ItemApp extends React.Component {
+  constructor(props) {
+    super(props)
+    CategoryStore.setDefaults(this.props.defaultCategories)
+  }
   state = {
     tabIndex: 0,
     categoryColumns: [
@@ -25,8 +29,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Active"
             accessor="is_active"
-            getOptions={CatalogStore.getUniqPropValues}
-            onUpdate={CatalogStore.updateFilterOptions}
+            getOptions={CategoryStore.getUniqPropValues}
+            onUpdate={CategoryStore.updateFilterOptions}
           />
         ),
         accessor: 'is_active',
@@ -42,7 +46,7 @@ class ItemApp extends React.Component {
               />
               <label
                 className="toggle-button"
-                onClick={this.onToggleActive(props.row.id, props.value)}
+                onClick={this.onToggleActive(props.row)}
               />
             </div>
           )
@@ -131,7 +135,7 @@ class ItemApp extends React.Component {
   }
 
   componentDidMount() {
-    CatalogStore.loadCatalogues('sales_products', 'raw_sales_product')
+    CategoryStore.loadCategories()
     ItemStore.loadItems(this.props.facilityId)
   }
 
@@ -139,12 +143,19 @@ class ItemApp extends React.Component {
     this.setState({ tabIndex })
   }
 
-  onToggleActive = (id, value) => _e => {
-    CatalogStore.updateCatalog(id, !value)
+  onToggleActive = (data) => _e => {
+    const record = {
+      id: data.id,
+      name: data.name,
+      is_active: !data.is_active,
+    }
+    CategoryStore.updateCategory(record)
   }
 
   render() {
     const { itemColumns, categoryColumns, tabIndex } = this.state
+    const { facilityId } = this.props
+    console.log("TODO: Fix wrong facilityId when selecting All")
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -159,15 +170,18 @@ class ItemApp extends React.Component {
             onSelect={this.onSelectTab}
           >
             <TabList>
-              <Tab>Product Type</Tab>
-              <Tab>Product Subcategory</Tab>
+              <Tab>Product Category</Tab>
+              <Tab>Subcategory</Tab>
             </TabList>
             <TabPanel>
-              <div className="pv4 ph3">
+              <div className="pa3 tr">
+                <a href="#0" className="btn btn--primary">+ Add New</a>
+              </div>
+              <div className="pb4 ph3">
                 <ListingTable
-                  data={CatalogStore.filteredList}
+                  data={CategoryStore.filteredList}
                   columns={categoryColumns}
-                  isLoading={CatalogStore.isLoading}
+                  isLoading={CategoryStore.isLoading}
                 />
               </div>
             </TabPanel>

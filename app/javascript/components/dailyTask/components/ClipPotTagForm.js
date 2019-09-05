@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
 import ClippingStore from '../stores/ClippingStore'
 import PlantTagList from './PlantTagList'
-import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
+import { AdjustmentMessage, InputBarcode } from '../../utils'
 import dailyTasksStore from '../stores/DailyTasksStore'
 
 @observer

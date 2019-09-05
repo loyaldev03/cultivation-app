@@ -1,9 +1,16 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import { HeaderFilter, ListingTable } from '../utils'
-import CategoryStore from '../inventory/stores/ProductCategoryStore'
+import {
+  formatDate3,
+  SlidePanel,
+  SlidePanelFooter,
+  HeaderFilter,
+  ListingTable
+} from '../utils'
 import ItemStore from './ItemStore'
+import CategoryStore from '../inventory/stores/ProductCategoryStore'
+import AddEditProductCategoryForm from './AddEditProductCategoryForm'
 
 @observer
 class ItemApp extends React.Component {
@@ -13,6 +20,7 @@ class ItemApp extends React.Component {
   }
   state = {
     tabIndex: 0,
+    showEditPanel: true,
     categoryColumns: [
       {
         accessor: 'id',
@@ -143,27 +151,37 @@ class ItemApp extends React.Component {
     this.setState({ tabIndex })
   }
 
-  onToggleActive = (data) => _e => {
+  onToggleActive = data => _e => {
     const record = {
       id: data.id,
       name: data.name,
-      is_active: !data.is_active,
+      is_active: !data.is_active
     }
     CategoryStore.updateCategory(record)
   }
 
   render() {
-    const { itemColumns, categoryColumns, tabIndex } = this.state
+    const { itemColumns, categoryColumns, tabIndex, showEditPanel } = this.state
     const { facilityId } = this.props
-    console.log("TODO: Fix wrong facilityId when selecting All")
+    console.log('TODO: Fix wrong facilityId when selecting All')
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
+        <SlidePanel
+          width="500px"
+          show={showEditPanel}
+          renderBody={props => (
+            <AddEditProductCategoryForm
+              ref={form => (this.editForm = form)}
+              onClose={() => this.setState({ showEditPanel: false })}
+              onSave={() => console.log('onSave')}
+            />
+          )}
+        />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">
             Manage your product types &amp; subcategory
           </p>
-          {/* <div className="fl w-80-l w-100-m"> */}
           <Tabs
             className="react-tabs--primary react-tabs--boxed-panel react-tabs--no-float"
             selectedIndex={tabIndex}
@@ -175,7 +193,13 @@ class ItemApp extends React.Component {
             </TabList>
             <TabPanel>
               <div className="pa3 tr">
-                <a href="#0" className="btn btn--primary">+ Add New</a>
+                <a
+                  href="#0"
+                  className="btn btn--primary"
+                  onClick={() => this.setState({ showEditPanel: true })}
+                >
+                  + Add New
+                </a>
               </div>
               <div className="pb4 ph3">
                 <ListingTable

@@ -280,7 +280,7 @@ class BatchesDashboardApp extends React.Component {
                 count={numberFormatter.format(
                   DahboardBatchStore.data_batches_info.active_batches
                 )}
-                className="ma3"
+                className="mt4 mb5 ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
@@ -288,7 +288,7 @@ class BatchesDashboardApp extends React.Component {
                 count={numberFormatter.format(
                   DahboardBatchStore.data_batches_info.draft_batches
                 )}
-                className="ma3"
+                className="mt4 mb5 ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
             </div>
@@ -299,7 +299,7 @@ class BatchesDashboardApp extends React.Component {
                 count={numberFormatter.format(
                   DahboardBatchStore.data_batches_info.scheduled_batches
                 )}
-                className="ma3"
+                className="mt4 mb5 ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
@@ -307,7 +307,7 @@ class BatchesDashboardApp extends React.Component {
                 count={`$ ${decimalFormatter.format(
                   DahboardBatchStore.data_batches_info.active_batches_cost
                 )}`}
-                className="mt4 mb5"
+                className="mt4 mb5 ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
                 dataclassName="f3"
                 headerClassName="mt4"

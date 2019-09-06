@@ -11,6 +11,8 @@ export default class PlantByPhaseWidget extends React.Component {
 
   render() {
     const options = {
+      maintainAspectRatio: false,
+      responsive: true,
       legend: {
         display: false
       },
@@ -64,7 +66,10 @@ export default class PlantByPhaseWidget extends React.Component {
         </div>
         <br />
         {DashboardPlantStore.batch_distribution_loaded ? (
-          <Bar data={DashboardPlantStore.batchDistribution} options={options} />
+          <div style={{overflow:'auto', height: '260px'}}>
+            <Bar data={DashboardPlantStore.batchDistribution} options={options} />
+          </div>
+          
         ) : (
           'loading...'
         )}

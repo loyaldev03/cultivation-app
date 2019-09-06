@@ -8,12 +8,12 @@ import {
   HeaderFilter,
   ListingTable
 } from '../utils'
-import ItemStore from './ItemStore'
+import MetrcItemStore from './ItemStore'
 import CategoryStore from '../inventory/stores/ProductCategoryStore'
 import AddEditProductCategoryForm from './AddEditProductCategoryForm'
 
 @observer
-class ItemApp extends React.Component {
+class ProductCategoryApp extends React.Component {
   constructor(props) {
     super(props)
     CategoryStore.setDefaults(this.props.defaultCategories)
@@ -77,8 +77,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Item Category"
             accessor="product_category_name"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'product_category_name',
@@ -89,8 +89,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Strain"
             accessor="strain_name"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'strain_name',
@@ -102,8 +102,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Unit of Measure"
             accessor="uom_name"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'uom_name',
@@ -115,8 +115,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Quantity Type"
             accessor="quantity_type"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'quantity_type',
@@ -128,8 +128,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Added to Metrc"
             accessor="updated_metrc"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'updated_metrc',
@@ -144,7 +144,7 @@ class ItemApp extends React.Component {
 
   componentDidMount() {
     CategoryStore.loadCategories()
-    ItemStore.loadItems(this.props.facilityId)
+    MetrcItemStore.loadItems(this.props.facilityId)
   }
 
   onSelectTab = tabIndex => {
@@ -160,23 +160,31 @@ class ItemApp extends React.Component {
     CategoryStore.updateCategory(record)
   }
 
+  onSave = formData => {
+    this.setState({
+      showEditPanel: false
+    })
+  }
+
   render() {
     const { itemColumns, categoryColumns, tabIndex, showEditPanel } = this.state
     const { facilityId } = this.props
-    console.log('TODO: Fix wrong facilityId when selecting All')
+    console.warn('FIXME: Wrong facilityId when selecting All')
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
         <SlidePanel
           width="500px"
           show={showEditPanel}
-          renderBody={props => (
-            <AddEditProductCategoryForm
-              ref={form => (this.editForm = form)}
-              onClose={() => this.setState({ showEditPanel: false })}
-              onSave={() => console.log('onSave')}
-            />
-          )}
+          renderBody={props =>
+            showEditPanel ? (
+              <AddEditProductCategoryForm
+                ref={form => (this.editForm = form)}
+                onClose={() => this.setState({ showEditPanel: false })}
+                onSave={this.onSave}
+              />
+            ) : null
+          }
         />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">
@@ -196,7 +204,11 @@ class ItemApp extends React.Component {
                 <a
                   href="#0"
                   className="btn btn--primary"
-                  onClick={() => this.setState({ showEditPanel: true })}
+                  onClick={() =>
+                    this.setState({
+                      showEditPanel: true
+                    })
+                  }
                 >
                   + Add New
                 </a>
@@ -212,9 +224,9 @@ class ItemApp extends React.Component {
             <TabPanel>
               <div className="pv4 ph3">
                 <ListingTable
-                  data={ItemStore.filteredList}
+                  data={MetrcItemStore.filteredList}
                   columns={itemColumns}
-                  isLoading={ItemStore.isLoading}
+                  isLoading={MetrcItemStore.isLoading}
                 />
               </div>
             </TabPanel>
@@ -230,4 +242,4 @@ class ItemApp extends React.Component {
   }
 }
 
-export default ItemApp
+export default ProductCategoryApp

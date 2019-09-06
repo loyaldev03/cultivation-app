@@ -4,7 +4,7 @@ import { action, observable, computed } from 'mobx'
 import { toast } from '../utils/toast'
 import { httpPostOptions, httpGetOptions } from '../utils'
 
-class ItemCategoryStore {
+class MetrcItemCategoryStore {
   @observable isLoading = false
   @observable isDataLoaded = false
   @observable columnFilters = {}
@@ -96,7 +96,18 @@ class ItemCategoryStore {
   }
 
   @computed
-  get weightOptions() {
+  get allSelectOptions() {
+    const res = this.categories.map(c => {
+      return {
+        value: c.name,
+        label: c.name
+      }
+    })
+    return res
+  }
+
+  @computed
+  get weightBasedSelectOptions() {
     const res = this.categories
       .filter(
         c =>
@@ -115,6 +126,6 @@ class ItemCategoryStore {
   /* - column filters */
 }
 
-const categoryStore = new ItemCategoryStore()
+const store = new MetrcItemCategoryStore()
 
-export default categoryStore
+export default store

@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import CategoryStore from '../../../settings/ItemCategoryStore'
+import CategoryStore from '../../../settings/MetrcItemCategoryStore'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import Select from 'react-select'
 
@@ -12,7 +12,7 @@ class ItemCategorySelector extends React.Component {
 
   async componentDidMount() {
     await CategoryStore.loadCategories()
-    if (CategoryStore.isDataLoaded) {
+    if (CategoryStore.isDataLoaded && this.props.excludes) {
       CategoryStore.excludes = this.props.excludes
     }
   }
@@ -37,12 +37,11 @@ class ItemCategorySelector extends React.Component {
   }
 
   render() {
-    const { excludes } = this.props
     return (
       <div>
         <Select
           styles={reactSelectStyle}
-          options={CategoryStore.weightOptions}
+          options={CategoryStore.allSelectOptions}
           value={this.state.selectedCategory}
           onChange={this.onChange}
         />

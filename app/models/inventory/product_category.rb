@@ -6,6 +6,9 @@ module Inventory
     # Product category is unique
     field :name, type: String
 
+    # Weight based / Count based
+    field :quantity_type, type: String
+
     # Indicate if this record is currently in use by other record.
     # This would decide if this record can be deleted.
     field :is_used, type: Boolean, default: -> { false }

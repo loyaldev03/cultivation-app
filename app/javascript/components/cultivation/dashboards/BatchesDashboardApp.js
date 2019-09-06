@@ -4,6 +4,8 @@ import { observer } from 'mobx-react'
 import BatchPhases from './batches/BatchPhases'
 import DahboardBatchStore from './batches/DahboardBatchStore'
 import BatchStore from '../batches/BatchStore'
+import StrainDistribution from '../../manager_dashboard/StrainDistribution'
+
 import {
   decimalFormatter,
   numberFormatter,
@@ -247,7 +249,7 @@ class BatchesDashboardApp extends React.Component {
     const { currentFacilityId, batchesPermission } = this.props
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         {Array.isArray(this.props.currentFacilityId)
           ? ''
           : batchesPermission.create && (
@@ -309,6 +311,20 @@ class BatchesDashboardApp extends React.Component {
                 loaded={DahboardBatchStore.batches_info_loaded}
                 dataclassName="f3"
                 headerClassName="mt4"
+              />
+            </div>
+          </div>
+          <div className="w-50">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              id="strain_chart"
+              style={{ height: 420 + 'px' }}
+            >
+              <h1 className="f5 fw6 dark-grey">Strain Distribution</h1>
+              <StrainDistribution
+                url={`/api/v1/dashboard_charts/strain_distribution?facility_id=${
+                  this.props.currentFacilityId
+                }`}
               />
             </div>
           </div>

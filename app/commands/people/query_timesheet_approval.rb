@@ -68,8 +68,9 @@ module People
     end
 
     def aggregate_query
+      facilities = @args[:facility_id].split(',').map { |x| x.to_bson_id }
       User.collection.aggregate([
-        {"$match": {"facilities": {"$all": [@args[:facility_id].to_bson_id]}}},
+        {"$match": {"facilities": {"$in": facilities}}},
         match_search,
         {"$lookup": {from: 'common_work_logs',
                      as: 'work_logs',

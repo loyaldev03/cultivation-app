@@ -14,12 +14,13 @@ module People
     end
 
     def call
-      result = aggregate_call
+      facilities = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      result = aggregate_call(facilities)
       main = []
       data = []
       result.to_a[0][:data].map do |user|
         ontime_arrival_data = ontime_arrival(user[:work_schedules], user[:cultivation_time_logs])
-        task_on_time_data = task_on_time(user[:tasks_ontime], user[:cultivation_time_logs], user[:_id])
+        task_on_time_data = task_on_time(facilities, user[:tasks_ontime], user[:cultivation_time_logs], user[:_id])
         capacity_hours = capacity_hours(user[:actual_capacity_hours], user[:work_schedules])
         absents = absents(user[:work_schedules])
         ot_hours = ot_hours(user[:cultivation_time_logs])
@@ -46,10 +47,10 @@ module People
       main.first
     end
 
-    def aggregate_call
-      tcapacity_ids = Cultivation::Task.where(facility_id: @args[:facility_id].to_bson_id).pluck(:id)
+    def aggregate_call(facilities)
+      tcapacity_ids = Cultivation::Task.where(facility_id: facilities).pluck(:id)
       User.collection.aggregate([
-        {"$match": {"facilities": {"$all": [@args[:facility_id].to_bson_id]}}},
+        {"$match": {"facilities": {"$in": facilities}}},
         match_search,
         #tasks_ontime
         {"$lookup": {from: 'cultivation_tasks',
@@ -59,7 +60,6 @@ module People
           {"$match": {
             "$expr": {
               "$and": [
-                {"$eq": ['$facility_id', @args[:facility_id].to_bson_id]},
                 {"$eq": ['$work_status', 'done']},
               ],
             },
@@ -163,17 +163,22 @@ module People
       return percentage
     end
 
-    def task_on_time(tasks, time_logs, u_id)
+    def task_on_time(facilities, tasks, time_logs, u_id)
+      filter_tasks = tasks&.select { |x| facilities.include?(x[:facility_id]) }
       count = 0
       tc = 0
-      tasks&.map do |task|
-        timelogs = time_logs&.select { |tl| tl[:task_id] == task[:_id].to_bson_id && tl[:user_id] == u_id.to_bson_id }
-        timelogs&.map { |time_log| count += ((time_log[:end_time] - time_log[:start_time]) / 1.hour) }
-        if count <= task[:estimated_hours]
-          tc += 1
+      if filter_tasks.count == 0 or filter_tasks.nil?
+        return 0
+      else
+        filter_tasks&.map do |task|
+          timelogs = time_logs&.select { |tl| tl[:task_id] == task[:_id].to_bson_id && tl[:user_id] == u_id.to_bson_id }
+          timelogs&.map { |time_log| count += ((time_log[:end_time] - time_log[:start_time]) / 1.hour) }
+          if count <= task[:estimated_hours]
+            tc += 1
+          end
         end
+        (100 - ((filter_tasks.count - tc) * 100 / filter_tasks.count).ceil)
       end
-      (100 - ((tasks.count - tc) * 100 / tasks.count).ceil) unless tasks.nil?
     end
 
     def capacity_hours(actual, work_schedules)

@@ -11,6 +11,8 @@ export default class IssueByGroup extends React.Component {
 
   render() {
     const options = {
+      maintainAspectRatio: false,
+      responsive: true,
       legend: {
         position: 'bottom'
       },
@@ -43,7 +45,9 @@ export default class IssueByGroup extends React.Component {
         </div>
         {DashboardIssueStore.issue_by_group_loaded ? (
           DashboardIssueStore.data_issue_by_group.length > 0 ? (
-            <Line data={DashboardIssueStore.IssueByGroup} options={options} />
+            <div style={{ overflow: 'auto', height: '320px' }}>
+              <Line data={DashboardIssueStore.IssueByGroup} options={options} />
+            </div>
           ) : (
             'Graph is not available'
           )

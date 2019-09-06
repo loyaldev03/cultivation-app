@@ -1,6 +1,6 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
-import { action, observable, computed } from 'mobx'
+import { action, observable, computed, toJS } from 'mobx'
 import { toast } from '../../utils/toast'
 import { httpPostOptions, httpGetOptions } from '../../utils'
 
@@ -50,16 +50,28 @@ class ProductCategoryStore {
       }
       return 0
     })
-    this.categories = results.sort((a, b) => Number(b.is_active) - Number(a.is_active))
+    this.categories = results.sort(
+      (a, b) => Number(b.is_active) - Number(a.is_active)
+    )
   }
 
   @action
-  async updateCategory(record) {
+  async updateCategory(name, updates) {
     this.isLoading = true
-    const url = `/api/v1/products/product_categories/update`
+    const found = this.getCategoryByName(name)
+    const payload = found ? Object.assign(toJS(found), updates) : updates
+    const url = '/api/v1/products/product_categories/update'
     try {
-      const response = await (await fetch(url, httpPostOptions(record))).json()
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response && response.data) {
+        if (!found) {
+          // If new record push to array
+          console.log('before push', this.categories.length)
+          console.log(response.data.attributes)
+          this.categories.push(response.data.attributes)
+          console.log('after push', this.categories.length)
+        }
+        // Update array in place
         this.categories = this.categories.map(x => {
           return x.name === response.data.attributes.name
             ? response.data.attributes
@@ -93,10 +105,8 @@ class ProductCategoryStore {
     })
   }
 
-  getCatalogueByName(name) {
-    const found = this.categories.find(
-      x => x.name === name || x.name.toUpperCase() === name.toUpperCase()
-    )
+  getCategoryByName(name) {
+    const found = this.categories.find(x => x.name === name)
     return found
   }
 

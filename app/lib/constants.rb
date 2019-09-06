@@ -305,22 +305,13 @@ module Constants
     {code: :other, name: 'Other'},
   ].freeze
 
-  # TODO: To be removed
-  SALES_PRODUCT_TYPE = [
-    {code: :blunt, name: 'Blunt'},
-    {code: :tinctures, name: 'Tinctures'},
-    {code: :topical, name: 'Topical'},
-    {code: :concentrate, name: 'Concentrate'},
-    {code: :edibles_liquid, name: 'Edibles - Liquid'},
-    {code: :edibles_solid, name: 'Edibles - Solid'},
-    {code: :extract, name: 'Extract'},
-    {code: :flowers, name: 'Flowers'},
-    {code: :oil, name: 'Oil'},
-    {code: :part, name: 'Part'},
-    {code: :preroll, name: 'Preroll'},
-    {code: :shakes_trim, name: 'Shakes/Trim'},
-    {code: :wax, name: 'Wax'},
-    {code: :other, name: 'Other'},
+  DEFAULT_PRODUCT_CATEGORIES = [
+    "Leaf",
+    "Parts",
+    "Pre-roll",
+    "Flowers",
+    "Shakes",
+    "Trim",
   ].freeze
 
   SALES_PRODUCT_CATEGORY = [

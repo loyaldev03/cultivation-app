@@ -1,30 +1,30 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
 import { action, observable, computed } from 'mobx'
-import { toast } from '../../utils/toast'
-import { httpPutOptions, httpPostOptions, httpGetOptions } from '../../utils'
+import { toast } from '../utils/toast'
+import { httpPostOptions, httpGetOptions } from '../utils'
 
-class CatalogStore {
+class MetrcItemCategoryStore {
   @observable isLoading = false
   @observable isDataLoaded = false
   @observable columnFilters = {}
-  @observable catalogues = []
+  @observable categories = []
   @observable excludes = []
 
   @action
-  async loadCatalogues(catalogue_type, category) {
+  async loadCategories() {
     this.isLoading = true
-    const url = `/api/v1/catalogues?catalogue_type=${catalogue_type}&category=${category}`
+    const url = '/api/v1/products/item_categories'
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        this.catalogues = response.data.map(x => x.attributes)
+        this.categories = response.data.map(x => x.attributes)
         this.isDataLoaded = true
       } else {
         this.isDataLoaded = false
       }
     } catch (error) {
-      this.catalogues = []
+      this.categories = []
       this.isDataLoaded = false
       console.error(error)
     } finally {
@@ -33,14 +33,14 @@ class CatalogStore {
   }
 
   @action
-  async updateCatalog(id, isActive) {
+  async updateCategory(id, isActive) {
     this.isLoading = true
-    const url = `/api/v1/catalogues/${id}`
+    const url = `/api/v1/products/item_categories/${id}/update`
     try {
       const params = { is_active: isActive }
-      const response = await (await fetch(url, httpPutOptions(params))).json()
+      const response = await (await fetch(url, httpPostOptions(params))).json()
       if (response && response.data) {
-        this.catalogues = this.catalogues.map(x =>
+        this.categories = this.categories.map(x =>
           x.id === response.data.id ? response.data.attributes : x
         )
         const cat = {
@@ -58,8 +58,8 @@ class CatalogStore {
     }
   }
 
-  getCatalogueByName(name) {
-    const found = this.catalogues.find(x => x.name === name)
+  getCategoryByName(name) {
+    const found = this.categories.find(x => x.name === name)
     return found
   }
 
@@ -87,17 +87,28 @@ class CatalogStore {
   @computed
   get filteredList() {
     if (!isEmpty(this.columnFilters)) {
-      return this.catalogues.filter(b => {
+      return this.categories.filter(b => {
         return !this.isFiltered(b)
       })
     } else {
-      return this.catalogues
+      return this.categories
     }
   }
 
   @computed
-  get weightOptions() {
-    const res = this.catalogues
+  get allSelectOptions() {
+    const res = this.categories.map(c => {
+      return {
+        value: c.name,
+        label: c.name
+      }
+    })
+    return res
+  }
+
+  @computed
+  get weightBasedSelectOptions() {
+    const res = this.categories
       .filter(
         c =>
           !this.excludes.includes(c.name) &&
@@ -115,6 +126,6 @@ class CatalogStore {
   /* - column filters */
 }
 
-const catalogStore = new CatalogStore()
+const store = new MetrcItemCategoryStore()
 
-export default catalogStore
+export default store

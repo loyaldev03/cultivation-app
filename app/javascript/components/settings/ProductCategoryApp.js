@@ -1,14 +1,26 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import { HeaderFilter, ListingTable } from '../utils'
-import CatalogStore from '../inventory/stores/CatalogStore'
-import ItemStore from './ItemStore'
+import {
+  formatDate3,
+  SlidePanel,
+  SlidePanelFooter,
+  HeaderFilter,
+  ListingTable
+} from '../utils'
+import MetrcItemStore from './ItemStore'
+import CategoryStore from '../inventory/stores/ProductCategoryStore'
+import AddEditProductCategoryForm from './AddEditProductCategoryForm'
 
 @observer
-class ItemApp extends React.Component {
+class ProductCategoryApp extends React.Component {
+  constructor(props) {
+    super(props)
+    CategoryStore.setDefaults(this.props.defaultCategories)
+  }
   state = {
     tabIndex: 0,
+    showEditPanel: true,
     categoryColumns: [
       {
         accessor: 'id',
@@ -25,8 +37,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Active"
             accessor="is_active"
-            getOptions={CatalogStore.getUniqPropValues}
-            onUpdate={CatalogStore.updateFilterOptions}
+            getOptions={CategoryStore.getUniqPropValues}
+            onUpdate={CategoryStore.updateFilterOptions}
           />
         ),
         accessor: 'is_active',
@@ -42,7 +54,7 @@ class ItemApp extends React.Component {
               />
               <label
                 className="toggle-button"
-                onClick={this.onToggleActive(props.row.id, props.value)}
+                onClick={this.onToggleActive(props.row)}
               />
             </div>
           )
@@ -65,8 +77,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Item Category"
             accessor="product_category_name"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'product_category_name',
@@ -77,8 +89,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Strain"
             accessor="strain_name"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'strain_name',
@@ -90,8 +102,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Unit of Measure"
             accessor="uom_name"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'uom_name',
@@ -103,8 +115,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Quantity Type"
             accessor="quantity_type"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'quantity_type',
@@ -116,8 +128,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Added to Metrc"
             accessor="updated_metrc"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
+            getOptions={MetrcItemStore.getUniqPropValues}
+            onUpdate={MetrcItemStore.updateFilterOptions}
           />
         ),
         accessor: 'updated_metrc',
@@ -131,52 +143,90 @@ class ItemApp extends React.Component {
   }
 
   componentDidMount() {
-    CatalogStore.loadCatalogues('sales_products', 'raw_sales_product')
-    ItemStore.loadItems(this.props.facilityId)
+    CategoryStore.loadCategories()
+    MetrcItemStore.loadItems(this.props.facilityId)
   }
 
   onSelectTab = tabIndex => {
     this.setState({ tabIndex })
   }
 
-  onToggleActive = (id, value) => _e => {
-    CatalogStore.updateCatalog(id, !value)
+  onToggleActive = data => _e => {
+    const record = {
+      id: data.id,
+      name: data.name,
+      is_active: !data.is_active
+    }
+    CategoryStore.updateCategory(record)
+  }
+
+  onSave = formData => {
+    this.setState({
+      showEditPanel: false
+    })
   }
 
   render() {
-    const { itemColumns, categoryColumns, tabIndex } = this.state
+    const { itemColumns, categoryColumns, tabIndex, showEditPanel } = this.state
+    const { facilityId } = this.props
+    console.warn('FIXME: Wrong facilityId when selecting All')
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
+        <SlidePanel
+          width="500px"
+          show={showEditPanel}
+          renderBody={props =>
+            showEditPanel ? (
+              <AddEditProductCategoryForm
+                ref={form => (this.editForm = form)}
+                onClose={() => this.setState({ showEditPanel: false })}
+                onSave={this.onSave}
+              />
+            ) : null
+          }
+        />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">
             Manage your product types &amp; subcategory
           </p>
-          {/* <div className="fl w-80-l w-100-m"> */}
           <Tabs
             className="react-tabs--primary react-tabs--boxed-panel react-tabs--no-float"
             selectedIndex={tabIndex}
             onSelect={this.onSelectTab}
           >
             <TabList>
-              <Tab>Product Type</Tab>
-              <Tab>Product Subcategory</Tab>
+              <Tab>Product Category</Tab>
+              <Tab>Subcategory</Tab>
             </TabList>
             <TabPanel>
-              <div className="pv4 ph3">
+              <div className="pa3 tr">
+                <a
+                  href="#0"
+                  className="btn btn--primary"
+                  onClick={() =>
+                    this.setState({
+                      showEditPanel: true
+                    })
+                  }
+                >
+                  + Add New
+                </a>
+              </div>
+              <div className="pb4 ph3">
                 <ListingTable
-                  data={CatalogStore.filteredList}
+                  data={CategoryStore.filteredList}
                   columns={categoryColumns}
-                  isLoading={CatalogStore.isLoading}
+                  isLoading={CategoryStore.isLoading}
                 />
               </div>
             </TabPanel>
             <TabPanel>
               <div className="pv4 ph3">
                 <ListingTable
-                  data={ItemStore.filteredList}
+                  data={MetrcItemStore.filteredList}
                   columns={itemColumns}
-                  isLoading={ItemStore.isLoading}
+                  isLoading={MetrcItemStore.isLoading}
                 />
               </div>
             </TabPanel>
@@ -192,4 +242,4 @@ class ItemApp extends React.Component {
   }
 }
 
-export default ItemApp
+export default ProductCategoryApp

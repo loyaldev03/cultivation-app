@@ -1,24 +1,25 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
 import { action, observable, computed } from 'mobx'
-import { toast } from '../utils/toast'
-import { httpPostOptions, httpGetOptions } from '../utils'
+import { toast } from '../../utils/toast'
+import { httpPostOptions, httpGetOptions } from '../../utils'
 
-class ItemCategoryStore {
+class ProductCategoryStore {
   @observable isLoading = false
   @observable isDataLoaded = false
   @observable columnFilters = {}
   @observable categories = []
+  @observable defaultCategories = []
   @observable excludes = []
 
   @action
-  async loadCategories() {
+  async loadCategories(defaultCategories) {
     this.isLoading = true
-    const url = '/api/v1/products/item_categories'
+    const url = '/api/v1/products/product_categories'
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        this.categories = response.data.map(x => x.attributes)
+        this.mergeCategories(response.data)
         this.isDataLoaded = true
       } else {
         this.isDataLoaded = false
@@ -33,16 +34,37 @@ class ItemCategoryStore {
   }
 
   @action
-  async updateCategory(id, isActive) {
+  mergeCategories(reponseData) {
+    let results = reponseData.map(x => x.attributes)
+    const names = results.map(x => x.name.toUpperCase())
+    const defaultWithoutSaved = this.defaultCategories.filter(x => {
+      return !names.includes(x.name.toUpperCase())
+    })
+    results = [...results, ...defaultWithoutSaved]
+    results = results.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1
+      }
+      if (a.name > b.name) {
+        return 1
+      }
+      return 0
+    })
+    this.categories = results.sort((a, b) => Number(b.is_active) - Number(a.is_active))
+  }
+
+  @action
+  async updateCategory(record) {
     this.isLoading = true
-    const url = `/api/v1/products/item_categories/${id}/update`
+    const url = `/api/v1/products/product_categories/update`
     try {
-      const params = { is_active: isActive }
-      const response = await (await fetch(url, httpPostOptions(params))).json()
+      const response = await (await fetch(url, httpPostOptions(record))).json()
       if (response && response.data) {
-        this.categories = this.categories.map(x =>
-          x.id === response.data.id ? response.data.attributes : x
-        )
+        this.categories = this.categories.map(x => {
+          return x.name === response.data.attributes.name
+            ? response.data.attributes
+            : x
+        })
         const cat = {
           name: response.data.attributes.name,
           status: response.data.attributes.is_active ? 'active' : 'inactive'
@@ -58,8 +80,23 @@ class ItemCategoryStore {
     }
   }
 
-  getCategoryByName(name) {
-    const found = this.categories.find(x => x.name === name)
+  @action
+  setDefaults(categories) {
+    // Generate category to bind on ui from default categories.
+    // when a default category is deleted by user, save it as deleted and inactive.
+    categories.forEach((c, i) => {
+      this.defaultCategories.push({
+        id: i + 1,
+        name: c,
+        is_active: false
+      })
+    })
+  }
+
+  getCatalogueByName(name) {
+    const found = this.categories.find(
+      x => x.name === name || x.name.toUpperCase() === name.toUpperCase()
+    )
     return found
   }
 
@@ -115,6 +152,6 @@ class ItemCategoryStore {
   /* - column filters */
 }
 
-const categoryStore = new ItemCategoryStore()
+const productCategoryStore = new ProductCategoryStore()
 
-export default categoryStore
+export default productCategoryStore

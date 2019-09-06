@@ -3,7 +3,7 @@ class Settings::Core::PackagesController < ApplicationController
     @packages = Inventory::QueryPackage.call.result
     @specials = ['others', 'grow_light', 'grow_medium', 'nutrients', 'supplements']
     @second_levels = ['blend', 'nitrogen', 'phosphate', 'potassium']
-    ###should standardize the name to catalogue example -> Inventory::QueryCatalogue
+    @default_categories = Constants::DEFAULT_PRODUCT_CATEGORIES
   end
 
   def new
@@ -19,9 +19,7 @@ class Settings::Core::PackagesController < ApplicationController
       @parent = Inventory::Catalogue.find(params[:record][:parent_id])
       @record.category = @parent.key
     end
-    Rails.logger.debug (@record.inspect)
     if @record.save
-      Rails.logger.debug ("After #{@record.inspect}")
       render 'layouts/hide_sidebar', layouts: nil
     else
       render 'new', layout: nil

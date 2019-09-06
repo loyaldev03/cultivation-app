@@ -18,7 +18,7 @@ module Inventory
 
     # In case record is in_used but user want to remove from the list, set this to
     # true and filter from api.
-    # field :deleted, type: Boolean, default: -> { false }
+    field :deleted, type: Boolean, default: -> { false }
 
     # Which facilities uses this product category
     field :facilities, type: Array, default: [] # Array of BSON::ObjectId

@@ -66,11 +66,19 @@ class ProductCategoryStore {
       if (response && response.data) {
         if (!found) {
           // If new record push to array
-          console.log('before push', this.categories.length)
-          console.log(response.data.attributes)
-          this.categories.push(response.data.attributes)
-          console.log('after push', this.categories.length)
+          this.categories = this.categories.push(response.data.attributes)
+          toast(`${name} has been saved`, 'success')
+          return
         }
+
+        if (updates.deleted) {
+          this.categories = this.categories.filter(
+            x => x.name !== response.data.attributes.name
+          )
+          toast(`${name} has been deleted`, 'success')
+          return
+        }
+
         // Update array in place
         this.categories = this.categories.map(x => {
           return x.name === response.data.attributes.name

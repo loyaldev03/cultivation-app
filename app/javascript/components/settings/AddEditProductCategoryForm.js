@@ -5,6 +5,16 @@ import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCate
 
 @observer
 class AddEditProductCategoryForm extends React.Component {
+  constructor(props) {
+    super(props)
+    if (props.mode === 'edit') {
+      console.log(props.formData)
+      this.state = {
+        formData: props.formData
+      }
+    }
+  }
+
   onSubmit = e => {
     e.preventDefault()
     const metrcCategory = this.categorySelector.getSelectedCategory()
@@ -18,8 +28,12 @@ class AddEditProductCategoryForm extends React.Component {
     }
   }
 
+  setFormData(formData) {
+    console.log('setFormData', formData)
+  }
+
   render() {
-    const { onClose, onSave, mode = 'add' } = this.props
+    const { onClose, onSave, mode = 'add', formData } = this.props
     return (
       <div className="h-100 flex flex-auto flex-column">
         <SlidePanelHeader
@@ -38,6 +52,7 @@ class AddEditProductCategoryForm extends React.Component {
                 <label className="f6 fw6 db mb1 gray ttc">Name</label>
                 <input
                   ref={input => (this.nameInput = input)}
+                  defaultValue={formData ? formData.name : ''}
                   className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                   required={true}
                 />

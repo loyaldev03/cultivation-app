@@ -139,7 +139,7 @@ class IssuesDashboard extends React.Component {
   render() {
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse">
           <span className="f5 fw6">
             You have
@@ -154,7 +154,7 @@ class IssuesDashboard extends React.Component {
             <div className="w-50">
               <div
                 className="ba b--light-gray pa3 bg-white br2 mr3"
-                style={{ height: 350 + 'px' }}
+                style={{ height: 420 + 'px' }}
               >
                 <IssueByPriority />
               </div>
@@ -162,7 +162,7 @@ class IssuesDashboard extends React.Component {
             <div className="w-50">
               <div
                 className="ba b--light-gray pa3 bg-white br2"
-                style={{ height: 350 + 'px' }}
+                style={{ height: 420 + 'px' }}
               >
                 <IssueByGroup facility_id={this.props.currentFacilityId} />
               </div>

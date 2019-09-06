@@ -11,6 +11,8 @@ export default class IssueByPriority extends React.Component {
 
   render() {
     const options = {
+      responsive:true,
+      maintainAspectRatio: false,
       legend: {
         display: false
       },
@@ -39,7 +41,7 @@ export default class IssueByPriority extends React.Component {
             gridLines: {
               display: false
             },
-            barPercentage: 0.3
+            barPercentage: 0.2
           }
         ],
         yAxes: [
@@ -60,7 +62,10 @@ export default class IssueByPriority extends React.Component {
         </div>
         {DashboardIssueStore.issue_by_priority_loaded ? (
           DashboardIssueStore.data_issue_by_priority.length > 0 ? (
-            <Bar data={DashboardIssueStore.IssueByPriority} options={options} />
+            <div style={{ overflow: 'auto', height: '320px' }}>
+              <Bar data={DashboardIssueStore.IssueByPriority} options={options}/>
+            </div>
+            
           ) : (
             'Graph is not available'
           )

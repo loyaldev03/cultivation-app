@@ -130,11 +130,14 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def update_product_categories
-    category = Inventory::ProductCategory.find_or_create_by(name: params[:name])
-    category.is_active = params[:is_active]
-    # WeightBased / CountBased, copy from METRC Item Category
-    category.quantity_type = params[:quantity_type]
-    if params[:metrc_item_category].present?
+    category = Inventory::ProductCategory.find_or_initialize_by(name: params[:name])
+    # New record are set to active automatically.
+    category.is_active = category.new_record? ? true : params[:is_active]
+    if params[:quantity_type]
+      # WeightBased / CountBased, copy from METRC Item Category
+      category.quantity_type = params[:quantity_type]
+    end
+    if params[:metrc_item_category]
       category.metrc_item_category = params[:metrc_item_category]
     end
     category.save!

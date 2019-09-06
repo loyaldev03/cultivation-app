@@ -20,7 +20,7 @@ class ProductCategoryApp extends React.Component {
   }
   state = {
     tabIndex: 0,
-    showEditPanel: true,
+    showEditPanel: false,
     categoryColumns: [
       {
         accessor: 'id',
@@ -152,15 +152,13 @@ class ProductCategoryApp extends React.Component {
   }
 
   onToggleActive = data => _e => {
-    const record = {
-      id: data.id,
-      name: data.name,
+    CategoryStore.updateCategory(data.name, {
       is_active: !data.is_active
-    }
-    CategoryStore.updateCategory(record)
+    })
   }
 
   onSave = formData => {
+    CategoryStore.updateCategory(formData.name, formData)
     this.setState({
       showEditPanel: false
     })

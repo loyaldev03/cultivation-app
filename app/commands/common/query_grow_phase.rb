@@ -17,6 +17,8 @@ module Common
             id: phase.id.to_s,
             name: phase.name,
             is_active: phase.is_active,
+            number_of_days: phase.number_of_days,
+            number_of_days_avg: phase.number_of_days_avg,
           },
 
         }

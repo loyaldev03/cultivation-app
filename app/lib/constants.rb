@@ -306,12 +306,12 @@ module Constants
   ].freeze
 
   DEFAULT_PRODUCT_CATEGORIES = [
-    "Leaf",
-    "Parts",
-    "Pre-roll",
-    "Flowers",
-    "Shakes",
-    "Trim",
+    'Leaf',
+    'Parts',
+    'Pre-roll',
+    'Flowers',
+    'Shakes',
+    'Trim',
   ].freeze
 
   SALES_PRODUCT_CATEGORY = [

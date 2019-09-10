@@ -1,6 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
+import CategoryStore from '../inventory/stores/ProductCategoryStore'
 import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCategorySelector'
 
 @observer
@@ -14,18 +15,21 @@ class AddEditProductCategoryForm extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-    const { mode } = this.props
+    const { mode, editCategory } = this.props
     if (mode && mode !== prevProps.mode) {
-      console.log('mode changed, reseting form')
-      this.resetForm()
+      this.setState({
+        name: '',
+        metrc_item_category: ''
+      })
     }
-  }
-
-  resetForm() {
-    this.setState({
-      name: '',
-      metrc_item_category: ''
-    })
+    if (editCategory && editCategory !== prevProps.editCategory) {
+      const category = CategoryStore.getCategoryByName(editCategory)
+      const metrcItem = category.metrc_item_category || ''
+      this.setState({
+        name: editCategory,
+        metrc_item_category: metrcItem
+      })
+    }
   }
 
   onSubmit = e => {
@@ -83,6 +87,7 @@ class AddEditProductCategoryForm extends React.Component {
                 </span>
                 <ItemCategorySelector
                   ref={select => (this.categorySelector = select)}
+                  value={metrc_item_category}
                   onChange={selected => {
                     this.setState({
                       metrc_item_category: selected.value

@@ -60,7 +60,6 @@ class ProductCategoryStore {
     this.isLoading = true
     const found = this.getCategoryByName(name)
     const payload = found ? Object.assign(toJS(found), updates) : updates
-    console.log('updateCategory', payload)
     const url = '/api/v1/products/product_categories/update'
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()

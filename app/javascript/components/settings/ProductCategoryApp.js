@@ -206,6 +206,7 @@ class ProductCategoryApp extends React.Component {
     this.setState({
       showEditPanel: false,
       editPanelMode: '',
+      editCategory: ''
     })
   }
 
@@ -242,14 +243,15 @@ class ProductCategoryApp extends React.Component {
         <SlidePanel
           width="500px"
           show={showEditPanel}
-          renderBody={props =>
+          renderBody={props => (
             <AddEditProductCategoryForm
               ref={form => (this.editForm = form)}
               mode={editPanelMode}
+              editCategory={editCategory}
               onClose={() => this.setState({ showEditPanel: false })}
               onSave={this.onSave}
             />
-          }
+          )}
         />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">

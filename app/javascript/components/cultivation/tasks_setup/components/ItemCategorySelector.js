@@ -6,21 +6,39 @@ import Select from 'react-select'
 
 @observer
 class ItemCategorySelector extends React.Component {
-  state = {
-    selectedCategory: ''
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedCategory: {},
+      value: ''
+    }
   }
 
   async componentDidMount() {
     await CategoryStore.loadCategories()
-    if (CategoryStore.isDataLoaded && this.props.excludes) {
-      CategoryStore.excludes = this.props.excludes
+    if (CategoryStore.isDataLoaded) {
+      if (this.props.excludes) {
+        CategoryStore.excludes = this.props.excludes
+      }
+      const selected =
+        CategoryStore.allSelectOptions.find(
+          x => x.value === this.props.value
+        ) || {}
+      this.setState({ selectedCategory: selected, value: this.props.value })
     }
   }
 
   async componentDidUpdate(prevProps) {
+    if (!CategoryStore.isDataLoaded) {
+      return null
+    }
     const { value } = this.props
-    if (value && value !== prevProps.productType) {
-      const res = CategoryStore.getCategoryByName(value)
+    if (value !== prevProps.value) {
+      const selected =
+        CategoryStore.allSelectOptions.find(
+          x => x.value === this.props.value
+        ) || {}
+      this.setState({ selectedCategory: selected })
     }
   }
 

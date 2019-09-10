@@ -88,7 +88,7 @@ Rails.application.routes.draw do
   namespace 'purchasing', as: :purchasing do
     get '/' => 'purchasing#index'
     resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy, :show]
-    resources :purchase_orders, only: [:index, :show]
+    resources :purchase_orders, only: [:index, :show, :create]
     resources :vendor_invoices, only: [:index, :show]
   end
 
@@ -331,7 +331,7 @@ Rails.application.routes.draw do
       end
 
       resources :vendors, only: [:index]
-      resources :purchase_orders, only: [:index]
+      resources :purchase_orders, only: [:index, :create]
       resources :vendor_invoices, only: [:index, :show]
       resources :products, only: [:index] do
         get :non_nutrients, on: :collection

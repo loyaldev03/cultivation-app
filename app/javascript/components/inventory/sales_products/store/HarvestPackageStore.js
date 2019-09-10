@@ -1,5 +1,5 @@
 import { observable, action, computed, toJS, autorun } from 'mobx'
-import { httpGetOptions, formatDate, formatTime } from '../../../utils'
+import { httpGetOptions, formatDate, formatTime, httpPostOptions } from '../../../utils'
 import isEmpty from 'lodash.isempty'
 
 const uniq = require('lodash.uniq')
@@ -93,6 +93,24 @@ class HarvestPackageStore {
     )
     if (index >= 0) {
       this.harvestPackages[index] = harvestPackage
+    }
+  }
+
+  @action
+  async createOrder(params) {
+    const url = `/api/v1/purchase_orders`
+    try {
+      const response = await (await fetch(url, httpPostOptions(params))).json()
+      if (response.data) {
+
+        // this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.loadHarvestPackages()
     }
   }
 

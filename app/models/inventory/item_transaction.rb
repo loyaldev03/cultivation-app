@@ -36,6 +36,7 @@ module Inventory
     field :created_by, type: BSON::ObjectId #whodunnit
 
     field :production_cost, type: Float, default: -> { 0 }     # For sales product from harvest batch & conversion
+    field :status, type: String, default: 'new'
 
     belongs_to :facility, class_name: 'Facility'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

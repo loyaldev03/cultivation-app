@@ -26,15 +26,19 @@ class AddEditProductSubCategoryForm extends React.Component {
         productCategoryId: '',
         selectedProductCategory: {}
       })
-      return;
     }
-    if (editSubCategory && editSubCategory.id != prevProps.editSubCategory.id) {
+    if (
+      editSubCategory &&
+      prevProps.editSubCategory &&
+      editSubCategory.id != prevProps.editSubCategory.id
+    ) {
       let selectedProductCategory = {}
-      let productCategoryId =''
+      let productCategoryId = ''
       if (editSubCategory.productCategoryId) {
-        selectedProductCategory = CategoryStore.categoryOptions.find(
-          x => x.value === editSubCategory.productCategoryId
-        )
+        selectedProductCategory =
+          CategoryStore.categoryOptions.find(
+            x => x.value === editSubCategory.productCategoryId
+          ) || {}
         productCategoryId = editSubCategory.productCategoryId
       }
       this.setState({
@@ -43,7 +47,6 @@ class AddEditProductSubCategoryForm extends React.Component {
         productCategoryId,
         selectedProductCategory
       })
-      console.log(this.state)
     }
   }
 
@@ -104,6 +107,7 @@ class AddEditProductSubCategoryForm extends React.Component {
               </div>
               <div>
                 <Select
+                  isDisabled={mode === 'edit'}
                   styles={reactSelectStyle}
                   options={CategoryStore.categoryOptions}
                   value={this.state.selectedProductCategory}

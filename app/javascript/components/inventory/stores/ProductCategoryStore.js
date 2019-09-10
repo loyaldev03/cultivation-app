@@ -69,7 +69,7 @@ class ProductCategoryStore {
         const updated = response.data.attributes
         if (updated) {
           this.categories = this.categories.map(x => {
-            return x.name === updated.name ? updated : x
+            return x.id === updated.id ? Object.assign(toJS(x), updated) : x
           })
           toast(`${updates.name} saved.`, 'success')
         }

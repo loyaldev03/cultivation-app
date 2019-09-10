@@ -21,7 +21,6 @@ class AddEditProductCategoryForm extends React.Component {
         name: '',
         metrc_item_category: ''
       })
-      return;
     }
     if (editCategory && editCategory !== prevProps.editCategory) {
       const category = CategoryStore.getCategoryByName(editCategory)

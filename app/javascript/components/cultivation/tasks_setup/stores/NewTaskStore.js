@@ -556,7 +556,7 @@ class TaskStore {
     this.isLoading = true
 
     const url = `/api/v1/batches/${batch_id}/save_as_template`
-    const payload = { }
+    const payload = {}
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       // console.log(response)
@@ -567,7 +567,6 @@ class TaskStore {
       console.log(error)
     }
   }
-
 }
 
 const taskStore = new TaskStore()

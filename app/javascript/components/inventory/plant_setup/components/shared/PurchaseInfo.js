@@ -306,7 +306,6 @@ class PurchaseInfo extends React.Component {
             />
           </div>
         </div>
-        
       </React.Fragment>
     )
   }

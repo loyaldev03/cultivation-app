@@ -8,11 +8,12 @@ module Charts
     end
 
     def call
-      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: @args[:facility_id].split(',')}).result
-      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: @args[:facility_id].split(','), period: @args[:period]}).result
-      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: @args[:facility_id].split(','), period: @args[:period]}).result
+      facilities = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: facilities}).result
+      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: facilities, period: @args[:period]}).result
+      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: facilities, period: @args[:period]}).result
 
-      result = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id].split(',')}).result
+      result = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
       total_used = 0
       total_capacity = 0
       facility_capacity_used = 0

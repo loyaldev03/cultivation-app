@@ -9,7 +9,7 @@ const RoomCapcitySpot = ({ text, height, purpose, rooms, color, onClick }) => {
   return (
     <div
       href="#"
-      className="grow dib"
+      className="grow dib mr4"
       onClick={onClick}
       style={{ cursor: 'pointer', width: '70px' }}
     >
@@ -54,7 +54,7 @@ class DashboardRoomsCapacity extends React.Component {
         <div className="flex justify-between">
           <h1 className="f5 fw6 dark-grey">Rooms Capacity</h1>
         </div>
-        <div className="flex justify-between mb3">
+        <div className="flex justify-center mb3">
           {FacilityDashboardStore.data_rooms_capacity.map((e, i) => (
             <RoomCapcitySpot
               key={i}

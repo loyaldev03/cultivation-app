@@ -26,11 +26,11 @@ class QueryFacilitySummary
     end
 
     order = Constants::FACILITY_ROOMS_ORDER
-    results = results.select { |h| h[:purpose] }.sort_by do |r|
+    results = results.select { |h| h[:purpose].present? }.sort_by do |r|
       order_i = if r[:purpose].blank?
                   results.size
                 else
-                  order.index { |s| r[:purpose].ends_with?(s) }
+                  order.index { |s| r[:purpose].downcase.ends_with?(s) }
                 end
       [order_i, r[:room_code]]
     end

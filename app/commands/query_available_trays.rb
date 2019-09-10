@@ -28,11 +28,9 @@ class QueryAvailableTrays
   private
 
   def match_facility
-    if @facility_id && (@facility_id.is_a? Array) && @facility_id.any?
-      facility_ids = @facility_id.map(&:to_bson_id)
-      {"$match": {_id: {"$in": facility_ids}}}
-    elsif @facility_id.present?
-      {"$match": {_id: @facility_id.to_bson_id}}
+    if @facility_id.present?
+      f_ids = @facility_id.split(',').map { |x| x.to_bson_id }
+      {"$match": {_id: {"$in": f_ids}}}
     else
       {"$match": {}}
     end

@@ -10,8 +10,9 @@ class AddEditProductSubCategoryForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      id: '',
       name: '',
-      productCategory: '',
+      productCategoryId: '',
       selectedProductCategory: {}
     }
   }
@@ -21,34 +22,36 @@ class AddEditProductSubCategoryForm extends React.Component {
     if (mode && mode !== prevProps.mode) {
       this.setState({
         name: '',
-        productCategory: '',
+        productCategoryId: '',
         selectedProductCategory: {}
       })
     }
     if (editSubCategory && editSubCategory !== prevProps.editSubCategory) {
       const selectedOption = CategoryStore.categoryOptions.find(
-        x => x.name === editSubCategory
+        x => x.name === editSubCategory.name
       )
       this.setState({
-        name: editSubCategory,
-        productCategory: editProductCategory,
+        id: editSubCategory.id,
+        name: editSubCategory.name,
+        productCategoryId: editProductCategory,
         selectedProductCategory: selectedOption
       })
     }
   }
 
-  onChange = selectedOption => {
+  onChangeCategory = selectedOption => {
     this.setState({
       selectedProductCategory: selectedOption,
-      productCategory: selectedOption.value
+      productCategoryId: selectedOption.value
     })
   }
 
   onSubmit = e => {
     e.preventDefault()
     const formData = {
+      id: this.state.id,
       name: this.state.name,
-      productCategory: this.state.productCategory
+      product_category_id: this.state.productCategoryId
     }
     if (this.props.onSave) {
       this.props.onSave(formData)
@@ -57,7 +60,7 @@ class AddEditProductSubCategoryForm extends React.Component {
 
   render() {
     const { onClose, onSave, mode = 'add' } = this.props
-    const { name, productCategory, selectedProductCategory } = this.state
+    const { name, selectedProductCategory } = this.state
 
     if (!mode) {
       return null
@@ -96,7 +99,7 @@ class AddEditProductSubCategoryForm extends React.Component {
                   styles={reactSelectStyle}
                   options={CategoryStore.categoryOptions}
                   value={this.state.selectedProductCategory}
-                  onChange={this.onChange}
+                  onChange={selected => this.onChangeCategory(selected)}
                 />
               </div>
             </div>

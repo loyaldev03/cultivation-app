@@ -27,7 +27,7 @@ class ProductCategoryApp extends React.Component {
     editCategory: '', // Category
     showEditSubCategoryPanel: false, // SubCategory
     editSubCategoryPanelMode: '', // SubCategory
-    editSubCategory: '', // SubCategory
+    editSubCategory: {}, // SubCategory
     categoryColumns: [
       {
         accessor: 'id',
@@ -111,14 +111,33 @@ class ProductCategoryApp extends React.Component {
     ],
     subCategoryColumns: [
       {
-        accessor: 'id',
+        accessor: 'product_category_id',
+        show: false
+      },
+      {
+        accessor: 'product_category_name',
         show: false
       },
       {
         headerClassName: 'tl',
         Header: 'Name',
         accessor: 'name',
-        minWidth: 250
+        minWidth: 250,
+        Cell: props => {
+          return (
+            <a
+              href="#0"
+              className="ph2 w-100 dark-gray link"
+              onClick={e => this.onEditSubcategory(props.row.id)}
+            >
+              {props.value}
+              <span className="db">id: {props.row.product_category_id}</span>
+              <span className="db">
+                name: {props.row.product_category_name}
+              </span>
+            </a>
+          )
+        }
       },
       {
         Header: '',
@@ -169,7 +188,7 @@ class ProductCategoryApp extends React.Component {
     this.setState({
       showEditSubCategoryPanel: false,
       editSubCategoryPanelMode: '',
-      editSubCategory: ''
+      editSubCategory: {}
     })
   }
 
@@ -178,6 +197,14 @@ class ProductCategoryApp extends React.Component {
       showEditPanel: true,
       editPanelMode: 'edit',
       editCategory: name
+    })
+  }
+
+  onEditSubcategory = subCategory => {
+    this.setState({
+      showEditSubCategoryPanel: true,
+      editSubCategoryPanelMode: 'edit',
+      editSubCategory: subCategory
     })
   }
 

@@ -179,7 +179,16 @@ class ProductCategoryStore {
     if (this.isDataLoaded) {
       this.categories.forEach(x => {
         if (x.sub_categories) {
-          list = list.concat(x.sub_categories)
+          const sub = x.sub_categories.map(y => {
+            const product_category_id = x.id
+            return {
+              id: y.id,
+              name: y.name,
+              product_category_id: x.id,
+              product_category_name: x.name
+            }
+          })
+          list = list.concat(sub)
         }
       })
     }
@@ -192,7 +201,7 @@ class ProductCategoryStore {
       .filter(c => c.is_active && !c.deleted)
       .map(c => {
         return {
-          value: c.name,
+          value: c.id,
           label: c.name
         }
       })

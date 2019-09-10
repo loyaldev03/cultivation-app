@@ -153,8 +153,10 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def update_product_subcategory
-    category = Inventory::ProductCategory.find_by("sub_categories._id": params[:id].to_bson_id)
-    category ||= Inventory::ProductCategory.find_by(id: params[:product_category_id]) if params[:product_category_id]
+    category = Inventory::ProductCategory.
+      find_by(id: params[:product_category_id]) if params[:product_category_id].present?
+    category ||= Inventory::ProductCategory.
+      find_by("sub_categories._id": params[:id].to_bson_id) if params[:id].present?
     sub_category_id = params[:id]
     sub_category_name = params[:name]
     sub_category = category.sub_categories.detect { |x| x.id.to_s == sub_category_id }

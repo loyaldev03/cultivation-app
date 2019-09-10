@@ -3,6 +3,7 @@ import Select from 'react-select'
 import { httpPostOptions, selectStyles, GROWTH_PHASE } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput } from '../../utils/FormHelpers'
+import classNames from 'classnames'
 
 const ValidationMessage = ({ enable, show, text }) => {
   if (enable && show) {
@@ -22,7 +23,8 @@ class BatchSetupApp extends React.Component {
       batchSource: '',
       batchStrain: '',
       batchGrowMethod: '',
-      isLoading: false
+      isLoading: false,
+      useTemplate: false
     }
   }
 
@@ -44,7 +46,8 @@ class BatchSetupApp extends React.Component {
         batch_source: this.state.batchSource,
         facility_strain_id: this.state.batchStrain,
         grow_method: this.state.batchGrowMethod,
-        name: this.state.name
+        name: this.state.name,
+        template_id: this.state.useTemplate ? this.state.template : ''
       })
     )
       .then(response => response.json())
@@ -68,7 +71,18 @@ class BatchSetupApp extends React.Component {
   }
 
   handleChange = (field, value) => {
-    this.setState({ [field]: value })
+    if (field === 'template') {
+      const templateValue = this.props.templates.find(f => f.value === value)
+      this.setState({
+        [field]: value,
+        name: templateValue.template_name,
+        batchSource: templateValue.batch_source,
+        batchStrain: templateValue.batch_strain,
+        batchGrowMethod: templateValue.batch_grow_method
+      })
+    } else {
+      this.setState({ [field]: value })
+    }
   }
 
   switchFacility = facilityId => {
@@ -77,8 +91,29 @@ class BatchSetupApp extends React.Component {
     )
   }
 
+  onToggleTemplate = () => {
+    if (!this.state.useTemplate) {
+      this.setState({ useTemplate: !this.state.useTemplate })
+    } else {
+      this.setState({
+        useTemplate: !this.state.useTemplate,
+        name: '',
+        batchSource: '',
+        batchStrain: '',
+        batchGrowMethod: '',
+        template: ''
+      })
+    }
+  }
+
   render() {
-    const { plantSources, strains, growMethods, facilities = [] } = this.props
+    const {
+      plantSources,
+      strains,
+      growMethods,
+      facilities = [],
+      templates
+    } = this.props
     const {
       showValidation,
       facilityId,
@@ -86,11 +121,17 @@ class BatchSetupApp extends React.Component {
       batchSource,
       batchGrowMethod,
       isLoading,
+      template,
       name
     } = this.state
 
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
+    const templateValue = templates.find(f => f.value === template)
+    const batchGrowMethodvalue = growMethods.find(
+      f => f.value === batchGrowMethod
+    )
+    const batchSourceValue = plantSources.find(f => f.value === batchSource)
     const saveButtonText = isLoading ? 'Saving...' : 'Save and Continue'
 
     return (
@@ -126,6 +167,40 @@ class BatchSetupApp extends React.Component {
             </div>
           )}
           <div className="fl w-100 mt1 mb3">
+            <label className="subtitle-2 grey fl pv2">
+              Use template
+              {/* {isActive ? 'Active' : 'Deactivated'} */}
+            </label>
+            <input
+              id="is_active"
+              type="checkbox"
+              className="toggle toggle-default"
+              onChange={this.onToggleTemplate}
+              checked={this.state.useTemplate}
+            />
+            <label className="toggle-button mt1 fr" htmlFor="is_active" />
+          </div>
+
+          {this.state.useTemplate && (
+            <div className="fl w-100 mt1 mb3">
+              <label className="subtitle-2 grey fl pv2">Template </label>
+              <div className="fr w-100 measure-narrow">
+                <Select
+                  styles={selectStyles}
+                  options={templates}
+                  value={templateValue}
+                  onChange={e => this.handleChange('template', e.value)}
+                />
+                <ValidationMessage
+                  text="Select Strain"
+                  enable={showValidation}
+                  show={!batchStrain}
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="fl w-100 mt1 mb3">
             <label className="subtitle-2 grey fl pv2">Batch Name </label>
             <div className="fr w-100 measure-narrow">
               <TextInput
@@ -147,6 +222,7 @@ class BatchSetupApp extends React.Component {
                 options={strains}
                 value={batchStrainValue}
                 onChange={e => this.handleChange('batchStrain', e.value)}
+                isDisabled={this.state.useTemplate}
               />
               <ValidationMessage
                 text="Select Strain"
@@ -163,6 +239,8 @@ class BatchSetupApp extends React.Component {
                 options={plantSources}
                 className="w-100"
                 onChange={e => this.handleChange('batchSource', e.value)}
+                value={batchSourceValue}
+                isDisabled={this.state.useTemplate}
               />
               <ValidationMessage
                 text="Select Batch Source"
@@ -179,6 +257,8 @@ class BatchSetupApp extends React.Component {
                 options={growMethods}
                 className="w-100"
                 onChange={e => this.handleChange('batchGrowMethod', e.value)}
+                value={batchGrowMethodvalue}
+                isDisabled={this.state.useTemplate}
               />
               <ValidationMessage
                 text="Select Grow Method"

@@ -30,7 +30,6 @@ class DestroyedPlantApp extends React.Component {
     showDestroyedPlants: false
   }
 
-
   render() {
     const { currentFacilityId } = this.props
     const { columns, showDestroyedPlants } = this.state
@@ -49,8 +48,7 @@ class DestroyedPlantApp extends React.Component {
             Destroy Plants
           </a>
         </div>
-        
-        
+
         <SlidePanel
           show={showDestroyedPlants}
           renderBody={props => (

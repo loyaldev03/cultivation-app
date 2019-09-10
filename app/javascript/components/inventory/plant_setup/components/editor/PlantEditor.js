@@ -129,7 +129,9 @@ class PlantEditor extends React.Component {
               plant_ids: data.attributes.plant_id,
               plant_qty: 0,
               location_id: data.attributes.location_id,
-              planting_date: batch ? new Date(data.attributes.planting_date) : '',
+              planting_date: batch
+                ? new Date(data.attributes.planting_date)
+                : '',
               manifest_no: data.attributes.manifest_no,
               motherOption: motherOption,
               lot_number,
@@ -139,17 +141,18 @@ class PlantEditor extends React.Component {
               start_date: batch ? new Date(batch.start_date) : '',
               facility: batch ? batch.facility : '',
               batch_source: batch ? batch.batch_source : '',
-              isBought: batch ? batch.batch_source === BATCH_SOURCE.PURCHASED : false,
+              isBought: batch
+                ? batch.batch_source === BATCH_SOURCE.PURCHASED
+                : false,
 
               // relationships
               ...vendor_attr,
               ...invoice_attr
             })
 
-            if(batch){
+            if (batch) {
               this.loadLotNumbers(batch.id)
             }
-            
           }
         )
       }
@@ -684,9 +687,7 @@ class PlantEditor extends React.Component {
             <span className="f6 fw6 dark-gray">Plant Origin?</span>
           </div>
           <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">
-              Plants are purchased
-            </label>
+            <label className="f6 fw6 db mb1 gray">Plants are purchased</label>
             <input
               className="toggle toggle-default"
               type="checkbox"

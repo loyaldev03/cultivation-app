@@ -5,7 +5,12 @@ import ReactTable from 'react-table'
 import SeedEditor from './components/SeedEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
-import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import {
+  ListingTable,
+  HeaderFilter,
+  formatDate2,
+  CheckboxSelect
+} from '../../utils'
 
 const openEditor = (event, id) => {
   window.editorSidebar.open({ width: '500px', id })
@@ -14,12 +19,11 @@ const openEditor = (event, id) => {
 
 @observer
 class SeedSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
         {
-          
           accessor: 'order_uom',
           show: false
         },
@@ -53,7 +57,7 @@ class SeedSetupApp extends React.Component {
           headerClassName: 'tl'
         },
         {
-          Header: 'Supplier',     
+          Header: 'Supplier',
           accessor: 'vendor.name',
           headerClassName: 'tl'
         },
@@ -74,8 +78,7 @@ class SeedSetupApp extends React.Component {
           className: 'justify-end pr3',
           Cell: record => (
             <div className="tc">
-              {record.value}{' '}
-              {record.row.order_uom} 
+              {record.value} {record.row.order_uom}
             </div>
           )
         },
@@ -96,7 +99,7 @@ class SeedSetupApp extends React.Component {
         },
         {
           accessor: 'vendor_invoice.item_price',
-          show: false,
+          show: false
         },
         {
           Header: 'Cost',
@@ -105,8 +108,7 @@ class SeedSetupApp extends React.Component {
           Cell: record => (
             <div className="tr">
               {record.value} &nbsp;
-              
-               {(
+              {(
                 parseFloat(record.row.order_quantity) *
                 parseFloat(record.row['vendor_invoice.item_price'])
               ).toFixed(2)}
@@ -132,7 +134,6 @@ class SeedSetupApp extends React.Component {
           )
         }
       ]
-      
     }
   }
   componentDidMount() {
@@ -150,9 +151,8 @@ class SeedSetupApp extends React.Component {
   }
 
   renderList() {
-    const {columns} = this.state
+    const { columns } = this.state
     return (
-      
       <React.Fragment>
         <div className="w-100 bg-white pa3 grey">
           <div className="flex mb4 mt2">

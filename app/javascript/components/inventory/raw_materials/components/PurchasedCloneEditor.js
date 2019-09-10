@@ -35,7 +35,10 @@ class PurchasedCloneEditor extends React.Component {
                 id: id,
                 facility_id: attr.facility_id,
                 facility_strain_id: attr.facility_strain.id,
-                product: { value: attr.product ? attr.product.id : '', label: attr.product ? attr.product.name : '' },
+                product: {
+                  value: attr.product ? attr.product.id : '',
+                  label: attr.product ? attr.product.name : ''
+                },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer || '',

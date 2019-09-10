@@ -4,15 +4,17 @@ import ReactTable from 'react-table'
 import PlantEditor from './components/editor/PlantEditor'
 import PlantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
-import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import {
+  ListingTable,
+  HeaderFilter,
+  formatDate2,
+  CheckboxSelect
+} from '../../utils'
 import { differenceInDays } from 'date-fns'
-
-
-
 
 @observer
 class VegSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
@@ -25,7 +27,6 @@ class VegSetupApp extends React.Component {
           accessor: 'plant_id',
           headerStyle: { textAlign: 'left' },
           Cell: x => (
-
             <a
               href="#0"
               className="link grey"
@@ -46,7 +47,7 @@ class VegSetupApp extends React.Component {
           ),
           accessor: 'cultivation_batch_name',
           headerStyle: { textAlign: 'left' },
-          Cell: props => (<span>{props.value || 'Unnamed Batch'}</span>)
+          Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
           Header: 'Strain',
@@ -58,7 +59,9 @@ class VegSetupApp extends React.Component {
           accessor: 'current_growth_stage',
           headerStyle: { textAlign: 'left' },
           Cell: props => (
-            <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+            <span>
+              {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
+            </span>
           )
         },
         {
@@ -114,7 +117,6 @@ class VegSetupApp extends React.Component {
           Cell: props => (props.value ? props.value : '--')
         }
       ]
-
     }
   }
   componentDidMount() {
@@ -123,7 +125,7 @@ class VegSetupApp extends React.Component {
     loadPlants('veg', '', this.props.facility_id)
   }
 
-  openSidebar(event,id) {
+  openSidebar(event, id) {
     window.editorSidebar.open({ width: '500px', id }) // this is a very awkward way to set default sidepanel width
   }
 
@@ -141,7 +143,7 @@ class VegSetupApp extends React.Component {
 
   render() {
     const { plantPermission } = this.props
-    const {columns} = this.state
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">

@@ -47,7 +47,11 @@ class RawMaterialStore {
         const field2 = b.product_name.toLowerCase()
         const field3 = b.purchase_order.purchase_order_no.toLowerCase()
         const filter = this.filter.toLowerCase()
-        return field1.includes(filter) || field2.includes(filter) || field3.includes(filter)
+        return (
+          field1.includes(filter) ||
+          field2.includes(filter) ||
+          field3.includes(filter)
+        )
       })
     } else {
       return list
@@ -64,19 +68,15 @@ class RawMaterialStore {
   }
 
   updateFilterOptions = (propName, filterOptions) => {
-    
-      const updated = {
-        ...this.columnFilters,
-        [propName]: filterOptions
-      }
-      this.columnFilters = updated
-
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
   }
 
   getUniqPropValues = propName => {
-    
-      return uniq(this.filteredList.map(x => x[propName]).sort()) 
-    
+    return uniq(this.filteredList.map(x => x[propName]).sort())
   }
 }
 

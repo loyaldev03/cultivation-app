@@ -5,7 +5,12 @@ import ReactTable from 'react-table'
 import PurchasedCloneEditor from './components/PurchasedCloneEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
-import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import {
+  ListingTable,
+  HeaderFilter,
+  formatDate2,
+  CheckboxSelect
+} from '../../utils'
 
 const openEditor = (event, id) => {
   window.editorSidebar.open({ width: '500px', id })
@@ -14,7 +19,7 @@ const openEditor = (event, id) => {
 
 @observer
 class PurchasedClonesSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
@@ -65,15 +70,14 @@ class PurchasedClonesSetupApp extends React.Component {
         {
           accessor: 'order_uom',
           show: false
-,        },
+        },
         {
           Header: 'Order quantity',
           accessor: 'order_quantity',
           headerClassName: 'tr',
           Cell: record => (
             <div className="tr">
-              {record.value}{' '}
-              {record.row.order_uom}
+              {record.value} {record.row.order_uom}
             </div>
           )
         },
@@ -141,7 +145,7 @@ class PurchasedClonesSetupApp extends React.Component {
   }
 
   renderList() {
-    const {columns} = this.state
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 grey">

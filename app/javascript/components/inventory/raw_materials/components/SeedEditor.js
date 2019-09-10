@@ -17,7 +17,7 @@ class SeedEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
-    
+
     this.purchaseInfoEditor = React.createRef()
   }
 
@@ -42,7 +42,10 @@ class SeedEditor extends React.Component {
                 qty_per_package: attr.conversion,
                 product_id: attr.product_id,
                 product_name: attr.product_name,
-                product: { value: attr.product ? attr.product.id : '', label: attr.product ? attr.product.name : '' },
+                product: {
+                  value: attr.product ? attr.product.id : '',
+                  label: attr.product ? attr.product.name : ''
+                },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
                 upc: attr.product ? attr.product.upc : '',
@@ -360,7 +363,9 @@ class SeedEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">{this.state.form_type} Seed</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+              {this.state.form_type} Seed
+            </h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {

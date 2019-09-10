@@ -4,10 +4,14 @@ import ReactTable from 'react-table'
 import MotherEditor from './components/editor/MotherEditor'
 import PlantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
-import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import {
+  ListingTable,
+  HeaderFilter,
+  formatDate2,
+  CheckboxSelect
+} from '../../utils'
 import isEmpty from 'lodash.isempty'
 import { differenceInDays } from 'date-fns'
-
 
 function openStrain(event, id) {
   window.editorSidebar.open({ width: '500px', id })
@@ -16,7 +20,7 @@ function openStrain(event, id) {
 
 @observer
 class PlantSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
@@ -45,7 +49,7 @@ class PlantSetupApp extends React.Component {
           ),
           accessor: 'cultivation_batch_name',
           headerStyle: { textAlign: 'left' },
-          Cell: props => (<span>{props.value || 'Unnamed Batch'}</span>)
+          Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
           Header: 'Strain',
@@ -57,7 +61,9 @@ class PlantSetupApp extends React.Component {
           accessor: 'current_growth_stage',
           headerStyle: { textAlign: 'left' },
           Cell: props => (
-            <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+            <span>
+              {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
+            </span>
           )
         },
         {
@@ -113,7 +119,6 @@ class PlantSetupApp extends React.Component {
           Cell: props => (props.value ? props.value : '--')
         }
       ]
-
     }
   }
   componentDidMount() {
@@ -140,7 +145,7 @@ class PlantSetupApp extends React.Component {
 
   render() {
     const { plantPermission } = this.props
-    const {columns} = this.state
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -171,14 +176,13 @@ class PlantSetupApp extends React.Component {
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
           </div>
           <div className="pv3">
-          <ListingTable
-            columns={columns}
-            data={PlantStore.filteredList}
-            className="f6 -highlight"
-            isLoading={PlantStore.isLoading}
-          />
+            <ListingTable
+              columns={columns}
+              data={PlantStore.filteredList}
+              className="f6 -highlight"
+              isLoading={PlantStore.isLoading}
+            />
           </div>
-          
         </div>
         <MotherEditor
           isOpened={false}

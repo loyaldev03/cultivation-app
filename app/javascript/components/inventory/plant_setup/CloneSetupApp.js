@@ -4,9 +4,13 @@ import ReactTable from 'react-table'
 import PlantEditor from './components/editor/PlantEditor'
 import PlantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
-import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import {
+  ListingTable,
+  HeaderFilter,
+  formatDate2,
+  CheckboxSelect
+} from '../../utils'
 import { differenceInDays } from 'date-fns'
-
 
 function openSidebar(event, id) {
   window.editorSidebar.open({ width: '500px', id })
@@ -15,30 +19,29 @@ function openSidebar(event, id) {
 
 @observer
 class CloneSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
         {
           accessor: 'id',
-          show: false,
+          show: false
         },
         {
           Header: 'Plant ID',
           accessor: 'plant_id',
           headerStyle: { textAlign: 'left' },
           Cell: x => {
-            return(
-              
-            <a
-              href="#0"
-              className="link grey"
-              onClick={event => openSidebar(event, x.row.id)}
-            >
-              {x.value}
-            </a>
-          )
-            }
+            return (
+              <a
+                href="#0"
+                className="link grey"
+                onClick={event => openSidebar(event, x.row.id)}
+              >
+                {x.value}
+              </a>
+            )
+          }
         },
         {
           Header: (
@@ -51,7 +54,7 @@ class CloneSetupApp extends React.Component {
           ),
           accessor: 'cultivation_batch_name',
           headerStyle: { textAlign: 'left' },
-          Cell: props => (<span>{props.value || 'Unnamed Batch'}</span>)
+          Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
           Header: 'Strain',
@@ -119,7 +122,6 @@ class CloneSetupApp extends React.Component {
           Cell: props => (props.value ? props.value : '--')
         }
       ]
-
     }
   }
   componentDidMount() {
@@ -142,7 +144,7 @@ class CloneSetupApp extends React.Component {
 
   render() {
     const { plantPermission } = this.props
-    const {columns} = this.state
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -182,7 +184,6 @@ class CloneSetupApp extends React.Component {
               isLoading={PlantStore.isLoading}
             />
           </div>
-         
         </div>
         <PlantEditor
           growth_stage="clone"

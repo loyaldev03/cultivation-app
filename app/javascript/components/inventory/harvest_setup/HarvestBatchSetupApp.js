@@ -5,7 +5,7 @@ import HarvestBatchEditor from './components/HarvestBatchEditor'
 
 import harvestBatchStore from './store/HarvestBatchStore'
 import loadHarvests from './actions/loadHarvests'
-import { ListingTable, HeaderFilter, CheckboxSelect } from '../../utils';
+import { ListingTable, HeaderFilter, CheckboxSelect } from '../../utils'
 
 function openSidebar(event, id) {
   window.editorSidebar.open({ width: '500px', id })
@@ -14,7 +14,7 @@ function openSidebar(event, id) {
 
 @observer
 class HarvestbatchSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
@@ -49,7 +49,6 @@ class HarvestbatchSetupApp extends React.Component {
           ),
           accessor: 'cultivation_batch_name',
           headerStyle: { textAlign: 'left' }
-          
         },
         {
           Header: '# of Plants',
@@ -73,7 +72,8 @@ class HarvestbatchSetupApp extends React.Component {
             if (props.value && props.value.length > 0) {
               const d = new Date(props.value)
               return (
-                <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+                <span>{`${d.getMonth() +
+                  1}/${d.getDate()}/${d.getFullYear()}`}</span>
               )
             } else {
               return ''
@@ -101,7 +101,6 @@ class HarvestbatchSetupApp extends React.Component {
           width: 130
         }
       ]
-
     }
   }
   componentDidMount() {

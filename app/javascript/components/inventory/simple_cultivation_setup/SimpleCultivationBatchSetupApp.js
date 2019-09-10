@@ -6,9 +6,13 @@ import store from './store/CultivationBatchStore'
 import loadCultivationBatch from './actions/loadCultivationBatch'
 import BatchEditor from './components/BatchEditor'
 
-import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import {
+  ListingTable,
+  HeaderFilter,
+  formatDate2,
+  CheckboxSelect
+} from '../../utils'
 import { differenceInDays } from 'date-fns'
-
 
 function openBatch(event, id) {
   window.editorSidebar.open({ width: '500px', id })
@@ -17,7 +21,7 @@ function openBatch(event, id) {
 
 @observer
 class SimpleCultivationBatchSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       columns: [
@@ -60,7 +64,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             </a>
           )
         },
-        
+
         {
           Header: 'Phase',
           accessor: 'current_growth_stage',
@@ -108,7 +112,9 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           ),
           accessor: 'current_stage_location',
           minWidth: 180,
-          Cell: props => <span className="truncate">{props.value ? props.value : '--'}</span>
+          Cell: props => (
+            <span className="truncate">{props.value ? props.value : '--'}</span>
+          )
         },
         {
           Header: 'Start date',
@@ -185,10 +191,8 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           Header: 'Facility',
           accessor: 'facility',
           headerClassName: 'tl'
-        },
-        
+        }
       ]
-
     }
   }
   componentDidMount() {
@@ -214,7 +218,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
   }
 
   renderBatchList() {
-    const {columns} = this.state
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -276,4 +280,3 @@ class SimpleCultivationBatchSetupApp extends React.Component {
 }
 
 export default SimpleCultivationBatchSetupApp
-

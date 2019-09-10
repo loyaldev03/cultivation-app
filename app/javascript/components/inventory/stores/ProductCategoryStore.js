@@ -60,36 +60,32 @@ class ProductCategoryStore {
     this.isLoading = true
     const found = this.getCategoryByName(name)
     const payload = found ? Object.assign(toJS(found), updates) : updates
+    console.log('updateCategory', payload)
     const url = '/api/v1/products/product_categories/update'
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response && response.data) {
-        if (!found) {
-          // If new record push to array
-          this.categories = this.categories.push(response.data.attributes)
-          toast(`${name} has been saved`, 'success')
-          return
-        }
-
-        if (updates.deleted) {
-          this.categories = this.categories.filter(
-            x => x.name !== response.data.attributes.name
-          )
+        const updated = response.data.attributes
+        const found = this.categories.find(x => x.name === updated.name)
+        if (updated.deleted === true) {
+          this.categories = this.categories.filter(x => x.name !== updated.name)
           toast(`${name} has been deleted`, 'success')
           return
         }
-
-        // Update array in place
-        this.categories = this.categories.map(x => {
-          return x.name === response.data.attributes.name
-            ? response.data.attributes
-            : x
-        })
-        const cat = {
-          name: response.data.attributes.name,
-          status: response.data.attributes.is_active ? 'active' : 'inactive'
+        if (!found) {
+          // If new record push to array
+          // TODO: check why push not working
+          this.categories = [...this.categories, updated]
+          toast(`${name} has been saved`, 'success')
+          return
         }
-        toast(`${cat.name} is now ${cat.status}`, 'success')
+        if (updated) {
+          this.categories = this.categories.map(x => {
+            return x.name === updated.name ? updated : x
+          })
+          const status = updated.is_active ? 'active' : 'inactive'
+          toast(`${updated.name} is now ${status}`, 'success')
+        }
       } else {
         console.warn(response)
       }

@@ -133,11 +133,8 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     category = Inventory::ProductCategory.find_or_initialize_by(name: params[:name])
     # New record are set to active automatically.
     category.is_active = category.new_record? ? true : params[:is_active]
-
-    if params[:deleted] == true
-      category.deleted = true
-    end
-
+    # If user delete a category, just set the flag deleted.
+    category.deleted = params[:deleted] == true
     # WeightBased / CountBased, copy from METRC Item Category
     category.quantity_type = params[:quantity_type]
     category.metrc_item_category = params[:metrc_item_category]

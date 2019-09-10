@@ -22,7 +22,7 @@ class ProductCategoryApp extends React.Component {
   state = {
     tabIndex: 0,
     showEditPanel: false,
-    editPanelMode: 'add',
+    editPanelMode: '',
     editCategory: '',
     categoryColumns: [
       {
@@ -242,15 +242,12 @@ class ProductCategoryApp extends React.Component {
           width="500px"
           show={showEditPanel}
           renderBody={props =>
-            showEditPanel ? (
-              <AddEditProductCategoryForm
-                ref={form => (this.editForm = form)}
-                mode={editPanelMode}
-                formData={CategoryStore.getCategoryByName(editCategory)}
-                onClose={() => this.setState({ showEditPanel: false })}
-                onSave={this.onSave}
-              />
-            ) : null
+            <AddEditProductCategoryForm
+              ref={form => (this.editForm = form)}
+              mode={editPanelMode}
+              onClose={() => this.setState({ showEditPanel: false })}
+              onSave={this.onSave}
+            />
           }
         />
         <div className="mt0 ba b--light-grey pa3">

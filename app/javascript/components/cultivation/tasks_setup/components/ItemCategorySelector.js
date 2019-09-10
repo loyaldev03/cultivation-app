@@ -25,15 +25,10 @@ class ItemCategorySelector extends React.Component {
   }
 
   onChange = selectedCategory => {
-    const category = CategoryStore.getCategoryByName(selectedCategory.value)
     if (this.props.onChange) {
-      this.props.onChange(selectedCategory, category.quantity_type)
+      this.props.onChange(selectedCategory)
     }
     this.setState({ selectedCategory })
-  }
-
-  getSelectedCategory() {
-    return CategoryStore.getCategoryByName(this.state.selectedCategory.value)
   }
 
   render() {

@@ -204,7 +204,8 @@ class ProductCategoryApp extends React.Component {
   onSave = formData => {
     CategoryStore.updateCategory(formData.name, formData)
     this.setState({
-      showEditPanel: false
+      showEditPanel: false,
+      editPanelMode: '',
     })
   }
 

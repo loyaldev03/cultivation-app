@@ -9,10 +9,12 @@ module Inventory
     end
 
     attribute :sub_categories do |object|
-      {
-        id: object.id.to_s,
-        name: object.name,
-      }
+      object.sub_categories.map do |sub|
+        {
+          id: sub.id.to_s,
+          name: sub.name,
+        }
+      end
     end
   end
 end

@@ -167,6 +167,19 @@ class ProductCategoryStore {
   }
 
   @computed
+  get filteredListSubCategories() {
+    let list = []
+    if (this.isDataLoaded) {
+      this.categories.forEach(x => {
+        if (x.sub_categories) {
+          list = list.concat(x.sub_categories)
+        }
+      })
+    }
+    return list
+  }
+
+  @computed
   get categoryOptions() {
     const res = this.categories
       .filter(c => c.is_active && !c.deleted)

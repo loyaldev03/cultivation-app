@@ -109,7 +109,7 @@ class ProductCategoryApp extends React.Component {
         }
       }
     ],
-    itemColumns: [
+    subCategoryColumns: [
       {
         accessor: 'id',
         show: false
@@ -120,73 +120,6 @@ class ProductCategoryApp extends React.Component {
         accessor: 'name',
         minWidth: 250
       },
-      {
-        Header: (
-          <HeaderFilter
-            title="Item Category"
-            accessor="product_category_name"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'product_category_name',
-        minWidth: 150
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Strain"
-            accessor="strain_name"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'strain_name',
-        minWidth: 200
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Unit of Measure"
-            accessor="uom_name"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'uom_name',
-        minWidth: 120
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Quantity Type"
-            accessor="quantity_type"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'quantity_type',
-        minWidth: 120
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Added to Metrc"
-            accessor="updated_metrc"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'updated_metrc',
-        minWidth: 120,
-        className: 'justify-end pr3',
-        Cell: props => {
-          return props.value ? 'Yes' : 'No'
-        }
-      }
     ]
   }
 
@@ -242,8 +175,8 @@ class ProductCategoryApp extends React.Component {
 
   render() {
     const {
-      itemColumns,
       categoryColumns,
+      subCategoryColumns,
       tabIndex,
       showEditPanel,
       editPanelMode,
@@ -335,9 +268,9 @@ class ProductCategoryApp extends React.Component {
               </div>
               <div className="pb4 ph3">
                 <ListingTable
-                  data={MetrcItemStore.filteredList}
-                  columns={itemColumns}
-                  isLoading={MetrcItemStore.isLoading}
+                  data={CategoryStore.filteredListSubCategories}
+                  columns={subCategoryColumns}
+                  isLoading={CategoryStore.isLoading}
                 />
               </div>
             </TabPanel>

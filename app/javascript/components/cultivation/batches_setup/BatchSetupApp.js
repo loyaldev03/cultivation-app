@@ -71,13 +71,8 @@ class BatchSetupApp extends React.Component {
   }
 
   handleChange = (field, value) => {
-    console.log('changing something')
-    console.log(field)
-    console.log(value)
     if (field === 'template') {
       const templateValue = this.props.templates.find(f => f.value === value)
-      console.log(templateValue)
-      console.log(this.state)
       this.setState({
         [field]: value,
         name: templateValue.template_name,

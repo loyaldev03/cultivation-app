@@ -120,6 +120,23 @@ class ProductCategoryApp extends React.Component {
         accessor: 'name',
         minWidth: 250
       },
+      {
+        Header: '',
+        accessor: 'id',
+        width: 80,
+        className: 'justify-center',
+        Cell: props => {
+          const record = {
+            id: props.row.id,
+            name: props.row.name
+          }
+          return (
+            <a href="#0" onClick={e => this.onDeleteSubcategory(e, record)}>
+              <i className="material-icons red">delete</i>
+            </a>
+          )
+        }
+      }
     ]
   }
 
@@ -148,7 +165,6 @@ class ProductCategoryApp extends React.Component {
   }
 
   onSaveSubcategory = formData => {
-    console.log('save sub category', formData)
     CategoryStore.updateSubCategory(formData.productCategory, formData)
     this.setState({
       showEditSubCategoryPanel: false,
@@ -170,6 +186,17 @@ class ProductCategoryApp extends React.Component {
     const result = confirm(`Confirm delete product category ${record}?`)
     if (result) {
       CategoryStore.updateCategory(record, { deleted: true })
+    }
+  }
+
+  onDeleteSubcategory = (e, record) => {
+    e.stopPropagation()
+    const result = confirm(`Confirm delete subcategory ${record.name}?`)
+    if (result) {
+      CategoryStore.updateSubCategory(null, {
+        id: record.id,
+        deleted: true
+      })
     }
   }
 

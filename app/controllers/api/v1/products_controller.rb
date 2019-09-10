@@ -153,12 +153,19 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def update_product_subcategory
-    category = Inventory::ProductCategory.find_by(id: params[:product_category_id])
+    category = Inventory::ProductCategory.find_by("sub_categories._id": params[:id].to_bson_id)
+    category ||= Inventory::ProductCategory.find_by(id: params[:product_category_id]) if params[:product_category_id]
     sub_category_id = params[:id]
     sub_category_name = params[:name]
     sub_category = category.sub_categories.detect { |x| x.id.to_s == sub_category_id }
-    sub_category ||= category.sub_categories.detect { |x| x.name == sub_category_name }
-    sub_category ||= category.sub_categories.build(name: sub_category_name)
+
+    if params[:deleted] == true
+      category.sub_categories = category.sub_categories - [sub_category]
+    else
+      sub_category ||= category.sub_categories.detect { |x| x.name == sub_category_name }
+      sub_category ||= category.sub_categories.build(name: sub_category_name)
+    end
+
     category.save!
     render json: Inventory::ProductCategorySerializer.new(category).serialized_json
   end

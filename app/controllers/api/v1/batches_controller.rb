@@ -8,6 +8,13 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     render json: BatchSerializer.new(batches, options).serialized_json
   end
 
+  def show
+    batches = Cultivation::Batch.where(id: params[:id])
+    batch = Cultivation::Batch.find(params[:id])
+    phases = extract_phases(batches)
+    render json: BatchSerializer.new(batch, {params: {phases: phases}}).serialized_json
+  end
+
   def batch_info
     batch_id = params[:batch_id]
     batch = Cultivation::Batch.includes(:facility_strain).find_by(id: batch_id)

@@ -118,6 +118,8 @@ class HarvestPackageEditor extends React.Component {
             uom = { value: attr.uom, label: attr.uom }
           }
 
+          const facilityid = fs ? fs.facility_id : ''
+
           this.setState({
             ...this.resetState(),
             product_id: attr.product.id,
@@ -125,8 +127,8 @@ class HarvestPackageEditor extends React.Component {
             sku: attr.product.sku,
             transaction_limit: attr.product.transaction_limit || '',
             catalogue: catalogue,
-            facility_strain: fs,
-            facility_id: fs.facility_id,
+            facility_strain: fs || '',
+            facility_id: facilityid || '',
             id: attr.id,
             package_tag: attr.package_tag,
             quantity: attr.quantity,

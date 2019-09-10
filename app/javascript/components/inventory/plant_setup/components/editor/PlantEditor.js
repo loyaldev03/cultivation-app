@@ -123,30 +123,33 @@ class PlantEditor extends React.Component {
             this.setState({
               ...this.resetState(),
               id: data.id,
-              cultivation_batch_id: batch.id,
-              facility_strain_id: batch.facility_strain_id,
-              facility_id: batch.facility_id,
+              cultivation_batch_id: batch ? batch.id : '',
+              facility_strain_id: batch ? batch.facility_strain_id : '',
+              facility_id: batch ? batch.facility_id : '',
               plant_ids: data.attributes.plant_id,
               plant_qty: 0,
               location_id: data.attributes.location_id,
-              planting_date: new Date(data.attributes.planting_date),
+              planting_date: batch ? new Date(data.attributes.planting_date) : '',
               manifest_no: data.attributes.manifest_no,
               motherOption: motherOption,
               lot_number,
 
               // UI states
-              strain_name: batch.strain_name,
-              start_date: new Date(batch.start_date),
-              facility: batch.facility,
-              batch_source: batch.batch_source,
-              isBought: batch.batch_source === BATCH_SOURCE.PURCHASED,
+              strain_name: batch ? batch.strain_name : '',
+              start_date: batch ? new Date(batch.start_date) : '',
+              facility: batch ? batch.facility : '',
+              batch_source: batch ? batch.batch_source : '',
+              isBought: batch ? batch.batch_source === BATCH_SOURCE.PURCHASED : false,
 
               // relationships
               ...vendor_attr,
               ...invoice_attr
             })
 
-            this.loadLotNumbers(batch.id)
+            if(batch){
+              this.loadLotNumbers(batch.id)
+            }
+            
           }
         )
       }
@@ -681,7 +684,9 @@ class PlantEditor extends React.Component {
             <span className="f6 fw6 dark-gray">Plant Origin?</span>
           </div>
           <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">Plants are purchased</label>
+            <label className="f6 fw6 db mb1 gray">
+              Plants are purchased
+            </label>
             <input
               className="toggle toggle-default"
               type="checkbox"

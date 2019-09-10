@@ -126,7 +126,7 @@ class HarvestDashboard extends React.Component {
   render() {
     const { columns } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse">
           {/* <span className="f5 fw6">
             You have

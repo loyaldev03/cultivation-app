@@ -5,88 +5,7 @@ import ReactTable from 'react-table'
 import PurchasedCloneEditor from './components/PurchasedCloneEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
-
-const columns = [
-  {
-    Header: 'Strain',
-    accessor: 'attributes.facility_strain.strain_name',
-    headerClassName: 'tl ttc'
-  },
-  {
-    Header: 'Facility',
-    accessor: 'attributes.facility_name',
-    headerClassName: 'tl'
-  },
-  {
-    Header: 'Product Name',
-    accessor: 'attributes.product_name',
-    headerClassName: 'tl'
-  },
-  {
-    Header: 'Supplier',
-    accessor: 'attributes.vendor.name',
-    headerClassName: 'tl'
-  },
-  {
-    Header: 'PO Number',
-    accessor: 'attributes.purchase_order.purchase_order_no',
-    headerClassName: 'tl'
-  },
-  {
-    Header: 'Invoice No',
-    accessor: 'attributes.vendor_invoice.invoice_no',
-    headerClassName: 'tl'
-  },
-  {
-    Header: 'Order quantity',
-    headerClassName: 'tr',
-    Cell: record => (
-      <div className="tr">
-        {record.original.attributes.order_quantity}{' '}
-        {record.original.attributes.order_uom}
-      </div>
-    )
-  },
-  {
-    Header: 'Quantity',
-    headerClassName: 'tr',
-    Cell: record => (
-      <div className="tr">
-        {record.original.attributes.quantity} {record.original.attributes.uom}
-      </div>
-    )
-  },
-  {
-    Header: 'Cost',
-    headerClassName: 'tr',
-    Cell: record => (
-      <div className="tr">
-        {record.original.attributes.vendor_invoice.item_currency} &nbsp;
-        {(
-          parseFloat(record.original.attributes.order_quantity) *
-          parseFloat(record.original.attributes.vendor_invoice.item_price)
-        ).toFixed(2)}
-      </div>
-    )
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: record => (
-      <a
-        href="#"
-        onClick={event => {
-          const data = toJS(record.original.id)
-          openEditor(event, data)
-        }}
-      >
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
-  }
-]
+import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
 
 const openEditor = (event, id) => {
   window.editorSidebar.open({ width: '500px', id })
@@ -95,6 +14,122 @@ const openEditor = (event, id) => {
 
 @observer
 class PurchasedClonesSetupApp extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      columns: [
+        {
+          Header: 'Strain',
+          accessor: 'facility_strain.strain_name',
+          headerClassName: 'tl ttc'
+        },
+        {
+          Header: (
+            <HeaderFilter
+              title="Facility"
+              accessor="facility_name"
+              getOptions={rawMaterialStore.getUniqPropValues}
+              onUpdate={rawMaterialStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'facility_name',
+          headerClassName: 'tl'
+        },
+        {
+          Header: (
+            <HeaderFilter
+              title="Product Name"
+              accessor="product_name"
+              getOptions={rawMaterialStore.getUniqPropValues}
+              onUpdate={rawMaterialStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'product_name',
+          headerClassName: 'tl'
+        },
+        {
+          Header: 'Supplier',
+          accessor: 'vendor.name',
+          headerClassName: 'tl'
+        },
+        {
+          Header: 'PO Number',
+          accessor: 'purchase_order.purchase_order_no',
+          headerClassName: 'tl'
+        },
+        {
+          Header: 'Invoice No',
+          accessor: 'vendor_invoice.invoice_no',
+          headerClassName: 'tl'
+        },
+        {
+          accessor: 'order_uom',
+          show: false
+,        },
+        {
+          Header: 'Order quantity',
+          accessor: 'order_quantity',
+          headerClassName: 'tr',
+          Cell: record => (
+            <div className="tr">
+              {record.value}{' '}
+              {record.row.order_uom}
+            </div>
+          )
+        },
+        {
+          accessor: 'uom',
+          show: false
+        },
+        {
+          Header: 'Quantity',
+          headerClassName: 'tr',
+          accessor: 'quantity',
+          Cell: record => (
+            <div className="tr">
+              {record.value} {record.row.uom}
+            </div>
+          )
+        },
+        {
+          accessor: 'vendor_invoice.item_price',
+          show: false
+        },
+        {
+          Header: 'Cost',
+          accessor: 'vendor_invoice.item_currency',
+          headerClassName: 'tr',
+          Cell: record => (
+            <div className="tr">
+              {record.value} &nbsp;
+              {(
+                parseFloat(record.row.order_quantity) *
+                parseFloat(record.row['vendor_invoice.item_price'])
+              ).toFixed(2)}
+            </div>
+          )
+        },
+        {
+          Header: '',
+          className: 'tc',
+          filterable: false,
+          maxWidth: 45,
+          accessor: 'id',
+          Cell: record => (
+            <a
+              href="#"
+              onClick={event => {
+                const data = toJS(record.value)
+                openEditor(event, data)
+              }}
+            >
+              <i className="material-icons gray">more_horiz</i>
+            </a>
+          )
+        }
+      ]
+    }
+  }
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
@@ -106,6 +141,7 @@ class PurchasedClonesSetupApp extends React.Component {
   }
 
   renderList() {
+    const {columns} = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 grey">
@@ -127,14 +163,21 @@ class PurchasedClonesSetupApp extends React.Component {
             </div>
           </div>
 
-          <ReactTable
+          <div className="flex justify-between pb2">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Product Name/ Strain/ PO No"
+              onChange={e => {
+                rawMaterialStore.filter = e.target.value
+              }}
+            />
+            {/* <CheckboxSelect options={columns} onChange={this.onToggleColumns} /> */}
+          </div>
+
+          <ListingTable
             columns={columns}
-            pagination={{ position: 'top' }}
-            data={rawMaterialStore.bindable}
-            showPagination={false}
-            pageSize={30}
-            minRows={5}
-            filterable
+            data={rawMaterialStore.filteredList}
             className="f6 -highlight"
           />
         </div>

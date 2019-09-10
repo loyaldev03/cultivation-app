@@ -2,59 +2,12 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import MotherEditor from './components/editor/MotherEditor'
-import plantStore from './store/PlantStore'
+import PlantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
+import {ListingTable, HeaderFilter, formatDate2, CheckboxSelect} from '../../utils'
+import isEmpty from 'lodash.isempty'
+import { differenceInDays } from 'date-fns'
 
-const columns = [
-  {
-    Header: 'Plant ID',
-    accessor: 'attributes.plant_id',
-    headerStyle: { textAlign: 'left' },
-    Cell: x => (
-      <a
-        href="#0"
-        className="link grey"
-        onClick={event => openStrain(event, x.original.id)}
-      >
-        {x.value}
-      </a>
-    )
-  },
-  {
-    Header: 'Strain',
-    accessor: 'attributes.strain_name',
-    headerStyle: { textAlign: 'left' }
-  },
-  {
-    Header: 'Growth stage',
-    accessor: 'attributes.current_growth_stage',
-    headerStyle: { textAlign: 'left' },
-    Cell: props => (
-      <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
-    )
-  },
-  {
-    Header: 'Planted On',
-    accessor: 'attributes.planting_date',
-    headerStyle: { textAlign: 'left' },
-    Cell: props => {
-      const d = new Date(props.value)
-      if (props.value) {
-        return (
-          <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
-        )
-      } else {
-        return ''
-      }
-    }
-  },
-  {
-    Header: 'Location',
-    accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' },
-    width: 180
-  }
-]
 
 function openStrain(event, id) {
   window.editorSidebar.open({ width: '500px', id })
@@ -63,10 +16,122 @@ function openStrain(event, id) {
 
 @observer
 class PlantSetupApp extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      columns: [
+        {
+          Header: 'Plant ID',
+          accessor: 'plant_id',
+          headerStyle: { textAlign: 'left' },
+          Cell: x => (
+            <a
+              href="#0"
+              className="link grey"
+              onClick={event => openStrain(event, x.original.id)}
+            >
+              {x.value}
+            </a>
+          )
+        },
+        {
+          Header: (
+            <HeaderFilter
+              title="Batch ID"
+              accessor="cultivation_batch_name"
+              getOptions={PlantStore.getUniqPropValues}
+              onUpdate={PlantStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'cultivation_batch_name',
+          headerStyle: { textAlign: 'left' },
+          Cell: props => (<span>{props.value || 'Unnamed Batch'}</span>)
+        },
+        {
+          Header: 'Strain',
+          accessor: 'strain_name',
+          headerStyle: { textAlign: 'left' }
+        },
+        {
+          Header: 'Growth stage',
+          accessor: 'current_growth_stage',
+          headerStyle: { textAlign: 'left' },
+          Cell: props => (
+            <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+          )
+        },
+        {
+          Header: 'Planted On',
+          accessor: 'planting_date',
+          headerStyle: { textAlign: 'left' },
+          Cell: props => (props.value ? formatDate2(props.value) : '--')
+        },
+        {
+          headerClassName: 'tl',
+          Header: 'Batch Start Date',
+          accessor: 'batch_start_date',
+          className: 'justify-end pr3',
+          width: 88,
+          Cell: props => formatDate2(props.value)
+        },
+        {
+          headerClassName: 'tl',
+          Header: 'Phase Date',
+          accessor: 'current_stage_start_date',
+          className: 'justify-end pr3',
+          width: 88,
+          Cell: props => (props.value ? formatDate2(props.value) : '--')
+        },
+        {
+          headerClassName: 'tl',
+          Header: 'Est. Harvest Date',
+          accessor: 'estimated_harvest_date',
+          className: 'justify-end pr3',
+          width: 98,
+          Cell: props => formatDate2(props.value)
+        },
+        {
+          headerClassName: 'tl',
+          Header: '# of days in current stage',
+          accessor: 'stage_days',
+          className: 'justify-end pr3',
+          width: 100,
+          Cell: props => {
+            if (props.row.current_stage_start_date)
+              return differenceInDays(
+                this.props.currentTime,
+                props.row.current_stage_start_date
+              )
+            else return '--'
+          }
+        },
+        {
+          Header: 'Location',
+          accessor: 'location_name',
+          headerStyle: { textAlign: 'left' },
+          width: 180,
+          Cell: props => (props.value ? props.value : '--')
+        }
+      ]
+
+    }
+  }
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     loadPlants('mother', '', this.props.facility_id)
+  }
+
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
+    }
   }
 
   openSidebar() {
@@ -75,6 +140,7 @@ class PlantSetupApp extends React.Component {
 
   render() {
     const { plantPermission } = this.props
+    const {columns} = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -93,18 +159,26 @@ class PlantSetupApp extends React.Component {
               )}
             </div>
           </div>
-
-          <ReactTable
+          <div className="flex justify-between">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Plants"
+              onChange={e => {
+                PlantStore.filter = e.target.value
+              }}
+            />
+            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          </div>
+          <div className="pv3">
+          <ListingTable
             columns={columns}
-            pagination={{ position: 'top' }}
-            data={plantStore.bindablePlants}
-            showPagination={false}
-            pageSize={30}
-            minRows={5}
-            filterable
+            data={PlantStore.filteredList}
             className="f6 -highlight"
-            showPagination={plantStore.plants.length > 30}
+            isLoading={PlantStore.isLoading}
           />
+          </div>
+          
         </div>
         <MotherEditor
           isOpened={false}

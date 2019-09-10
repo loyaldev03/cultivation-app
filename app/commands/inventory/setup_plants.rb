@@ -21,6 +21,7 @@ module Inventory
       :vendor_no,
       :invoice_no,
       :purchase_order_no,
+      :manifest_no,
       :address,
       :vendor_state_license_num,
       :vendor_state_license_expiration_date,
@@ -52,6 +53,7 @@ module Inventory
       @vendor_location_license_expiration_date = args[:vendor_location_license_expiration_date]
       @vendor_location_license_num = args[:vendor_location_license_num]
       @purchase_date = args[:purchase_date]
+      @manifest_no = args[:manifest_no]
       @invoice_no = args[:invoice_no]
       @purchase_order_no = args[:purchase_order_no]
       @lot_number = args[:lot_number]
@@ -116,6 +118,7 @@ module Inventory
     end
 
     def update_plant(invoice_item)
+      Rails.logger.debug("MANIFEST====>#{manifest_no}")
       facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
 
@@ -134,6 +137,7 @@ module Inventory
         lot_number: lot_number,
         ref_id: invoice_item ? invoice_item.id : nil,
         ref_type: invoice_item ? invoice_item.class.name : nil,
+        manifest_no: manifest_no,
       )
 
       # Update tray bookings
@@ -149,7 +153,7 @@ module Inventory
     def create_plants(invoice_item)
       facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
-
+      Rails.logger.debug("MANIFEST====>#{manifest_no}")
       plants = plant_ids.map do |plant_id|
         Inventory::Plant.create!(
           plant_id: plant_id,
@@ -165,6 +169,7 @@ module Inventory
           lot_number: lot_number,
           ref_id: invoice_item ? invoice_item.id : nil,
           ref_type: invoice_item ? invoice_item.class.name : nil,
+          manifest_no: manifest_no,
         )
       end
 

@@ -124,8 +124,10 @@ module Cultivation
       # Rails.logger.debug ">>>>> [phase, start_date, duration]"
       # Rails.logger.debug [phase, start_date, duration]
       return start_date if duration == 0
+      facility_strain = Inventory::FacilityStrain.find @facility_strain_id
 
       batch.tasks.create!(
+        facility_id: facility_strain.facility_id,
         phase: phase,
         name: "Grow Period - #{phase.capitalize}",
         duration: duration,

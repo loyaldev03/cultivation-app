@@ -374,7 +374,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :batches, only: [:index, :create] do
+      resources :batches, only: [:index, :create, :show] do
         get 'batch_info'
         get 'harvest_batch'
         get 'list_infos', on: :collection

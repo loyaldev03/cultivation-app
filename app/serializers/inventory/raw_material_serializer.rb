@@ -5,6 +5,9 @@ module Inventory
 
     attributes :order_quantity, :order_uom, :quantity, :uom, :manufacturer, :description, :conversion
 
+    attribute :id do |object|
+      object.id&.to_s
+    end
     attribute :product_name do |object|
       object.product.name if object.product
     end

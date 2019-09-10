@@ -13,6 +13,10 @@ module Inventory
       :total_dry_weight,
       :total_cure_weight
 
+    attribute :id do |object|
+      object.id&.to_s
+    end
+
     attribute :cultivation_batch_name do |object|
       "#{object.cultivation_batch.batch_no} - #{object.cultivation_batch.name}"
     end

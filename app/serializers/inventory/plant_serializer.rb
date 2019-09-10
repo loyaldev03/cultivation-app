@@ -18,6 +18,7 @@ module Inventory
       :flower_date,
       :harvest_date,
       :estimated_harvest_date,
+      :manifest_no,
       :created_at
 
     attribute :cultivation_batch do |object, params = {}|

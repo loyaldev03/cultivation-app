@@ -65,7 +65,12 @@ class ProductCategoryStore {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response && response.data) {
         const updated = response.data.attributes
-        console.log('sub category updated', updated)
+        if (updated) {
+          this.categories = this.categories.map(x => {
+            return x.name === updated.name ? updated : x
+          })
+          toast(`${updates.name} saved.`, 'success')
+        }
       } else {
         console.warn(response)
       }

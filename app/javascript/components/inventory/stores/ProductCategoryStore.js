@@ -56,6 +56,27 @@ class ProductCategoryStore {
   }
 
   @action
+  async updateSubCategory(categoryName, updates) {
+    this.isLoading = true
+    const url = '/api/v1/products/product_categories/update_subcategory'
+    const found = this.getCategoryByName(categoryName)
+    const payload = Object.assign({ product_category_id: found.id }, updates)
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response && response.data) {
+        const updated = response.data.attributes
+        console.log('sub category updated', updated)
+      } else {
+        console.warn(response)
+      }
+    } catch (error) {
+      throw error
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
   async updateCategory(name, updates) {
     this.isLoading = true
     const found = this.getCategoryByName(name)

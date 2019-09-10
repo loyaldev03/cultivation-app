@@ -216,6 +216,7 @@ class ProductCategoryApp extends React.Component {
 
   onSaveSubcategory = formData => {
     console.log('save sub category', formData)
+    CategoryStore.updateSubCategory(formData.productCategory, formData)
     this.setState({
       showEditSubCategoryPanel: false,
       editSubCategoryPanelMode: '',

@@ -152,6 +152,17 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: Inventory::ProductCategorySerializer.new(category).serialized_json
   end
 
+  def update_product_subcategory
+    category = Inventory::ProductCategory.find_by(id: params[:product_category_id])
+    sub_category_id = params[:id]
+    sub_category_name = params[:name]
+    sub_category = category.sub_categories.detect { |x| x.id.to_s == sub_category_id }
+    sub_category ||= category.sub_categories.detect { |x| x.name == sub_category_name }
+    sub_category ||= category.sub_categories.build(name: sub_category_name)
+    category.save!
+    render json: Inventory::ProductCategorySerializer.new(category).serialized_json
+  end
+
   def items
     items = Inventory::Item.
       where(facility_id: params[:facility_id]).

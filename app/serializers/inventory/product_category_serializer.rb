@@ -7,5 +7,12 @@ module Inventory
     attribute :id do |object|
       object.id.to_s
     end
+
+    attribute :sub_categories do |object|
+      {
+        id: object.id.to_s,
+        name: object.name,
+      }
+    end
   end
 end

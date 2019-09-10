@@ -11,6 +11,7 @@ import {
 import MetrcItemStore from './ItemStore'
 import CategoryStore from '../inventory/stores/ProductCategoryStore'
 import AddEditProductCategoryForm from './AddEditProductCategoryForm'
+import AddEditProductSubCategoryForm from './AddEditProductSubCategoryForm'
 
 @observer
 class ProductCategoryApp extends React.Component {
@@ -21,9 +22,12 @@ class ProductCategoryApp extends React.Component {
 
   state = {
     tabIndex: 0,
-    showEditPanel: false,
-    editPanelMode: '',
-    editCategory: '',
+    showEditPanel: false, // Category
+    editPanelMode: '', // Category
+    editCategory: '', // Category
+    showEditSubCategoryPanel: false, // SubCategory
+    editSubCategoryPanelMode: '', // SubCategory
+    editSubCategory: '', // SubCategory
     categoryColumns: [
       {
         accessor: 'id',
@@ -210,6 +214,14 @@ class ProductCategoryApp extends React.Component {
     })
   }
 
+  onSaveSubcategory = formData => {
+    this.setState({
+      showEditSubCategoryPanel: false,
+      editSubCategoryPanelMode: '',
+      editSubCategory: ''
+    })
+  }
+
   onEdit = name => {
     this.setState({
       showEditPanel: true,
@@ -233,7 +245,10 @@ class ProductCategoryApp extends React.Component {
       tabIndex,
       showEditPanel,
       editPanelMode,
-      editCategory
+      editCategory,
+      showEditSubCategoryPanel,
+      editSubCategoryPanelMode,
+      editSubCategory
     } = this.state
     const { facilityId } = this.props
     console.warn('FIXME: Wrong facilityId when selecting All')
@@ -250,6 +265,18 @@ class ProductCategoryApp extends React.Component {
               editCategory={editCategory}
               onClose={() => this.setState({ showEditPanel: false })}
               onSave={this.onSave}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={showEditSubCategoryPanel}
+          renderBody={props => (
+            <AddEditProductSubCategoryForm
+              mode={editSubCategoryPanelMode}
+              editSubCategory={editSubCategory}
+              onClose={() => this.setState({ showEditSubCategoryPanel: false })}
+              onSave={this.onSaveSubcategory}
             />
           )}
         />
@@ -290,7 +317,21 @@ class ProductCategoryApp extends React.Component {
               </div>
             </TabPanel>
             <TabPanel>
-              <div className="pv4 ph3">
+              <div className="pa3 tr">
+                <a
+                  href="#0"
+                  className="btn btn--primary"
+                  onClick={() =>
+                    this.setState({
+                      showEditSubCategoryPanel: true,
+                      editSubCategoryPanelMode: 'add'
+                    })
+                  }
+                >
+                  + Add New
+                </a>
+              </div>
+              <div className="pb4 ph3">
                 <ListingTable
                   data={MetrcItemStore.filteredList}
                   columns={itemColumns}

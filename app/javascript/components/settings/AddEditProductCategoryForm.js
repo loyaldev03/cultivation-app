@@ -44,7 +44,7 @@ class AddEditProductCategoryForm extends React.Component {
   }
 
   render() {
-    const { onClose, onSave, mode = 'add', formData } = this.props
+    const { onClose, onSave, mode = 'add' } = this.props
     const { name, metrc_item_category } = this.state
 
     if (!mode) {
@@ -68,7 +68,6 @@ class AddEditProductCategoryForm extends React.Component {
               <div className="w-100 fl pr3">
                 <label className="f6 fw6 db mb1 gray ttc">Name</label>
                 <input
-                  ref={input => (this.nameInput = input)}
                   value={name}
                   onChange={e => this.setState({ name: e.target.value })}
                   className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"

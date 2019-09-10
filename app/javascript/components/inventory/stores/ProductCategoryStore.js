@@ -146,6 +146,19 @@ class ProductCategoryStore {
   }
 
   @computed
+  get categoryOptions() {
+    const res = this.categories
+      .filter(c => c.is_active && !c.deleted)
+      .map(c => {
+        return {
+          value: c.name,
+          label: c.name
+        }
+      })
+    return res
+  }
+
+  @computed
   get weightOptions() {
     const res = this.categories
       .filter(

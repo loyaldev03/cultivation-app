@@ -64,24 +64,27 @@ class ProductCategoryStore {
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response && response.data) {
+        const updated = response.data.attributes
+        const found = this.categories.find(x => x.name === updated.name)
+        if (updated.deleted === true) {
+          this.categories = this.categories.filter(x => x.name !== updated.name)
+          toast(`${name} has been deleted`, 'success')
+          return
+        }
         if (!found) {
           // If new record push to array
-          console.log('before push', this.categories.length)
-          console.log(response.data.attributes)
-          this.categories.push(response.data.attributes)
-          console.log('after push', this.categories.length)
+          // TODO: check why push not working
+          this.categories = [...this.categories, updated]
+          toast(`${name} has been saved`, 'success')
+          return
         }
-        // Update array in place
-        this.categories = this.categories.map(x => {
-          return x.name === response.data.attributes.name
-            ? response.data.attributes
-            : x
-        })
-        const cat = {
-          name: response.data.attributes.name,
-          status: response.data.attributes.is_active ? 'active' : 'inactive'
+        if (updated) {
+          this.categories = this.categories.map(x => {
+            return x.name === updated.name ? updated : x
+          })
+          const status = updated.is_active ? 'active' : 'inactive'
+          toast(`${updated.name} is now ${status}`, 'success')
         }
-        toast(`${cat.name} is now ${cat.status}`, 'success')
       } else {
         console.warn(response)
       }

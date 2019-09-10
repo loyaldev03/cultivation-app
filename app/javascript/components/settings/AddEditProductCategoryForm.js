@@ -1,17 +1,42 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
+import CategoryStore from '../inventory/stores/ProductCategoryStore'
 import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCategorySelector'
 
 @observer
 class AddEditProductCategoryForm extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      name: '',
+      metrc_item_category: ''
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { mode, editCategory } = this.props
+    if (mode && mode !== prevProps.mode) {
+      this.setState({
+        name: '',
+        metrc_item_category: ''
+      })
+    }
+    if (editCategory && editCategory !== prevProps.editCategory) {
+      const category = CategoryStore.getCategoryByName(editCategory)
+      const metrcItem = category.metrc_item_category || ''
+      this.setState({
+        name: editCategory,
+        metrc_item_category: metrcItem
+      })
+    }
+  }
+
   onSubmit = e => {
     e.preventDefault()
-    const metrcCategory = this.categorySelector.getSelectedCategory()
     const formData = {
-      name: this.nameInput.value,
-      metrc_item_category: metrcCategory ? metrcCategory.name : '',
-      quantity_type: metrcCategory ? metrcCategory.quantity_type : ''
+      name: this.state.name,
+      metrc_item_category: this.state.metrc_item_category
     }
     if (this.props.onSave) {
       this.props.onSave(formData)
@@ -19,7 +44,13 @@ class AddEditProductCategoryForm extends React.Component {
   }
 
   render() {
-    const { onClose, onSave, mode = 'add' } = this.props
+    const { onClose, onSave, mode = 'add', formData } = this.props
+    const { name, metrc_item_category } = this.state
+
+    if (!mode) {
+      return null
+    }
+
     return (
       <div className="h-100 flex flex-auto flex-column">
         <SlidePanelHeader
@@ -38,6 +69,8 @@ class AddEditProductCategoryForm extends React.Component {
                 <label className="f6 fw6 db mb1 gray ttc">Name</label>
                 <input
                   ref={input => (this.nameInput = input)}
+                  value={name}
+                  onChange={e => this.setState({ name: e.target.value })}
                   className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                   required={true}
                 />
@@ -54,6 +87,12 @@ class AddEditProductCategoryForm extends React.Component {
                 </span>
                 <ItemCategorySelector
                   ref={select => (this.categorySelector = select)}
+                  value={metrc_item_category}
+                  onChange={selected => {
+                    this.setState({
+                      metrc_item_category: selected.value
+                    })
+                  }}
                 />
               </div>
             </div>

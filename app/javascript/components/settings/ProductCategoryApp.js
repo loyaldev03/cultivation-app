@@ -18,9 +18,12 @@ class ProductCategoryApp extends React.Component {
     super(props)
     CategoryStore.setDefaults(this.props.defaultCategories)
   }
+
   state = {
     tabIndex: 0,
     showEditPanel: false,
+    editPanelMode: '',
+    editCategory: '',
     categoryColumns: [
       {
         accessor: 'id',
@@ -30,7 +33,35 @@ class ProductCategoryApp extends React.Component {
         headerClassName: 'tl',
         Header: 'Name',
         accessor: 'name',
-        minWidth: 250
+        minWidth: 250,
+        Cell: props => {
+          return (
+            <a
+              href="#0"
+              className="ph2 w-100 dark-gray link"
+              onClick={e => this.onEdit(props.row.name)}
+            >
+              {props.value}
+            </a>
+          )
+        }
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'METRC Item Category',
+        accessor: 'metrc_item_category',
+        maxWidth: 250,
+        Cell: props => {
+          return (
+            <a
+              href="#0"
+              className="ph2 w-100 dark-gray link"
+              onClick={e => this.onEdit(props.row.name)}
+            >
+              {props.value ? props.value : '--'}
+            </a>
+          )
+        }
       },
       {
         Header: (
@@ -57,6 +88,19 @@ class ProductCategoryApp extends React.Component {
                 onClick={this.onToggleActive(props.row)}
               />
             </div>
+          )
+        }
+      },
+      {
+        Header: '',
+        accessor: 'name',
+        width: 80,
+        className: 'justify-center',
+        Cell: props => {
+          return (
+            <a href="#0" onClick={e => this.onDelete(e, props.value)}>
+              <i className="material-icons red">delete</i>
+            </a>
           )
         }
       }
@@ -160,12 +204,37 @@ class ProductCategoryApp extends React.Component {
   onSave = formData => {
     CategoryStore.updateCategory(formData.name, formData)
     this.setState({
-      showEditPanel: false
+      showEditPanel: false,
+      editPanelMode: '',
+      editCategory: ''
     })
   }
 
+  onEdit = name => {
+    this.setState({
+      showEditPanel: true,
+      editPanelMode: 'edit',
+      editCategory: name
+    })
+  }
+
+  onDelete = (e, record) => {
+    e.stopPropagation()
+    const result = confirm(`Confirm delete product category ${record}?`)
+    if (result) {
+      CategoryStore.updateCategory(record, { deleted: true })
+    }
+  }
+
   render() {
-    const { itemColumns, categoryColumns, tabIndex, showEditPanel } = this.state
+    const {
+      itemColumns,
+      categoryColumns,
+      tabIndex,
+      showEditPanel,
+      editPanelMode,
+      editCategory
+    } = this.state
     const { facilityId } = this.props
     console.warn('FIXME: Wrong facilityId when selecting All')
     return (
@@ -174,15 +243,15 @@ class ProductCategoryApp extends React.Component {
         <SlidePanel
           width="500px"
           show={showEditPanel}
-          renderBody={props =>
-            showEditPanel ? (
-              <AddEditProductCategoryForm
-                ref={form => (this.editForm = form)}
-                onClose={() => this.setState({ showEditPanel: false })}
-                onSave={this.onSave}
-              />
-            ) : null
-          }
+          renderBody={props => (
+            <AddEditProductCategoryForm
+              ref={form => (this.editForm = form)}
+              mode={editPanelMode}
+              editCategory={editCategory}
+              onClose={() => this.setState({ showEditPanel: false })}
+              onSave={this.onSave}
+            />
+          )}
         />
         <div className="mt0 ba b--light-grey pa3">
           <p className="mt2 mb4 db body-1 grey">
@@ -204,7 +273,8 @@ class ProductCategoryApp extends React.Component {
                   className="btn btn--primary"
                   onClick={() =>
                     this.setState({
-                      showEditPanel: true
+                      showEditPanel: true,
+                      editPanelMode: 'add'
                     })
                   }
                 >

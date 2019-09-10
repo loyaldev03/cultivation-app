@@ -23,8 +23,8 @@ const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
       ) : indelible == 'add_nutrient' ? (
         <img src={MyImage} style={{ width: '2em' }} />
       ) : (
-            ''
-          )}
+        ''
+      )}
       <span className="pr2">{text}</span>
     </a>
   )
@@ -53,12 +53,15 @@ class HarvestPackageSetupApp extends React.Component {
   }
 
   onCreateOrder = e => {
-    if(this.state.checkedPackageIds.length > 0){
-      const packages = harvestPackageStore.harvestPackages.filter(e => this.state.checkedPackageIds.includes(e.id))
+    if (this.state.checkedPackageIds.length > 0) {
+      const packages = harvestPackageStore.harvestPackages.filter(e =>
+        this.state.checkedPackageIds.includes(e.id)
+      )
       this.createOrderSidebar.setPackages(packages)
-      this.setState({showCreateOrderSidebar: !this.state.showCreateOrderSidebar})
-
-    }else{
+      this.setState({
+        showCreateOrderSidebar: !this.state.showCreateOrderSidebar
+      })
+    } else {
       alert('please select one package to create order')
     }
   }
@@ -70,13 +73,12 @@ class HarvestPackageSetupApp extends React.Component {
 
   onCheckPackageId = id => {
     let newCheckedPackageIds = []
-    if (!this.state.checkedPackageIds.includes(id)){ //checked if doesnt exist
+    if (!this.state.checkedPackageIds.includes(id)) {
+      //checked if doesnt exist
       console.log('check')
-      newCheckedPackageIds = [
-        ...this.state.checkedPackageIds,
-        id
-      ]
-    }else{ //uncheck if already exist
+      newCheckedPackageIds = [...this.state.checkedPackageIds, id]
+    } else {
+      //uncheck if already exist
       console.log('uncheck')
       newCheckedPackageIds = this.state.checkedPackageIds.filter(a => a !== id)
     }
@@ -92,11 +94,11 @@ class HarvestPackageSetupApp extends React.Component {
       Cell: props => {
         console.log(props.row.id)
         return (
-            <input
-              type="checkbox"
-              // checked={!isActive}
-              onChange={e => this.onCheckPackageId(props.row.id)}
-            />
+          <input
+            type="checkbox"
+            // checked={!isActive}
+            onChange={e => this.onCheckPackageId(props.row.id)}
+          />
         )
       }
     },
@@ -331,8 +333,8 @@ class HarvestPackageSetupApp extends React.Component {
                 </div>
               </div>
             ) : (
-                ''
-              )
+              ''
+            )
           }
         >
           <i
@@ -368,7 +370,13 @@ class HarvestPackageSetupApp extends React.Component {
 
   render() {
     const { locations, harvest_batches, salesProductPermission } = this.props
-    const { showEditor, showCreatePackagePlan, idOpen, columns, showCreateOrderSidebar } = this.state
+    const {
+      showEditor,
+      showCreatePackagePlan,
+      idOpen,
+      columns,
+      showCreateOrderSidebar
+    } = this.state
 
     return (
       <React.Fragment>
@@ -379,11 +387,7 @@ class HarvestPackageSetupApp extends React.Component {
               Package Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
-              {salesProductPermission.create && (
-                <React.Fragment>
-
-                </React.Fragment>
-              )}
+              {salesProductPermission.create && <React.Fragment />}
             </div>
           </div>
 
@@ -429,7 +433,10 @@ class HarvestPackageSetupApp extends React.Component {
                   }
                   onSave={data => {
                     harvestPackageStore.createOrder(data)
-                    this.setState({ showCreateOrderSidebar: false, checkedPackageIds: []})
+                    this.setState({
+                      showCreateOrderSidebar: false,
+                      checkedPackageIds: []
+                    })
                     // TaskStore.editAssignedUsers(
                     //   batchId,
                     //   this.state.taskSelected,

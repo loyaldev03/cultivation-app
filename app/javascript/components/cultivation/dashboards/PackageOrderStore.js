@@ -1,8 +1,12 @@
 import { observable, action, computed, toJS, autorun } from 'mobx'
-import { httpGetOptions, formatDate, formatTime, httpPostOptions } from '../../utils'
+import {
+  httpGetOptions,
+  formatDate,
+  formatTime,
+  httpPostOptions
+} from '../../utils'
 
 class PackageOrderStore {
-
   @action
   async createOrder(params) {
     this.isLoading = true
@@ -10,7 +14,6 @@ class PackageOrderStore {
     try {
       const response = await (await fetch(url, httpPostOptions(params))).json()
       if (response.data) {
-        
         // this.loadTasks(batchId)
       } else {
         console.error(response.errors)

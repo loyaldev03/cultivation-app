@@ -1,6 +1,10 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { SlidePanelHeader, SlidePanelFooter, reactSelectStyle } from '../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  reactSelectStyle
+} from '../../utils'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import CustomerStore from '../../settings/CustomerStore'
 import { toJS } from 'mobx'
@@ -14,17 +18,16 @@ class CreateOrderSidebar extends React.Component {
       selectedUsers: []
     }
   }
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
-  setPackages = (packages) => {
+  setPackages = packages => {
     console.log(packages)
     this.setState({
       packages: packages
     })
   }
 
-  onDeletePackage = (p) =>{
+  onDeletePackage = p => {
     this.setState({
       packages: this.state.packages.filter(e => e !== p)
     })
@@ -34,7 +37,7 @@ class CreateOrderSidebar extends React.Component {
     await this.props.onSave(this.state)
   }
 
-  onChangeCustomer = (customer) => {
+  onChangeCustomer = customer => {
     console.log('change')
 
     if (customer) {
@@ -68,19 +71,19 @@ class CreateOrderSidebar extends React.Component {
         mobile_number: ''
       })
     }
-
-
   }
 
-
   onChange = (key, e) => {
-    this.setState({[key]: e.target.value})
+    this.setState({ [key]: e.target.value })
   }
 
   render() {
     const { onClose } = this.props
-    const { state_license, address, mobile_number} = this.state
-    const customers = CustomerStore.items.map(e => ({label: e.name, value: e.id}))
+    const { state_license, address, mobile_number } = this.state
+    const customers = CustomerStore.items.map(e => ({
+      label: e.name,
+      value: e.id
+    }))
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
@@ -89,7 +92,9 @@ class CreateOrderSidebar extends React.Component {
             <h1 className="pa3 f4">Order #1283619</h1>
             <div className="pa3 flex justify-between bg-light-gray ">
               <label>Package selected </label>
-              <label>{this.state.packages ? this.state.packages.length : '0'} items</label>
+              <label>
+                {this.state.packages ? this.state.packages.length : '0'} items
+              </label>
             </div>
 
             <div className="pa2 mt3">
@@ -108,17 +113,15 @@ class CreateOrderSidebar extends React.Component {
                     <label className="w-30 f6">{e.package_tag} </label>
                     <label className="w-20 f6">{e.quantity}</label>
                     <label className="w-10 f6">
-                      <i 
+                      <i
                         className="material-icons red pointer f6"
                         onClick={f => this.onDeletePackage(e)}
                       >
                         delete
                       </i>
                     </label>
-
                   </div>
-                ))
-                }
+                ))}
             </div>
 
             <div className="pa3 flex justify-between bg-light-gray mt5">
@@ -156,8 +159,6 @@ class CreateOrderSidebar extends React.Component {
                 </div>
               </div>
 
-
-
               <div className="flex mt4">
                 <div className="w-20">
                   <label className="f6">Address</label>
@@ -171,7 +172,6 @@ class CreateOrderSidebar extends React.Component {
                   />
                 </div>
               </div>
-
 
               <div className="flex mt4">
                 <div className="w-20">
@@ -187,8 +187,6 @@ class CreateOrderSidebar extends React.Component {
                 </div>
               </div>
             </div>
-            
-
           </div>
           <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
         </div>

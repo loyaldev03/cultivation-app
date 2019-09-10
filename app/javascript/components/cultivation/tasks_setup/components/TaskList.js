@@ -711,6 +711,12 @@ class TaskList extends React.Component {
     event.preventDefault()
   }
 
+  saveAsTemplate = () => {
+    if (!this.props.batch.is_template) {
+      TaskStore.saveAsTemplate(this.props.batch.id)
+    }
+  }
+
   render() {
     const {
       showTaskEditor,
@@ -892,7 +898,26 @@ class TaskList extends React.Component {
             }}
           />
         </Suspense>
-        <div className="mt3 tr">
+        <div
+          className={classNames('mt3 tr', {
+            'flex justify-between': this.props.batch.status !== 'DRAFT'
+          })}
+        >
+          {this.props.batch.status !== 'DRAFT' && (
+            <input
+              type="button"
+              className={classNames('btn btn--large', {
+                'btn--grey': this.props.batch.is_template,
+                'btn--primary': !this.props.batch.is_template
+              })}
+              value={
+                this.props.batch.is_template
+                  ? 'Saved as template'
+                  : 'Save as template'
+              }
+              onClick={() => this.saveAsTemplate()}
+            />
+          )}
           <input
             type="button"
             className="btn btn--primary btn--large"

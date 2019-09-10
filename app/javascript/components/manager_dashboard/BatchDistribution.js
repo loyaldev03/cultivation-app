@@ -113,8 +113,8 @@ export default class BatchDistribution extends React.Component {
           </Tippy>
         </div>
         {ChartStore.batch_distribution_loaded ? (
-          <div style={{overflow:'auto', height: '320px'}}>
-          <Bar data={ChartStore.batchDistribution} options={options} />
+          <div style={{ overflow: 'auto', height: '320px' }}>
+            <Bar data={ChartStore.batchDistribution} options={options} />
           </div>
         ) : (
           'loading...'

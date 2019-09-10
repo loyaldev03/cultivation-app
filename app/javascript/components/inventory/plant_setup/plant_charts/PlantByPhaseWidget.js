@@ -113,9 +113,9 @@ export default class PlantByPhaseWidget extends React.Component {
         </h1>
         <br />
         {PlantStore.plant_distribution_loaded ? (
-          <div style={{overflow:'auto', height: '260px'}}>
+          <div style={{ overflow: 'auto', height: '260px' }}>
             <Bar data={PlantStore.plantDistribution} options={options} />
-          </div> 
+          </div>
         ) : (
           'loading...'
         )}

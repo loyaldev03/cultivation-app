@@ -681,9 +681,7 @@ class PlantEditor extends React.Component {
             <span className="f6 fw6 dark-gray">Plant Origin?</span>
           </div>
           <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">
-              Plants are purchased
-            </label>
+            <label className="f6 fw6 db mb1 gray">Plants are purchased</label>
             <input
               className="toggle toggle-default"
               type="checkbox"

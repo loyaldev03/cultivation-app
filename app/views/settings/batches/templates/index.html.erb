@@ -1,0 +1,47 @@
+<div class="pa4">
+  <div class="flex flex-column justify-between bg-white box--shadow">
+    <div class="pa4 min-h-600">
+      <div class="fl w-100 flex flex-column width-100">
+        <div class="flex justify-between">
+          <div>
+            <h5 class="tl pa0 ma0 h5--font dark-grey ttc">Batches template</h5>
+            <p class="mt2 body-1 grey">
+            </p>
+          </div>
+        </div>
+
+
+        <div class="bg-white">
+          <table class="std-table pv2 ph3 mt1 w-100">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Template Name</th>
+                <th>Batch Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @batches.each_with_index do |batch, i| %>
+                <tr class="pointer">
+                  <td class="tl pv2 ph3 gray" data-toggle-right="<%= edit_settings_batch_template_path(batch.id)%>"><%= i+1 %></td>
+                  <td class="tl pv2 ph3" data-toggle-right="<%= edit_settings_batch_template_path(batch.id)%>"><%= batch.template_name%></td>
+                  <td class="tl pv2 ph3" data-toggle-right="<%= edit_settings_batch_template_path(batch.id)%>"><%= batch.name%></td>
+                  <td class="tr pv2 ph3">
+                    <%= link_to settings_batch_template_path(batch.id), method: :delete, data: {remote: false, confirm: 'Are you sure?'}, class: 'grey subtitle-2 pv3 tc dim' do %>
+                      <i class="material-icons md-15 orange dim pointer">delete</i>
+                    <% end%>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+

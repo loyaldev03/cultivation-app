@@ -5,7 +5,8 @@ module Cultivation
     include Mongoid::History::Trackable
 
     field :batch_no, type: String
-    field :name, type: String
+    field :template_name, type: String #name that is used for template
+    field :name, type: String #name that is used for batch
     field :batch_source, type: String
     field :grow_method, type: String
     field :start_date, type: Time
@@ -37,6 +38,8 @@ module Cultivation
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
 
     field :destroyed_plants_count, type: Integer, default: -> { 0 }
+
+    field :is_template, type: Boolean, default: false
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'

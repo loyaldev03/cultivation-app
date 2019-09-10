@@ -66,10 +66,12 @@ export default class PlantByPhaseWidget extends React.Component {
         </div>
         <br />
         {DashboardPlantStore.batch_distribution_loaded ? (
-          <div style={{overflow:'auto', height: '260px'}}>
-            <Bar data={DashboardPlantStore.batchDistribution} options={options} />
+          <div style={{ overflow: 'auto', height: '260px' }}>
+            <Bar
+              data={DashboardPlantStore.batchDistribution}
+              options={options}
+            />
           </div>
-          
         ) : (
           'loading...'
         )}

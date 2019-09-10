@@ -74,18 +74,18 @@ class BatchSetupApp extends React.Component {
     console.log('changing something')
     console.log(field)
     console.log(value)
-    if(field === 'template'){
+    if (field === 'template') {
       const templateValue = this.props.templates.find(f => f.value === value)
       console.log(templateValue)
       console.log(this.state)
-      this.setState({ 
+      this.setState({
         [field]: value,
         name: templateValue.template_name,
         batchSource: templateValue.batch_source,
         batchStrain: templateValue.batch_strain,
         batchGrowMethod: templateValue.batch_grow_method
       })
-    }else{
+    } else {
       this.setState({ [field]: value })
     }
   }
@@ -97,10 +97,10 @@ class BatchSetupApp extends React.Component {
   }
 
   onToggleTemplate = () => {
-    if(!this.state.useTemplate){
+    if (!this.state.useTemplate) {
       this.setState({ useTemplate: !this.state.useTemplate })
-    }else{
-      this.setState({ 
+    } else {
+      this.setState({
         useTemplate: !this.state.useTemplate,
         name: '',
         batchSource: '',
@@ -112,7 +112,13 @@ class BatchSetupApp extends React.Component {
   }
 
   render() {
-    const { plantSources, strains, growMethods, facilities = [], templates } = this.props
+    const {
+      plantSources,
+      strains,
+      growMethods,
+      facilities = [],
+      templates
+    } = this.props
     const {
       showValidation,
       facilityId,
@@ -127,7 +133,9 @@ class BatchSetupApp extends React.Component {
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
     const templateValue = templates.find(f => f.value === template)
-    const batchGrowMethodvalue = growMethods.find(f => f.value === batchGrowMethod)
+    const batchGrowMethodvalue = growMethods.find(
+      f => f.value === batchGrowMethod
+    )
     const batchSourceValue = plantSources.find(f => f.value === batchSource)
     const saveButtonText = isLoading ? 'Saving...' : 'Save and Continue'
 
@@ -163,10 +171,8 @@ class BatchSetupApp extends React.Component {
               </div>
             </div>
           )}
-          <div className='fl w-100 mt1 mb3'>
-            <label
-              className='subtitle-2 grey fl pv2'
-            >
+          <div className="fl w-100 mt1 mb3">
+            <label className="subtitle-2 grey fl pv2">
               Use template
               {/* {isActive ? 'Active' : 'Deactivated'} */}
             </label>
@@ -180,7 +186,7 @@ class BatchSetupApp extends React.Component {
             <label className="toggle-button mt1 fr" htmlFor="is_active" />
           </div>
 
-          {this.state.useTemplate && 
+          {this.state.useTemplate && (
             <div className="fl w-100 mt1 mb3">
               <label className="subtitle-2 grey fl pv2">Template </label>
               <div className="fr w-100 measure-narrow">
@@ -197,7 +203,7 @@ class BatchSetupApp extends React.Component {
                 />
               </div>
             </div>
-          }
+          )}
 
           <div className="fl w-100 mt1 mb3">
             <label className="subtitle-2 grey fl pv2">Batch Name </label>

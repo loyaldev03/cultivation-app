@@ -115,10 +115,6 @@ class ProductCategoryApp extends React.Component {
         show: false
       },
       {
-        accessor: 'product_category_name',
-        show: false
-      },
-      {
         headerClassName: 'tl',
         Header: 'Name',
         accessor: 'name',
@@ -128,13 +124,38 @@ class ProductCategoryApp extends React.Component {
             <a
               href="#0"
               className="ph2 w-100 dark-gray link"
-              onClick={e => this.onEditSubcategory(props.row.id)}
+              onClick={e =>
+                this.onEditSubcategory({
+                  id: props.row.id,
+                  name: props.row.name,
+                  productCategoryId: props.row.product_category_id
+                })
+              }
             >
               {props.value}
-              <span className="db">id: {props.row.product_category_id}</span>
-              <span className="db">
-                name: {props.row.product_category_name}
-              </span>
+            </a>
+          )
+        }
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Product Category',
+        accessor: 'product_category_name',
+        minWidth: 200,
+        Cell: props => {
+          return (
+            <a
+              href="#0"
+              className="ph2 w-100 dark-gray link"
+              onClick={e =>
+                this.onEditSubcategory({
+                  id: props.row.id,
+                  name: props.row.name,
+                  productCategoryId: props.row.product_category_id
+                })
+              }
+            >
+              {props.value}
             </a>
           )
         }

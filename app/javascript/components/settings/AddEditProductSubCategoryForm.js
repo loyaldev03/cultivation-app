@@ -26,21 +26,24 @@ class AddEditProductSubCategoryForm extends React.Component {
         productCategoryId: '',
         selectedProductCategory: {}
       })
+      return;
     }
-    if (editSubCategory && prevProps.editSubCategory) {
-      console.log('editSubCategory', editSubCategory)
-      console.log('prev sub cat', prevProps.editSubCategory)
-      // editSubCategory.id !== prevProps.editSubCategory.id) {
-      // const selectedOption = CategoryStore.categoryOptions.find(
-      //   x => x.value === editSubCategory.id
-      // )
-      // console.log(selectedOption)
-      // this.setState({
-      //   id: editSubCategory.id,
-      //   name: editSubCategory.name,
-      //   productCategoryId: editProductCategory,
-      //   selectedProductCategory: selectedOption
-      // })
+    if (editSubCategory && editSubCategory.id != prevProps.editSubCategory.id) {
+      let selectedProductCategory = {}
+      let productCategoryId =''
+      if (editSubCategory.productCategoryId) {
+        selectedProductCategory = CategoryStore.categoryOptions.find(
+          x => x.value === editSubCategory.productCategoryId
+        )
+        productCategoryId = editSubCategory.productCategoryId
+      }
+      this.setState({
+        id: editSubCategory.id,
+        name: editSubCategory.name,
+        productCategoryId,
+        selectedProductCategory
+      })
+      console.log(this.state)
     }
   }
 

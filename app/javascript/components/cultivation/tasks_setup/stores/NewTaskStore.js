@@ -550,6 +550,24 @@ class TaskStore {
       console.log(error)
     }
   }
+
+  @action
+  async saveAsTemplate(batch_id) {
+    this.isLoading = true
+
+    const url = `/api/v1/batches/${batch_id}/save_as_template`
+    const payload = { }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      // console.log(response)
+      location.reload()
+      this.isLoading = false
+      toast('Batch saved as template', 'success')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 }
 
 const taskStore = new TaskStore()

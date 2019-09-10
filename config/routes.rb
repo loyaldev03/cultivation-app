@@ -208,6 +208,11 @@ Rails.application.routes.draw do
       resources :rows,      only: [:index, :edit, :update]
       resources :shelves,   only: [:index, :edit, :update]
     end
+
+    namespace 'batches', as: :batch do
+      resources :templates
+    end
+
   end
 
   namespace 'cultivation' do
@@ -387,6 +392,7 @@ Rails.application.routes.draw do
         post 'destroy', on: :collection
         get 'product_plans'
         post 'save_product_plans'
+        post 'save_as_template'
 
         resources :tasks, only: [:index, :update, :create, :destroy] do
           member do

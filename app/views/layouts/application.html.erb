@@ -22,7 +22,7 @@
                 <% if company_info&.is_active %>
                 <span class="f5 fw4 gray flex items-center">
                   <i class="material-icons mr2 black-20 md-18">business</i>
-                  <%= select_tag :facility_id, options_for_select(['All'] + Facility.where(id: {'$in': current_user.facilities}).pluck(:name, :id), selected: params[:facility_id]), :onchange => "changeDefaultFacility()"%>
+                  <%= select_tag :facility_id, options_for_select(['All'] + Facility.where(id: {'$in': current_user.facilities}, is_enabled: true).pluck(:name, :id), selected: params[:facility_id]), :onchange => "changeDefaultFacility()"%>
 
                 </span>
                 <% end %>

@@ -10,7 +10,7 @@ module Charts
     def call
       bar_colors = ['red', 'blue', 'orange', 'purple', 'yellowgreen', 'mediumvioletred', 'cadetblue', 'dodgerblue', 'sienna', 'palevioletred', 'cornflowerblue']
       json = []
-      facility_by_rooms = QueryFacilitySummary.call(facility_id: @args[:facility_id]).result
+      facility_by_rooms = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
       facility_by_rooms.group_by { |d| d[:purpose] }.each_with_index do |(k, v), i|
         planned_capacity = 0
         total_capacity = 0

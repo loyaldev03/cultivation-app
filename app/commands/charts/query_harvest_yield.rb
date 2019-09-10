@@ -5,7 +5,7 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id].split(',')
+      @facility_id = @args[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
     def call

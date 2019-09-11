@@ -10,9 +10,8 @@ import {
 } from '../../utils'
 import classNames from 'classnames'
 import uniq from 'lodash.uniq'
-import loadDestroyedPlants from '../../inventory/plant_setup/actions/loadDestroyedPlants';
-import plantStore from '../../inventory/plant_setup/store/PlantStore';
-
+import loadDestroyedPlants from '../../inventory/plant_setup/actions/loadDestroyedPlants'
+import plantStore from '../../inventory/plant_setup/store/PlantStore'
 
 @observer
 class DestroyedPlantDashboardApp extends React.Component {
@@ -94,7 +93,9 @@ class DestroyedPlantDashboardApp extends React.Component {
         accessor: 'planting_date',
         className: ' pr3 justify-center',
         width: 120,
-        Cell: props => (<span>{props.value ? formatDate2(props.value) : '--'}</span>)
+        Cell: props => (
+          <span>{props.value ? formatDate2(props.value) : '--'}</span>
+        )
       },
       {
         headerClassName: '',
@@ -102,7 +103,9 @@ class DestroyedPlantDashboardApp extends React.Component {
         accessor: 'batch_start_date',
         className: ' pr3 justify-center',
         width: 120,
-        Cell: props => (<span>{props.value ? formatDate2(props.value) : '--'}</span>)
+        Cell: props => (
+          <span>{props.value ? formatDate2(props.value) : '--'}</span>
+        )
       },
       {
         headerClassName: '',
@@ -110,7 +113,9 @@ class DestroyedPlantDashboardApp extends React.Component {
         accessor: 'destroyed_date',
         className: ' pr3 justify-center',
         width: 110,
-        Cell: props => (<span>{props.value ? formatDate2(props.value) : '--'}</span>)
+        Cell: props => (
+          <span>{props.value ? formatDate2(props.value) : '--'}</span>
+        )
       },
       {
         headerClassName: '',
@@ -139,7 +144,7 @@ class DestroyedPlantDashboardApp extends React.Component {
         accessor: 'worker_name',
         className: ' pr3 justify-center',
         width: 110
-      },
+      }
     ]
   }
   componentDidMount() {

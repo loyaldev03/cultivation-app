@@ -1,3 +1,5 @@
+<%=react_component('inventory/plant_setup/DestroyedPlantApp', {currentFacilityId: params[:facility_id]})%>
+
 <div class="pa4">
   <% if RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result[:read] == true %>
     <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id])%>

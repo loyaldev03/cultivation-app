@@ -17,6 +17,7 @@ class SeedEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
+
     this.purchaseInfoEditor = React.createRef()
   }
 
@@ -41,16 +42,19 @@ class SeedEditor extends React.Component {
                 qty_per_package: attr.conversion,
                 product_id: attr.product_id,
                 product_name: attr.product_name,
-                product: { value: attr.product.id, label: attr.product.name },
+                product: {
+                  value: attr.product ? attr.product.id : '',
+                  label: attr.product ? attr.product.name : ''
+                },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
-                upc: attr.product.upc || '',
-                product_size: attr.product.size || '',
+                upc: attr.product ? attr.product.upc : '',
+                product_size: attr.product ? attr.product.size : '',
                 product_uom: {
-                  label: attr.product.common_uom,
-                  value: attr.product.common_uom
+                  label: attr.product ? attr.product.common_uom : '',
+                  value: attr.product ? attr.product.common_uom : ''
                 },
-                product_ppm: attr.product.ppm || '',
+                product_ppm: attr.product ? attr.product.ppm : '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -59,7 +63,8 @@ class SeedEditor extends React.Component {
                 // purchase info
                 vendor: attr.vendor,
                 purchase_order: attr.purchase_order,
-                vendor_invoice: attr.vendor_invoice
+                vendor_invoice: attr.vendor_invoice,
+                form_type: 'Edit'
               },
               () => {
                 this.loadProducts('')
@@ -125,6 +130,7 @@ class SeedEditor extends React.Component {
       vendor: null,
       purchase_order: null,
       vendor_invoice: null,
+      form_type: 'Add',
       errors: {}
     }
   }
@@ -278,7 +284,7 @@ class SeedEditor extends React.Component {
           product,
           product_id: product.id,
           product_name: product.name,
-          manufacturer: product.manufacturer,
+          manufacturer: product.manufacturer || '',
           description: product.description,
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
@@ -357,7 +363,9 @@ class SeedEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Seed</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+              {this.state.form_type} Seed
+            </h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {

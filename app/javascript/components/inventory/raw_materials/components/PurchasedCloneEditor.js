@@ -35,18 +35,21 @@ class PurchasedCloneEditor extends React.Component {
                 id: id,
                 facility_id: attr.facility_id,
                 facility_strain_id: attr.facility_strain.id,
-                product: { value: attr.product.id, label: attr.product.name },
+                product: {
+                  value: attr.product ? attr.product.id : '',
+                  label: attr.product ? attr.product.name : ''
+                },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
-                manufacturer: attr.manufacturer,
-                description: attr.description,
-                upc: attr.product.upc || '',
-                product_size: attr.product.size || '',
+                manufacturer: attr.manufacturer || '',
+                description: attr.description || '',
+                upc: attr.product ? attr.product.upc : '',
+                product_size: attr.product ? attr.product.size : '',
                 product_uom: {
-                  label: attr.product.common_uom,
-                  value: attr.product.common_uom
+                  label: attr.product ? attr.product.common_uom : '',
+                  value: attr.product ? attr.product.common_uom : ''
                 },
-                product_ppm: attr.product.ppm || '',
+                product_ppm: attr.product ? attr.product.ppm : '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -54,7 +57,8 @@ class PurchasedCloneEditor extends React.Component {
                 // purchase info
                 vendor: attr.vendor,
                 purchase_order: attr.purchase_order,
-                vendor_invoice: attr.vendor_invoice
+                vendor_invoice: attr.vendor_invoice,
+                form_type: 'Edit'
               },
               () => {
                 this.loadProducts('')
@@ -98,6 +102,7 @@ class PurchasedCloneEditor extends React.Component {
       vendor: null,
       purchase_order: null,
       vendor_invoice: null,
+      form_type: 'Add',
       errors: {}
     }
   }
@@ -310,7 +315,7 @@ class PurchasedCloneEditor extends React.Component {
             style={{ height: '51px' }}
           >
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              Add Purchased Clones
+              {this.state.form_type} Purchased Clones
             </h1>
             <span
               className="rc-slide-panel__close-button dim"

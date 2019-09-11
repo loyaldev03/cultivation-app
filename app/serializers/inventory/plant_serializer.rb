@@ -2,6 +2,10 @@ module Inventory
   class PlantSerializer
     include FastJsonapi::ObjectSerializer
 
+    attribute :id do |object|
+      object.id&.to_s
+    end
+
     attributes :plant_id,
       :plant_tag,
       :location_type,

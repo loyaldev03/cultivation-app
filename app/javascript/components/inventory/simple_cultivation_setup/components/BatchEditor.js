@@ -6,6 +6,30 @@ import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import saveCultivationBatch from '../actions/saveCultivationBatch'
 
+function getBatch(id, includeFields = '') {
+  let apiUrl = '/api/v1/batches/' + id
+
+  if (includeFields.length > 0) {
+    apiUrl += '?include=' + includeFields
+  }
+
+  return fetch(apiUrl, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+    return response.json().then(data => {
+      return {
+        status: response.status,
+        data: data.data,
+        included: data.included || []
+      }
+    })
+  })
+}
+
 class BatchEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -14,19 +38,77 @@ class BatchEditor extends React.Component {
 
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
-      if (!event.detail.data) {
+      const id = event.detail.id
+
+      if (!id) {
         this.setState(this.resetState())
-      } else {
+        return
+      }
+
+      getBatch(event.detail.id).then(({ status, data }) => {
+        if (status != 200) {
+          alert('something wrong')
+          return
+        }
+        const attrs = data.attributes
+        const strainOption = this.props.facility_strains.find(
+          x => x.value === attrs.facility_strain_id
+        )
+
         const newState = {
           ...this.resetState(),
-          ...event.detail.data.attributes,
-          id: event.detail.data.id,
-          start_date: new Date(event.detail.data.attributes.start_date),
-          current_growth_stage_disabled:
-            event.detail.data.attributes.plant_count > 0
+          ...attrs,
+          id: data.id,
+          start_date: new Date(attrs.start_date),
+          current_growth_stage: attrs.current_growth_stage || '',
+          current_growth_stage_disabled: attrs.plant_count > 0
         }
         this.setState(newState)
-      }
+
+        //const vendor = data.attributes.vendor
+        //let vendor_attr = {}
+        // if (vendor) {
+        //   vendor_attr = {
+        //     vendor_id: vendor.id,
+        //     vendor_name: vendor.name,
+        //     vendor_no: vendor.vendor_no,
+        //     address: vendor.address,
+        //     vendor_state_license_num: vendor.state_license_num,
+        //     vendor_state_license_expiration_date: new Date(
+        //       vendor.state_license_expiration_date
+        //     ),
+        //     vendor_location_license_num: vendor.location_license_num,
+        //     vendor_location_license_expiration_date: new Date(
+        //       vendor.location_license_expiration_date
+        //     )
+        //   }
+        // }
+
+        // this.setState({
+        //   ...this.resetState(),
+        //   id: data.id,
+        //   facility_strain_id: attrs.facility_strain_id,
+        //   facility_id: strainOption.facility_id,
+        //   strain_name: strainOption.label,
+        //   plant_ids: attrs.plant_id,
+        //   location_id: attrs.location_id,
+        //   planted_on: new Date(attrs.planting_date),
+        //   isBought: Object.getOwnPropertyNames(vendor_attr).length > 0,
+        //   ...vendor_attr,
+        //   ...invoice_attr
+        // })
+      })
+      //  else {
+      //   const newState = {
+      //     ...this.resetState(),
+      //     ...event.detail.data.attributes,
+      //     id: event.detail.data.id,
+      //     start_date: new Date(event.detail.data.attributes.start_date),
+      //     current_growth_stage_disabled:
+      //       event.detail.data.attributes.plant_count > 0
+      //   }
+      //   this.setState(newState)
+      // }
     })
   }
 
@@ -303,11 +385,14 @@ class BatchEditor extends React.Component {
                 Current growth phase
               </label>
               <select
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
+                className="db w-100 pa2 f6 grey ba b--black-20 br2 outline-0 select"
                 disabled={this.state.current_growth_stage_disabled}
                 onChange={this.onCurrentGrowthPhaseSelected}
                 value={this.state.current_growth_stage}
               >
+                <option value="" key="n/a">
+                  Select Grow Phase..
+                </option>
                 <option value="clone" key="clone">
                   Clone
                 </option>

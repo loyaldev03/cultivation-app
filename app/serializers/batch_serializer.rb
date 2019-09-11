@@ -3,6 +3,9 @@ class BatchSerializer
   attributes :name, :batch_source, :batch_no, :status, :start_date, :grow_method, :current_growth_stage, :estimated_harvest_date
   has_many :tasks, if: Proc.new { |record, params| params.nil? || params[:exclude_tasks] != true }
 
+  attribute :id do |object|
+    object.id&.to_s
+  end
   attribute :facility do |object|
     object.facility_strain&.facility&.name&.to_s
   end
@@ -23,7 +26,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_CLONE}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end
@@ -33,7 +40,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_VEG}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end
@@ -43,7 +54,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_VEG1}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end
@@ -53,7 +68,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_VEG2}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end
@@ -63,7 +82,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_FLOWER}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end
@@ -73,7 +96,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_DRY}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end
@@ -83,7 +110,11 @@ class BatchSerializer
     if params[:phases]
       key = "#{object.id.to_s}/#{Constants::CONST_CURE}"
       phase = params[:phases][key]
-      phase.duration if phase
+      if phase
+        phase.duration
+      else
+        ''
+      end
     else
       ''
     end

@@ -5,77 +5,7 @@ import HarvestBatchEditor from './components/HarvestBatchEditor'
 
 import harvestBatchStore from './store/HarvestBatchStore'
 import loadHarvests from './actions/loadHarvests'
-
-const columns = [
-  {
-    Header: 'Cultivation Batch Name',
-    accessor: 'attributes.harvest_name',
-    headerStyle: { textAlign: 'left' },
-    Cell: x => (
-      <a
-        href="#0"
-        className="link grey"
-        onClick={event => openSidebar(event, x.original.id)}
-      >
-        {x.value}
-      </a>
-    )
-  },
-  {
-    Header: 'Strain',
-    accessor: 'attributes.strain_name',
-    headerStyle: { textAlign: 'left' },
-    width: 160
-  },
-  {
-    Header: 'Harvest Batch Name',
-    accessor: 'attributes.cultivation_batch_name',
-    headerStyle: { textAlign: 'left' }
-  },
-  {
-    Header: '# of Plants',
-    accessor: 'attributes.plant_count',
-    headerStyle: { textAlign: 'right' },
-    className: 'tc',
-    width: 80
-  },
-  {
-    Header: 'Locations',
-    accessor: 'attributes.location',
-    headerStyle: { textAlign: 'left' },
-    width: 100
-  },
-  {
-    Header: 'Harvest date',
-    accessor: 'attributes.harvest_date',
-    headerStyle: { textAlign: 'left' },
-    width: 100,
-    Cell: props => {
-      if (props.value && props.value.length > 0) {
-        const d = new Date(props.value)
-        return (
-          <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
-        )
-      } else {
-        return ''
-      }
-    }
-  },
-  {
-    Header: 'Total weight',
-    accessor: 'attributes.total_wet_weight',
-    headerStyle: { textAlign: 'right' },
-    className: 'tr',
-    width: 130
-  },
-  {
-    Header: 'Status',
-    accessor: 'attributes.status',
-    headerStyle: { textAlign: 'left' },
-    className: 'tl',
-    width: 130
-  }
-]
+import { ListingTable, HeaderFilter, CheckboxSelect } from '../../utils'
 
 function openSidebar(event, id) {
   window.editorSidebar.open({ width: '500px', id })
@@ -84,10 +14,111 @@ function openSidebar(event, id) {
 
 @observer
 class HarvestbatchSetupApp extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      columns: [
+        {
+          Header: 'Cultivation Batch Name',
+          accessor: 'harvest_name',
+          headerStyle: { textAlign: 'left' },
+          Cell: x => (
+            <a
+              href="#0"
+              className="link grey"
+              onClick={event => openSidebar(event, x.original.id)}
+            >
+              {x.value}
+            </a>
+          )
+        },
+        {
+          Header: 'Strain',
+          accessor: 'strain_name',
+          headerStyle: { textAlign: 'left' },
+          width: 160
+        },
+        {
+          Header: (
+            <HeaderFilter
+              title="Harvest Batch Name"
+              accessor="cultivation_batch_name"
+              getOptions={harvestBatchStore.getUniqPropValues}
+              onUpdate={harvestBatchStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'cultivation_batch_name',
+          headerStyle: { textAlign: 'left' }
+        },
+        {
+          Header: '# of Plants',
+          accessor: 'plant_count',
+          headerStyle: { textAlign: 'center' },
+          className: 'justify-end',
+          width: 80
+        },
+        {
+          Header: 'Locations',
+          accessor: 'location',
+          headerStyle: { textAlign: 'left' },
+          width: 100
+        },
+        {
+          Header: 'Harvest date',
+          accessor: 'harvest_date',
+          headerStyle: { textAlign: 'left' },
+          width: 100,
+          Cell: props => {
+            if (props.value && props.value.length > 0) {
+              const d = new Date(props.value)
+              return (
+                <span>{`${d.getMonth() +
+                  1}/${d.getDate()}/${d.getFullYear()}`}</span>
+              )
+            } else {
+              return ''
+            }
+          }
+        },
+        {
+          Header: 'Total weight',
+          accessor: 'total_wet_weight',
+          className: 'justify-end',
+          width: 130
+        },
+        {
+          Header: (
+            <HeaderFilter
+              title="Status"
+              accessor="status"
+              getOptions={harvestBatchStore.getUniqPropValues}
+              onUpdate={harvestBatchStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'status',
+          headerStyle: { textAlign: 'left' },
+          className: 'tl',
+          width: 130
+        }
+      ]
+    }
+  }
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     loadHarvests(this.props.facility_id)
+  }
+
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
+    }
   }
 
   openSidebar() {
@@ -96,6 +127,7 @@ class HarvestbatchSetupApp extends React.Component {
 
   render() {
     const { plantPermission } = this.props
+    const { columns } = this.state
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -114,10 +146,21 @@ class HarvestbatchSetupApp extends React.Component {
               )}
             </div>
           </div>
-          <ReactTable
+          <div className="flex justify-between pb2">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Batch Name"
+              onChange={e => {
+                harvestBatchStore.filter = e.target.value
+              }}
+            />
+            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          </div>
+          <ListingTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={harvestBatchStore.bindableBatches}
+            data={harvestBatchStore.filteredList}
             showPagination={false}
             pageSize={30}
             minRows={5}

@@ -71,7 +71,11 @@ class ProductCategoryStore {
           this.categories = this.categories.map(x => {
             return x.id === updated.id ? updated : x
           })
-          toast(`${updates.name} saved.`, 'success')
+          if (updates.deleted) {
+            toast('Record deleted', 'success')
+          } else {
+            toast(`${updates.name} saved.`, 'success')
+          }
         }
       } else {
         console.warn(response)

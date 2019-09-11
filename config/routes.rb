@@ -305,6 +305,12 @@ Rails.application.routes.draw do
           get 'products'
         end
       end
+      
+      resources :sales_package_orders, only: [:index, :create] do
+        collection do
+          get 'get_next_order_no'
+        end
+      end
 
       resources :sales_products, only: [:index] do
         collection do

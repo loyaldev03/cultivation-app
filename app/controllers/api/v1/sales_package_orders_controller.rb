@@ -1,17 +1,7 @@
-class Api::V1::PurchaseOrdersController < Api::V1::BaseApiController
+class Api::V1::SalesPackageOrdersController < Api::V1::BaseApiController
   def index
-    @pos = Inventory::PurchaseOrder.where(vendor_id: params[:vendor_id])
-    @pos = @pos.where(:purchase_order_no => /^#{params[:filter]}/i).limit(7).map do |x|
-      {
-        value: x.id.to_s,
-        label: x.purchase_order_no,
-        purchase_order_date: x.purchase_order_date&.iso8601,
-        vendor_id: x.vendor_id.to_s,
-        status: x.status,
-      }
-    end
-
-    render json: @pos
+    orders = Sales::PackageOrder.all
+    render json: Sales::PackageOrderSerializer.new(orders).serialized_json
   end
 
   def create
@@ -25,7 +15,10 @@ class Api::V1::PurchaseOrdersController < Api::V1::BaseApiController
     packages.update_all(package_order_id: order.id, status: 'sold')
     render json: {data: 'success create'}
     #create order with many packages
-    #update package order_id
     #added new customer doesnt exist
+  end
+
+  def get_next_order_no
+    render json: {data: Sales::PackageOrder.get_next_order_no}
   end
 end

@@ -18,20 +18,6 @@ class HarvestPackageStore {
   }
   @observable searchTerm = ''
 
-  constructor() {
-    autorun(
-      () => {
-        if (this.filter.facility_id) {
-          if (this.searchTerm === null) {
-            this.searchTerm = ''
-          }
-          this.loadHarvestPackages()
-        }
-      },
-      { delay: 700 }
-    )
-  }
-
   @action
   setFilter(filter) {
     this.filter = {
@@ -61,11 +47,11 @@ class HarvestPackageStore {
   }
 
   @action
-  async loadHarvestPackages() {
+  async loadHarvestPackages(status = '') {
     this.isLoading = true
     const url = `/api/v1/sales_products/harvest_packages?facility_id=${
       this.filter.facility_id
-    }&&search=${this.searchTerm}`
+    }&&search=${this.searchTerm}&&status=${status}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -100,23 +86,6 @@ class HarvestPackageStore {
     )
     if (index >= 0) {
       this.harvestPackages[index] = harvestPackage
-    }
-  }
-
-  @action
-  async createOrder(params) {
-    const url = `/api/v1/purchase_orders`
-    try {
-      const response = await (await fetch(url, httpPostOptions(params))).json()
-      if (response.data) {
-        // this.loadTasks(batchId)
-      } else {
-        console.error(response.errors)
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      this.loadHarvestPackages()
     }
   }
 

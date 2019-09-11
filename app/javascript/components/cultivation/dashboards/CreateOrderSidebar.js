@@ -20,9 +20,9 @@ class CreateOrderSidebar extends React.Component {
   }
   componentDidMount() {}
 
-  setPackages = packages => {
-    console.log(packages)
+  setPackages = (packages, order_no) => {
     this.setState({
+      order_no: order_no,
       packages: packages
     })
   }
@@ -89,7 +89,7 @@ class CreateOrderSidebar extends React.Component {
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
         <div className="flex flex-column flex-auto justify-between">
           <div className="flex flex-column">
-            <h1 className="pa3 f4">Order #1283619</h1>
+            <h1 className="pa3 f4">Order {this.state.order_no}</h1>
             <div className="pa3 flex justify-between bg-light-gray ">
               <label>Package selected </label>
               <label>

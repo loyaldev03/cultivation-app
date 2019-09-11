@@ -5,6 +5,7 @@ import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
 import { toast, ListingTable, CheckboxSelect } from '../../utils'
 import harvestPackageStore from '../../inventory/sales_products/store/HarvestPackageStore'
+import PackageOrderStore from './PackageOrderStore'
 import ConvertPackagePlanForm from '../../cultivation/tasks_setup/components/ConvertPackagePlanForm'
 import { SlidePanel, HeaderFilter } from '../../utils'
 
@@ -31,7 +32,7 @@ const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
 }
 
 @observer
-class HarvestPackageSetupApp extends React.Component {
+class PackagesUnsoldDashboardApp extends React.Component {
   state = {
     idOpen: '',
     showCreatePackagePlan: false,
@@ -43,7 +44,7 @@ class HarvestPackageSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    harvestPackageStore.loadHarvestPackages()
+    // harvestPackageStore.loadHarvestPackages('new')
     CustomerStore.loadCustomer()
   }
 
@@ -52,12 +53,13 @@ class HarvestPackageSetupApp extends React.Component {
     event.preventDefault()
   }
 
-  onCreateOrder = e => {
+  onCreateOrder = async e => {
     if (this.state.checkedPackageIds.length > 0) {
       const packages = harvestPackageStore.harvestPackages.filter(e =>
         this.state.checkedPackageIds.includes(e.id)
       )
-      this.createOrderSidebar.setPackages(packages)
+      await PackageOrderStore.getNextOrderNo()
+      this.createOrderSidebar.setPackages(packages, PackageOrderStore.next_order_no)
       this.setState({
         showCreateOrderSidebar: !this.state.showCreateOrderSidebar
       })
@@ -92,7 +94,6 @@ class HarvestPackageSetupApp extends React.Component {
       Header: '',
       headerClassName: '',
       Cell: props => {
-        console.log(props.row.id)
         return (
           <input
             type="checkbox"
@@ -350,15 +351,15 @@ class HarvestPackageSetupApp extends React.Component {
     )
   }
 
-  onFetchData = (state, instance) => {
+  onFetchData = async (state, instance) => {
+    console.log('fetching data')
     harvestPackageStore.setFilter({
       facility_id: this.props.facility_id
     })
-    harvestPackageStore.loadHarvestPackages()
+    await harvestPackageStore.loadHarvestPackages('new')
   }
 
   onSave = data => {
-    console.log(data)
     if (data.toast) {
       toast(data.toast.message, data.toast.type)
     }
@@ -431,17 +432,14 @@ class HarvestPackageSetupApp extends React.Component {
                   onClose={() =>
                     this.setState({ showCreateOrderSidebar: false })
                   }
-                  onSave={data => {
-                    harvestPackageStore.createOrder(data)
+                  onSave={async data => {
+                    await PackageOrderStore.createOrder(data)
+                    await harvestPackageStore.loadHarvestPackages('new')
                     this.setState({
                       showCreateOrderSidebar: false,
                       checkedPackageIds: []
                     })
-                    // TaskStore.editAssignedUsers(
-                    //   batchId,
-                    //   this.state.taskSelected,
-                    //   users
-                    // )
+
                   }}
                 />
               </Suspense>
@@ -453,7 +451,7 @@ class HarvestPackageSetupApp extends React.Component {
   }
 }
 
-HarvestPackageSetupApp.propTypes = {
+PackagesUnsoldDashboardApp.propTypes = {
   facility_strains: PropTypes.array.isRequired,
   harvest_batches: PropTypes.array.isRequired,
   sales_catalogue: PropTypes.array.isRequired,
@@ -461,4 +459,4 @@ HarvestPackageSetupApp.propTypes = {
   users: PropTypes.array.isRequired
 }
 
-export default HarvestPackageSetupApp
+export default PackagesUnsoldDashboardApp

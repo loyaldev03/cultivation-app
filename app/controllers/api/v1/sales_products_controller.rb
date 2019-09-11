@@ -71,6 +71,9 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
         in(catalogue: sales_catalogue_ids('raw_sales_product')).
         order(c_at: :desc)
     end
+    if params[:status].present?
+      items = items.where(status: params[:status])
+    end
 
     serialized_json = Inventory::HarvestPackageSerializer.new(
       items,

@@ -260,8 +260,6 @@ class ProductCategoryApp extends React.Component {
       editSubCategoryPanelMode,
       editSubCategory
     } = this.state
-    const { facilityId } = this.props
-    console.warn('FIXME: Wrong facilityId when selecting All')
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -350,11 +348,6 @@ class ProductCategoryApp extends React.Component {
               </div>
             </TabPanel>
           </Tabs>
-          {/* </div> */}
-
-          <div data-role="sidebar" className="rc-slide-panel">
-            <div className="rc-slide-panel__body h-100" />
-          </div>
         </div>
       </React.Fragment>
     )

@@ -8,6 +8,7 @@ module Sales
     field :status, type: String
     field :state_license, type: String
     field :license_type, type: String
+    field :mobile_number, type: String
 
     embeds_many :addresses, as: :addressable, class_name: 'Address'
 

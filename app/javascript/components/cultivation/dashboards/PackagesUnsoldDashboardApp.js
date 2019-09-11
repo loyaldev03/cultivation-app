@@ -96,6 +96,7 @@ class PackagesUnsoldDashboardApp extends React.Component {
     {
       Header: '',
       headerClassName: '',
+      width: 40,
       Cell: props => {
         return (
           <input
@@ -355,11 +356,10 @@ class PackagesUnsoldDashboardApp extends React.Component {
   }
 
   onFetchData = async (state, instance) => {
-    console.log('fetching data')
     harvestPackageStore.setFilter({
       facility_id: this.props.facility_id
     })
-    await harvestPackageStore.loadHarvestPackages('new')
+    await harvestPackageStore.loadHarvestPackages()
   }
 
   onSave = data => {

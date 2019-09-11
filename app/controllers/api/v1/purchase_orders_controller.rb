@@ -13,19 +13,4 @@ class Api::V1::PurchaseOrdersController < Api::V1::BaseApiController
 
     render json: @pos
   end
-
-  def create
-    package_ids = params[:packages].map { |a| a[:id] }
-    order = Sales::PackageOrder.create(
-      order_no: params[:order_no],
-      status: 'new',
-      customer_id: params[:customer_id], #assuming customer id present
-    )
-    packages = Inventory::ItemTransaction.in(id: package_ids)
-    packages.update_all(package_order_id: order.id, status: 'sold')
-    render json: {data: 'success create'}
-    #create order with many packages
-    #update package order_id
-    #added new customer doesnt exist
-  end
 end

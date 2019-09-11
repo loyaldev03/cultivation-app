@@ -58,8 +58,8 @@ class CreateOrderSidebar extends React.Component {
           customer,
           customer_id: cust.id,
           state_license: cust.state_license,
-          address: cust.addresses[0].address,
-          mobile_number: cust.addresses[0].mobile_number
+          address: cust.addresses[0] ? cust.addresses[0].address : '',
+          mobile_number: cust.mobile_number
         })
       }
     } else {

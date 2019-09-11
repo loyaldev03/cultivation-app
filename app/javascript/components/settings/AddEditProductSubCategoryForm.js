@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import Select from 'react-select'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
 import reactSelectStyle from '../utils/reactSelectStyle'
-import CategoryStore from '../inventory/stores/ProductCategoryStore'
+import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
 
 @observer
 class AddEditProductSubCategoryForm extends React.Component {
@@ -13,18 +13,20 @@ class AddEditProductSubCategoryForm extends React.Component {
       id: '',
       name: '',
       productCategoryId: '',
-      selectedProductCategory: {}
+      selectedProductCategory: {},
+      packageUnits: []
     }
   }
 
   async componentDidUpdate(prevProps) {
-    const { mode, editSubCategory, editProductCategory } = this.props
+    const { mode, editSubCategory } = this.props
     if (mode && mode !== prevProps.mode) {
       this.setState({
         id: '',
         name: '',
         productCategoryId: '',
-        selectedProductCategory: {}
+        selectedProductCategory: {},
+        packageUnits: []
       })
     }
     if (
@@ -34,26 +36,28 @@ class AddEditProductSubCategoryForm extends React.Component {
     ) {
       let selectedProductCategory = {}
       let productCategoryId = ''
+      let packageUnits = editSubCategory.packageUnits || []
       if (editSubCategory.productCategoryId) {
         selectedProductCategory =
-          CategoryStore.categoryOptions.find(
+          ProductCategoryStore.categoryOptions.find(
             x => x.value === editSubCategory.productCategoryId
           ) || {}
         productCategoryId = editSubCategory.productCategoryId
       }
       this.setState({
-        id: editSubCategory.id,
-        name: editSubCategory.name,
+        id: editSubCategory.id || '',
+        name: editSubCategory.name || '',
         productCategoryId,
-        selectedProductCategory
+        selectedProductCategory,
+        packageUnits
       })
     }
   }
 
-  onChangeCategory = selectedOption => {
+  onChangeProductCategory = selected => {
     this.setState({
-      selectedProductCategory: selectedOption,
-      productCategoryId: selectedOption.value
+      selectedProductCategory: selected,
+      productCategoryId: selected.value
     })
   }
 
@@ -62,7 +66,8 @@ class AddEditProductSubCategoryForm extends React.Component {
     const formData = {
       id: this.state.id,
       name: this.state.name,
-      product_category_id: this.state.productCategoryId
+      product_category_id: this.state.productCategoryId,
+      package_units: this.state.packageUnits
     }
     if (this.props.onSave) {
       this.props.onSave(formData)
@@ -71,7 +76,7 @@ class AddEditProductSubCategoryForm extends React.Component {
 
   render() {
     const { onClose, onSave, mode = 'add' } = this.props
-    const { name, selectedProductCategory } = this.state
+    const { name, selectedProductCategory, packageUnits } = this.state
 
     if (!mode) {
       return null
@@ -109,10 +114,130 @@ class AddEditProductSubCategoryForm extends React.Component {
                 <Select
                   isDisabled={mode === 'edit'}
                   styles={reactSelectStyle}
-                  options={CategoryStore.categoryOptions}
+                  options={ProductCategoryStore.categoryOptions}
                   value={this.state.selectedProductCategory}
-                  onChange={selected => this.onChangeCategory(selected)}
+                  onChange={selected => this.onChangeProductCategory(selected)}
                 />
+              </div>
+            </div>
+            <div className="mt3 fl w-100">
+              <div className="w-100 fl">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Packaging Unit Types
+                </label>
+              </div>
+              <div className="grey f6">
+                <span className="fw6 mt2 dib">Package:</span>
+                <div>
+                  <label className="ph2 pv2 dib">
+                    <input type="checkbox" value="pk_3" /> 3pk{' '}
+                  </label>
+                  <label className="ph2 pv2 dib">
+                    <input type="checkbox" value="pk_5" /> 5pk{' '}
+                  </label>
+                  <label className="ph2 pv2 dib">
+                    <input type="checkbox" value="pk_12" /> 12pk{' '}
+                  </label>
+                  <label className="ph2 pv2 dib">
+                    <input type="checkbox" value="pk_24" /> 24pk{' '}
+                  </label>
+                </div>
+              </div>
+              <div className="grey f6">
+                <span className="fw6 mt2 dib">Weight:</span>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr'
+                  }}
+                >
+                  <label className="pa2 db">
+                    <input type="checkbox" value="half_g" /> 1/2 gram{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="half_kg" /> 1/2 kg{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="quarter_lb" /> 1/4 lb{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="quarter_oz" /> 1/4 ounce{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="eighth" /> Eighth{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="g" /> Gram{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="half_oz" /> Half ounce{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="kg" /> Kg{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="lb" /> Lb{' '}
+                  </label>
+                  <label className="pa2 db">
+                    <input type="checkbox" value="oz" /> Ounce{' '}
+                  </label>
+                </div>
+              </div>
+              <div className="grey f6">
+                <span className="fw6 mt2 dib">Custom Units:</span>
+                <div>
+                  {packageUnits.map(x => {
+                    return (
+                      <div
+                        key={x.value}
+                        className="ph2 pt2 pb1 flex items-center"
+                      >
+                        <input
+                          type="text"
+                          className="input w4"
+                          name={x.value}
+                          value={x.label}
+                          onChange={e => {
+                            this.setState({
+                              packageUnits: this.state.packageUnits.map(y =>
+                                y.value === e.target.name
+                                  ? { ...y, label: e.target.value }
+                                  : y
+                              )
+                            })
+                          }}
+                        />
+                        <i
+                          className="material-icons icon--btn red"
+                          onClick={() => {
+                            this.setState({
+                              packageUnits: this.state.packageUnits.filter(
+                                y => y.value !== x.value
+                              )
+                            })
+                          }}
+                        >
+                          delete
+                        </i>
+                      </div>
+                    )
+                  })}
+                  <a
+                    href="#0"
+                    className="link pa2 dib"
+                    onClick={() => {
+                      const customKey = packageUnits.length + 1
+                      this.setState({
+                        packageUnits: [
+                          ...packageUnits,
+                          { value: `custom_${customKey}`, label: '' }
+                        ]
+                      })
+                    }}
+                  >
+                    Add
+                  </a>
+                </div>
               </div>
             </div>
           </div>

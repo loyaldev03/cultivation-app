@@ -33,13 +33,4 @@ module Inventory
     # Sub categories that belongs to this category
     embeds_many :sub_categories, class_name: 'Inventory::ProductSubCategory'
   end
-
-  class ProductSubCategory
-    include Mongoid::Document
-
-    field :name, type: String
-
-    validates :name, presence: true
-    validates_uniqueness_of :name
-  end
 end

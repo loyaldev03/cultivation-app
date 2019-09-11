@@ -13,6 +13,8 @@ module Inventory
         {
           id: sub.id.to_s,
           name: sub.name,
+          product_category_id: object.id.to_s,
+          product_category_name: object.name,
         }
       end
     end

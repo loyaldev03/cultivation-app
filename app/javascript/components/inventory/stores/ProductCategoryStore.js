@@ -69,7 +69,7 @@ class ProductCategoryStore {
         const updated = response.data.attributes
         if (updated) {
           this.categories = this.categories.map(x => {
-            return x.id === updated.id ? Object.assign(toJS(x), updated) : x
+            return x.id === updated.id ? updated : x
           })
           toast(`${updates.name} saved.`, 'success')
         }
@@ -179,16 +179,7 @@ class ProductCategoryStore {
     if (this.isDataLoaded) {
       this.categories.forEach(x => {
         if (x.sub_categories) {
-          const sub = x.sub_categories.map(y => {
-            const product_category_id = x.id
-            return {
-              id: y.id,
-              name: y.name,
-              product_category_id: x.id,
-              product_category_name: x.name
-            }
-          })
-          list = list.concat(sub)
+          list = list.concat(x.sub_categories)
         }
       })
     }

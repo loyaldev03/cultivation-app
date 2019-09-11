@@ -153,31 +153,37 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def update_product_subcategory
-    sub_category_id = params[:id]
-    sub_category_name = params[:name]
-    product_category_id = params[:product_category_id]
-
-    if sub_category_id.present?
-      # Updating
-      category = Inventory::ProductCategory.find_by("sub_categories._id": sub_category_id.to_bson_id)
-      sub_category = category.sub_categories.detect { |x| x.id.to_s == sub_category_id }
-
-      if params[:deleted] == true
-        category.sub_categories = category.sub_categories - [sub_category]
-        category.save!
-        render json: Inventory::ProductCategorySerializer.new(category).serialized_json
-        return
+    if params[:deleted] == true
+      cmd = Inventory::DeleteProductSubCategory.call(params[:id])
+      if cmd.success?
+        render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
       else
-        sub_category.name = sub_category_name
-        category.save!
-        render json: Inventory::ProductCategorySerializer.new(category).serialized_json
+        render json: cmd.errors.to_json
       end
-    elsif product_category_id.present?
-      # Create
-      category = Inventory::ProductCategory.find_by(id: product_category_id) 
-      sub_category = category.sub_categories.build(name: sub_category_name)
-      category.save!
-      render json: Inventory::ProductCategorySerializer.new(category).serialized_json
+      return
+    end
+
+    # Updating
+    if params[:id].present?
+      cmd = Inventory::UpdateProductSubCategory.call(sub_category_id: params[:id],
+                                                     sub_category_name: params[:name])
+      if cmd.success?
+        render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
+      else
+        render json: cmd.errors.to_json
+      end
+      return
+    end
+
+    # Creating
+    if params[:product_category_id].present?
+      cmd = Inventory::CreateProductSubCategory.call(product_category_id: params[:product_category_id],
+                                                     sub_category_name: params[:name])
+      if cmd.success?
+        render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
+      else
+        render json: cmd.errors.to_json
+      end
     end
   end
 

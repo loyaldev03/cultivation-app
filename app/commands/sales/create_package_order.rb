@@ -20,7 +20,6 @@ module Sales
           mobile_number: @args[:mobile_number],
         )
         customer.save
-        Rails.logger.debug "Customer error saving ===> #{customer.errors.inspect}"
         customer_id = customer.id
       end
       order = Sales::PackageOrder.create(
@@ -31,7 +30,5 @@ module Sales
       packages = Inventory::ItemTransaction.in(id: package_ids)
       packages.update_all(package_order_id: order.id, status: 'sold')
     end
-
-    private
   end
 end

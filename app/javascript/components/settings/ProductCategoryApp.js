@@ -8,8 +8,8 @@ import {
   HeaderFilter,
   ListingTable
 } from '../utils'
-import MetrcItemStore from './ItemStore'
 import CategoryStore from '../inventory/stores/ProductCategoryStore'
+import MetrcItemCategoryStore from './MetrcItemCategoryStore'
 import AddEditProductCategoryForm from './AddEditProductCategoryForm'
 import AddEditProductSubCategoryForm from './AddEditProductSubCategoryForm'
 
@@ -115,6 +115,10 @@ class ProductCategoryApp extends React.Component {
         show: false
       },
       {
+        accessor: 'package_units',
+        show: false
+      },
+      {
         headerClassName: 'tl',
         Header: 'Name',
         accessor: 'name',
@@ -128,7 +132,8 @@ class ProductCategoryApp extends React.Component {
                 this.onEditSubcategory({
                   id: props.row.id,
                   name: props.row.name,
-                  productCategoryId: props.row.product_category_id
+                  productCategoryId: props.row.product_category_id,
+                  packageUnits: props.row.package_units
                 })
               }
             >
@@ -151,7 +156,8 @@ class ProductCategoryApp extends React.Component {
                 this.onEditSubcategory({
                   id: props.row.id,
                   name: props.row.name,
-                  productCategoryId: props.row.product_category_id
+                  productCategoryId: props.row.product_category_id,
+                  packageUnits: props.row.package_units
                 })
               }
             >
@@ -180,9 +186,18 @@ class ProductCategoryApp extends React.Component {
     ]
   }
 
-  componentDidMount() {
-    CategoryStore.loadCategories()
-    MetrcItemStore.loadItems(this.props.facilityId)
+  async componentDidMount() {
+    await Promise.all([
+      CategoryStore.loadCategories(),
+      MetrcItemCategoryStore.loadCategories()
+    ])
+
+    // TODO: For DEVELOPMENT USE ONLY
+    this.setState({
+      tabIndex: 1,
+      showEditSubCategoryPanel: true,
+      editSubCategoryPanelMode: 'add'
+    })
   }
 
   onSelectTab = tabIndex => {
@@ -260,8 +275,6 @@ class ProductCategoryApp extends React.Component {
       editSubCategoryPanelMode,
       editSubCategory
     } = this.state
-    const { facilityId } = this.props
-    console.warn('FIXME: Wrong facilityId when selecting All')
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -350,11 +363,6 @@ class ProductCategoryApp extends React.Component {
               </div>
             </TabPanel>
           </Tabs>
-          {/* </div> */}
-
-          <div data-role="sidebar" className="rc-slide-panel">
-            <div className="rc-slide-panel__body h-100" />
-          </div>
         </div>
       </React.Fragment>
     )

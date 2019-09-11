@@ -10,11 +10,12 @@ class MetrcItemCategoryStore {
   @observable columnFilters = {}
   @observable categories = []
   @observable excludes = []
+  @observable quantityTypeFilter = ''
 
   @action
   async loadCategories() {
     this.isLoading = true
-    const url = '/api/v1/products/item_categories'
+    const url = '/api/v1/products/item_categories' // Item Category is Metrc Item Category
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -96,33 +97,22 @@ class MetrcItemCategoryStore {
   }
 
   @computed
-  get allSelectOptions() {
-    const res = this.categories.map(c => {
-      return {
-        value: c.name,
-        label: c.name
-      }
-    })
+  get metrcItemCategoryOptions() {
+    let res
+    if (!isEmpty(this.quantityTypeFilter)) {
+      res = this.categories.filter(
+        c => c.quantity_type === this.quantityTypeFilter
+      )
+    } else {
+      res = this.categories
+    }
+    res = res.map(c => ({
+      value: c.name,
+      label: c.name
+    }))
     return res
   }
 
-  @computed
-  get weightBasedSelectOptions() {
-    const res = this.categories
-      .filter(
-        c =>
-          !this.excludes.includes(c.name) &&
-          c.quantity_type === 'WeightBased' &&
-          c.is_active
-      )
-      .map(c => {
-        return {
-          value: c.name,
-          label: c.name
-        }
-      })
-    return res
-  }
   /* - column filters */
 }
 

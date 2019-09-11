@@ -1,8 +1,26 @@
 import React from 'react'
 import { observer } from 'mobx-react'
+import Select from 'react-select'
+import reactSelectStyle from '../utils/reactSelectStyle'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
-import CategoryStore from '../inventory/stores/ProductCategoryStore'
+import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
+import MetrcItemCategoryStore from './MetrcItemCategoryStore'
 import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCategorySelector'
+
+const QUANTITY_TYPES = [
+  {
+    value: 'CountBased',
+    label: 'Count Based'
+  },
+  {
+    value: 'VolumeBased',
+    label: 'Volume Based'
+  },
+  {
+    value: 'WeightBased',
+    label: 'Weight Based'
+  }
+]
 
 @observer
 class AddEditProductCategoryForm extends React.Component {
@@ -10,8 +28,13 @@ class AddEditProductCategoryForm extends React.Component {
     super(props)
     this.state = {
       name: '',
-      metrc_item_category: ''
+      metrc_item_category: '',
+      selectedQuantityType: {}
     }
+  }
+
+  async componentDidMount() {
+    await MetrcItemCategoryStore.loadCategories()
   }
 
   async componentDidUpdate(prevProps) {
@@ -19,16 +42,38 @@ class AddEditProductCategoryForm extends React.Component {
     if (mode && mode !== prevProps.mode) {
       this.setState({
         name: '',
-        metrc_item_category: ''
+        metrc_item_category: '',
+        selectedQuantityType: {}
       })
     }
     if (editCategory && editCategory !== prevProps.editCategory) {
-      const category = CategoryStore.getCategoryByName(editCategory)
+      const category = ProductCategoryStore.getCategoryByName(editCategory)
       const metrcItem = category.metrc_item_category || ''
       this.setState({
         name: editCategory,
         metrc_item_category: metrcItem
       })
+      if (MetrcItemCategoryStore.isDataLoaded) {
+        const metrcCategory = MetrcItemCategoryStore.getCategoryByName(
+          metrcItem
+        )
+        console.log('metrcCategory.name', metrcCategory.name)
+        console.log('metrcCategory.quantity_type', metrcCategory.quantity_type)
+        if (metrcItem && metrcCategory) {
+          const quantityType = QUANTITY_TYPES.find(
+            x => x.value === metrcCategory.quantity_type
+          )
+          this.setState({
+            metrc_item_category: metrcCategory.name,
+            selectedQuantityType: quantityType
+          })
+        } else {
+          this.setState({
+            metrc_item_category: '',
+            selectedQuantityType: {}
+          })
+        }
+      }
     }
   }
 
@@ -45,7 +90,7 @@ class AddEditProductCategoryForm extends React.Component {
 
   render() {
     const { onClose, onSave, mode = 'add' } = this.props
-    const { name, metrc_item_category } = this.state
+    const { name, metrc_item_category, selectedQuantityType } = this.state
 
     if (!mode) {
       return null
@@ -77,6 +122,23 @@ class AddEditProductCategoryForm extends React.Component {
             </div>
             <div className="mt3 fl w-100">
               <div className="w-100 fl">
+                <label className="f6 fw6 db mb1 gray ttc">Quantity Type</label>
+              </div>
+              <div>
+                <Select
+                  styles={reactSelectStyle}
+                  options={QUANTITY_TYPES}
+                  value={selectedQuantityType}
+                  onChange={selected => {
+                    this.setState({
+                      selectedQuantityType: selected
+                    })
+                  }}
+                />
+              </div>
+            </div>
+            <div className="mt3 fl w-100">
+              <div className="w-100 fl">
                 <label className="f6 fw6 db gray ttc">
                   METRC Item Category
                 </label>
@@ -86,6 +148,7 @@ class AddEditProductCategoryForm extends React.Component {
                 </span>
                 <ItemCategorySelector
                   ref={select => (this.categorySelector = select)}
+                  quantityType={selectedQuantityType.value}
                   value={metrc_item_category}
                   onChange={selected => {
                     this.setState({

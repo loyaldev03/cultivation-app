@@ -139,6 +139,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     # we change the active flag to true
     if category.deleted
       category.is_active = true
+      category.sub_categories = []
     end
     category.deleted = params[:deleted] == true
     if category.deleted
@@ -146,8 +147,11 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
       category.is_active = false
     end
     # WeightBased / CountBased, copy from METRC Item Category
-    category.quantity_type = params[:quantity_type]
     category.metrc_item_category = params[:metrc_item_category]
+    if category.metrc_item_category
+      found = Inventory::ItemCategory.find_by(name: category.metrc_item_category)
+      category.quantity_type = found&.quantity_type
+    end
     category.save!
     render json: Inventory::ProductCategorySerializer.new(category).serialized_json
   end
@@ -166,7 +170,8 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     # Updating
     if params[:id].present?
       cmd = Inventory::UpdateProductSubCategory.call(sub_category_id: params[:id],
-                                                     sub_category_name: params[:name])
+                                                     sub_category_name: params[:name],
+                                                     package_units: params[:package_units])
       if cmd.success?
         render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
       else

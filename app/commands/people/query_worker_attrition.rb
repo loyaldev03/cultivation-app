@@ -21,11 +21,12 @@ module People
     private
 
     def new_employee
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
       date = Time.parse("#{@args[:period]}-01-01")
       if !@args[:role].present?
-        users = User.where(is_active: true).where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+        users = User.in(facilities: f_ids).where(c_at: (date.beginning_of_year..date.end_of_year), is_active: true).compact
       else
-        users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
+        users = User.in(facilities: f_ids).where(c_at: (date.beginning_of_year..date.end_of_year), is_active: true).map { |x| x if x.roles.include?(@args[:role].to_bson_id) }.compact
       end
 
       persons = users.map do |u|
@@ -46,11 +47,12 @@ module People
     end
 
     def leaving_employee
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
       date = Time.parse("#{@args[:period]}-01-01")
       if !@args[:role].present?
-        users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+        users = User.in(facilities: f_ids).where(c_at: (date.beginning_of_year..date.end_of_year)).compact
       else
-        users = User.where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) && x.roles.include?(@args[:role].to_bson_id) }.compact
+        users = User.in(facilities: f_ids).where(c_at: (date.beginning_of_year..date.end_of_year)).map { |x| x if x.roles.include?(@args[:role].to_bson_id) }.compact
       end
       user_json = []
       users.each do |u|

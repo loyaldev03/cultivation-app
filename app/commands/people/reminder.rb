@@ -10,9 +10,10 @@ module People
     end
 
     def call
-      tor = time_off_request.count
-      el = employees_leaving.count
-      es = employees_starting.count
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      tor = time_off_request(f_ids).count
+      el = employees_leaving(f_ids).count
+      es = employees_starting(f_ids).count
 
       {
         time_off_request: tor,
@@ -23,8 +24,8 @@ module People
 
     private
 
-    def time_off_request
-      @grouping_users = User.where(is_active: true).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+    def time_off_request(f_ids)
+      @grouping_users = User.where(is_active: true).in(facilities: f_ids).compact
       @work_requests = []
       @grouping_users.each do |v|
         @work_requests.push(Common::WorkRequest.where(user_id: v.id, status: 'pending'))
@@ -32,18 +33,18 @@ module People
       return @work_requests
     end
 
-    def employees_starting
+    def employees_starting(f_ids)
       @grouping_users = User.where(:expected_start_date => (Time.now.beginning_of_week..Time.now.end_of_week)).where(is_active: false)
 
-      result = @grouping_users.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+      result = @grouping_users.in(facilities: f_ids).compact
 
       return result
     end
 
-    def employees_leaving
+    def employees_leaving(f_ids)
       @grouping_users = User.where(is_active: true).ne(expected_leave_date: nil)
 
-      result = @grouping_users.map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+      result = @grouping_users.in(facilities: f_ids).compact
 
       return result
     end

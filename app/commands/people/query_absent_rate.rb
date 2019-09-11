@@ -17,7 +17,7 @@ module People
       work_schedules = User.collection.aggregate([
         {
           "$match": {
-            "facilities": {"$all": [@args[:facility_id].to_bson_id]},
+            "facilities": {"$in": @args[:facility_id]},
             "exempt": {"$ne": true},
           },
         },

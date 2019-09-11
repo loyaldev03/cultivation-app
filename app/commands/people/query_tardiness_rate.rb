@@ -17,7 +17,7 @@ module People
       users = User.collection.aggregate([
         {
           "$match": {
-            "facilities": {"$all": [@args[:facility_id].to_bson_id]},
+            "facilities": {"$all": @args[:facility_id]},
           },
         },
       ])

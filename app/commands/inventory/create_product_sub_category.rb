@@ -8,6 +8,7 @@ module Inventory
 
       @product_category_id = args[:product_category_id].to_bson_id
       @sub_category_name = args[:sub_category_name]
+      @package_units = args[:package_units]
     end
 
     def call
@@ -17,6 +18,13 @@ module Inventory
 
       sub_category = product_category.sub_categories.build
       sub_category.name = @sub_category_name
+      sub_category.package_units = []
+
+      if @package_units.any?
+        @package_units.each do |x|
+          sub_category.package_units.build(value: x[:value], label: x[:label])
+        end
+      end
 
       product_category.save!
       product_category

@@ -8,14 +8,24 @@ module Inventory
 
       @sub_category_id = args[:sub_category_id].to_bson_id
       @sub_category_name = args[:sub_category_name]
+      @package_units = args[:package_units]
     end
 
     def call
       product_category = Inventory::ProductCategory.find_by(
         "sub_categories._id": @sub_category_id,
       )
+
       sub_category = product_category.sub_categories.detect { |x| x.id == @sub_category_id }
       sub_category.name = @sub_category_name
+      sub_category.package_units = []
+
+      if @package_units.any?
+        @package_units.each do |x|
+          sub_category.package_units.build(value: x[:value], label: x[:label])
+        end
+      end
+
       product_category.save!
       product_category
     end

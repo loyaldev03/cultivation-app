@@ -172,7 +172,7 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'waste_type',
-        className: 'justify-center',
+        className: 'justify-center'
       },
       {
         headerClassName: '',
@@ -199,7 +199,7 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'harvest_id',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -212,7 +212,7 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'plant_id',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -225,48 +225,43 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'strain_name',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Grow Phase',
         accessor: 'current_grow_phase',
-        className: ' pr3 justify-center',
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Location Origin',
         accessor: 'location_name',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Location',
         accessor: 'location_type',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Planting Date',
         accessor: 'planting_date',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Harvest Date',
         accessor: 'harvest_date',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Destroyed Date',
         accessor: 'destroyed_date',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
@@ -279,24 +274,20 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'customer',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Weight',
         accessor: 'net_waste_weight',
-        className: ' pr3 justify-center',
-        
+        className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
         Header: 'Assigned To',
         accessor: 'assigned_to',
-        className: ' pr3 justify-center',
-        
-      },
-     
+        className: ' pr3 justify-center'
+      }
     ]
   }
   componentDidMount() {
@@ -333,10 +324,7 @@ class WastesDashboardApp extends React.Component {
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
-          <ListingTable
-            data={dummyData}
-            columns={columns}
-          />
+          <ListingTable data={dummyData} columns={columns} />
         </div>
       </div>
     )

@@ -139,6 +139,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     # we change the active flag to true
     if category.deleted
       category.is_active = true
+      category.sub_categories = []
     end
     category.deleted = params[:deleted] == true
     if category.deleted

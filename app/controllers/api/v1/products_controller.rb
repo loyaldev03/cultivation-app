@@ -147,8 +147,11 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
       category.is_active = false
     end
     # WeightBased / CountBased, copy from METRC Item Category
-    category.quantity_type = params[:quantity_type]
     category.metrc_item_category = params[:metrc_item_category]
+    if category.metrc_item_category
+      found = Inventory::ItemCategory.find_by(name: category.metrc_item_category)
+      category.quantity_type = found&.quantity_type
+    end
     category.save!
     render json: Inventory::ProductCategorySerializer.new(category).serialized_json
   end

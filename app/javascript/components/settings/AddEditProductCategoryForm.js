@@ -4,9 +4,10 @@ import Select from 'react-select'
 import reactSelectStyle from '../utils/reactSelectStyle'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
 import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
+import MetrcItemCategoryStore from './MetrcItemCategoryStore'
 import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCategorySelector'
 
-const QUANTITY_TYPES_OPTIONS = [
+const QUANTITY_TYPES = [
   {
     value: 'CountBased',
     label: 'Count Based'
@@ -32,6 +33,10 @@ class AddEditProductCategoryForm extends React.Component {
     }
   }
 
+  async componentDidMount() {
+    await MetrcItemCategoryStore.loadCategories()
+  }
+
   async componentDidUpdate(prevProps) {
     const { mode, editCategory } = this.props
     if (mode && mode !== prevProps.mode) {
@@ -48,6 +53,25 @@ class AddEditProductCategoryForm extends React.Component {
         name: editCategory,
         metrc_item_category: metrcItem
       })
+      if (MetrcItemCategoryStore.isDataLoaded) {
+        const metrcCategory = MetrcItemCategoryStore.getCategoryByName(metrcItem)
+        console.log('metrcCategory.name', metrcCategory.name)
+        console.log('metrcCategory.quantity_type', metrcCategory.quantity_type)
+        if (metrcItem && metrcCategory) {
+          const quantityType = QUANTITY_TYPES.find(
+            x => x.value === metrcCategory.quantity_type
+          )
+          this.setState({
+            metrc_item_category: metrcCategory.name,
+            selectedQuantityType: quantityType
+          })
+        } else {
+          this.setState({
+            metrc_item_category: '',
+            selectedQuantityType: {}
+          })
+        }
+      }
     }
   }
 
@@ -100,9 +124,8 @@ class AddEditProductCategoryForm extends React.Component {
               </div>
               <div>
                 <Select
-                  isDisabled={mode === 'edit'}
                   styles={reactSelectStyle}
-                  options={QUANTITY_TYPES_OPTIONS}
+                  options={QUANTITY_TYPES}
                   value={selectedQuantityType}
                   onChange={selected => {
                     this.setState({

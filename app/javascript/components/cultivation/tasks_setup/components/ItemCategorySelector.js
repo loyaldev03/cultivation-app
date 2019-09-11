@@ -38,7 +38,7 @@ class ItemCategorySelector extends React.Component {
       CategoryStore.quantityTypeFilter = quantityType
       this.setState({ selectedCategory: {} })
     }
-    else if (value !== prevProps.value) {
+    if (value !== prevProps.value) {
       const selected =
         CategoryStore.metrcItemCategoryOptions.find(x => x.value === value) ||
         {}

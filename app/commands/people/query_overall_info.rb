@@ -9,8 +9,9 @@ module People
 
     def call
       period = get_period_date(@args[:period].downcase)
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
       args = {
-        facility_id: @args[:facility_id],
+        facility_id: f_ids,
         start_date: period[:start_date],
         end_date: period[:end_date],
       }

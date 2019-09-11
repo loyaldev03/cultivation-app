@@ -8,6 +8,7 @@ module People
     end
 
     def call
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
       main = []
       months = I18n.t('date.abbr_month_names').compact
       Common::Role.all.map do |role|
@@ -22,7 +23,7 @@ module People
         User.all.map do |user|
           if user.roles.include?(role.id)
             user_count += 1
-            tasks = user.cultivation_tasks.where(facility_id: @args[:facility_id]).includes(:time_logs)
+            tasks = user.cultivation_tasks.in(facility_id: f_ids).includes(:time_logs)
               .group_by { |m| m.start_date.beginning_of_month }
               .sort_by { |date, data| date }
 
@@ -37,7 +38,7 @@ module People
         end
         main << {
           role: role.name,
-          toatal_user: user_count,
+          total_user: user_count,
           data: data,
         }
       end

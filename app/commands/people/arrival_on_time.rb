@@ -8,7 +8,8 @@ module People
     end
 
     def call
-      users = User.where(exempt: false).map { |x| x if x.facilities.include?(@args[:facility_id].to_bson_id) }.compact
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      users = User.in(facilities: f_ids).where(exempt: false).compact
       if (@args[:order] == 'late')
         most_late = total_late(users)
         me = {

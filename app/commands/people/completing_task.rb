@@ -10,11 +10,12 @@ module People
     end
 
     def call
+      f_ids = @facility_id.split(',').map { |x| x.to_bson_id }
       json = []
       total_percentages = 0
       users = User.where(exempt: false)
       users.map do |user|
-        tasks = user.cultivation_tasks.where(facility_id: @facility_id, work_status: 'done')
+        tasks = user.cultivation_tasks.in(facility_id: f_ids).where(work_status: 'done')
         tc = 0
         if tasks.count > 0
           count = 0

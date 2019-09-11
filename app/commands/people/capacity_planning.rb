@@ -68,9 +68,10 @@ module People
     private
 
     def capacity_planning_aggregate
-      t_ids = Cultivation::Task.where(facility_id: @args[:facility_id].to_bson_id).pluck(:id)
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      t_ids = Cultivation::Task.in(facility_id: f_ids).pluck(:id)
       User.collection.aggregate([
-        {"$match": {"facilities": {"$all": [@args[:facility_id].to_bson_id]}}},
+        {"$match": {"facilities": {"$in": f_ids}}},
         {"$lookup": {from: 'cultivation_time_logs',
                      as: 'time_logs',
                      let: {user_id: '$_id'},

@@ -70,6 +70,11 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
+  def all_destroyed_plant
+    destroyed_plants = Inventory::Plant.not.where(destroyed_date: nil)
+    render json: Inventory::PlantSerializer.new(destroyed_plants, include_options).serialized_json
+  end
+
   def destroyed_plants
     batch_id = params[:batch_id]
     command = Inventory::QueryDestroyedPlants.call(batch_id: batch_id)

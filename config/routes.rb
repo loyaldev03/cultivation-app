@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   get "cult/batches" => "home#cult_batches"
   get "cult/plants" => "home#cult_plants"
   get "cult/harvests" => "home#cult_harvests"
+  get "cult/destroyed_plants" => "home#cult_destroyed_plants"
+  get "cult/wastes" => "home#cult_wastes"
   get "cult/tasks" => "home#cult_tasks"
   get "cult/issues" => "home#cult_issues"
   get "onboarding" => "home#onboarding"
@@ -284,6 +286,7 @@ Rails.application.routes.draw do
           get 'all/(:current_growth_stage)', action: :all
           get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
           get 'search_by_location'
+          get 'all_destroyed_plant'
           get 'destroyed_plants'
           get 'harvests'
           get 'harvests/:id', action: 'show_harvest'

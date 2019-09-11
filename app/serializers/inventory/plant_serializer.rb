@@ -23,6 +23,8 @@ module Inventory
       :harvest_date,
       :estimated_harvest_date,
       :manifest_no,
+      :destroyed_date,
+      :destroyed_reason,
       :created_at
 
     attribute :cultivation_batch do |object, params = {}|

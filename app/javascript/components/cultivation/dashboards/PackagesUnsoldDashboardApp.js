@@ -1,420 +1,464 @@
-import React, { memo, useState, lazy, Suspense } from 'react'
+import React, { lazy, Suspense } from 'react'
+import PropTypes from 'prop-types'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
-import {
-  CheckboxSelect,
-  ListingTable,
-  TempPackagesWidgets,
-  HeaderFilter
-} from '../../utils'
-import uniq from 'lodash.uniq'
+import Tippy from '@tippy.js/react'
+import { toast, ListingTable, CheckboxSelect } from '../../utils'
+import harvestPackageStore from '../../inventory/sales_products/store/HarvestPackageStore'
+import PackageOrderStore from './PackageOrderStore'
+import ConvertPackagePlanForm from '../../cultivation/tasks_setup/components/ConvertPackagePlanForm'
+import { SlidePanel, HeaderFilter } from '../../utils'
 
-const dummyData = [
-  {
-    package: 'CAMPOS DE KUSH',
-    package_id: 'PCK94457',
-    group: 'pre-rolls',
-    type: 'lb',
-    order_id: '03/12/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'God Bud',
-    genome: 'indica',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'SKUNKWORX PACKAGING',
-    package_id: 'PCK94457',
-    group: 'pre-rolls',
-    type: 'lb',
-    order_id: '11/12/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'GLASS VIAL WITH BLACK CHILD RESISTANT CAP',
-    genome: 'indica',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'PHYTO ALASKAN',
-    package_id: 'PCK94457',
-    group: 'buds',
-    type: 'lb',
-    order_id: '12/2/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Alaskan Thunder Fuck',
-    genome: 'sativa',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'CREAM OF THE CROP GARDENS',
-    package_id: 'PCK94457',
-    group: 'buds',
-    type: 'lb',
-    order_id: '21/6/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Do Si Dos',
-    genome: 'indica',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'CANNASOL FARMS',
-    package_id: 'PCK94457',
-    group: 'buds',
-    type: 'lb',
-    order_id: '11/1/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Alaskan Thunder Fuck',
-    genome: 'sativa',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'ARTIZEN CANNABIS',
-    package_id: 'PCK94457',
-    group: 'kief',
-    type: 'lb',
-    order_id: '19/3/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Allen Wrench',
-    genome: 'sativa',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'LAUGHING MAN FARMS',
-    package_id: 'PCK94457',
-    group: 'leaves',
-    type: 'lb',
-    order_id: '26/5/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Allen Wrench',
-    genome: 'sativa',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'CANNASOL FARMS',
-    package_id: 'PCK94457',
-    group: 'kief',
-    type: 'lb',
-    order_id: '18/9/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Allen Wrench',
-    genome: 'sativa',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: '7 POINTS OREGON',
-    package_id: 'PCK94457',
-    group: 'buds',
-    type: 'lb',
-    order_id: '10/11/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Cherry Pie',
-    genome: 'hybrid',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'SPINACH CANNABIS',
-    package_id: 'PCK94457',
-    group: 'pre-rolls',
-    type: 'lb',
-    order_id: '11/12/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Dancehall',
-    genome: 'hybrid',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'DOUBLE DUTCH FARMS',
-    package_id: 'PCK94457',
-    group: 'leaves',
-    type: 'lb',
-    order_id: '26/3/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Dutch Treat',
-    genome: 'hybrid',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'TKO RESERVE',
-    package_id: 'PCK94457',
-    group: 'leaves',
-    type: 'lb',
-    order_id: '29/1/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Gelato',
-    genome: 'hyrbid',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  },
-  {
-    package: 'LAZY BEE GARDENS',
-    package_id: 'PCK94457',
-    group: 'buds',
-    type: 'lb',
-    order_id: '11/4/2019',
-    manifest: 'medical',
-    use_type: 'medical',
-    strain: 'Gelato',
-    genome: 'hybrid',
-    thc: '9%',
-    cbd: '8%',
-    total_net_weight: '',
-    price_per_unit: '',
-    total_price: '',
-    location: ''
-  }
-]
+const CreateOrderSidebar = lazy(() => import('./CreateOrderSidebar'))
 
-class PackageStore {
-  updateFilterOptions = (propName, filterOptions) => {
-    const updated = {
-      ...this.columnFilters,
-      [propName]: filterOptions
-    }
-    this.columnFilters = updated
-  }
+import CustomerStore from '../../settings/CustomerStore'
 
-  getUniqPropValues = propName => {
-    return uniq(dummyData.map(x => x[propName]).sort())
-  }
+const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
+  return (
+    <a
+      className={`pa2 flex link dim pointer items-center ${className}`}
+      onClick={onClick}
+    >
+      {icon ? (
+        <i className="material-icons md-17 pr2">{icon}</i>
+      ) : indelible == 'add_nutrient' ? (
+        <img src={MyImage} style={{ width: '2em' }} />
+      ) : (
+        ''
+      )}
+      <span className="pr2">{text}</span>
+    </a>
+  )
 }
-const packageStore = new PackageStore()
 
 @observer
-class PackageDashboardApp extends React.Component {
+class PackagesUnsoldDashboardApp extends React.Component {
   state = {
-    columns: [
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
-            title="Package Group"
-            accessor="group"
-            getOptions={packageStore.getUniqPropValues}
-            onUpdate={packageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'group',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: 'Package ID',
-        accessor: 'package_id',
-        className: ''
-      },
-
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
-            title="Package Type"
-            accessor="type"
-            getOptions={packageStore.getUniqPropValues}
-            onUpdate={packageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'type',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: 'Package Date',
-        accessor: 'order_id',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
-            title="Use Type"
-            accessor="use_type"
-            getOptions={packageStore.getUniqPropValues}
-            onUpdate={packageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'use_type',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
-            title="Strain"
-            accessor="strain"
-            getOptions={packageStore.getUniqPropValues}
-            onUpdate={packageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'strain',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
-            title="Genome Type"
-            accessor="genome"
-            getOptions={packageStore.getUniqPropValues}
-            onUpdate={packageStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'genome',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: '% THC',
-        accessor: 'thc',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: '% CBD',
-        accessor: 'cbd',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: 'Qty',
-        accessor: 'qty',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: 'Total Net Weight',
-        accessor: 'total_net_weight',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: 'Price per unit ',
-        accessor: 'price_per_unit',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: 'Total Est Revenue',
-        accessor: 'total_price',
-        className: ' pr3 justify-center'
-      }
-    ]
+    idOpen: '',
+    showCreatePackagePlan: false,
+    showEditor: false,
+    checkedPackageIds: [],
+    showCreateOrderSidebar: false
   }
+
   componentDidMount() {
-    // BatchStore.loadBatches()
+    const sidebarNode = document.querySelector('[data-role=sidebar]')
+    window.editorSidebar.setup(sidebarNode)
+    // harvestPackageStore.loadHarvestPackages('new')
+    CustomerStore.loadCustomer()
   }
 
-  onToggleColumns = (header, value) => {
-    const column = this.state.columns.find(x => x.Header === header)
-    if (column) {
-      column.show = value
+  openHarvestPackage = (event, id) => {
+    this.setState({ showEditor: true, idOpen: id })
+    event.preventDefault()
+  }
+
+  onCreateOrder = async e => {
+    if (this.state.checkedPackageIds.length > 0) {
+      const packages = harvestPackageStore.harvestPackages.filter(e =>
+        this.state.checkedPackageIds.includes(e.id)
+      )
+      await PackageOrderStore.getNextOrderNo()
+      this.createOrderSidebar.setPackages(
+        packages,
+        PackageOrderStore.next_order_no
+      )
       this.setState({
-        columns: this.state.columns.map(x =>
-          x.Header === column.Header ? column : x
-        )
+        showCreateOrderSidebar: !this.state.showCreateOrderSidebar
       })
+    } else {
+      alert('please select one package to create order')
+    }
+  }
+
+  onShowCreatePackagePlan = id => {
+    // somehow pass the id into the form
+    this.setState({ showCreatePackagePlan: true, idOpen: id })
+  }
+
+  onCheckPackageId = id => {
+    let newCheckedPackageIds = []
+    if (!this.state.checkedPackageIds.includes(id)) {
+      //checked if doesnt exist
+      console.log('check')
+      newCheckedPackageIds = [...this.state.checkedPackageIds, id]
+    } else {
+      //uncheck if already exist
+      console.log('uncheck')
+      newCheckedPackageIds = this.state.checkedPackageIds.filter(a => a !== id)
+    }
+    this.setState({
+      checkedPackageIds: newCheckedPackageIds
+    })
+  }
+
+  tableColumns = (locations, harvest_batches) => [
+    {
+      Header: '',
+      headerClassName: '',
+      width: 40,
+      Cell: props => {
+        return (
+          <input
+            type="checkbox"
+            // checked={!isActive}
+            onChange={e => this.onCheckPackageId(props.row.id)}
+          />
+        )
+      }
+    },
+    {
+      Header: 'Package Name',
+      accessor: 'package_name',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: (
+        <HeaderFilter
+          title="Package Group"
+          accessor="label"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'label',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: (
+        <HeaderFilter
+          title="Package Type"
+          accessor="uom"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'uom',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Package ID',
+      accessor: 'package_tag',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: (
+        <HeaderFilter
+          title="Use Type"
+          accessor="use_type"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'use_type',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: (
+        <HeaderFilter
+          title="Strain"
+          accessor="strain"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'strain',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: (
+        <HeaderFilter
+          title="Genome Type"
+          accessor="genome_type"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'genome_type',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: '% THC',
+      accessor: 'thc',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: '% CBD',
+      accessor: 'cbd',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Qty Sold',
+      accessor: 'qty_sold',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Qty Unsold',
+      accessor: 'qty_unsold',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Total Net Weight',
+      accessor: 'quantity',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Price per Unit',
+      accessor: 'cost_per_unit',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Total Revenue',
+      accessor: 'total_revenue',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Order Date',
+      accessor: 'order_date',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Order #',
+      accessor: 'order_id',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Manifest #',
+      accessor: 'manifest_id',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: (
+        <HeaderFilter
+          title="Status"
+          accessor="status"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'status',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Fullfilment Date',
+      accessor: 'fullfilment_date',
+      headerClassName: 'tl',
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
+      Header: 'Actions',
+      className: 'tc',
+      accessor: 'id',
+      filterable: false,
+      maxWidth: 45,
+      Cell: this.renderActions
+    }
+  ]
+
+  renderActions = record => {
+    const id = toJS(record.original.id)
+
+    return (
+      <span className="pointer">
+        <Tippy
+          placement="bottom-end"
+          trigger="click"
+          content={
+            this.state.idOpen === record.id ? (
+              <div className="bg-white f6 flex grey">
+                <div className="db shadow-4">
+                  <MenuButton
+                    icon="edit"
+                    text="Edit"
+                    onClick={e => {
+                      this.openHarvestPackage(event, id)
+                    }}
+                  />
+                  <MenuButton
+                    icon="settings"
+                    text="Convert product"
+                    onClick={e => this.onShowCreatePackagePlan(id)}
+                  />
+                </div>
+              </div>
+            ) : (
+              ''
+            )
+          }
+        >
+          <i
+            onClick={() => {
+              this.setState({ idOpen: record.id })
+            }}
+            className="material-icons gray"
+          >
+            more_horiz
+          </i>
+        </Tippy>
+      </span>
+    )
+  }
+
+  onFetchData = async (state, instance) => {
+    harvestPackageStore.setFilter({
+      facility_id: this.props.facility_id
+    })
+    await harvestPackageStore.loadHarvestPackages()
+  }
+
+  onSave = data => {
+    if (data.toast) {
+      toast(data.toast.message, data.toast.type)
+    }
+
+    if (data.hideSidebar) {
+      this.setState({ showCreatePackagePlan: false, showEditor: false })
     }
   }
 
   render() {
-    // const { defaultFacilityId } = this.props
-    const { columns } = this.state
-    return (
-      <div className="pa4">
-        <div className="flex flex-row-reverse" />
+    const { locations, harvest_batches, salesProductPermission } = this.props
+    const {
+      showEditor,
+      showCreatePackagePlan,
+      idOpen,
+      columns,
+      showCreateOrderSidebar
+    } = this.state
 
-        <div className="flex justify-between">
-          <input
-            type="text"
-            className="input w5"
-            placeholder="Search"
-            // onChange={e => {
-            //   BatchStore.filter = e.target.value
-            // }}
-          />
-          <div className="flex">
-            <a className="btn btn--primary ml2">Create new order</a>
-            <a className="btn btn--primary ml2 mr2 ">Convert package</a>
-            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+    return (
+      <React.Fragment>
+        <div id="toast" className="toast animated toast--success" />
+        <div className="w-100 bg-white pa3">
+          <div className="flex mb4 mt2">
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
+              Package Inventory
+            </h1>
+            <div style={{ justifySelf: 'end' }}>
+              {salesProductPermission.create && <React.Fragment />}
+            </div>
           </div>
-        </div>
-        <div className="pv3">
+
+          <div className="flex justify-between pb3">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Package Name"
+              onChange={e => {
+                harvestPackageStore.searchTerm = e.target.value
+              }}
+            />
+            <button
+              className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+              onClick={this.onCreateOrder}
+            >
+              Create order
+            </button>
+          </div>
+
           <ListingTable
-            data={dummyData}
-            columns={columns}
-            // isLoading={BatchStore.isLoading}
+            columns={this.tableColumns(locations, harvest_batches)}
+            className="-highlight std-table"
+            ajax={true}
+            onFetchData={this.onFetchData}
+            isLoading={harvestPackageStore.isLoading}
+            data={harvestPackageStore.filteredList}
+            pageSize={20}
+            minRows={5}
+            className="f6 -highlight"
+          />
+          <SlidePanel
+            width="600px"
+            show={showCreateOrderSidebar}
+            renderBody={props => (
+              <Suspense fallback={<div />}>
+                <CreateOrderSidebar
+                  ref={form => (this.createOrderSidebar = form)}
+                  title={'Create new order package'}
+                  // facilityId={this.props.batch.facility_id}
+                  onClose={() =>
+                    this.setState({ showCreateOrderSidebar: false })
+                  }
+                  onSave={async data => {
+                    await PackageOrderStore.createOrder(data)
+                    await harvestPackageStore.loadHarvestPackages('new')
+                    this.setState({
+                      showCreateOrderSidebar: false,
+                      checkedPackageIds: []
+                    })
+                  }}
+                />
+              </Suspense>
+            )}
           />
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
 
-export default PackageDashboardApp
+PackagesUnsoldDashboardApp.propTypes = {
+  facility_strains: PropTypes.array.isRequired,
+  harvest_batches: PropTypes.array.isRequired,
+  sales_catalogue: PropTypes.array.isRequired,
+  drawdown_uoms: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired
+}
+
+export default PackagesUnsoldDashboardApp

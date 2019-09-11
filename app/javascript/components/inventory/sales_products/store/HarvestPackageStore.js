@@ -1,5 +1,10 @@
 import { observable, action, computed, toJS, autorun } from 'mobx'
-import { httpGetOptions, formatDate, formatTime } from '../../../utils'
+import {
+  httpGetOptions,
+  formatDate,
+  formatTime,
+  httpPostOptions
+} from '../../../utils'
 import isEmpty from 'lodash.isempty'
 
 const uniq = require('lodash.uniq')
@@ -12,20 +17,6 @@ class HarvestPackageStore {
     facility_id: ''
   }
   @observable searchTerm = ''
-
-  constructor() {
-    autorun(
-      () => {
-        if (this.filter.facility_id) {
-          if (this.searchTerm === null) {
-            this.searchTerm = ''
-          }
-          this.loadHarvestPackages()
-        }
-      },
-      { delay: 700 }
-    )
-  }
 
   @action
   setFilter(filter) {
@@ -56,11 +47,11 @@ class HarvestPackageStore {
   }
 
   @action
-  async loadHarvestPackages() {
+  async loadHarvestPackages(status = '') {
     this.isLoading = true
     const url = `/api/v1/sales_products/harvest_packages?facility_id=${
       this.filter.facility_id
-    }&&search=${this.searchTerm}`
+    }&&search=${this.searchTerm}&&status=${status}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {

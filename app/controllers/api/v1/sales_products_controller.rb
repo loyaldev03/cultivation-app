@@ -61,6 +61,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def harvest_packages
+    #need to filter add status new for unsold
     if resource_shared?
       items = Inventory::ItemTransaction.all.includes(:product, :catalogue, :harvest_batch, :facility_strain).
         in(catalogue: sales_catalogue_ids('raw_sales_product')).
@@ -69,6 +70,9 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
       items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch, :facility_strain).
         in(catalogue: sales_catalogue_ids('raw_sales_product')).
         order(c_at: :desc)
+    end
+    if params[:status].present?
+      items = items.where(status: params[:status])
     end
 
     serialized_json = Inventory::HarvestPackageSerializer.new(

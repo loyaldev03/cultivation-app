@@ -10,6 +10,7 @@ class MetrcItemCategoryStore {
   @observable columnFilters = {}
   @observable categories = []
   @observable excludes = []
+  @observable quantityTypeFilter = ''
 
   @action
   async loadCategories() {
@@ -96,13 +97,19 @@ class MetrcItemCategoryStore {
   }
 
   @computed
-  get allSelectOptions() {
-    const res = this.categories.map(c => {
-      return {
-        value: c.name,
-        label: c.name
-      }
-    })
+  get metrcItemCategoryOptions() {
+    let res
+    if (!isEmpty(this.quantityTypeFilter)) {
+      res = this.categories.filter(
+        c => c.quantity_type === this.quantityTypeFilter
+      )
+    } else {
+      res = this.categories
+    }
+    res = res.map(c => ({
+      value: c.name,
+      label: c.name
+    }))
     return res
   }
 

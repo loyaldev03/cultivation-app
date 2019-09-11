@@ -20,8 +20,9 @@ class ItemCategorySelector extends React.Component {
       if (this.props.excludes) {
         CategoryStore.excludes = this.props.excludes
       }
+      CategoryStore.quantityTypeFilter = this.props.quantityType
       const selected =
-        CategoryStore.allSelectOptions.find(
+        CategoryStore.metrcItemCategoryOptions.find(
           x => x.value === this.props.value
         ) || {}
       this.setState({ selectedCategory: selected, value: this.props.value })
@@ -32,12 +33,15 @@ class ItemCategorySelector extends React.Component {
     if (!CategoryStore.isDataLoaded) {
       return null
     }
-    const { value } = this.props
-    if (value !== prevProps.value) {
+    const { value, quantityType } = this.props
+    if (quantityType !== prevProps.quantityType) {
+      CategoryStore.quantityTypeFilter = quantityType
+      this.setState({ selectedCategory: {} })
+    }
+    else if (value !== prevProps.value) {
       const selected =
-        CategoryStore.allSelectOptions.find(
-          x => x.value === this.props.value
-        ) || {}
+        CategoryStore.metrcItemCategoryOptions.find(x => x.value === value) ||
+        {}
       this.setState({ selectedCategory: selected })
     }
   }
@@ -54,7 +58,7 @@ class ItemCategorySelector extends React.Component {
       <div>
         <Select
           styles={reactSelectStyle}
-          options={CategoryStore.allSelectOptions}
+          options={CategoryStore.metrcItemCategoryOptions}
           value={this.state.selectedCategory}
           onChange={this.onChange}
         />

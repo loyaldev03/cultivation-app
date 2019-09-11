@@ -202,24 +202,6 @@ class ProductCategoryStore {
       })
     return res
   }
-
-  @computed
-  get weightOptions() {
-    const res = this.categories
-      .filter(
-        c =>
-          !this.excludes.includes(c.name) &&
-          c.quantity_type === 'WeightBased' &&
-          c.is_active
-      )
-      .map(c => {
-        return {
-          value: c.name,
-          label: c.name
-        }
-      })
-    return res
-  }
   /* - column filters */
 }
 

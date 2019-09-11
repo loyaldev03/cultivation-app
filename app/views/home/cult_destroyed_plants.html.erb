@@ -1,0 +1,27 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
+<% end %>
+
+<% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_ISSUES).result[:read] == true %>
+  <%- if params[:facility_id].blank? || params[:facility_id] == "All"%>
+    <%= react_component 'cultivation/dashboards/DestroyedPlantDashboardApp',
+      {
+        defaultFacilityId: current_default_facility&.id.to_s,
+        currentFacilityId: current_shared_facility_ids.map{|x| x.to_s},
+        currentTime: Time.current,
+      }
+    %>
+  <%-else%>
+    <%= react_component 'cultivation/dashboards/DestroyedPlantDashboardApp',
+      {
+        defaultFacilityId: current_default_facility&.id.to_s,
+        currentFacilityId: current_facility&.id.to_s,
+        currentTime: Time.current,
+      }
+    %>
+  <%end%>
+<% else %>
+  <div class="w-100 bg-white ph3 pt2 pb4">
+    <%= render partial: 'layouts/no_permission' %>
+  </div>
+<% end %>

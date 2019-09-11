@@ -51,11 +51,18 @@
           <%= link_to 'Harvest', cult_harvests_path(facility_id: current_facility&.id), class: "link gray f6 #{active_link(cult_harvests_path)}" %>
         </li>
         <li class="pv2">
+          <%= link_to 'Destroyed Plant', cult_destroyed_plants_path(facility_id: current_facility&.id), class: "link gray f6 #{active_link(cult_destroyed_plants_path)}" %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Wastes', cult_wastes_path(facility_id: current_facility&.id), class: "link gray f6 #{active_link(cult_wastes_path)}" %>
+        </li>
+        <li class="pv2">
           <%= link_to 'Tasks', cult_tasks_path(facility_id: current_facility&.id), class: "link gray f6 #{active_link(cult_tasks_path)}" %>
         </li>
         <li class="pv2">
           <%= link_to 'Issues', cult_issues_path(facility_id: current_facility&.id), class: "link gray f6 #{active_link(cult_issues_path)}" %>
         </li>
+        
       </ul>
     </li>
     

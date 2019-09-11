@@ -45,6 +45,14 @@ class HomeController < ApplicationController
     authorize! :cult_plants, HomeController
   end
 
+  def cult_destroyed_plants
+    authorize! :cult_destroyed_plants, HomeController
+  end
+
+  def cult_wastes
+    authorize! :cult_wastes, HomeController
+  end
+
   def cult_tasks
     authorize! :cult_tasks, HomeController
   end

@@ -61,7 +61,7 @@ module ApplicationHelper
   def parent_active_link(parent)
     case parent
     when 'cultivation'
-      paths = [dashboard_cultivation_batches_path, cult_batches_path, cult_plants_path, cult_harvests_path, cult_tasks_path, cult_issues_path]
+      paths = [dashboard_cultivation_batches_path, cult_batches_path, cult_plants_path, cult_harvests_path, cult_tasks_path, cult_issues_path, cult_destroyed_plants_path, cult_wastes_path]
     when 'inventory'
       paths = [inventory_strains_path, mothers_inventory_plants_path, nutrients_inventory_raw_materials_path, products_inventory_sales_products_path, inventory_metrc_index_path, convert_products_inventory_sales_products_path]
       plant_paths = [mothers_inventory_plants_path, cultivation_batches_inventory_plants_path, clones_inventory_plants_path, vegs_inventory_plants_path, flowers_inventory_plants_path, harvests_inventory_plants_path, harvest_batches_inventory_plants_path, seeds_inventory_plants_path, purchased_clones_inventory_plants_path]

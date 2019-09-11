@@ -345,7 +345,7 @@ class TasksDashboardApp extends React.Component {
             </Suspense>
           )}
         />
-        <div className="pa4 mw1200">
+        <div className="pa4">
           <div className="pb4">
             {Array.isArray(this.props.currentFacilityId)
               ? ''

@@ -30,6 +30,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
       batch_source: params[:batch_source],
       grow_method: params[:grow_method],
       name: params[:name],
+      template_id: params[:template_id],
     }
     command = Cultivation::CreateBatch.call(current_user, args)
     if command.success?
@@ -272,6 +273,12 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
 
     render json: ProductTypePlanSerializer.new(result).serialized_json, status: 200
+  end
+
+  def save_as_template
+    batch = Cultivation::Batch.find(params[:batch_id])
+    batch.update(is_template: true)
+    render json: {data: 'Batch saved as template'}
   end
 
   private

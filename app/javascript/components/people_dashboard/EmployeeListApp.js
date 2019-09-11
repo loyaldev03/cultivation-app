@@ -118,7 +118,6 @@ class ActiveTaskStore {
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
-    console.log(url)
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {

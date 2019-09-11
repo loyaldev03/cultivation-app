@@ -36,6 +36,8 @@ export default class BatchDistribution extends React.Component {
   render() {
     const { arr_months } = this.state
     const options = {
+      maintainAspectRatio: false,
+      responsive: true,
       legend: {
         display: false
       },
@@ -111,7 +113,9 @@ export default class BatchDistribution extends React.Component {
           </Tippy>
         </div>
         {ChartStore.batch_distribution_loaded ? (
-          <Bar data={ChartStore.batchDistribution} options={options} />
+          <div style={{ overflow: 'auto', height: '320px' }}>
+            <Bar data={ChartStore.batchDistribution} options={options} />
+          </div>
         ) : (
           'loading...'
         )}

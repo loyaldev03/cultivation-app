@@ -45,6 +45,7 @@ module Cultivation
         cultivation_phases: growth_stages,
         actual_cost: @batch.actual_cost,
         actual_hours: @batch.actual_hours,
+        is_template: @batch.is_template,
         status: @batch.status,
       }
 

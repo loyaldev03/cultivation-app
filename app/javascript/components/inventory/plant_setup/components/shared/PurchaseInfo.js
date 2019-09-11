@@ -23,6 +23,7 @@ class PurchaseInfo extends React.Component {
       purchase_order_no: props.purchase_order_no,
       purchase_order_id: props.purchase_order_id,
       invoice_id: props.invoice_id,
+      manifest_no: props.manifest_no,
       errors: {}
     }
   }
@@ -39,6 +40,7 @@ class PurchaseInfo extends React.Component {
       purchase_date: null,
       invoice_no: '',
       purchase_order_no: '',
+      manifest_no: '',
       errors: {}
     })
   }
@@ -75,7 +77,8 @@ class PurchaseInfo extends React.Component {
       vendor_location_license_expiration_date,
       purchase_date,
       invoice_no,
-      purchase_order_no
+      purchase_order_no,
+      manifest_no
     } = this.state
 
     if (!isDraft) {
@@ -152,6 +155,7 @@ class PurchaseInfo extends React.Component {
         purchase_date,
         invoice_no,
         purchase_order_no,
+        manifest_no,
         errors,
         ...licenseData,
         isValid: Object.getOwnPropertyNames(errors).length === 0
@@ -169,6 +173,7 @@ class PurchaseInfo extends React.Component {
       purchase_date,
       invoice_no,
       purchase_order_no,
+      manifest_no,
       errors
     }
   }
@@ -292,6 +297,14 @@ class PurchaseInfo extends React.Component {
               onChange={this.onChangeGeneric}
             />
           </div>
+          <div className="w-50 pl3">
+            <TextInput
+              fieldname="manifest_no"
+              label={'Manifest no'}
+              value={this.state.manifest_no}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
         </div>
       </React.Fragment>
     )
@@ -308,6 +321,7 @@ PurchaseInfo.propTypes = {
   vendor_location_license_expiration_date: PropTypes.instanceOf(Date),
   purchase_date: PropTypes.instanceOf(Date),
   invoice_no: PropTypes.string,
+  manifest_no: PropTypes.string,
   purchase_order_no: PropTypes.string,
   showLabel: PropTypes.bool,
   label: PropTypes.string,
@@ -321,6 +335,7 @@ PurchaseInfo.defaultProps = {
   showLabel: true,
   purchase_order_no: '',
   invoice_no: '',
+  manifest_no: '',
   label: 'Where the seeds are sourced from?',
   vendorLicense: true
 }

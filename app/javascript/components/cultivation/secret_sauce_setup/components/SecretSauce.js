@@ -58,8 +58,7 @@ class SecretSauce extends React.Component {
     const { phase, tabIndex, showEditNutrientPanel } = this.state
     const phases = NutrientProfileStore.getPhases()
     const currPhase = NutrientProfileStore.getCurrentPhase()
-    const { canUpdate } = this.props.canUpdate
-
+    const { canUpdate } = this.props
     return (
       <React.Fragment>
         <SlidePanel

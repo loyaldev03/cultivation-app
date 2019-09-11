@@ -6,7 +6,7 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   end
 
   def strain_distribution
-    result = Charts::QueryStrainDistribution.call(current_user, {}).result
+    result = Charts::QueryStrainDistribution.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
 

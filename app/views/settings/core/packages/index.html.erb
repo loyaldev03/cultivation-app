@@ -49,7 +49,12 @@
             >
               Packages
             </a>
-            <%= react_component 'settings/ItemApp', { facilityId: current_facility.id.to_s } %>
+            <%= react_component 'settings/ProductCategoryApp',
+              {
+                facilityId: current_facility.id.to_s,
+                defaultCategories: @default_categories,
+              }
+            %>
           </div>
         </div>
       </div>

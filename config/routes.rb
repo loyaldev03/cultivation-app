@@ -208,6 +208,11 @@ Rails.application.routes.draw do
       resources :rows,      only: [:index, :edit, :update]
       resources :shelves,   only: [:index, :edit, :update]
     end
+
+    namespace 'batches', as: :batch do
+      resources :templates
+    end
+
   end
 
   namespace 'cultivation' do
@@ -336,9 +341,15 @@ Rails.application.routes.draw do
       resources :products, only: [:index] do
         get :non_nutrients, on: :collection
         get :upc, on: :collection
+        get :product_categories, on: :collection
+        post 'product_categories/update',
+          on: :collection,
+          action: :update_product_categories
         get :item_categories, on: :collection
         get :items, on: :collection
-        post 'item_categories/:id/update', on: :collection, action: :update_item_category
+        post 'item_categories/:id/update',
+          on: :collection,
+          action: :update_item_category
       end
 
       resources :strains, only: [:index, :create, :show] do
@@ -381,6 +392,7 @@ Rails.application.routes.draw do
         post 'destroy', on: :collection
         get 'product_plans'
         post 'save_product_plans'
+        post 'save_as_template'
 
         resources :tasks, only: [:index, :update, :create, :destroy] do
           member do

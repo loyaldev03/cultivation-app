@@ -180,7 +180,11 @@ class ManagerDashboardApp extends React.Component {
               style={{ height: 420 + 'px' }}
             >
               <h1 className="f5 fw6 dark-grey">Strain Distribution</h1>
-              <StrainDistribution url="/api/v1/dashboard_charts/strain_distribution" />
+              <StrainDistribution
+                url={`/api/v1/dashboard_charts/strain_distribution?facility_id=${
+                  this.props.facilityId
+                }`}
+              />
             </div>
           </div>
         </div>

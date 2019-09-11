@@ -12,6 +12,8 @@ export default class BatchPhases extends React.Component {
 
   render() {
     const options = {
+      maintainAspectRatio: false,
+      responsive: true,
       legend: {
         display: false
       },
@@ -58,7 +60,12 @@ export default class BatchPhases extends React.Component {
           <h1 className="f5 fw6 dark-grey">Batch In Phases</h1>
         </div>
         {DahboardBatchStore.batch_distribution_loaded ? (
-          <Bar data={DahboardBatchStore.batchDistribution} options={options} />
+          <div style={{ overflow: 'auto', height: '320px' }}>
+            <Bar
+              data={DahboardBatchStore.batchDistribution}
+              options={options}
+            />
+          </div>
         ) : (
           'loading...'
         )}

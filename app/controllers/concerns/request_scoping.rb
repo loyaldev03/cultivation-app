@@ -84,9 +84,11 @@ module RequestScoping
 
   def current_shared_facility_ids
     if current_facility.nil?
-      ids = current_default_facility.shared_facility_ids.push(current_default_facility.id)
+      f_ids = Facility.where(id: {'$in': current_default_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
+      ids = f_ids.push(current_default_facility.id)
     else
-      ids = current_facility.shared_facility_ids.push(current_facility.id)
+      f_ids = Facility.where(id: {'$in': current_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
+      ids = f_ids.push(current_facility.id)
     end
   end
 

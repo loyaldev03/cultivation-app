@@ -124,6 +124,34 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: ItemCategorySerializer.new(categories).serialized_json
   end
 
+  def product_categories
+    records = Inventory::ProductCategory.where(deleted: {"$ne": true}).to_a
+    render json: Inventory::ProductCategorySerializer.new(records).serialized_json
+  end
+
+  def update_product_categories
+    # Try to find category by id first, follow by name
+    category = Inventory::ProductCategory.find_by(id: params[:id])
+    category ||= Inventory::ProductCategory.find_or_initialize_by(name: params[:name])
+    # New record are set to active automatically.
+    category.is_active = category.new_record? ? true : params[:is_active]
+    # if previously category was deleted, and user created a new record with same name
+    # we change the active flag to true
+    if category.deleted
+      category.is_active = true
+    end
+    category.deleted = params[:deleted] == true
+    if category.deleted
+      # If user deleted record, set active to false
+      category.is_active = false
+    end
+    # WeightBased / CountBased, copy from METRC Item Category
+    category.quantity_type = params[:quantity_type]
+    category.metrc_item_category = params[:metrc_item_category]
+    category.save!
+    render json: Inventory::ProductCategorySerializer.new(category).serialized_json
+  end
+
   def items
     items = Inventory::Item.
       where(facility_id: params[:facility_id]).

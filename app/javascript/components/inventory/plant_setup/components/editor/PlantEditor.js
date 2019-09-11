@@ -130,6 +130,7 @@ class PlantEditor extends React.Component {
               plant_qty: 0,
               location_id: data.attributes.location_id,
               planting_date: new Date(data.attributes.planting_date),
+              manifest_no: data.attributes.manifest_no,
               motherOption: motherOption,
               lot_number,
 
@@ -176,6 +177,7 @@ class PlantEditor extends React.Component {
       purchase_date: null,
       purchase_order_no: '',
       invoice_no: '',
+      manifest_no: '',
 
       // UI states
       strain_name: '',
@@ -241,6 +243,7 @@ class PlantEditor extends React.Component {
       facility: item.facility,
       planting_date,
       motherOption: null,
+      manifest_no: item.manifest_no,
       batch_source: item.batch_source,
       isBought: item.batch_source === BATCH_SOURCE.PURCHASED,
       showScanner: false
@@ -673,7 +676,48 @@ class PlantEditor extends React.Component {
             </div>
           </div>
 
-          {this.renderProcurementInfo()}
+          <hr className="mt3 mb3 b--light-gray w-100" />
+          <div className="ph4 mb3 mt2">
+            <span className="f6 fw6 dark-gray">Plant Origin?</span>
+          </div>
+          <div className="ph4 mb3 flex justify-between">
+            <label className="f6 fw6 db mb1 gray">Plants are purchased</label>
+            <input
+              className="toggle toggle-default"
+              type="checkbox"
+              value="1"
+              checked={this.state.isBought}
+              id="is_bought_input"
+              onChange={this.onIsBoughtChanged}
+            />
+            <label className="toggle-button" htmlFor="is_bought_input" />
+          </div>
+          {this.state.isBought && (
+            <PurchaseInfo
+              key={this.state.id}
+              showLabel={false}
+              ref={this.setPurchaseInfoEditor}
+              vendor_name={this.state.vendor_name}
+              vendor_no={this.state.vendor_no}
+              address={this.state.address}
+              vendor_state_license_num={this.state.vendor_state_license_num}
+              vendor_state_license_expiration_date={
+                this.state.vendor_state_license_expiration_date
+              }
+              vendor_location_license_num={
+                this.state.vendor_location_license_num
+              }
+              vendor_location_license_expiration_date={
+                this.state.vendor_location_license_expiration_date
+              }
+              purchase_date={this.state.purchase_date}
+              invoice_no={this.state.invoice_no}
+              purchase_order_no={this.state.purchase_order_no}
+              manifest_no={this.state.manifest_no}
+            />
+          )}
+
+          {/* {this.renderProcurementInfo()} */}
           {(canUpdate || canCreate) && (
             <React.Fragment>
               <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">

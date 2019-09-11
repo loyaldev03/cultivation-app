@@ -50,7 +50,14 @@ class PlantsDashboardApp extends React.Component {
       },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Batch ID',
+        Header: (
+          <HeaderFilter
+            title="Batch ID"
+            accessor="cultivation_batch_name"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'cultivation_batch_name',
         className: 'pl3 fw6',
         minWidth: 144,
@@ -174,7 +181,7 @@ class PlantsDashboardApp extends React.Component {
     const { currentFacilityId } = this.props
     const { columns, showDestroyedPlants } = this.state
     return (
-      <div className="pa4 mw1200">
+      <div className="pa4">
         <div className="flex flex-row-reverse">
           <a
             href="#0"

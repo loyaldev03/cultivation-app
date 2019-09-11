@@ -59,7 +59,10 @@ class PackagesUnsoldDashboardApp extends React.Component {
         this.state.checkedPackageIds.includes(e.id)
       )
       await PackageOrderStore.getNextOrderNo()
-      this.createOrderSidebar.setPackages(packages, PackageOrderStore.next_order_no)
+      this.createOrderSidebar.setPackages(
+        packages,
+        PackageOrderStore.next_order_no
+      )
       this.setState({
         showCreateOrderSidebar: !this.state.showCreateOrderSidebar
       })
@@ -439,7 +442,6 @@ class PackagesUnsoldDashboardApp extends React.Component {
                       showCreateOrderSidebar: false,
                       checkedPackageIds: []
                     })
-
                   }}
                 />
               </Suspense>

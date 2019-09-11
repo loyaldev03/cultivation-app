@@ -161,11 +161,13 @@ class OrdersDashboardApp extends React.Component {
         width: 190,
         Cell: props => (
           <div>
-            {
-              props.value ? 
-                props.value
-                : <a className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer">Create manifest</a>
-            }
+            {props.value ? (
+              props.value
+            ) : (
+              <a className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer">
+                Create manifest
+              </a>
+            )}
           </div>
         )
       }
@@ -193,25 +195,20 @@ class OrdersDashboardApp extends React.Component {
       <div className="pa4">
         <div className="flex flex-row-reverse" />
         <div className="flex justify-between">
-          <input
-            type="text"
-            className="input w5"
-            placeholder="Search"
-          />
+          <input type="text" className="input w5" placeholder="Search" />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable
             data={PackageOrderStore.package_orders}
             columns={columns}
-            SubComponent={v => 
-            {
+            SubComponent={v => {
               return (
-              <div style={{ padding: '10px' }}>
-                <img src={TempPackagesHistory} />
-              </div>
-              )}
-            }
+                <div style={{ padding: '10px' }}>
+                  <img src={TempPackagesHistory} />
+                </div>
+              )
+            }}
           />
         </div>
       </div>

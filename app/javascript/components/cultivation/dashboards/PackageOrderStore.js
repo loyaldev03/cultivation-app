@@ -1,9 +1,5 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import {
-  httpGetOptions,
-  httpPostOptions,
-  toast
-} from '../../utils'
+import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 
 class PackageOrderStore {
   @observable package_orders
@@ -33,7 +29,6 @@ class PackageOrderStore {
       this.isLoading = false
     }
   }
-
 
   @action
   async createOrder(params) {
@@ -74,7 +69,6 @@ class PackageOrderStore {
       this.isLoading = false
     }
   }
-
 }
 
 const pos = new PackageOrderStore()

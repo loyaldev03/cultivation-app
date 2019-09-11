@@ -9,8 +9,8 @@ module People
 
     def call
       skills = ['Packaging', 'Gardening', 'Trimming', 'Managing', 'Accounting', 'Multitasking', 'Management', 'Budgeting']
-
-      users = User.where(facilities: @args[:facility_id].to_bson_id)
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      users = User.in(facilities: f_ids)
       json_array = []
 
       skills.each do |s|

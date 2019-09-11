@@ -35,7 +35,7 @@ const JobRoleLine = ({ icon, jobrole, options, onClick, className = '' }) => {
     <div className={'dt-ns w-100'}>
       <div className={'dtc-ns v-mid w-30'}>
         <h4 className={'f5'}>{jobrole.role}</h4>
-        <span className={'f6'}>Total Workers: {jobrole.toatal_user}</span>
+        <span className={'f6'}>Total Workers: {jobrole.total_user}</span>
       </div>
       <div className={'dtc-ns v-mid w-70'}>
         <Line data={final_result} options={options} />

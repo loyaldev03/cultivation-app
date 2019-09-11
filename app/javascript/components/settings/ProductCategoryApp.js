@@ -11,6 +11,7 @@ import {
 import MetrcItemStore from './ItemStore'
 import CategoryStore from '../inventory/stores/ProductCategoryStore'
 import AddEditProductCategoryForm from './AddEditProductCategoryForm'
+import AddEditProductSubCategoryForm from './AddEditProductSubCategoryForm'
 
 @observer
 class ProductCategoryApp extends React.Component {
@@ -21,9 +22,12 @@ class ProductCategoryApp extends React.Component {
 
   state = {
     tabIndex: 0,
-    showEditPanel: false,
-    editPanelMode: '',
-    editCategory: '',
+    showEditPanel: false, // Category
+    editPanelMode: '', // Category
+    editCategory: '', // Category
+    showEditSubCategoryPanel: false, // SubCategory
+    editSubCategoryPanelMode: '', // SubCategory
+    editSubCategory: {}, // SubCategory
     categoryColumns: [
       {
         accessor: 'id',
@@ -105,82 +109,72 @@ class ProductCategoryApp extends React.Component {
         }
       }
     ],
-    itemColumns: [
+    subCategoryColumns: [
       {
-        accessor: 'id',
+        accessor: 'product_category_id',
         show: false
       },
       {
         headerClassName: 'tl',
         Header: 'Name',
         accessor: 'name',
-        minWidth: 250
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Item Category"
-            accessor="product_category_name"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'product_category_name',
-        minWidth: 150
-      },
-      {
-        Header: (
-          <HeaderFilter
-            title="Strain"
-            accessor="strain_name"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'strain_name',
-        minWidth: 200
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Unit of Measure"
-            accessor="uom_name"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'uom_name',
-        minWidth: 120
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Quantity Type"
-            accessor="quantity_type"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'quantity_type',
-        minWidth: 120
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Added to Metrc"
-            accessor="updated_metrc"
-            getOptions={MetrcItemStore.getUniqPropValues}
-            onUpdate={MetrcItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'updated_metrc',
-        minWidth: 120,
-        className: 'justify-end pr3',
+        minWidth: 250,
         Cell: props => {
-          return props.value ? 'Yes' : 'No'
+          return (
+            <a
+              href="#0"
+              className="ph2 w-100 dark-gray link"
+              onClick={e =>
+                this.onEditSubcategory({
+                  id: props.row.id,
+                  name: props.row.name,
+                  productCategoryId: props.row.product_category_id
+                })
+              }
+            >
+              {props.value}
+            </a>
+          )
+        }
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Product Category',
+        accessor: 'product_category_name',
+        minWidth: 200,
+        Cell: props => {
+          return (
+            <a
+              href="#0"
+              className="ph2 w-100 dark-gray link"
+              onClick={e =>
+                this.onEditSubcategory({
+                  id: props.row.id,
+                  name: props.row.name,
+                  productCategoryId: props.row.product_category_id
+                })
+              }
+            >
+              {props.value}
+            </a>
+          )
+        }
+      },
+      {
+        Header: '',
+        accessor: 'id',
+        width: 80,
+        className: 'justify-center',
+        Cell: props => {
+          const record = {
+            id: props.row.id,
+            name: props.row.name
+          }
+          return (
+            <a href="#0" onClick={e => this.onDeleteSubcategory(e, record)}>
+              <i className="material-icons red">delete</i>
+            </a>
+          )
         }
       }
     ]
@@ -210,11 +204,28 @@ class ProductCategoryApp extends React.Component {
     })
   }
 
+  onSaveSubcategory = formData => {
+    CategoryStore.updateSubCategory(formData.productCategory, formData)
+    this.setState({
+      showEditSubCategoryPanel: false,
+      editSubCategoryPanelMode: '',
+      editSubCategory: {}
+    })
+  }
+
   onEdit = name => {
     this.setState({
       showEditPanel: true,
       editPanelMode: 'edit',
       editCategory: name
+    })
+  }
+
+  onEditSubcategory = subCategory => {
+    this.setState({
+      showEditSubCategoryPanel: true,
+      editSubCategoryPanelMode: 'edit',
+      editSubCategory: subCategory
     })
   }
 
@@ -226,14 +237,28 @@ class ProductCategoryApp extends React.Component {
     }
   }
 
+  onDeleteSubcategory = (e, record) => {
+    e.stopPropagation()
+    const result = confirm(`Confirm delete subcategory ${record.name}?`)
+    if (result) {
+      CategoryStore.updateSubCategory(null, {
+        id: record.id,
+        deleted: true
+      })
+    }
+  }
+
   render() {
     const {
-      itemColumns,
       categoryColumns,
+      subCategoryColumns,
       tabIndex,
       showEditPanel,
       editPanelMode,
-      editCategory
+      editCategory,
+      showEditSubCategoryPanel,
+      editSubCategoryPanelMode,
+      editSubCategory
     } = this.state
     const { facilityId } = this.props
     console.warn('FIXME: Wrong facilityId when selecting All')
@@ -250,6 +275,18 @@ class ProductCategoryApp extends React.Component {
               editCategory={editCategory}
               onClose={() => this.setState({ showEditPanel: false })}
               onSave={this.onSave}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={showEditSubCategoryPanel}
+          renderBody={props => (
+            <AddEditProductSubCategoryForm
+              mode={editSubCategoryPanelMode}
+              editSubCategory={editSubCategory}
+              onClose={() => this.setState({ showEditSubCategoryPanel: false })}
+              onSave={this.onSaveSubcategory}
             />
           )}
         />
@@ -290,11 +327,25 @@ class ProductCategoryApp extends React.Component {
               </div>
             </TabPanel>
             <TabPanel>
-              <div className="pv4 ph3">
+              <div className="pa3 tr">
+                <a
+                  href="#0"
+                  className="btn btn--primary"
+                  onClick={() =>
+                    this.setState({
+                      showEditSubCategoryPanel: true,
+                      editSubCategoryPanelMode: 'add'
+                    })
+                  }
+                >
+                  + Add New
+                </a>
+              </div>
+              <div className="pb4 ph3">
                 <ListingTable
-                  data={MetrcItemStore.filteredList}
-                  columns={itemColumns}
-                  isLoading={MetrcItemStore.isLoading}
+                  data={CategoryStore.filteredListSubCategories}
+                  columns={subCategoryColumns}
+                  isLoading={CategoryStore.isLoading}
                 />
               </div>
             </TabPanel>

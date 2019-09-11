@@ -152,6 +152,41 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: Inventory::ProductCategorySerializer.new(category).serialized_json
   end
 
+  def update_product_subcategory
+    if params[:deleted] == true
+      cmd = Inventory::DeleteProductSubCategory.call(params[:id])
+      if cmd.success?
+        render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
+      else
+        render json: cmd.errors.to_json
+      end
+      return
+    end
+
+    # Updating
+    if params[:id].present?
+      cmd = Inventory::UpdateProductSubCategory.call(sub_category_id: params[:id],
+                                                     sub_category_name: params[:name])
+      if cmd.success?
+        render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
+      else
+        render json: cmd.errors.to_json
+      end
+      return
+    end
+
+    # Creating
+    if params[:product_category_id].present?
+      cmd = Inventory::CreateProductSubCategory.call(product_category_id: params[:product_category_id],
+                                                     sub_category_name: params[:name])
+      if cmd.success?
+        render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
+      else
+        render json: cmd.errors.to_json
+      end
+    end
+  end
+
   def items
     items = Inventory::Item.
       where(facility_id: params[:facility_id]).

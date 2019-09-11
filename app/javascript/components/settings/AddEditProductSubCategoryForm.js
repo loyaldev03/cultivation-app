@@ -1,42 +1,68 @@
 import React from 'react'
 import { observer } from 'mobx-react'
+import Select from 'react-select'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
+import reactSelectStyle from '../utils/reactSelectStyle'
 import CategoryStore from '../inventory/stores/ProductCategoryStore'
-import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCategorySelector'
 
 @observer
-class AddEditProductCategoryForm extends React.Component {
+class AddEditProductSubCategoryForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      id: '',
       name: '',
-      metrc_item_category: ''
+      productCategoryId: '',
+      selectedProductCategory: {}
     }
   }
 
   async componentDidUpdate(prevProps) {
-    const { mode, editCategory } = this.props
+    const { mode, editSubCategory, editProductCategory } = this.props
     if (mode && mode !== prevProps.mode) {
       this.setState({
+        id: '',
         name: '',
-        metrc_item_category: ''
+        productCategoryId: '',
+        selectedProductCategory: {}
       })
     }
-    if (editCategory && editCategory !== prevProps.editCategory) {
-      const category = CategoryStore.getCategoryByName(editCategory)
-      const metrcItem = category.metrc_item_category || ''
+    if (
+      editSubCategory &&
+      prevProps.editSubCategory &&
+      editSubCategory.id != prevProps.editSubCategory.id
+    ) {
+      let selectedProductCategory = {}
+      let productCategoryId = ''
+      if (editSubCategory.productCategoryId) {
+        selectedProductCategory =
+          CategoryStore.categoryOptions.find(
+            x => x.value === editSubCategory.productCategoryId
+          ) || {}
+        productCategoryId = editSubCategory.productCategoryId
+      }
       this.setState({
-        name: editCategory,
-        metrc_item_category: metrcItem
+        id: editSubCategory.id,
+        name: editSubCategory.name,
+        productCategoryId,
+        selectedProductCategory
       })
     }
+  }
+
+  onChangeCategory = selectedOption => {
+    this.setState({
+      selectedProductCategory: selectedOption,
+      productCategoryId: selectedOption.value
+    })
   }
 
   onSubmit = e => {
     e.preventDefault()
     const formData = {
+      id: this.state.id,
       name: this.state.name,
-      metrc_item_category: this.state.metrc_item_category
+      product_category_id: this.state.productCategoryId
     }
     if (this.props.onSave) {
       this.props.onSave(formData)
@@ -45,7 +71,7 @@ class AddEditProductCategoryForm extends React.Component {
 
   render() {
     const { onClose, onSave, mode = 'add' } = this.props
-    const { name, metrc_item_category } = this.state
+    const { name, selectedProductCategory } = this.state
 
     if (!mode) {
       return null
@@ -55,9 +81,7 @@ class AddEditProductCategoryForm extends React.Component {
       <div className="h-100 flex flex-auto flex-column">
         <SlidePanelHeader
           onClose={onClose}
-          title={
-            mode == 'add' ? 'Add Product Category' : 'Edit Product Category'
-          }
+          title={mode == 'add' ? 'Add Subcategory' : 'Edit Subcategory'}
         />
         <form
           className="pt3 flex-auto flex flex-column justify-between"
@@ -77,21 +101,17 @@ class AddEditProductCategoryForm extends React.Component {
             </div>
             <div className="mt3 fl w-100">
               <div className="w-100 fl">
-                <label className="f6 fw6 db gray ttc">
-                  METRC Item Category
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Product Category
                 </label>
-                <span className="f6 grey pv2 dib">
-                  Map this product category to corresponding Item Category on
-                  METRC. This list is provided by the state.
-                </span>
-                <ItemCategorySelector
-                  ref={select => (this.categorySelector = select)}
-                  value={metrc_item_category}
-                  onChange={selected => {
-                    this.setState({
-                      metrc_item_category: selected.value
-                    })
-                  }}
+              </div>
+              <div>
+                <Select
+                  isDisabled={mode === 'edit'}
+                  styles={reactSelectStyle}
+                  options={CategoryStore.categoryOptions}
+                  value={this.state.selectedProductCategory}
+                  onChange={selected => this.onChangeCategory(selected)}
                 />
               </div>
             </div>
@@ -105,4 +125,4 @@ class AddEditProductCategoryForm extends React.Component {
   }
 }
 
-export default AddEditProductCategoryForm
+export default AddEditProductSubCategoryForm

@@ -345,6 +345,9 @@ Rails.application.routes.draw do
         post 'product_categories/update',
           on: :collection,
           action: :update_product_categories
+        post 'product_categories/update_subcategory',
+          on: :collection,
+          action: :update_product_subcategory
         get :item_categories, on: :collection
         get :items, on: :collection
         post 'item_categories/:id/update',

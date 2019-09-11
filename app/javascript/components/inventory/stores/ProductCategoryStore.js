@@ -56,6 +56,34 @@ class ProductCategoryStore {
   }
 
   @action
+  async updateSubCategory(categoryName, updates) {
+    this.isLoading = true
+    const url = '/api/v1/products/product_categories/update_subcategory'
+    const found = this.getCategoryByName(categoryName)
+    const payload = found
+      ? Object.assign({ product_category_id: found.id }, updates)
+      : updates
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response && response.data) {
+        const updated = response.data.attributes
+        if (updated) {
+          this.categories = this.categories.map(x => {
+            return x.id === updated.id ? updated : x
+          })
+          toast(`${updates.name} saved.`, 'success')
+        }
+      } else {
+        console.warn(response)
+      }
+    } catch (error) {
+      throw error
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
   async updateCategory(name, updates) {
     this.isLoading = true
     const found = this.getCategoryByName(name)
@@ -143,6 +171,32 @@ class ProductCategoryStore {
     } else {
       return this.categories
     }
+  }
+
+  @computed
+  get filteredListSubCategories() {
+    let list = []
+    if (this.isDataLoaded) {
+      this.categories.forEach(x => {
+        if (x.sub_categories) {
+          list = list.concat(x.sub_categories)
+        }
+      })
+    }
+    return list
+  }
+
+  @computed
+  get categoryOptions() {
+    const res = this.categories
+      .filter(c => c.is_active && !c.deleted)
+      .map(c => {
+        return {
+          value: c.id,
+          label: c.name
+        }
+      })
+    return res
   }
 
   @computed

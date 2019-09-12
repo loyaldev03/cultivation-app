@@ -19,6 +19,11 @@ class Api::V1::CataloguesController < Api::V1::BaseApiController
     render json: records.serialized_json
   end
 
+  def query_catalogue
+    result = Inventory::QueryCatalogueTree.call(params[:type], params[:category].to_s).result
+    render json: result.to_json
+  end
+
   def update
     record = Inventory::Catalogue.find(params[:id])
     record.is_active = params[:is_active] == true

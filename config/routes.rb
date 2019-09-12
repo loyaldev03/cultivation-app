@@ -457,6 +457,7 @@ Rails.application.routes.draw do
         collection do
           get 'raw_material_tree'
           get 'raw_materials'
+          get 'query_catalogue'
         end
       end
 

@@ -903,7 +903,7 @@ class TaskList extends React.Component {
             'flex justify-between': this.props.batch.status !== 'DRAFT'
           })}
         >
-          {this.props.batch.status !== 'DRAFT' && (
+          {this.props.batch.status !== 'DRAFT' && this.props.canCreateTemplate && (
             <input
               type="button"
               className={classNames('btn btn--large', {

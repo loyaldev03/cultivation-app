@@ -20,7 +20,8 @@
         current_user_first_name: current_user.first_name,
         current_user_last_name: current_user.last_name,
         current_user_photo: current_user.photo&.url,
-        batchesPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result
+        batchesPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result,
+        templatesPermission: RoleCheck.call(current_user, Constants::APP_MOD_TEMPLATES).result
       },
       { class: "flex flex-column h-100" } %>
   <% end %>

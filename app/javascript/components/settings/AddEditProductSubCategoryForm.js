@@ -5,6 +5,12 @@ import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
 import reactSelectStyle from '../utils/reactSelectStyle'
 import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
 
+const PackageUnitCheckbox = ({ value, checked }) => {
+  return <span />
+}
+
+const CUSTOM_PKG_PREFIX = 'custom_'
+
 @observer
 class AddEditProductSubCategoryForm extends React.Component {
   constructor(props) {
@@ -52,6 +58,29 @@ class AddEditProductSubCategoryForm extends React.Component {
         packageUnits
       })
     }
+  }
+
+  onChangeCb = value => e => {
+    let packageUnits
+    if (e.target.checked) {
+      const unit = { value: e.target.value, label: e.target.name }
+      const found = this.state.packageUnits.find(x => x.value === unit.value)
+      if (found) {
+        packageUnits = this.state.packageUnits.map(x =>
+          x.value === unit.value ? unit : x
+        )
+      } else {
+        packageUnits = [...this.state.packageUnits, unit]
+      }
+    } else {
+      packageUnits = this.state.packageUnits.filter(
+        x => x.value !== e.target.name
+      )
+    }
+    // console.log(`${value} - ${e.target.name} checked: `, e.target.checked)
+    this.setState({
+      packageUnits
+    })
   }
 
   onChangeProductCategory = selected => {
@@ -130,16 +159,40 @@ class AddEditProductSubCategoryForm extends React.Component {
                 <span className="fw6 mt2 dib">Package:</span>
                 <div>
                   <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_3" /> 3pk{' '}
+                    <input
+                      type="checkbox"
+                      name="3pk"
+                      value="3pk"
+                      onChange={this.onChangeCb('3pk')}
+                    />{' '}
+                    3pk{' '}
                   </label>
                   <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_5" /> 5pk{' '}
+                    <input
+                      type="checkbox"
+                      name="5pk"
+                      value="5pk"
+                      onChange={this.onChangeCb('5pk')}
+                    />{' '}
+                    5pk{' '}
                   </label>
                   <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_12" /> 12pk{' '}
+                    <input
+                      type="checkbox"
+                      name="12pk"
+                      value="12pk"
+                      onChange={this.onChangeCb('12pk')}
+                    />{' '}
+                    12pk{' '}
                   </label>
                   <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_24" /> 24pk{' '}
+                    <input
+                      type="checkbox"
+                      name="24pk"
+                      value="24pk"
+                      onChange={this.onChangeCb('24pk')}
+                    />{' '}
+                    24pk{' '}
                   </label>
                 </div>
               </div>
@@ -186,51 +239,56 @@ class AddEditProductSubCategoryForm extends React.Component {
               <div className="grey f6">
                 <span className="fw6 mt2 dib">Custom Units:</span>
                 <div>
-                  {packageUnits.map(x => {
-                    return (
-                      <div
-                        key={x.value}
-                        className="ph2 pt2 pb1 flex items-center"
-                      >
-                        <input
-                          type="text"
-                          className="input w4"
-                          name={x.value}
-                          value={x.label}
-                          onChange={e => {
-                            this.setState({
-                              packageUnits: this.state.packageUnits.map(y =>
-                                y.value === e.target.name
-                                  ? { ...y, label: e.target.value }
-                                  : y
-                              )
-                            })
-                          }}
-                        />
-                        <i
-                          className="material-icons icon--btn red"
-                          onClick={() => {
-                            this.setState({
-                              packageUnits: this.state.packageUnits.filter(
-                                y => y.value !== x.value
-                              )
-                            })
-                          }}
+                  {packageUnits
+                    .filter(u => u.value.includes(CUSTOM_PKG_PREFIX))
+                    .map(x => {
+                      return (
+                        <div
+                          key={x.value}
+                          className="ph2 pt2 pb1 flex items-center"
                         >
-                          delete
-                        </i>
-                      </div>
-                    )
-                  })}
+                          <input
+                            type="text"
+                            className="input w4"
+                            name={x.value}
+                            value={x.label}
+                            onChange={e => {
+                              this.setState({
+                                packageUnits: this.state.packageUnits.map(y =>
+                                  y.value === e.target.name
+                                    ? { ...y, label: e.target.value }
+                                    : y
+                                )
+                              })
+                            }}
+                          />
+                          <i
+                            className="material-icons icon--btn red"
+                            onClick={() => {
+                              this.setState({
+                                packageUnits: this.state.packageUnits.filter(
+                                  y => y.value !== x.value
+                                )
+                              })
+                            }}
+                          >
+                            delete
+                          </i>
+                        </div>
+                      )
+                    })}
                   <a
                     href="#0"
                     className="link pa2 dib"
                     onClick={() => {
-                      const customKey = packageUnits.length + 1
+                      const customIdx = packageUnits.length + 1
                       this.setState({
                         packageUnits: [
                           ...packageUnits,
-                          { value: `custom_${customKey}`, label: '' }
+                          {
+                            value: `${CUSTOM_PKG_PREFIX}${customIdx}`,
+                            label: ''
+                          }
                         ]
                       })
                     }}

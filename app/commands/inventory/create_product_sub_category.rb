@@ -20,7 +20,7 @@ module Inventory
       sub_category.name = @sub_category_name
       sub_category.package_units = []
 
-      if @package_units.any?
+      if !@package_units.blank?
         @package_units.each do |x|
           sub_category.package_units.build(value: x[:value], label: x[:label])
         end

@@ -33,30 +33,24 @@ class GrowPhaseSetting extends React.Component {
           <p className="grey">
             You can decide which phases to be used by setting it to "Active"
           </p>
-          <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt4 w-100 mb2">
+          <table className="std-table pv2 ph3 mt4 w-100">
             <tbody>
-              <tr className="bg-light-gray">
-                <th className="pv2 ph3 subtitle-2 dark-grey tc">Name</th>
-                <th className="pv2 ph3 subtitle-2 dark-grey tc">
-                  # Days Of Propagation
-                </th>
-                <th className="pv2 ph3 subtitle-2 dark-grey tc">
-                  Avg Days of Propagation
-                </th>
-                <th className="pv2 ph3 subtitle-2 dark-grey tc">Active</th>
+              <tr>
+                <th>Name</th>
+                <th># Days Of Propagation</th>
+                <th>Avg Days of Propagation</th>
+                <th className="tc">Active</th>
               </tr>
               {GrowPhaseStore.filteredList.map((x, i) => (
                 <tr
                   key={x.id}
-                  className={classNames('dim pointer', { grey: !x.is_active })}
+                  className="pointer"
                   onClick={e => this.openGrowPhase(e, i)}
                 >
-                  <td className="bb b--black-20 pv3 tc ttc">{x.name}</td>
-                  <td className="bb b--black-20 pv3 tc">{x.number_of_days}</td>
-                  <td className="bb b--black-20 pv3 tc">
-                    {x.number_of_days_avg}
-                  </td>
-                  <td className="bb b--black-20 pv3 tc">
+                  <td>{x.name}</td>
+                  <td>{x.number_of_days}</td>
+                  <td>{x.number_of_days_avg}</td>
+                  <td>
                     <div className="center">
                       <input
                         type="checkbox"

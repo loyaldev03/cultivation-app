@@ -306,17 +306,22 @@
     th {
       height: 56px;
       border-right: solid 1px rgba(0, 0, 0, 0.05);
-
       padding: .5rem;
       text-align: left;
       background-color: var(--grey-smoke);
       font-size: 0.9rem;
       font-weight: 600;
       vertical-align: top;
+      &.tc { text-align: center; }
+      &.tl { text-align: left; }
+      &.tr { text-align: right; }
     }
     td {
       padding: .5rem;
       height: 42px;
+      &.tc { text-align: center; }
+      &.tl { text-align: left; }
+      &.tr { text-align: right; }
     }
   }
 

@@ -5,6 +5,45 @@ import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
 import reactSelectStyle from '../utils/reactSelectStyle'
 import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
 
+const PkgUnitCheckbox = React.memo(
+  ({ value, label, checked, onChange, className }) => {
+    return (
+      <label className={className}>
+        <input
+          type="checkbox"
+          name={label}
+          value={value}
+          onChange={onChange}
+          checked={checked}
+        />
+        <span className="ph1">{label}</span>
+      </label>
+    )
+  }
+)
+
+const CUSTOM_PKG_PREFIX = 'custom_'
+
+const BUILTIN_PK_UNITS = [
+  { value: '3pk', label: '3pk' },
+  { value: '5pk', label: '5pk' },
+  { value: '12pk', label: '12pk' },
+  { value: '24pk', label: '24pk' }
+]
+
+const BUILTIN_WEIGHT_UNITS = [
+  { value: 'half_g', label: '1/2 gram' },
+  { value: 'half_kg', label: '1/2 kg' },
+  { value: 'quarter_lb', label: '1/4 lb' },
+  { value: 'quarter_oz', label: '1/4 ounce' },
+  { value: 'eighth', label: 'Eighth' },
+  { value: 'g', label: 'Gram' },
+  { value: 'half_oz', label: 'Half ounce' },
+  { value: 'kg', label: 'Kg' },
+  { value: 'lb', label: 'Lb' },
+  { value: 'oz', label: 'Ounce' },
+]
+
 @observer
 class AddEditProductSubCategoryForm extends React.Component {
   constructor(props) {
@@ -52,6 +91,28 @@ class AddEditProductSubCategoryForm extends React.Component {
         packageUnits
       })
     }
+  }
+
+  onChangeCb = e => {
+    let packageUnits
+    if (e.target.checked) {
+      const unit = { value: e.target.value, label: e.target.name }
+      const found = this.state.packageUnits.find(x => x.value === unit.value)
+      if (found) {
+        packageUnits = this.state.packageUnits.map(x =>
+          x.value === unit.value ? unit : x
+        )
+      } else {
+        packageUnits = [...this.state.packageUnits, unit]
+      }
+    } else {
+      packageUnits = this.state.packageUnits.filter(
+        x => x.value !== e.target.name
+      )
+    }
+    this.setState({
+      packageUnits
+    })
   }
 
   onChangeProductCategory = selected => {
@@ -128,19 +189,21 @@ class AddEditProductSubCategoryForm extends React.Component {
               </div>
               <div className="grey f6">
                 <span className="fw6 mt2 dib">Package:</span>
-                <div>
-                  <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_3" /> 3pk{' '}
-                  </label>
-                  <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_5" /> 5pk{' '}
-                  </label>
-                  <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_12" /> 12pk{' '}
-                  </label>
-                  <label className="ph2 pv2 dib">
-                    <input type="checkbox" value="pk_24" /> 24pk{' '}
-                  </label>
+                <div className="pa2">
+                  {BUILTIN_PK_UNITS.map(pkgUnit => (
+                    <PkgUnitCheckbox
+                      className="pv1 pr3 dib"
+                      key={pkgUnit.value}
+                      label={pkgUnit.label}
+                      value={pkgUnit.value}
+                      onChange={this.onChangeCb}
+                      checked={
+                        packageUnits.findIndex(
+                          x => x.value === pkgUnit.value
+                        ) >= 0
+                      }
+                    />
+                  ))}
                 </div>
               </div>
               <div className="grey f6">
@@ -151,86 +214,75 @@ class AddEditProductSubCategoryForm extends React.Component {
                     gridTemplateColumns: '1fr 1fr'
                   }}
                 >
-                  <label className="pa2 db">
-                    <input type="checkbox" value="half_g" /> 1/2 gram{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="half_kg" /> 1/2 kg{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="quarter_lb" /> 1/4 lb{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="quarter_oz" /> 1/4 ounce{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="eighth" /> Eighth{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="g" /> Gram{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="half_oz" /> Half ounce{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="kg" /> Kg{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="lb" /> Lb{' '}
-                  </label>
-                  <label className="pa2 db">
-                    <input type="checkbox" value="oz" /> Ounce{' '}
-                  </label>
+                  {BUILTIN_WEIGHT_UNITS.map(pkgUnit => (
+                    <PkgUnitCheckbox
+                      className="pa2"
+                      key={pkgUnit.value}
+                      label={pkgUnit.label}
+                      value={pkgUnit.value}
+                      onChange={this.onChangeCb}
+                      checked={
+                        packageUnits.findIndex(
+                          x => x.value === pkgUnit.value
+                        ) >= 0
+                      }
+                    />
+                  ))}
                 </div>
               </div>
               <div className="grey f6">
                 <span className="fw6 mt2 dib">Custom Units:</span>
                 <div>
-                  {packageUnits.map(x => {
-                    return (
-                      <div
-                        key={x.value}
-                        className="ph2 pt2 pb1 flex items-center"
-                      >
-                        <input
-                          type="text"
-                          className="input w4"
-                          name={x.value}
-                          value={x.label}
-                          onChange={e => {
-                            this.setState({
-                              packageUnits: this.state.packageUnits.map(y =>
-                                y.value === e.target.name
-                                  ? { ...y, label: e.target.value }
-                                  : y
-                              )
-                            })
-                          }}
-                        />
-                        <i
-                          className="material-icons icon--btn red"
-                          onClick={() => {
-                            this.setState({
-                              packageUnits: this.state.packageUnits.filter(
-                                y => y.value !== x.value
-                              )
-                            })
-                          }}
+                  {packageUnits
+                    .filter(u => u.value.includes(CUSTOM_PKG_PREFIX))
+                    .map(x => {
+                      return (
+                        <div
+                          key={x.value}
+                          className="ph2 pt2 pb1 flex items-center"
                         >
-                          delete
-                        </i>
-                      </div>
-                    )
-                  })}
+                          <input
+                            type="text"
+                            className="input w4"
+                            name={x.value}
+                            value={x.label}
+                            onChange={e => {
+                              this.setState({
+                                packageUnits: this.state.packageUnits.map(y =>
+                                  y.value === e.target.name
+                                    ? { ...y, label: e.target.value }
+                                    : y
+                                )
+                              })
+                            }}
+                          />
+                          <i
+                            className="material-icons icon--btn red"
+                            onClick={() => {
+                              this.setState({
+                                packageUnits: this.state.packageUnits.filter(
+                                  y => y.value !== x.value
+                                )
+                              })
+                            }}
+                          >
+                            delete
+                          </i>
+                        </div>
+                      )
+                    })}
                   <a
                     href="#0"
                     className="link pa2 dib"
                     onClick={() => {
-                      const customKey = packageUnits.length + 1
+                      const customIdx = packageUnits.length + 1
                       this.setState({
                         packageUnits: [
                           ...packageUnits,
-                          { value: `custom_${customKey}`, label: '' }
+                          {
+                            value: `${CUSTOM_PKG_PREFIX}${customIdx}`,
+                            label: ''
+                          }
                         ]
                       })
                     }}

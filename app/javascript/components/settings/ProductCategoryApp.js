@@ -191,13 +191,6 @@ class ProductCategoryApp extends React.Component {
       CategoryStore.loadCategories(),
       MetrcItemCategoryStore.loadCategories()
     ])
-
-    // TODO: For DEVELOPMENT USE ONLY
-    this.setState({
-      tabIndex: 1,
-      showEditSubCategoryPanel: true,
-      editSubCategoryPanelMode: 'add'
-    })
   }
 
   onSelectTab = tabIndex => {

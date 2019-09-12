@@ -118,8 +118,10 @@ class AddEditProductCategoryForm extends React.Component {
                 />
               </div>
             </div>
-            <div className="mt3 fl w-100">
-              <div className="w-100 fl">
+            <div className="mt4 fl w-100">
+              <span className="f5 fw6 gray">METRC configuration:</span>
+              <hr />
+              <div className="w-100 mt1 fl">
                 <label className="f6 fw6 db mb1 gray ttc">Quantity Type</label>
               </div>
               <div>
@@ -137,12 +139,10 @@ class AddEditProductCategoryForm extends React.Component {
             </div>
             <div className="mt3 fl w-100">
               <div className="w-100 fl">
-                <label className="f6 fw6 db gray ttc">
-                  METRC Item Category
-                </label>
+                <label className="f6 fw6 db gray ttc">Item Category</label>
                 <span className="f6 grey pv2 dib">
-                  Map this product category to corresponding Item Category on
-                  METRC. This list is provided by the state.
+                  Map product category to corresponding Item Category on METRC.
+                  This list is provided by the state.
                 </span>
                 <ItemCategorySelector
                   ref={select => (this.categorySelector = select)}

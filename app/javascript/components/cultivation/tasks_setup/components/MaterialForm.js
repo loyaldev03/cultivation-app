@@ -10,10 +10,9 @@ import {
   httpGetOptions
 } from '../../../utils'
 
-
 const group_type = [
-  { label: 'Raw Material', value: 'raw_materials'}, 
-  { label: 'Non Sale', value: 'non_sales' }, 
+  { label: 'Raw Material', value: 'raw_materials' },
+  { label: 'Non Sale', value: 'non_sales' }
 ]
 
 export default class MaterialForm extends React.Component {
@@ -74,31 +73,42 @@ export default class MaterialForm extends React.Component {
       })
   }
 
-  onChangeGroup = (e) => {
-    this.setState({ group: e, type: '', childCollection: []}, ()=>{
+  onChangeGroup = e => {
+    this.setState({ group: e, type: '', childCollection: [] }, () => {
       this.loadCatalogue(e.value, '', 'typeCollection')
     })
   }
 
-  onChangeType = (e) => {
-    this.setState({ type: e, keyCollection: [], child: '', catalogue_id: e.value }, async() => {
-      await this.loadCatalogue(this.state.group.value, e.key, 'childCollection')
-      if (this.state.childCollection < 1){ //empty
-        this.loadProducts('')
+  onChangeType = e => {
+    this.setState(
+      { type: e, keyCollection: [], child: '', catalogue_id: e.value },
+      async () => {
+        await this.loadCatalogue(
+          this.state.group.value,
+          e.key,
+          'childCollection'
+        )
+        if (this.state.childCollection < 1) {
+          //empty
+          this.loadProducts('')
+        }
       }
-    })
+    )
   }
 
-  onChangeChild = (e) => {
-    this.setState({ child: e, keyCollection: e.children, key: '', catalogue_id: e.value }, () => {
-      if (this.state.keyCollection < 1) { //empty
-        this.loadProducts('')
-
+  onChangeChild = e => {
+    this.setState(
+      { child: e, keyCollection: e.children, key: '', catalogue_id: e.value },
+      () => {
+        if (this.state.keyCollection < 1) {
+          //empty
+          this.loadProducts('')
+        }
       }
-    })
+    )
   }
 
-  onChangeKey = (e) => {
+  onChangeKey = e => {
     this.setState({ key: e, catalogue_id: e.value }, () => {
       this.loadProducts('')
     })
@@ -159,30 +169,33 @@ export default class MaterialForm extends React.Component {
         return { id: x.id, element: x.element, value: '' }
       }
     })
-    this.setState({
-      task_id: task_id,
-      batch_id: batch_id,
-      materials: items,
-      task: task,
-      nutrients,
-      water_ph: task.water_ph,
-      group: '',
-      type: '',
-      child: '',
-      key: ''
-    }, async () => {
-        if (
-          task &&
-          task.indelible &&
-          task.indelible === 'add_nutrient'
-        ){
-          await this.loadCatalogue('raw_materials', 'nutrients', 'childCollection')
+    this.setState(
+      {
+        task_id: task_id,
+        batch_id: batch_id,
+        materials: items,
+        task: task,
+        nutrients,
+        water_ph: task.water_ph,
+        group: '',
+        type: '',
+        child: '',
+        key: ''
+      },
+      async () => {
+        if (task && task.indelible && task.indelible === 'add_nutrient') {
+          await this.loadCatalogue(
+            'raw_materials',
+            'nutrients',
+            'childCollection'
+          )
           this.setState({
             group: { label: 'Raw Material', value: 'raw_materials' },
             type: 'raw_materials'
           })
         }
-    })
+      }
+    )
   }
 
   handleChangeQuantity = (id, quantity) => {
@@ -213,74 +226,92 @@ export default class MaterialForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { nutrients, materials, task, typeCollection, childCollection, child, keyCollection, group, type, key } = this.state
+    const {
+      nutrients,
+      materials,
+      task,
+      typeCollection,
+      childCollection,
+      child,
+      keyCollection,
+      group,
+      type,
+      key
+    } = this.state
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
     const title =
       task && task.indelible === 'add_nutrient'
         ? `Add Nutrient ${task.name == 'Add nutrients' ? '' : '. ' + task.name}`
         : 'Assign Materials'
-    const isAddNutrient = task && task.indelible && task.indelible === 'add_nutrient'
+    const isAddNutrient =
+      task && task.indelible && task.indelible === 'add_nutrient'
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
           <SlidePanelHeader onClose={onClose} title={title} />
-          {!isAddNutrient && 
+          {!isAddNutrient && (
             <div className="ph4 mt3 flex">
               <div className="w-100">
                 <label className="f6 fw6 db mb1 gray ttc">Category Type</label>
-                  <Select
-                    styles={reactSelectStyle}
-                    options={group_type}
-                    className="w-100"
-                    value={group}
-                    onChange={e => this.onChangeGroup(e)}
-                  />
+                <Select
+                  styles={reactSelectStyle}
+                  options={group_type}
+                  className="w-100"
+                  value={group}
+                  onChange={e => this.onChangeGroup(e)}
+                />
               </div>
             </div>
-          }
-          {!isAddNutrient && group && 
+          )}
+          {!isAddNutrient && group && (
             <div className="ph4 mt3 flex">
               <div className="w-100">
-                <label className="f6 fw6 db mb1 gray ttc">{group.label} Type</label>
-                  <Select
-                    styles={reactSelectStyle}
-                    options={typeCollection}
-                    className="w-100"
-                    value={type}
-                    onChange={e => this.onChangeType(e)}
-                  />
+                <label className="f6 fw6 db mb1 gray ttc">
+                  {group.label} Type
+                </label>
+                <Select
+                  styles={reactSelectStyle}
+                  options={typeCollection}
+                  className="w-100"
+                  value={type}
+                  onChange={e => this.onChangeType(e)}
+                />
               </div>
             </div>
-          }
-          {type && childCollection && childCollection.length > 0 &&
+          )}
+          {type && childCollection && childCollection.length > 0 && (
             <div className="ph4 mt3 flex">
               <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">{type.label} Type</label>
-                  <Select
-                    styles={reactSelectStyle}
-                    options={childCollection}
-                    className="w-100"
-                    value={child}
-                    onChange={e => this.onChangeChild(e)}
-                  />
+                <label className="f6 fw6 db mb1 gray ttc">
+                  {type.label} Type
+                </label>
+                <Select
+                  styles={reactSelectStyle}
+                  options={childCollection}
+                  className="w-100"
+                  value={child}
+                  onChange={e => this.onChangeChild(e)}
+                />
               </div>
             </div>
-          }
-          {child && keyCollection &&
+          )}
+          {child && keyCollection && (
             <div className="ph4 mt3 flex">
               <div className="w-100">
-                <label className="f6 fw6 db mb1 gray ttc">{child.label} Type</label>
-                  <Select
-                    styles={reactSelectStyle}
-                    options={keyCollection}
-                    className="w-100"
-                    value={key}
-                    onChange={e => this.onChangeKey(e)}
-                  />
+                <label className="f6 fw6 db mb1 gray ttc">
+                  {child.label} Type
+                </label>
+                <Select
+                  styles={reactSelectStyle}
+                  options={keyCollection}
+                  className="w-100"
+                  value={key}
+                  onChange={e => this.onChangeKey(e)}
+                />
               </div>
             </div>
-          }
+          )}
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product</label>

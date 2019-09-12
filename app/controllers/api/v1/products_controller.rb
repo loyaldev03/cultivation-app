@@ -5,6 +5,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     facility_id = params[:facility_id].to_s
     # TODO: Why???
     facility_id = Cultivation::Batch.find(params[:batch_id].to_s).facility_id if params[:batch_id]
+    catalogue_id = params[:catalogue_id].to_bson_id
     facility_strain_id = params[:facility_strain_id].to_s
 
     if type == 'raw_materials'
@@ -31,7 +32,9 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = []
 
-    if catalogue_ids.blank? || type.nil? && category.nil?
+    if catalogue_id.present?
+      products = Inventory::Product.where(catalogue_id: catalogue_id)
+    elsif catalogue_id.blank? || catalogue_ids.blank? || type.nil? && category.nil?
       products = Inventory::Product.all
     else
       products = Inventory::Product.where(:catalogue_id.in => catalogue_ids)

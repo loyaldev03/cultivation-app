@@ -57,8 +57,6 @@ class AddEditProductCategoryForm extends React.Component {
         const metrcCategory = MetrcItemCategoryStore.getCategoryByName(
           metrcItem
         )
-        console.log('metrcCategory.name', metrcCategory.name)
-        console.log('metrcCategory.quantity_type', metrcCategory.quantity_type)
         if (metrcItem && metrcCategory) {
           const quantityType = QUANTITY_TYPES.find(
             x => x.value === metrcCategory.quantity_type

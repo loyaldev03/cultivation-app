@@ -183,7 +183,8 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     # Creating
     if params[:product_category_id].present?
       cmd = Inventory::CreateProductSubCategory.call(product_category_id: params[:product_category_id],
-                                                     sub_category_name: params[:name])
+                                                     sub_category_name: params[:name],
+                                                     package_units: params[:package_units])
       if cmd.success?
         render json: Inventory::ProductCategorySerializer.new(cmd.result).serialized_json
       else

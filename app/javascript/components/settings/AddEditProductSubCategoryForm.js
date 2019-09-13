@@ -41,7 +41,7 @@ const BUILTIN_WEIGHT_UNITS = [
   { value: 'half_oz', label: 'Half ounce' },
   { value: 'kg', label: 'Kg' },
   { value: 'lb', label: 'Lb' },
-  { value: 'oz', label: 'Ounce' },
+  { value: 'oz', label: 'Ounce' }
 ]
 
 @observer

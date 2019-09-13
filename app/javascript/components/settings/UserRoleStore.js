@@ -85,7 +85,6 @@ class UserRoleStore {
       runInAction(() => {
         if (response.data) {
           this.weekWithWorkSchedule = response.data || []
-          console.log(toJS(this.weekWithWorkSchedule))
         } else {
           this.weekWithWorkSchedule = []
         }

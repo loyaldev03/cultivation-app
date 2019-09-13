@@ -561,6 +561,7 @@ class TeamSetttingApp extends React.Component {
             {activeTab === 'usersTab' && (
               <UserDetailsEditor
                 key={editingUser.id}
+                firstDayOfWeek={this.props.first_day_of_week}
                 currentId={userId}
                 user={editingUser}
                 onSave={this.onUserSave}

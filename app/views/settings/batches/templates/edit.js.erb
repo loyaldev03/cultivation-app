@@ -1,2 +1,6 @@
-$_("#right-sidebar-content").innerHTML = ("<%= j render('edit') %>");
+<% if RoleCheck.call(current_user, Constants::APP_MOD_TEMPLATES).result[:update] == true %>
+  $_("#right-sidebar-content").innerHTML = ("<%= j render('edit') %>");
+<% else %>
+  alert('no permission');
+<% end %>
 setupCollapsible();

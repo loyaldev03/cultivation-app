@@ -79,7 +79,7 @@ class TaskSetup extends React.Component {
   }
 
   render() {
-    const { batch, batchesPermission } = this.props
+    const { batch, batchesPermission, templatesPermission } = this.props
     const { showDestroyedPlants } = this.state
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
@@ -290,6 +290,7 @@ class TaskSetup extends React.Component {
             batch={batch}
             columns={this.state.columns}
             canUpdate={batchesPermission.update}
+            canCreateTemplate={templatesPermission.create}
           />
         </div>
         <SlidePanel

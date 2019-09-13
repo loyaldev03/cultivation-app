@@ -314,6 +314,26 @@ module Constants
     'Trim',
   ].freeze
 
+  BUILTIN_PACKAGE_UNITS = [
+    { value: '3pk', label: '3pk' },
+    { value: '5pk', label: '5pk' },
+    { value: '12pk', label: '12pk' },
+    { value: '24pk', label: '24pk' }
+  ].freeze
+
+  BUILTIN_WEIGHT_UNITS = [
+    { value: 'half_g', label: '1/2 gram' },
+    { value: 'half_kg', label: '1/2 kg' },
+    { value: 'quarter_lb', label: '1/4 lb' },
+    { value: 'quarter_oz', label: '1/4 ounce' },
+    { value: 'eighth', label: 'Eighth' },
+    { value: 'g', label: 'Gram' },
+    { value: 'half_oz', label: 'Half ounce' },
+    { value: 'kg', label: 'Kg' },
+    { value: 'lb', label: 'Lb' },
+    { value: 'oz', label: 'Ounce' },
+  ].freeze
+
   SALES_PRODUCT_CATEGORY = [
     {code: :high_cbd, name: 'High CBD'},
     {code: :hybrid, name: 'Hybrid'},

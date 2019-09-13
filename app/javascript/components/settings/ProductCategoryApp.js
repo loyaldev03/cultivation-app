@@ -257,6 +257,7 @@ class ProductCategoryApp extends React.Component {
   }
 
   render() {
+    const { builtInPackageUnits, builtInWeightUnits } = this.props
     const {
       categoryColumns,
       subCategoryColumns,
@@ -268,6 +269,7 @@ class ProductCategoryApp extends React.Component {
       editSubCategoryPanelMode,
       editSubCategory
     } = this.state
+
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -289,6 +291,8 @@ class ProductCategoryApp extends React.Component {
           show={showEditSubCategoryPanel}
           renderBody={props => (
             <AddEditProductSubCategoryForm
+              builtInWeightUnits={builtInWeightUnits}
+              builtInPackageUnits={builtInPackageUnits}
               mode={editSubCategoryPanelMode}
               editSubCategory={editSubCategory}
               onClose={() => this.setState({ showEditSubCategoryPanel: false })}

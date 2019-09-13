@@ -19,10 +19,10 @@ export default function loadPlants(
   }
   if (facility_id && facility_strain_id) {
     if (facility_strain_id.length > 0) {
-      apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
+      apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id 
     }
     if (facility_id.length > 0) {
-      apiUrl = apiUrl + '&&facility_id=' + facility_id
+      apiUrl = apiUrl + '&facility_id=' + facility_id
     }
   } else {
     if (facility_strain_id && facility_strain_id.length > 0) {

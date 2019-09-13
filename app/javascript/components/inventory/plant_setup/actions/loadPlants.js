@@ -17,13 +17,20 @@ export default function loadPlants(
   if (current_growth_stage.length > 0) {
     apiUrl = apiUrl + '/' + current_growth_stage
   }
-
-  if (facility_strain_id.length > 0) {
-    apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
-  }
-
-  if (facility_id && facility_id.length > 0) {
-    apiUrl = apiUrl + '?facility_id=' + facility_id
+  if (facility_id && facility_strain_id) {
+    if (facility_strain_id.length > 0) {
+      apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
+    }
+    if (facility_id.length > 0) {
+      apiUrl = apiUrl + '&facility_id=' + facility_id
+    }
+  } else {
+    if (facility_strain_id && facility_strain_id.length > 0) {
+      apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
+    }
+    if (facility_id && facility_id.length > 0) {
+      apiUrl = apiUrl + '?facility_id=' + facility_id
+    }
   }
 
   if (!isEmpty(excludes)) {

@@ -129,3 +129,5 @@ gem 'timecop'
 gem 'nexmo'
 
 gem 'cancancan'
+
+gem 'groupdate'

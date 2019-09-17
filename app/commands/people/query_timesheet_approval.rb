@@ -22,6 +22,7 @@ module People
     end
 
     def call
+      first_week = CompanyInfo.first.first_day_of_week.downcase[0..2].to_sym
       date = Date.current
       main = []
       data = []
@@ -29,8 +30,11 @@ module People
       result[0][:data]&.map do |user|
         roles = Common::Role.find(user[:roles])&.pluck(:name)
         manager = User.find(user[:reporting_manager_id]) unless user[:reporting_manager_id].nil?
-        worklogs = user[:work_logs]&.group_by { |d| (DateTime.parse(d[:start_time].strftime('%Y-%m-%d')).strftime('%W').to_i + 1) }
-        workschedules = user[:work_schedules]&.group_by { |d| (DateTime.parse(d[:start_time].strftime('%Y-%m-%d')).strftime('%W').to_i + 1) }
+        ws = user[:work_schedules]&.select { |k| k[:start_time] != nil }
+        wl = user[:work_logs]&.select { |k| k[:start_time] != nil }
+        worklogs = wl.present? ? wl.group_by_week(week_start: first_week) { |d| d[:start_time] } : []
+        workschedules = ws.present? ? ws.group_by_week(week_start: first_week) { |d| d[:start_time] } : []
+
         if (@args[:role].nil?) || (@args[:role] == 'all') || (user[:roles].include?(@args[:role].to_bson_id))
           workschedules&.map do |week, work_schedules|
             if (@args[:status] == 'all') || (work_schedules.first[:timesheet_status] == @args[:status])
@@ -38,8 +42,6 @@ module People
               wlogs = worklogs&.select { |k, v| k == week }
               wlogs&.map do |weekl, work_logs|
                 total_hours = 0
-                start_week = Date.commercial(date.year, weekl.to_i, 1)
-                end_week = Date.commercial(date.year, weekl.to_i, 7)
                 total_hours += ((work_logs.last[:end_time] - work_logs.first[:start_time]) / 1.hour)
                 data << {
                   user_id: user[:_id].to_s,
@@ -48,8 +50,7 @@ module People
                   photo_url: nil,
                   approver: manager.nil? ? manager : "#{manager.first_name} #{manager.last_name}",
                   status: status,
-                  week: "#{start_week} - #{end_week} ",
-                  week_number: weekl,
+                  week: "#{weekl} - #{weekl + 6} ",
                   total_hours: total_hours.round(2),
                   total_ot: 0,
 
@@ -68,9 +69,9 @@ module People
     end
 
     def aggregate_query
-      facilities = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
       User.collection.aggregate([
-        {"$match": {"facilities": {"$in": facilities}}},
+        {"$match": {"facilities": {"$in": f_ids}}},
         match_search,
         {"$lookup": {from: 'common_work_logs',
                      as: 'work_logs',

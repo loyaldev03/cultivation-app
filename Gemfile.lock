@@ -127,6 +127,8 @@ GEM
       raabro (~> 1.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    groupdate (4.1.2)
+      activesupport (>= 4.2)
     guard (2.15.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -409,6 +411,7 @@ DEPENDENCIES
   faker
   fast_jsonapi
   flamegraph
+  groupdate
   guard-rspec
   health_check
   htmlbeautifier

@@ -1,5 +1,13 @@
 # app/controllers/registrations_controller.rb
 class RegistrationsController < Devise::RegistrationsController
+  def new
+    if CompanyInfo.last.is_active?
+      redirect_to new_user_session_url
+    else
+      super
+    end
+  end
+
   protected
 
   def after_sign_up_path_for(resource)

@@ -2,7 +2,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
     facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
     if resource_shared?
-      facility_strain_ids = Inventory::FacilityStrain.all.pluck(:id).map(&:to_s)
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
     else
       facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
     end
@@ -138,7 +138,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def harvests
     if resource_shared?
-      facility_strains_ids = Inventory::FacilityStrain.all.pluck(:id)
+      facility_strains_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id)
     else
       facility_strains_ids = Inventory::FacilityStrain.where(facility_id: params[:facility_id]).pluck(:id)
     end
@@ -171,9 +171,5 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
       options = {params: {include: include_rels}}
     end
     options
-  end
-
-  def resource_shared?
-    CompanyInfo.last.enable_resouces_sharing
   end
 end

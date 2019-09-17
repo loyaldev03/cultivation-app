@@ -41,6 +41,7 @@ module Inventory
 
       if resource_shared?
         item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
+          :facility_id.in => active_facility_ids,
           :event_type.in => @event_types,
           :catalogue_id.in => raw_material_ids,
         ).order(c_at: :desc)
@@ -87,6 +88,10 @@ module Inventory
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
+    end
+
+    def active_facility_ids
+      Facility.where(is_enabled: true).pluck(:id)
     end
   end
 end

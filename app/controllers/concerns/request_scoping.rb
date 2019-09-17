@@ -11,6 +11,8 @@ module RequestScoping
     helper_method :current_shared_facility_ids
     helper_method :current_ip_facility
     helper_method :company_info
+    helper_method :active_facility_ids
+    helper_method :resource_shared?
   end
 
   protected
@@ -90,6 +92,14 @@ module RequestScoping
       f_ids = Facility.where(id: {'$in': current_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
       ids = f_ids.push(current_facility.id)
     end
+  end
+
+  def active_facility_ids
+    Facility.where(is_enabled: true).pluck(:id)
+  end
+
+  def resource_shared?
+    CompanyInfo.last.enable_resouces_sharing
   end
 
   def company_info

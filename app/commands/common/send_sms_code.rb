@@ -15,7 +15,7 @@ module Common
         to: @phone_number,
         text: @message,
       )
-      if !res.messages.blank?
+      if !res.messages.blank? && res.messages[0]&.status != '0'
         err_msgs = res.messages.map(&:error_text).join('. ')
         raise StandardError.new "#{@phone_number}: #{err_msgs}"
       end

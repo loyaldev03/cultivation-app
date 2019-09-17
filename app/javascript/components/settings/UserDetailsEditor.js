@@ -321,8 +321,8 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onUploadAvatarSuccess = photoData => {
-    const photoUrl = `/uploads/${photoData.storage}/${photoData.id}`
-    this.setState({ photoUrl, photoData })
+    const photoUrl = `/uploads/${photoData.body.storage}/${photoData.body.id}`
+    this.setState({ photoUrl: photoUrl, photoData: photoData.body })
   }
 
   onSubmit = e => {

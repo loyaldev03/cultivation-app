@@ -51,8 +51,9 @@
             </a>
             <%= react_component 'settings/ProductCategoryApp',
               {
-                facilityId: current_facility.id.to_s,
                 defaultCategories: @default_categories,
+                builtInPackageUnits: Constants::BUILTIN_PACKAGE_UNITS,
+                builtInWeightUnits: Constants::BUILTIN_WEIGHT_UNITS,
               }
             %>
           </div>

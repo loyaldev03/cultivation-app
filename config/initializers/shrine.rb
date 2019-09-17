@@ -17,18 +17,6 @@ s3_public_options = {
   region:            ENV['AWS_REGION'],
 }
 
-if Rails.env.production?
-  s3_general_options = {
-    access_key_id:     Rails.application.credentials.aws[:access_key_id],
-    secret_access_key: Rails.application.credentials.aws[:secret_access_key],
-    bucket:            Rails.application.credentials.aws[:bucket],
-    region:            Rails.application.credentials.aws[:region],
-  }
-
-  # Since bucket not created yet...
-  s3_public_options = s3_general_options
-end
-
 if Rails.env.development? || Rails.env.test?
   s3_general_options = s3_public_options = {
     access_key_id: 'AKIAJ45K32YD37C47NJA',

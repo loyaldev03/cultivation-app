@@ -141,6 +141,23 @@ class HarvestPackageSetupApp extends React.Component {
       }
     },
     {
+      headerClassName: '',
+      Header: (
+        <HeaderFilter
+          title="Location"
+          accessor="location"
+          getOptions={harvestPackageStore.getUniqPropValues}
+          onUpdate={harvestPackageStore.updateFilterOptions}
+        />
+      ),
+      accessor: 'location',
+      className: ' pr3 justify-center',
+      width: 110,
+      Cell: props => {
+        return <span>{props.value ? props.value : '-'}</span>
+      }
+    },
+    {
       Header: (
         <HeaderFilter
           title="Strain"

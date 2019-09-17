@@ -65,6 +65,11 @@ const columns = raw_material_type_label => [
     )
   },
   {
+    Header: 'Location',
+    accessor: 'attributes.location_name',
+    headerClassName: 'tl'
+  },
+  {
     Header: '',
     className: 'tc',
     filterable: false,

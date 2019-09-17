@@ -87,6 +87,14 @@ module Inventory
       object.location_id&.to_s
     end
 
+    attribute :location_name do |object, params|
+      if params[:locations] && object.location_id
+        params[:locations].get_location_code(object.location_id)
+      else
+        ''
+      end
+    end
+
     attribute :vendor, if: Proc.new { |record, params|
                params && params[:include]&.include?(:vendor) && record.ref_id.present?
              } do |object, params|

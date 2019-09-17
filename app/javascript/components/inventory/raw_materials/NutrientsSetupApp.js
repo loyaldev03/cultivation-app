@@ -55,6 +55,11 @@ const columns = [
     )
   },
   {
+    Header: 'Location',
+    accessor: 'attributes.location_name',
+    headerClassName: 'tl'
+  },
+  {
     Header: '',
     className: 'tc',
     filterable: false,

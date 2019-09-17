@@ -74,6 +74,7 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
     options = {params: {
       include: additional_fields,
       relations: {vendor_invoice_items: vendor_invoice_items},
+      locations: QueryLocations.call(params[:facility_id]),
     }}
 
     {

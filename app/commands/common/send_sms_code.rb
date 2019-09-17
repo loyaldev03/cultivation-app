@@ -2,27 +2,32 @@ module Common
   class SendSmsCode
     prepend SimpleCommand
 
-    def initialize(current_user, args = {})
-      @user = current_user
-      @args = args
+    def initialize(args = {})
+      @phone_number = args[:phone_number]
       @message = args[:message]
-      @client = initialize_nextmo
     end
 
     def call
-      @client.sms.send(
-        from: 'Cannected',
-        to: @user.phone_number,
+      from = ENV['MAILER_URL_HOST'] || 'Cannected.com'
+      @client = initialize_nextmo
+      res = @client.sms.send(
+        from: from,
+        to: @phone_number,
         text: @message,
       )
+      if !res.messages.blank?
+        err_msgs = res.messages.map(&:error_text).join('. ')
+        raise StandardError.new "#{@phone_number}: #{err_msgs}"
+      end
+      res
     end
 
     private
 
     def initialize_nextmo
       Nexmo::Client.new(
-        api_key: ENV['NEXTMO_API_KEY'],
-        api_secret: ENV['NEXTMO_API_SECRET'],
+        api_key: Rails.application.credentials.nexmo[:api_key],
+        api_secret: Rails.application.credentials.nexmo[:api_secret],
       )
     end
   end

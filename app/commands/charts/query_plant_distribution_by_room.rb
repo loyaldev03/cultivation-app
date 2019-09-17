@@ -10,7 +10,7 @@ module Charts
 
     def call
       if resource_shared?
-        facilities = Facility.all
+        facilities = Facility.in(id: active_facility_ids)
       else
         facilities = Facility.in(id: @facility_id)
       end
@@ -61,6 +61,10 @@ module Charts
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
+    end
+
+    def active_facility_ids
+      Facility.where(is_enabled: true).pluck(:id)
     end
   end
 end

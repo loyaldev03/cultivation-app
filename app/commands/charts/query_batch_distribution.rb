@@ -13,7 +13,7 @@ module Charts
       range = @args[:range].humanize.downcase
 
       if resource_shared?
-        batches_with_facility = Cultivation::Batch.all.includes(:plants)
+        batches_with_facility = Cultivation::Batch.in(facility_id: active_facility_ids).includes(:plants)
       else
         batches_with_facility = Cultivation::Batch.in(facility_id: @facility_id).includes(:plants)
       end
@@ -60,6 +60,10 @@ module Charts
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
+    end
+
+    def active_facility_ids
+      Facility.where(is_enabled: true).pluck(:id)
     end
   end
 end

@@ -28,7 +28,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     products = []
 
     if resource_shared?
-      products = Inventory::Product.in(catalogue: catalogue_ids)
+      products = Inventory::Product.in(catalogue: catalogue_ids, facility_id: active_facility_ids)
     else
       products = Inventory::Product.where(facility_id: params[:facility_id]).in(catalogue: catalogue_ids)
     end
@@ -44,7 +44,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   def converted_products
     if resource_shared?
       items = Inventory::ItemTransaction.all.includes(:product, :catalogue).
-        in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
+        in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY), facility_id: active_facility_ids).
         order(c_at: :desc)
     else
       items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue).
@@ -63,8 +63,8 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   def harvest_packages
     #need to filter add status new for unsold
     if resource_shared?
-      items = Inventory::ItemTransaction.all.includes(:product, :catalogue, :harvest_batch, :facility_strain).
-        in(catalogue: sales_catalogue_ids('raw_sales_product')).
+      items = Inventory::ItemTransaction.in(facility_id: active_facility_ids).includes(:product, :catalogue, :harvest_batch, :facility_strain).
+        in(catalogue: sales_catalogue_ids('raw_sales_product'), facility_id: active_facility_ids).
         order(c_at: :desc)
     else
       items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch, :facility_strain).
@@ -310,9 +310,5 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
 
   def request_with_errors(errors)
     params[:sales_product].to_unsafe_h.merge(errors: errors)
-  end
-
-  def resource_shared?
-    CompanyInfo.last.enable_resouces_sharing
   end
 end

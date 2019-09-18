@@ -98,11 +98,11 @@ module RequestScoping
   end
 
   def active_facility_ids
-    Facility.where(is_enabled: true).pluck(:id)
+    @active_facility_ids ||= Facility.where(is_enabled: true).pluck(:id)
   end
 
   def resource_shared?
-    CompanyInfo.last.enable_resouces_sharing
+    @resource_shared ||= company_info.enable_resouces_sharing
   end
 
   def company_info

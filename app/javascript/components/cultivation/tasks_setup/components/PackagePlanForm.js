@@ -193,7 +193,7 @@ class PackagePlanForm extends React.Component {
   }
 
   totalPlannedWeight = () => {
-    return this.state.data.reduce((sum, x) => {
+    const total = this.state.data.reduce((sum, x) => {
       return (
         sum +
         x.package_plans.reduce((innerSum, y) => {
@@ -207,6 +207,7 @@ class PackagePlanForm extends React.Component {
         }, 0)
       )
     }, 0)
+    return total.toFixed(2)
   }
 
   render() {
@@ -220,7 +221,7 @@ class PackagePlanForm extends React.Component {
         <div className="ph4 mv3 flex">
           <div className="w-60 f4 fw6">{harvestBatch.harvest_name}</div>
           <div className="w-40 tr fw4 f5">
-            {this.totalPlannedWeight().toFixed(2)} /{' '}
+            {this.totalPlannedWeight()} /{' '}
             {harvestBatch.total_cure_weight} {harvestBatch.uom} allocated
           </div>
         </div>

@@ -96,18 +96,18 @@ class AddEditProductSubCategoryForm extends React.Component {
   onChangeCb = e => {
     let packageUnits
     if (e.target.checked) {
-      const unit = { value: e.target.value, label: e.target.name }
-      const found = this.state.packageUnits.find(x => x.value === unit.value)
+      const pkgUnit = { value: e.target.value, label: e.target.name }
+      const found = this.state.packageUnits.find(x => x.value === pkgUnit.value)
       if (found) {
         packageUnits = this.state.packageUnits.map(x =>
-          x.value === unit.value ? unit : x
+          x.value === pkgUnit.value ? pkgUnit : x
         )
       } else {
-        packageUnits = [...this.state.packageUnits, unit]
+        packageUnits = [...this.state.packageUnits, pkgUnit]
       }
     } else {
       packageUnits = this.state.packageUnits.filter(
-        x => x.value !== e.target.name
+        x => x.value !== e.target.value
       )
     }
     this.setState({
@@ -132,6 +132,19 @@ class AddEditProductSubCategoryForm extends React.Component {
     }
     if (this.props.onSave) {
       this.props.onSave(formData)
+    }
+  }
+
+  isChecked = value => {
+    const res = this.state.packageUnits.findIndex(x => x.value === value)
+    return res >= 0
+  }
+
+  onDelete = value => e => {
+    if (confirm('Confirm delete?')) {
+      this.setState({
+        packageUnits: this.state.packageUnits.filter(x => x.value !== value)
+      })
     }
   }
 
@@ -190,20 +203,18 @@ class AddEditProductSubCategoryForm extends React.Component {
               <div className="grey f6">
                 <span className="fw6 mt2 dib">Package:</span>
                 <div className="pa2">
-                  {BUILTIN_PK_UNITS.map(pkgUnit => (
-                    <PkgUnitCheckbox
-                      className="pv1 pr3 dib"
-                      key={pkgUnit.value}
-                      label={pkgUnit.label}
-                      value={pkgUnit.value}
-                      onChange={this.onChangeCb}
-                      checked={
-                        packageUnits.findIndex(
-                          x => x.value === pkgUnit.value
-                        ) >= 0
-                      }
-                    />
-                  ))}
+                  {BUILTIN_PK_UNITS.map(pkgUnit => {
+                    return (
+                      <PkgUnitCheckbox
+                        className="pv1 pr3 dib"
+                        key={pkgUnit.value}
+                        label={pkgUnit.label}
+                        value={pkgUnit.value}
+                        onChange={this.onChangeCb}
+                        checked={this.isChecked(pkgUnit.value)}
+                      />
+                    )
+                  })}
                 </div>
               </div>
               <div className="grey f6">
@@ -221,11 +232,7 @@ class AddEditProductSubCategoryForm extends React.Component {
                       label={pkgUnit.label}
                       value={pkgUnit.value}
                       onChange={this.onChangeCb}
-                      checked={
-                        packageUnits.findIndex(
-                          x => x.value === pkgUnit.value
-                        ) >= 0
-                      }
+                      checked={this.isChecked(pkgUnit.value)}
                     />
                   ))}
                 </div>
@@ -258,13 +265,7 @@ class AddEditProductSubCategoryForm extends React.Component {
                           />
                           <i
                             className="material-icons icon--btn red"
-                            onClick={() => {
-                              this.setState({
-                                packageUnits: this.state.packageUnits.filter(
-                                  y => y.value !== x.value
-                                )
-                              })
-                            }}
+                            onClick={this.onDelete(x.value)}
                           >
                             delete
                           </i>
@@ -275,7 +276,7 @@ class AddEditProductSubCategoryForm extends React.Component {
                     href="#0"
                     className="link pa2 dib"
                     onClick={() => {
-                      const customIdx = packageUnits.length + 1
+                      const customIdx = new Date().getTime()
                       this.setState({
                         packageUnits: [
                           ...packageUnits,

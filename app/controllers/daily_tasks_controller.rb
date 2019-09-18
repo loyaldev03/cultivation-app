@@ -1,5 +1,6 @@
 class DailyTasksController < ApplicationController
   include WorkersDashboard
+  before_action :verify_facility_setup
 
   def index
     @facility = current_default_facility

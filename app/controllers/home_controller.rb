@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   include WorkersDashboard
+  before_action :verify_facility_setup, except: [:index]
 
   def index
     authorize! :index, HomeController

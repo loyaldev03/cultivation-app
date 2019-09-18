@@ -178,15 +178,20 @@ class HomeController < ApplicationController
     redirect_to root_path, flash: {notice: 'Data has reset.'}
   end
 
-  def qr; end
-
   def onboarding
+    if params[:facility_id].nil?
+      @facility = nil
+      @onboarding_count = 0
+      return
+    end
     @facility = Facility.find(params[:facility_id])
-    @onboarding_count = @facility.preferences.ne(code: 'ONBOARDING_DONE').map { |x| x if x.value == true }.compact.count
-    Rails.logger.debug("Facility found--->#{@facility.inspect}")
-
-    if @facility.onboarding_val('ONBOARDING_DONE') == true
-      redirect_to dashboard_cultivation_batches_path
+    if @facility.nil?
+      @onboarding_count = 0
+    else
+      @onboarding_count = @facility.preferences.ne(code: 'ONBOARDING_DONE').map { |x| x if x.value == true }.compact.count
+      if @facility.onboarding_val('ONBOARDING_DONE') == true
+        redirect_to dashboard_cultivation_batches_path
+      end
     end
   end
 

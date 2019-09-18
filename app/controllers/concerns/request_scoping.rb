@@ -65,19 +65,25 @@ module RequestScoping
   end
 
   def current_default_facility
-    if current_user.present?
-      @current_default_facility ||= FindDefaultFacility.call(current_user).result
+    if @current_default_facility.nil?
+      @current_default_facility = if current_user.present?
+                                    FindDefaultFacility.call(current_user).result
+                                  end
     end
+    @current_default_facility
   end
 
+  # TODO: Change this to always return array.
+  # - Return array with only the selected facility
+  # - Return array with all enabled facility when 'All' is selected.
   def current_facility
-    if @current_facility.blank? && params[:facility_id].present?
+    if @current_facility.nil? && params[:facility_id].present?
       if params[:facility_id] == 'All'
         @current_facility = FindDefaultFacility.call(current_user).result
       else
         @current_facility = Facility.find(params[:facility_id])
       end
-    elsif @current_facility.blank? && params[:facility_id].blank?
+    elsif @current_facility.nil? && params[:facility_id].blank?
       @current_facility = FindDefaultFacility.call(current_user).result
     else
       @current_facility
@@ -85,10 +91,10 @@ module RequestScoping
   end
 
   def current_shared_facility_ids
-    if current_user.nil?
+    if current_user.nil? && current_facility.blank?
       return []
     end
-    if current_facility.nil?
+    if current_facility.blank?
       f_ids = Facility.where(id: {'$in': current_default_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
       ids = f_ids.push(current_default_facility.id)
     else
@@ -98,11 +104,11 @@ module RequestScoping
   end
 
   def active_facility_ids
-    Facility.where(is_enabled: true).pluck(:id)
+    @active_facility_ids ||= Facility.where(is_enabled: true).pluck(:id)
   end
 
   def resource_shared?
-    CompanyInfo.last.enable_resouces_sharing
+    @resource_shared ||= company_info.enable_resouces_sharing
   end
 
   def company_info

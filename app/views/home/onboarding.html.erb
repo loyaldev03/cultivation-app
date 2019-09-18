@@ -49,4 +49,11 @@
 
     </div>
     </div>
+<% else %>
+    <div class="ph4 bg-white ma4 items-center pb3 pt3 dark-grey">
+      <p>Let's get started by defining a facility.</p>
+      <%= link_to "Setup my first facility",
+        facility_setup_new_path,
+        class: "btn btn--primary btn--large" %>
+    </div>
 <%end%>

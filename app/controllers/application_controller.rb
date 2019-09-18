@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_facility_setup
-    unless params[:controller] == "home" && params[:action] == "index"
+    unless params[:controller] == 'home' && params[:action] == 'index'
       redirect_to first_setup_path if !has_default_facility?
     end
   end

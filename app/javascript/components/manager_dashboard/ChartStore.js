@@ -288,8 +288,7 @@ class ChartStore {
         this.performer_list = []
       }
     } catch (error) {
-      console.error(error)
-    } finally {
+      throw error
     }
   }
 

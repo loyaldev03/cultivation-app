@@ -1,5 +1,6 @@
 class Cultivation::BatchesController < ApplicationController
   authorize_resource class: false
+  before_action :verify_facility_setup
   before_action :find_batch_info, only: [:show,
                                          :gantt,
                                          :locations,

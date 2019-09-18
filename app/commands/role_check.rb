@@ -19,14 +19,18 @@ class RoleCheck
 
   def call
     if @current_user&.roles.blank?
+      if Facility.count.zero? && @current_user.user_mode == 'admin'
+        # During initial setup where no facility exists
+        return {read: true, update: true, create: true, delete: true}
+      end
       # Current user do not have any roles
-      return false
+      return {read: false, update: false, create: false, delete: false}
     end
 
     roles = Common::Role.where(:_id.in => @current_user.roles)
     if roles.blank?
       # Roles cannot be found
-      return false
+      return {read: false, update: false, create: false, delete: false}
     end
 
     permit = nil

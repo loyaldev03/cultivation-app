@@ -56,7 +56,7 @@
                 <div class="flex flex-row mt3">
                   <div class="mr4 w-30">
                     <%= f.label "Facility Square Foot", class: "grey subtitle-2 ttc db mb1" %>
-                    <%= f.text_field :square_foot,
+                    <%= f.number_field :square_foot,
                       value: @wizard_form.square_foot,
                       class: "grey input-reset br2 outline-0 ba b--light-grey pa2 db w-100" %>
                   </div>
@@ -184,9 +184,12 @@
               </div>
             <% end %>
 
-            
-            <div class="mt2 flex flex-row items-center">
-              <%= link_to 'Whitelist my public IP', whitelist_ip_path(facility_id: params[:facility_id]), method: :post, class: 'btn btn--primary'%>
+            <div class="mt4">
+              <span class="grey subtitle-2 ttc db">
+                Security
+              </span>
+              <p class="grey db">Add your current network IP address to whitelist. Devices connected to the same network can gain access to this application.</p>
+              <%= link_to 'Whitelist my public ip', whitelist_ip_path(facility_id: params[:facility_id]), method: :post, class: 'db btn btn--primary'%>
             </div>
           </div>
         <% end %>

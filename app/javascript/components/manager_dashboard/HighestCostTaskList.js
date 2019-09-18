@@ -89,8 +89,8 @@ export default class HighestCostTaskList extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {ChartStore.data_highest_cost_task.map(e => (
-                <React.Fragment>
+              {ChartStore.data_highest_cost_task.map((e, i) => (
+                <React.Fragment key={e.id + i}>
                   {e.tasks.map(u => (
                     <tr className="pa2 dark-grey">
                       <td>

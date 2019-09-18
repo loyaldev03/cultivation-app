@@ -184,9 +184,12 @@
               </div>
             <% end %>
 
-            
-            <div class="mt2 flex flex-row items-center">
-              <%= link_to 'Whitelist my public IP', whitelist_ip_path(facility_id: params[:facility_id]), method: :post, class: 'btn btn--primary'%>
+            <div class="mt4">
+              <span class="grey subtitle-2 ttc db">
+                Security
+              </span>
+              <p class="grey db">Add your current network IP address to whitelist. Devices connected to the same network can gain access to this application.</p>
+              <%= link_to 'Whitelist my public ip', whitelist_ip_path(facility_id: params[:facility_id]), method: :post, class: 'db btn btn--primary'%>
             </div>
           </div>
         <% end %>

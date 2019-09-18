@@ -1,7 +1,7 @@
 # app/controllers/registrations_controller.rb
 class RegistrationsController < Devise::RegistrationsController
   def new
-    if CompanyInfo.last.is_active?
+    if CompanyInfo.last&.is_active?
       redirect_to new_user_session_url
     else
       super

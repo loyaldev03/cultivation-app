@@ -238,7 +238,6 @@ class ChartStore {
 
   @action
   async loadScheduleList(date) {
-    console.log(date)
     this.isLoading = true
     this.schedule_list_loaded = false
     const url = `/api/v1/dashboard_charts/tasklist_by_day?date=${date}`

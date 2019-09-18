@@ -79,3 +79,55 @@ Cannected
 
 ## Beta Server URL
 - Url: https://beta.cannected.com/
+
+
+# New Client Setup
+
+## Create AWS S3 bucket for client
+1. Create bucket - *e.g. mountain1.cannected.com*
+1. Add CORS configuration to the bucket
+    ```
+    <?xml version="1.0" encoding="UTF-8"?>
+    <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedOrigin>https://mountain.cannected.com</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <AllowedMethod>PUT</AllowedMethod>
+        <MaxAgeSeconds>3000</MaxAgeSeconds>
+        <AllowedHeader>Authorization</AllowedHeader>
+        <AllowedHeader>x-amz-date</AllowedHeader>
+        <AllowedHeader>x-amz-content-sha256</AllowedHeader>
+        <AllowedHeader>content-type</AllowedHeader>
+    </CORSRule>
+    <CORSRule>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <MaxAgeSeconds>3000</MaxAgeSeconds>
+    </CORSRule>
+    </CORSConfiguration>
+    ```
+1. Create IAM user - *e.g. mountain-rails-s3*
+1. Attach policy to IAM user from #2 to allow to access #1
+    ```
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": "s3:ListBucket",
+                "Resource": "arn:aws:s3:::mountain1.cannected.com"
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:PutObject",
+                    "s3:GetObject",
+                    "s3:DeleteObject"
+                ],
+                "Resource": "arn:aws:s3:::mountain1.cannected.com/*"
+            }
+        ]
+    }
+    ```
+1. Copy Access Key and Secret key from 2 and add to server ENV settings.

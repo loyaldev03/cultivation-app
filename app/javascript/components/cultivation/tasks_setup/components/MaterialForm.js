@@ -32,7 +32,6 @@ export default class MaterialForm extends React.Component {
       keyCollection: [],
       catalogue_id: ''
     }
-    this.loadProducts('')
   }
 
   loadProducts = (inputValue, catalogue_id = this.state.catalogue_id) => {

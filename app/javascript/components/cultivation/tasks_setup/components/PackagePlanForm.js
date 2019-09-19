@@ -221,8 +221,8 @@ class PackagePlanForm extends React.Component {
         <div className="ph4 mv3 flex">
           <div className="w-60 f4 fw6">{harvestBatch.harvest_name}</div>
           <div className="w-40 tr fw4 f5">
-            {this.totalPlannedWeight()} /{' '}
-            {harvestBatch.total_cure_weight} {harvestBatch.uom} allocated
+            {this.totalPlannedWeight()} / {harvestBatch.total_cure_weight}{' '}
+            {harvestBatch.uom} allocated
           </div>
         </div>
 

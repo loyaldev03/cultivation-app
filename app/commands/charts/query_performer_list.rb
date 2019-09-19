@@ -17,7 +17,6 @@ module Charts
             total_dry_weight: batch.harvest_batch.sum(:total_dry_weight),
           }
         end
-        highest_dry_weight = 0
 
         if @args[:order].present?
           if @args[:order] == 'top'
@@ -28,6 +27,8 @@ module Charts
             highest_dry_weight = batches_json.last[:total_dry_weight]
           end
         end
+
+        highest_dry_weight ||= 0
 
         batches_json = batches_json.map do |batch|
           percentage = highest_dry_weight > 0 ? ((batch[:total_dry_weight] / highest_dry_weight) * 100) : 0

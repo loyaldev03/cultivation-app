@@ -170,7 +170,8 @@ class QueryLocations
 
   def match_facility
     if @facility_id.is_a?(Array)
-      {"$match": {_id: {"$in": @facility_id}}}
+      facility_ids = @facility_id.map { |x| x.to_bson_id } rescue []
+      {"$match": {_id: {"$in": facility_ids}}}
     else
       {"$match": {_id: @facility_id}}
     end

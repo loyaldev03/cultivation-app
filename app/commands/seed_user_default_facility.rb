@@ -11,8 +11,15 @@ class SeedUserDefaultFacility
     user = User.find(@user_id)
     if user.present?
       user.facilities << @facility_id
-      # Set facility as default if user do not have any default facility
-      user.default_facility_id = @facility_id if user.default_facility_id.nil?
+      if user.default_facility_id
+        prev = Facility.find_by(id: user.default_facility_id)
+        if prev.nil?
+          user.default_facility_id = @facility_id
+        end
+      else
+        # Set facility as default if user do not have any default facility
+        user.default_facility_id = @facility_id if user.default_facility_id.nil?
+      end
       user.save!
     end
   end

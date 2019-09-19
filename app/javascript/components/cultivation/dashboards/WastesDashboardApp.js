@@ -297,8 +297,7 @@ class WastesDashboardApp extends React.Component {
     PlantWasteStore.loadPlants(this.props.currentFacilityId)
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   onToggleColumns = (header, value) => {
     const column = this.state.columns.find(x => x.Header === header)
@@ -313,7 +312,6 @@ class WastesDashboardApp extends React.Component {
   }
 
   render() {
-    // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
       <div className="pa4">
@@ -323,9 +321,9 @@ class WastesDashboardApp extends React.Component {
             type="text"
             className="input w5"
             placeholder="Search"
-            // onChange={e => {
-            //   BatchStore.filter = e.target.value
-            // }}
+            onChange={e => {
+              PlantWasteStore.filter = e.target.value
+            }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>

@@ -39,7 +39,6 @@ class PlantWasteStore {
     return toJS(this.plants.selected_plants)
   }
 
-
   @computed
   get filteredList() {
     if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
@@ -47,11 +46,10 @@ class PlantWasteStore {
         if (this.isFiltered(b)) {
           return false
         }
-        const batchNoLc = `${b.name || ''} ${b.batch_no}`.toLowerCase()
-        const strainLc = b.strain_name.toLowerCase()
+        const plantId = b.plant_id.toLowerCase()
         const filterLc = this.filter.toLowerCase()
-        const result = this.filter
-          // batchNoLc.includes(filterLc) || strainLc.includes(filterLc)
+        console.log(this.filter)
+        const result = plantId.includes(filterLc)
         return result
       })
     } else {

@@ -596,7 +596,7 @@ class UserDetailsEditor extends React.PureComponent {
                     onChange={this.onChangeInput('firstName')}
                     value={firstName}
                     required={true}
-                    disabled={isSameUser}
+                    // disabled={isSameUser}
                   />
                 </div>
                 <div className="w-50 fr pl3">
@@ -606,7 +606,7 @@ class UserDetailsEditor extends React.PureComponent {
                     onChange={this.onChangeInput('lastName')}
                     value={lastName}
                     required={true}
-                    disabled={isSameUser}
+                    // disabled={isSameUser}
                   />
                 </div>
               </div>

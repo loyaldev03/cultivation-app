@@ -2,6 +2,12 @@
   <%= render "layouts/sidebar" %>
 <% end %>
 
+<% content_for :breadcrumb do %>
+  <div>
+    <%= breadcrumbs "Home" %>
+  </div>
+<% end %>
+
 <% if RoleCheck.call(current_user, Constants::APP_MOD_TEAM_SETTINGS_ROLES).result[:read] == true %>
   <div class="ph4">
     <% if !@home.have_company %>

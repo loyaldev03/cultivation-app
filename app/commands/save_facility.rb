@@ -13,12 +13,16 @@ class SaveFacility
   private
 
   def save_record(form_object)
-    record = Facility.where(id: form_object.id.to_bson_id).first
-    is_new = false
+    if form_object.id.present?
+      record = Facility.find_by(id: form_object.id)
+      is_new = false
+    end
+
     if record.nil?
       record = Facility.new
       is_new = true
     end
+
     map_attributes(record, form_object)
     record.save!
 

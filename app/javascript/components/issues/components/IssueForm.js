@@ -8,7 +8,7 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import setupUppy from '../../utils/setupUppy'
 
-import { TextInput } from '../../utils/FormHelpers'
+import { TextInput, FieldError } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import UserPicker from '../../utils/UserPicker'
 import AttachmentPopup from '../../utils/AttachmentPopup'
@@ -58,6 +58,13 @@ class IssueForm extends React.Component {
         users
       })
     })
+    if(this.props.taskId){
+      loadLocations(this.props.batchId, this.props.taskId).then(result => {
+        this.setState({
+          locations: result
+        })
+      })
+    }
   }
 
   async componentDidUpdate(prevProps) {
@@ -89,7 +96,6 @@ class IssueForm extends React.Component {
     if (issue.task) {
       locations = await loadLocations(this.props.batchId, issue.task.id)
     }
-
     this.setState(
       {
         ...this.resetState(),
@@ -109,7 +115,7 @@ class IssueForm extends React.Component {
       title: '',
       description: '',
       severity: '',
-      task_id: '',
+      task_id: this.props.taskId ? this.props.taskId :  '',
       location_id: '',
       location_type: '',
       assigned_to_id: '',
@@ -294,6 +300,7 @@ class IssueForm extends React.Component {
       assigned_to_id,
       attachments,
       delete_attachments
+      
     } = this.state
 
     const errors = {}
@@ -464,6 +471,7 @@ class IssueForm extends React.Component {
               value={this.state.title}
               onChange={this.onChangeGeneric}
             />
+            <FieldError errors={this.state.errors} field="title" />
           </div>
         </div>
 
@@ -476,6 +484,7 @@ class IssueForm extends React.Component {
               onChange={this.onSeverityChanged}
               value={severityOption}
             />
+            <FieldError errors={this.state.errors} field="severity" />
           </div>
           <div className="w-30 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Status</label>

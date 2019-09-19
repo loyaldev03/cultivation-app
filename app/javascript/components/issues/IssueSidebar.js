@@ -66,7 +66,8 @@ class IssueSidebar extends React.Component {
       current_user_first_name,
       current_user_last_name,
       current_user_photo,
-      canUpdate
+      canUpdate,
+      task_id
     } = this.props
     const { mode } = this.state
 
@@ -93,6 +94,7 @@ class IssueSidebar extends React.Component {
           mode={this.state.mode}
           issueId={this.state.issueId}
           batchId={batch_id}
+          taskId={task_id}
           facilityId={facility_id}
         />
       )

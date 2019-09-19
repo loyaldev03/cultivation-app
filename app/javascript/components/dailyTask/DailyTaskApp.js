@@ -54,6 +54,7 @@ class DailyTaskApp extends React.Component {
     } = SidebarStore
     const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
       IssueSidebar,
+      SidebarStore.taskId,
       this.props
     )
     return (

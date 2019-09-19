@@ -110,7 +110,6 @@ class DailyTaskStore {
     const payload = { actions: action, task_id: taskId }
     try {
       const response = await (await fetch(url, httpPutOptions(payload))).json()
-      console.log(response)
       if (response.data) {
         // this.loadTasks(batchId)
         this.updateTaskWorkStatus(batchId, taskId, action)
@@ -207,7 +206,6 @@ class DailyTaskStore {
   updateTaskWorkStatus(batchId, taskId, status) {
     // For other tasks where batchId is others
     if (batchId === 'others') {
-      console.log(this.otherTasks)
       let task = this.otherTasks.tasks.find(x => x.id === taskId)
       task.work_status = status
     } else {

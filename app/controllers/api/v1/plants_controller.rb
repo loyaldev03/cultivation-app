@@ -158,6 +158,25 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     render json: {lot_numbers: lot_numbers}, status: 200
   end
 
+  def plant_waste
+    facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
+
+    if resource_shared?
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
+    else
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
+    end
+
+    plants = Inventory::Plant.in(facility_strain_id: facility_strain_ids).not_in(destroyed_date: nil)
+    data = Inventory::PlantWasteSerializer.new(
+      plants,
+      params: {
+        locations: QueryLocations.call(facility),
+      },
+    ).serialized_json
+    render json: data
+  end
+
   private
 
   def request_with_errors(errors)

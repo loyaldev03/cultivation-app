@@ -35,7 +35,7 @@ class SaveFacility
     record.site_license = form_object.site_license
     record.timezone = form_object.timezone
     record.is_complete = form_object.is_complete
-    record.is_enabled = form_object.is_enabled
+    record.is_enabled = form_object.is_enabled if form_object.is_enabled.present?
 
     if record.rooms.any?
       record.rooms.each do |room|

@@ -25,16 +25,6 @@ class SeedFacilityDataJob < ApplicationJob
 
   private
 
-  def seed_roles
-    # Find the Super Admin role in the system
-    sa_role = Common::Role.find_by(name: Constants::SUPER_ADMIN, built_in: true)
-
-    # Seed built-in roles
-    if sa_role.nil?
-      Common::Role.create!(name: Constants::SUPER_ADMIN, built_in: true)
-    end
-  end
-
   def seed_facility_users
     SeedUserDefaultFacility.call(@current_user_id, @facility_id)
   end

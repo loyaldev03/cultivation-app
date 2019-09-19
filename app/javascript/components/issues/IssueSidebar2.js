@@ -43,7 +43,7 @@ class IssueSidebar extends React.Component {
       current_user_last_name,
       current_user_photo,
       daily_task,
-      task_id,
+      task_id
     } = this.props
 
     const issueId = currentIssueStore.issue ? currentIssueStore.issue.id : null

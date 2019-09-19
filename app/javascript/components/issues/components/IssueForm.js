@@ -58,7 +58,7 @@ class IssueForm extends React.Component {
         users
       })
     })
-    if(this.props.taskId){
+    if (this.props.taskId) {
       loadLocations(this.props.batchId, this.props.taskId).then(result => {
         this.setState({
           locations: result
@@ -115,7 +115,7 @@ class IssueForm extends React.Component {
       title: '',
       description: '',
       severity: '',
-      task_id: this.props.taskId ? this.props.taskId :  '',
+      task_id: this.props.taskId ? this.props.taskId : '',
       location_id: '',
       location_type: '',
       assigned_to_id: '',
@@ -300,7 +300,6 @@ class IssueForm extends React.Component {
       assigned_to_id,
       attachments,
       delete_attachments
-      
     } = this.state
 
     const errors = {}

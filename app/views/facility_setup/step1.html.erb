@@ -165,24 +165,20 @@
               </div>
             </div>
 
-            <% unless current_default_facility&.id == @wizard_form.id %>
-              <div class="mt3 flex flex-row items-center">
-                <div class="w-100">
-                  <label class="grey subtitle-2 ttc db mb1">
-                    Facility Status
-                  </label>
-                  <p class="gray f6 db mv1">
-                    Active or Diactive.
-                  </p>
-                </div>
-                <% unless current_default_facility&.id == @wizard_form.id %>
-                  <div class="dib pointer w-20-l w-10 flex justify-end">
-                    <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>
-                    <label class="toggle-button" for="facility_is_enabled"></label>
-                  </div>
-                <% end %>
+            <div class="mt3 flex flex-row items-center">
+              <div class="w-100">
+                <label class="grey subtitle-2 ttc db mb1">
+                  Facility Status
+                </label>
+                <p class="gray f6 db mv1">
+                  Active or Diactive.
+                </p>
               </div>
-            <% end %>
+              <div class="dib pointer w-20-l w-10 flex justify-end">
+                <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>
+                <label class="toggle-button" for="facility_is_enabled"></label>
+              </div>
+            </div>
 
             <div class="mt4">
               <span class="grey subtitle-2 ttc db">

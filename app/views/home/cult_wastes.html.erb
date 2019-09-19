@@ -11,7 +11,7 @@
         currentTime: Time.current,
       }
     %>
-  <%-else%>
+  <%else%>
     <%= react_component 'cultivation/dashboards/WastesDashboardApp',
       {
         defaultFacilityId: current_default_facility&.id.to_s,

@@ -290,6 +290,7 @@ Rails.application.routes.draw do
           get 'destroyed_plants'
           get 'harvests'
           get 'harvests/:id', action: 'show_harvest'
+          get 'plant_waste'
           post 'setup_mother'
           post 'setup_plants'
           post 'setup_harvest_batch'

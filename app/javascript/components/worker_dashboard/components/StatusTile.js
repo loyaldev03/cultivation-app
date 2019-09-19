@@ -3,23 +3,61 @@ import DashboardCalendarApp from '../dashboardCalendar/DashboardCalendarApp'
 import { WorkerDashboardGraph, longDate } from '../../utils'
 import workerDashboardStore from '../stores/WorkerDashboardStore'
 import { formatIssueNo } from '../../issues/components/FormatHelper'
+import IssueList from '../../../components/dailyTask/components/IssueList'
+import SidebarStore from '../../../components/dailyTask/stores/SidebarStore'
+import Tippy from '@tippy.js/react'
+
+const MenuButton = ({ icon, text, onClick, className = '' }) => {
+  return (
+    <a
+      className={`pa2 flex link dim pointer items-center ${className}`}
+      onClick={onClick}
+    >
+      <i className="material-icons md-17 pr2">{icon}</i>
+      <span className="pr2">{text}</span>
+    </a>
+  )
+}
+
 export default class StatusTile extends React.Component {
   state = {
     task: [],
-    issue: []
+    issue: [],
+    selectedStatus: 'open'
   }
   componentDidMount = async () => {
     let date = new Date()
     let task = await workerDashboardStore.getTaskByDate(
       `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     )
-    let issue = await workerDashboardStore.getTask()
+    let issue = await workerDashboardStore.getIssue('open')
     this.setState({ task, issue })
   }
+
+  onChangeStatus = async range => {
+    let issuelist = []
+    issuelist = await workerDashboardStore.getIssue(range)
+    this.setState({ selectedStatus: range, issue: issuelist })
+  }
+
+  onShowIssue = issue => {
+    let issueId = issue.id
+    let mode = 'details'
+    let dailyTask = true // What
+    SidebarStore.openIssues(
+      issueId,
+      mode,
+      dailyTask,
+      issue.task_id,
+      issue.batch_id
+    )
+    event.preventDefault()
+  }
+
   render() {
     const { date } = this.props
     let { task, issue } = this.state
-    issue = issue.map(x => x.tasks.map(i => i.attributes.issues))
+    // issue = issue.map(x => x.tasks.map(i => i.attributes.issues))
     return (
       <div className="flex mt4">
         <div className="w-60">
@@ -40,82 +78,60 @@ export default class StatusTile extends React.Component {
           <div className="ba b--light-gray pa3 bg-white mt3">
             <div className="flex justify-between">
               <div>
-                <h1 className="f5 fw6 ">Issues</h1>
+                <h1 className="f5 fw6 dark-grey mb3">Issues</h1>
               </div>
-              <div className="flex">
-                <h1 className="f5 fw6">Opened</h1>
-                <i className="material-icons grey mr2 dim md-21 pointer mt2">
-                  keyboard_arrow_down
-                </i>
-              </div>
+              <Tippy
+                placement="bottom-end"
+                trigger="click"
+                duration="0"
+                content={
+                  <div className="bg-white f6 flex">
+                    <div className="db shadow-4">
+                      <MenuButton
+                        text="Open"
+                        className=""
+                        onClick={() => this.onChangeStatus('open')}
+                      />
+                      <MenuButton
+                        text="Resolved"
+                        className=""
+                        onClick={() => this.onChangeStatus('resolved')}
+                      />
+                    </div>
+                  </div>
+                }
+              >
+                <div className="flex ba b--light-silver br2 pointer dim">
+                  <h1 className="f6 fw6 ml2 grey ttc">
+                    {this.state.selectedStatus}
+                  </h1>
+                  <i className="material-icons grey mr2  md-21 mt2">
+                    keyboard_arrow_down
+                  </i>
+                </div>
+              </Tippy>
             </div>
 
-            <ul className="list pl0 pb0">
-              {issue &&
-                issue.slice(0, 2).map(x =>
-                  x.slice(0, 2).map(i =>
-                    i.slice(0, 2).map(k => (
-                      <li className="pt2 pb3 pointer" key={k}>
-                        <div className="flex items-center justify-start">
-                          <div className="f6 fw6 silver">
-                            ISSUE {formatIssueNo(k.issue_no)}
-                          </div>
-                          <div className="f5 fw6 ph1">•</div>
-                          <div
-                            className={`f6 fw6 ${
-                              k.status === 'open' ? 'green' : 'gray'
-                            } pr2 ttu`}
-                          >
-                            {k.status}
-                          </div>
-                          {k.severity === 'high' && (
-                            <div className="tc ttc">
-                              <i
-                                className="material-icons red"
-                                style={{ fontSize: '18px' }}
-                              >
-                                error
-                              </i>
-                            </div>
-                          )}
-                          {k.severity === 'medium' && (
-                            <div className="tc ttc">
-                              <i
-                                className="material-icons gold"
-                                style={{ fontSize: '18px' }}
-                              >
-                                warning
-                              </i>
-                            </div>
-                          )}
-                          {k.severity === 'low' && (
-                            <div class="tc ttc purple f7">FYI</div>
-                          )}
-                        </div>
-                        <div className="flex pt1 justify-start">
-                          <div
-                            className="fw4 gray"
-                            style={{ fontSize: '10px' }}
-                          >
-                            {longDate(new Date(k.created_at))}
-                          </div>
-                        </div>
-                      </li>
-                    ))
-                  )
-                )}
-            </ul>
-            {issue && issue.length > 0 ? (
-              <div className="flex justify-center mv3">
-                <a className="fw6 orange dim pointer" href="/daily_tasks">
-                  Show More
-                </a>
-              </div>
-            ) : (
-              <div className="flex justify-center mv5">
-                <span className="fw6 gray dim">No isssue for today</span>
-              </div>
-            )}
+            <div className="overflow-y-scroll" style={{ height: 330 + 'px' }}>
+              <IssueList
+                show={true}
+                issues={issue}
+                onShow={this.onShowIssue}
+                onDelete={this.onToggleAddIssue}
+              />
+
+              {issue && issue.length > 0 ? (
+                <div className="flex justify-center mv3">
+                  <a className="fw6 orange dim pointer" href="/daily_tasks">
+                    Show More
+                  </a>
+                </div>
+              ) : (
+                <div className="flex justify-center mv5">
+                  <span className="fw6 gray dim">No isssues found</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

@@ -1,5 +1,7 @@
 import { observable, action, computed, toJS } from 'mobx'
-import { httpGetOptions, formatDate, formatTime } from '../../utils'
+import { httpGetOptions, formatDate, formatTime, toast } from '../../utils'
+import loadBatchIssues from '../actions/loadBatchIssues'
+import currentIssueStore from './CurrentIssueStore'
 import isEmpty from 'lodash.isempty'
 
 const uniq = require('lodash.uniq')
@@ -37,6 +39,49 @@ class IssueStore {
         })
         this.load(issues)
         this.isLoading = false
+      } else {
+        this.issues = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  async loadAllIssuesByManager(facility_id) {
+    this.isLoading = true
+    const url = `/api/v1/issues/by_manager?facility_id=${facility_id}`
+    console.log(url)
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        const issues = response.data.map(res => {
+          let temp = res
+          temp.attributes = parseIssue(res.attributes)
+          return temp
+        })
+        this.load(issues)
+        this.isLoading = false
+      } else {
+        this.issues = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async deleteIssue(issueId, batch_id) {
+    this.isLoading = true
+    const url = `/api/v1/issues/delete_issue?id=${issueId}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        this.isLoading = false
+        toast('Issue Deleted', 'success')
+        currentIssueStore.setIssue(response.data)
+        loadBatchIssues(batch_id)
       } else {
         this.issues = []
       }

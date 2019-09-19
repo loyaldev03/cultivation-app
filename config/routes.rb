@@ -475,6 +475,7 @@ Rails.application.routes.draw do
         post ':id/update_nutrients', to: 'daily_tasks#update_nutrients'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         get '/tasks', to: 'daily_tasks#tasks'
+        get '/issues', to: 'daily_tasks#issues'
         get '/other_tasks', to: 'daily_tasks#other_tasks'
         get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
         get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
@@ -496,8 +497,10 @@ Rails.application.routes.draw do
         collection do
           get 'all'
           get 'by_batch/:batch_id', action: 'by_batch'
+          get 'by_manager'
           get 'unresolved_count/:batch_id', action: 'unresolved_count'
           post 'archive'
+          get 'delete_issue'
         end
 
         member do

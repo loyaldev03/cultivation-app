@@ -1,4 +1,6 @@
 import React from 'react'
+import Tippy from '@tippy.js/react'
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import Avatar from '../../utils/Avatar'
@@ -12,6 +14,17 @@ import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCo
 import { SlidePanel } from '../../utils'
 import getIssue from '../../issues/actions/getIssue'
 import currentIssueStore from '../../issues/store/CurrentIssueStore'
+
+const MenuButton = ({ icon, text, onClick, className = '' }) => {
+  return (
+    <a
+      className={`pa2 flex link dim pointer center ${className}`}
+      onClick={onClick}
+    >
+      <i className="material-icons orange md-24 pr2">{icon}</i>
+    </a>
+  )
+}
 
 @observer
 class BatchIssues extends React.Component {
@@ -196,6 +209,28 @@ class BatchIssues extends React.Component {
     )
   }
 
+  deleteIssue = e => {
+    if (confirm('Are you sure?')) {
+      issueStore.deleteIssue(e, this.props.batch.id)
+    }
+  }
+
+  actionIssue = data => {
+    const { id } = data.row
+    const canDelete = this.props.batchPermission.delete
+    return (
+      <div className="flex flex-auto justify-between items-center h-100 hide-child">
+        {canDelete ? (
+          <MenuButton
+            icon="delete"
+            text="Delete Issue"
+            onClick={e => this.deleteIssue(id)}
+          />
+        ) : null}
+      </div>
+    )
+  }
+
   columns = [
     {
       Header: 'ID',
@@ -239,6 +274,12 @@ class BatchIssues extends React.Component {
       headerStyle: { textAlign: 'left' },
       width: 100,
       Cell: record => this.renderHumanize(record.original.attributes.status)
+    },
+    {
+      Header: 'Action',
+      headerStyle: { textAlign: 'center' },
+      width: 90,
+      Cell: this.actionIssue
     }
   ]
 

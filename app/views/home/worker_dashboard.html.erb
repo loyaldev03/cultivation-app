@@ -43,7 +43,11 @@
 
   <%= react_component 'worker_dashboard/WorkerDashboardApp',
   {
-    date: Time.current.beginning_of_day
+    date: Time.current.beginning_of_day,
+    facility_id: current_default_facility.id.to_s,
+    current_user_first_name: current_user.first_name,
+    current_user_last_name: current_user.last_name,
+    current_user_photo: current_user.photo&.url
   } %>
 
 </div>

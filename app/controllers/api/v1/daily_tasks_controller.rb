@@ -34,6 +34,28 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: @tasks_by_batch&.compact
   end
 
+  def issues
+    json_array = []
+    range = params[:range].present? ? params[:range] : 'open'
+    issues = Issues::Issue.or({reported_by_id: current_user.id}, {assigned_to_id: current_user.id}).where(status: params[:range]).includes(:cultivation_batch, :reported_by, :assigned_to)
+    issues.each do |issue|
+      json_array << {
+        id: issue.id.to_s,
+        issue_no: issue.issue_no,
+        severity: issue.severity,
+        # reported_by: issue.reported_by_id == current_user.id ? 'Me' : issue&.reported_by&.email,
+        # assigned_to: issue.assigned_to_id == current_user.id ? 'Me' :  issue&.assigned_to&.email,
+        batch: issue&.cultivation_batch&.batch_no,
+        batch_id: issue&.cultivation_batch_id&.to_s,
+        task_id: issue.task_id.to_s,
+        created_at: issue.c_at,
+        status: issue.status,
+        title: issue.title,
+      }
+    end
+    render json: json_array
+  end
+
   def other_tasks
     @tasks_date = Time.current.beginning_of_day
     tasks = get_other_tasks(current_user.id, @tasks_date)

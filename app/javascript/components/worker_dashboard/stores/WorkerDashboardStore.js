@@ -21,10 +21,10 @@ class WorkerDashboardStore {
     }
   }
   @action
-  getTask = async () => {
+  getIssue = async range => {
     this.isLoading = true
     try {
-      let url = `api/v1/daily_tasks/tasks`
+      let url = `api/v1/daily_tasks/issues?range=${range}`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
         return response

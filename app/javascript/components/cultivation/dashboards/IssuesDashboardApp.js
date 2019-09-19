@@ -121,7 +121,7 @@ class IssuesDashboard extends React.Component {
     ]
   }
   componentDidMount() {
-    IssueStore.loadAllIssues()
+    IssueStore.loadAllIssuesByManager(this.props.currentFacilityId)
   }
 
   onToggleColumns = (header, value) => {

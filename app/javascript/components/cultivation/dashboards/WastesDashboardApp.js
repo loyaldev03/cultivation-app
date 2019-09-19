@@ -9,6 +9,7 @@ import {
 } from '../../utils'
 import classNames from 'classnames'
 import uniq from 'lodash.uniq'
+import PlantWasteStore from './PlantWasteStore'
 
 const dummyData = [
   {
@@ -167,8 +168,8 @@ class WastesDashboardApp extends React.Component {
           <HeaderFilter
             title="Waste Type"
             accessor="waste_type"
-            getOptions={orderStore.getUniqPropValues}
-            onUpdate={orderStore.updateFilterOptions}
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
         accessor: 'waste_type',
@@ -180,8 +181,8 @@ class WastesDashboardApp extends React.Component {
           <HeaderFilter
             title="Batch ID"
             accessor="cultivation_batch"
-            getOptions={orderStore.getUniqPropValues}
-            onUpdate={orderStore.updateFilterOptions}
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
         accessor: 'cultivation_batch',
@@ -194,8 +195,8 @@ class WastesDashboardApp extends React.Component {
           <HeaderFilter
             title="Harvest ID"
             accessor="harvest_id"
-            getOptions={orderStore.getUniqPropValues}
-            onUpdate={orderStore.updateFilterOptions}
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
         accessor: 'harvest_id',
@@ -207,8 +208,8 @@ class WastesDashboardApp extends React.Component {
           <HeaderFilter
             title="Plant ID"
             accessor="plant_id"
-            getOptions={orderStore.getUniqPropValues}
-            onUpdate={orderStore.updateFilterOptions}
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
         accessor: 'plant_id',
@@ -220,8 +221,8 @@ class WastesDashboardApp extends React.Component {
           <HeaderFilter
             title="Strain"
             accessor="strain_name"
-            getOptions={orderStore.getUniqPropValues}
-            onUpdate={orderStore.updateFilterOptions}
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
         accessor: 'strain_name',
@@ -230,7 +231,7 @@ class WastesDashboardApp extends React.Component {
       {
         headerClassName: '',
         Header: 'Grow Phase',
-        accessor: 'current_grow_phase',
+        accessor: 'current_growth_stage',
         className: ' pr3 justify-center'
       },
       {
@@ -290,9 +291,13 @@ class WastesDashboardApp extends React.Component {
       }
     ]
   }
-  componentDidMount() {
-    // BatchStore.loadBatches()
+
+  constructor(props) {
+    super(props)
+    PlantWasteStore.loadPlants(this.props.currentFacilityId)
   }
+
+  componentDidMount() {}
 
   onToggleColumns = (header, value) => {
     const column = this.state.columns.find(x => x.Header === header)
@@ -307,7 +312,6 @@ class WastesDashboardApp extends React.Component {
   }
 
   render() {
-    // const { defaultFacilityId } = this.props
     const { columns } = this.state
     return (
       <div className="pa4">
@@ -317,14 +321,18 @@ class WastesDashboardApp extends React.Component {
             type="text"
             className="input w5"
             placeholder="Search"
-            // onChange={e => {
-            //   BatchStore.filter = e.target.value
-            // }}
+            onChange={e => {
+              PlantWasteStore.filter = e.target.value
+            }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
-          <ListingTable data={dummyData} columns={columns} />
+          <ListingTable
+            data={PlantWasteStore.filteredList}
+            columns={columns}
+            isLoading={PlantWasteStore.isLoading}
+          />
         </div>
       </div>
     )

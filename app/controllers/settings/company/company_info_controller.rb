@@ -28,6 +28,7 @@ class Settings::Company::CompanyInfoController < ApplicationController
         info.work_schedules.build(day: a)
       end
       info.save!
+      SeedCompanyData.perform_async(current_user.id)
       info
     end
     info

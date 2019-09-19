@@ -119,7 +119,7 @@ export default class StatusTile extends React.Component {
                 onShow={this.onShowIssue}
                 onDelete={this.onToggleAddIssue}
               />
-            
+
               {issue && issue.length > 0 ? (
                 <div className="flex justify-center mv3">
                   <a className="fw6 orange dim pointer" href="/daily_tasks">

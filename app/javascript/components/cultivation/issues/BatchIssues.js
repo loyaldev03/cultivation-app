@@ -217,16 +217,16 @@ class BatchIssues extends React.Component {
 
   actionIssue = data => {
     const { id } = data.row
-    const canDelete= this.props.batchPermission.delete
+    const canDelete = this.props.batchPermission.delete
     return (
       <div className="flex flex-auto justify-between items-center h-100 hide-child">
         {canDelete ? (
-        <MenuButton
-          icon="delete"
-          text="Delete Issue"
-          onClick={e => this.deleteIssue(id)}
-        />
-      ) : null}
+          <MenuButton
+            icon="delete"
+            text="Delete Issue"
+            onClick={e => this.deleteIssue(id)}
+          />
+        ) : null}
       </div>
     )
   }
@@ -280,7 +280,7 @@ class BatchIssues extends React.Component {
       headerStyle: { textAlign: 'center' },
       width: 90,
       Cell: this.actionIssue
-    },
+    }
   ]
 
   render() {

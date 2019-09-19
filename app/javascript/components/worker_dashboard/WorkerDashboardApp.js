@@ -21,9 +21,7 @@ class WorkerDashboardApp extends React.Component {
   }
 
   renderSlidePanel() {
-    const {
-      showIssues,
-    } = SidebarStore
+    const { showIssues } = SidebarStore
     const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
       IssueSidebar,
       this.props

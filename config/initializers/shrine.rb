@@ -19,9 +19,9 @@ s3_public_options = {
 
 if Rails.env.development? || Rails.env.test?
   s3_general_options = s3_public_options = {
-    access_key_id: 'AKIAJ45K32YD37C47NJA',
-    secret_access_key: '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',
-    bucket: 'cannected-dev',
+    access_key_id: Rails.application.credentials.aws[:access_key_id],
+    secret_access_key: Rails.application.credentials.aws[:secret_access_key],
+    bucket: 'dev.cannected.com',
     region: 'ap-southeast-1',
   }
 end

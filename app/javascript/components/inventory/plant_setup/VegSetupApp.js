@@ -24,7 +24,7 @@ class VegSetupApp extends React.Component {
         },
         {
           Header: 'Plant ID',
-          accessor: 'plant_id',
+          accessor: 'plant_tag',
           headerStyle: { textAlign: 'left' },
           Cell: x => (
             <a

@@ -13,9 +13,7 @@ import {
   formatDate,
   selectStyles
 } from '../../../utils'
-import {
-  FieldError
-} from '../../../utils/FormHelpers'
+import { FieldError } from '../../../utils/FormHelpers'
 @observer
 class ReportDestroyedPlants extends React.Component {
   state = {
@@ -33,11 +31,11 @@ class ReportDestroyedPlants extends React.Component {
       await destroyedPlantsStore.load(batch_id)
     }
   }
-  
-  handleKeyDown = function (e, cb) {
+
+  handleKeyDown = function(e, cb) {
     if (e.key === 'Enter' && e.shiftKey === false) {
-      e.preventDefault();
-      cb();
+      e.preventDefault()
+      cb()
     }
   }
 
@@ -51,7 +49,6 @@ class ReportDestroyedPlants extends React.Component {
     }
     const res = await destroyedPlantsStore.addDestroyedPlant(plant_tag, reason)
     if (res && this.props.onClose) {
-      
       this.inputPlantId.value = ''
       if (this.inputReason) {
         this.inputReason.value = ''
@@ -62,16 +59,14 @@ class ReportDestroyedPlants extends React.Component {
         plantFlower: false,
         plantFoundMessage: 'No plant found'
       })
-      if (!res.errors){
+      if (!res.errors) {
         toast('Destroyed plant recorded', 'success')
         this.props.onClose()
-        this.setState({errors: {}, plantFoundMessage: '', showAll: false})
-      }
-      else{
-        this.setState({errors: res.errors, plantFoundMessage: ''})
+        this.setState({ errors: {}, plantFoundMessage: '', showAll: false })
+      } else {
+        this.setState({ errors: res.errors, plantFoundMessage: '' })
         return
       }
-     
     }
   }
   onShowAll = async () => {
@@ -80,7 +75,7 @@ class ReportDestroyedPlants extends React.Component {
   }
 
   onChange = async () => {
-    this.setState({errors: {}})
+    this.setState({ errors: {} })
     const plant_tag = this.inputPlantId.value
     if (plant_tag.length < 8) {
       return
@@ -100,7 +95,7 @@ class ReportDestroyedPlants extends React.Component {
       }
     } else {
       this.setState({ plantExist: false })
-      this.setState({ plantFlower: false, plantFoundMessage: "No plant found" })
+      this.setState({ plantFlower: false, plantFoundMessage: 'No plant found' })
     }
   }
 
@@ -119,93 +114,101 @@ class ReportDestroyedPlants extends React.Component {
     }
     return (
       <React.Fragment>
-
-      <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title={title} />
-        <form onSubmit={this.onSave} onKeyDown={(e) => { this.handleKeyDown(e, this.onSave) }} className="h-100">
-        <div className="flex flex-column flex-auto justify-between h-100">
-          <div className="pv3 ph4 flex flex-column h-100">
-            <div className="">
-              <label className="db pb1">Plant ID:</label>
-              <InputBarcode
-                className="w-100"
-                name={'plant_tag'}
-                ref={input => (this.inputPlantId = input)}
-                onChange={this.onChange}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="plant_tag"
-              />
-            </div>
-            <div className="">
-              {plantExist && !plantFlower && (
-                <React.Fragment>
-                  <label className="db pb1">Reason:</label>
-                  <textarea
-                    ref={input => (this.inputReason = input)}
-                    className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+        <div className="flex flex-column h-100">
+          <SlidePanelHeader onClose={onClose} title={title} />
+          <form
+            onSubmit={this.onSave}
+            onKeyDown={e => {
+              this.handleKeyDown(e, this.onSave)
+            }}
+            className="h-100"
+          >
+            <div className="flex flex-column flex-auto justify-between h-100">
+              <div className="pv3 ph4 flex flex-column h-100">
+                <div className="">
+                  <label className="db pb1">Plant ID:</label>
+                  <InputBarcode
+                    className="w-100"
+                    name={'plant_tag'}
+                    ref={input => (this.inputPlantId = input)}
+                    onChange={this.onChange}
                   />
-                </React.Fragment>
-              )}
-              {plantExist && plantFlower && (
-                <React.Fragment>
-                  <label className="db pb1">Reason:</label>
-                  <Select
-                    styles={selectStyles}
-                    options={wasteReasons}
-                    onChange={f => this.setState({ wasteReason: f.value })}
-                  />
-                </React.Fragment>
-              )}
-              {!plantExist && (
-                <React.Fragment>
-                  <div className="f7 lh-copy red i">{plantFoundMessage}</div>
-                </React.Fragment>
-              )}
-            </div>
-            <div className="mt3 f6">
-              {showAll && (
-                <React.Fragment>
-                  <div className="mv2 pb1 flex bb b--black-40">
-                    <span className="flex-auto">Plant ID</span>
-                    <span className="w4">Destroyed Date</span>
-                    <span className="w1" />
-                  </div>
-                  {isEmpty(destroyedPlantsStore.plants) ? (
-                    <div className="i">Nothing yet...</div>
-                  ) : (
-                    destroyedPlantsStore.plants.map(p => (
-                      <div key={p.plant_id} className="flex items-center pv1">
-                        <span className="flex-auto">{p.plant_tag}</span>
-                        <span className="w4">{formatDate(p.destroyed_date)}</span>
-                        <i
-                          className="w1 material-icons icon--medium"
-                          title={p.destroyed_reason}
-                        >
-                          info
-                        </i>
-                      </div>
-                    ))
+                  <FieldError errors={this.state.errors} field="plant_tag" />
+                </div>
+                <div className="">
+                  {plantExist && !plantFlower && (
+                    <React.Fragment>
+                      <label className="db pb1">Reason:</label>
+                      <textarea
+                        ref={input => (this.inputReason = input)}
+                        className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+                      />
+                    </React.Fragment>
                   )}
-                </React.Fragment>
-              )}
-              {!showAll && (
-                <a href="#0" className="link" onClick={this.onShowAll}>
-                  View all destroyed plants
-                </a>
-              )}
+                  {plantExist && plantFlower && (
+                    <React.Fragment>
+                      <label className="db pb1">Reason:</label>
+                      <Select
+                        styles={selectStyles}
+                        options={wasteReasons}
+                        onChange={f => this.setState({ wasteReason: f.value })}
+                      />
+                    </React.Fragment>
+                  )}
+                  {!plantExist && (
+                    <React.Fragment>
+                      <div className="f7 lh-copy red i">
+                        {plantFoundMessage}
+                      </div>
+                    </React.Fragment>
+                  )}
+                </div>
+                <div className="mt3 f6">
+                  {showAll && (
+                    <React.Fragment>
+                      <div className="mv2 pb1 flex bb b--black-40">
+                        <span className="flex-auto">Plant ID</span>
+                        <span className="w4">Destroyed Date</span>
+                        <span className="w1" />
+                      </div>
+                      {isEmpty(destroyedPlantsStore.plants) ? (
+                        <div className="i">Nothing yet...</div>
+                      ) : (
+                        destroyedPlantsStore.plants.map(p => (
+                          <div
+                            key={p.plant_id}
+                            className="flex items-center pv1"
+                          >
+                            <span className="flex-auto">{p.plant_tag}</span>
+                            <span className="w4">
+                              {formatDate(p.destroyed_date)}
+                            </span>
+                            <i
+                              className="w1 material-icons icon--medium"
+                              title={p.destroyed_reason}
+                            >
+                              info
+                            </i>
+                          </div>
+                        ))
+                      )}
+                    </React.Fragment>
+                  )}
+                  {!showAll && (
+                    <a href="#0" className="link" onClick={this.onShowAll}>
+                      View all destroyed plants
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-
-        </div>
-        </form>
-        <SlidePanelFooter
+          </form>
+          <SlidePanelFooter
             onSave={this.onSave}
             onCancel={onClose}
             label={destroyedPlantsStore.isSaving ? 'Saving...' : 'Save'}
           />
-      </div>
+        </div>
       </React.Fragment>
     )
   }
@@ -246,12 +249,12 @@ class DestroyedPlantsStore {
         p.plant_tag === plant_tag ? payload : p
       )
     } else {
-      if (!res.errors){ 
+      if (!res.errors) {
         this.plants = [...this.plants, payload]
       }
-      
+
     }
-    
+
     this.isSaving = false
 
     return res

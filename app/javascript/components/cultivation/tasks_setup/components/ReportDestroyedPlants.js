@@ -77,7 +77,12 @@ class ReportDestroyedPlants extends React.Component {
   onChange = async () => {
     this.setState({ errors: {} })
     const plant_tag = this.inputPlantId.value
-    if (plant_tag.length < 8) {
+    if (plant_tag.length < 8 && plant_tag.length > 0) {
+      this.setState({plantFoundMessage: 'Invalid tag length. Minimum of 8 characters'})
+      return
+    
+    }else if (plant_tag.length == 0){
+      this.setState({plantFoundMessage: ''})
       return
     }
 

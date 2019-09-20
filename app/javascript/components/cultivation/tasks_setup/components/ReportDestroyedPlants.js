@@ -10,9 +10,12 @@ import {
   httpGetOptions,
   httpPostOptions,
   toast,
+  formatDate,
   selectStyles
 } from '../../../utils'
-
+import {
+  FieldError
+} from '../../../utils/FormHelpers'
 @observer
 class ReportDestroyedPlants extends React.Component {
   state = {
@@ -20,7 +23,9 @@ class ReportDestroyedPlants extends React.Component {
     plantExist: false,
     plantFlower: false,
     wasteReasons: [],
-    wasteReason: ''
+    wasteReason: '',
+    errors: [],
+    plantFoundMessage: ''
   }
   async componentDidUpdate(prevProps) {
     const { batch_id } = this.props
@@ -28,6 +33,14 @@ class ReportDestroyedPlants extends React.Component {
       await destroyedPlantsStore.load(batch_id)
     }
   }
+  
+  handleKeyDown = function (e, cb) {
+    if (e.key === 'Enter' && e.shiftKey === false) {
+      e.preventDefault();
+      cb();
+    }
+  }
+
   onSave = async () => {
     const plant_tag = this.inputPlantId.value
     let reason = ''
@@ -38,7 +51,7 @@ class ReportDestroyedPlants extends React.Component {
     }
     const res = await destroyedPlantsStore.addDestroyedPlant(plant_tag, reason)
     if (res && this.props.onClose) {
-      // toast('Destroyed plant recorded', 'success')
+      
       this.inputPlantId.value = ''
       if (this.inputReason) {
         this.inputReason.value = ''
@@ -46,9 +59,19 @@ class ReportDestroyedPlants extends React.Component {
       this.setState({
         wasteReason: '',
         plantExist: false,
-        plantFlower: false
+        plantFlower: false,
+        plantFoundMessage: 'No plant found'
       })
-      this.props.onClose()
+      if (!res.errors){
+        toast('Destroyed plant recorded', 'success')
+        this.props.onClose()
+        this.setState({errors: {}, plantFoundMessage: '', showAll: false})
+      }
+      else{
+        this.setState({errors: res.errors, plantFoundMessage: ''})
+        return
+      }
+     
     }
   }
   onShowAll = async () => {
@@ -57,10 +80,12 @@ class ReportDestroyedPlants extends React.Component {
   }
 
   onChange = async () => {
+    this.setState({errors: {}})
     const plant_tag = this.inputPlantId.value
     if (plant_tag.length < 8) {
       return
     }
+
     const res = await fetchPlant.load(plant_tag)
     if (res && res.data && res.data.id) {
       this.setState({ plantExist: true })
@@ -75,7 +100,7 @@ class ReportDestroyedPlants extends React.Component {
       }
     } else {
       this.setState({ plantExist: false })
-      this.setState({ plantFlower: false })
+      this.setState({ plantFlower: false, plantFoundMessage: "No plant found" })
     }
   }
 
@@ -86,22 +111,31 @@ class ReportDestroyedPlants extends React.Component {
       plantExist,
       plantFlower,
       wasteReasons,
-      wasteReason
+      wasteReason,
+      plantFoundMessage
     } = this.state
     if (!show) {
       return null
     }
     return (
+      <React.Fragment>
+
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title={title} />
-        <div className="flex flex-column flex-auto justify-between">
-          <div className="pv3 ph4 flex flex-column">
+        <form onSubmit={this.onSave} onKeyDown={(e) => { this.handleKeyDown(e, this.onSave) }} className="h-100">
+        <div className="flex flex-column flex-auto justify-between h-100">
+          <div className="pv3 ph4 flex flex-column h-100">
             <div className="">
               <label className="db pb1">Plant ID:</label>
               <InputBarcode
                 className="w-100"
+                name={'plant_tag'}
                 ref={input => (this.inputPlantId = input)}
                 onChange={this.onChange}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="plant_tag"
               />
             </div>
             <div className="">
@@ -126,7 +160,7 @@ class ReportDestroyedPlants extends React.Component {
               )}
               {!plantExist && (
                 <React.Fragment>
-                  <div className="i">No plant found</div>
+                  <div className="f7 lh-copy red i">{plantFoundMessage}</div>
                 </React.Fragment>
               )}
             </div>
@@ -142,12 +176,12 @@ class ReportDestroyedPlants extends React.Component {
                     <div className="i">Nothing yet...</div>
                   ) : (
                     destroyedPlantsStore.plants.map(p => (
-                      <div key={p.plant_tag} className="flex items-center pv1">
+                      <div key={p.plant_id} className="flex items-center pv1">
                         <span className="flex-auto">{p.plant_tag}</span>
-                        <span className="w4">{p.destroyed_on}</span>
+                        <span className="w4">{formatDate(p.destroyed_date)}</span>
                         <i
                           className="w1 material-icons icon--medium"
-                          title={p.reason}
+                          title={p.destroyed_reason}
                         >
                           info
                         </i>
@@ -163,13 +197,16 @@ class ReportDestroyedPlants extends React.Component {
               )}
             </div>
           </div>
-          <SlidePanelFooter
+
+        </div>
+        </form>
+        <SlidePanelFooter
             onSave={this.onSave}
             onCancel={onClose}
             label={destroyedPlantsStore.isSaving ? 'Saving...' : 'Save'}
           />
-        </div>
       </div>
+      </React.Fragment>
     )
   }
 }
@@ -198,25 +235,31 @@ class DestroyedPlantsStore {
     const payload = {
       plant_tag,
       destroyed_reason: reason,
-      destroyed_on: new Date().toString()
+      destroyed_date: new Date().toString()
     }
     // Optimistic update
+    const url = '/api/v1/plants/save_destroyed_plant'
+    const res = await (await fetch(url, httpPostOptions(payload))).json()
     const found = this.plants.find(p => p.plant_tag === plant_tag)
     if (found) {
       this.plants = this.plants.map(p =>
         p.plant_tag === plant_tag ? payload : p
       )
     } else {
-      this.plants = [...this.plants, payload]
+      if (!res.errors){ 
+        this.plants = [...this.plants, payload]
+      }
+      
     }
-    const url = '/api/v1/plants/save_destroyed_plant'
-    const res = await (await fetch(url, httpPostOptions(payload))).json()
+    
     this.isSaving = false
-    if (res) {
-      return true
-    } else {
-      return false
-    }
+
+    return res
+    // if (res) {
+    //   return true
+    // } else {
+    //   return false
+    // }
   }
 }
 

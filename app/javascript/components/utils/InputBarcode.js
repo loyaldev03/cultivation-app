@@ -17,7 +17,8 @@ const InputBarcode = forwardRef(
       readOnly = false,
       autoFocus = false,
       className = 'w5',
-      multiple = false
+      multiple = false,
+      name = ''
     },
     ref
   ) => {
@@ -25,6 +26,7 @@ const InputBarcode = forwardRef(
     const onShowScanner = () => {
       setHidden(!hidden)
     }
+    
     return (
       <React.Fragment>
         <div className="flex items-center">
@@ -43,6 +45,7 @@ const InputBarcode = forwardRef(
             <React.Fragment>
               <input
                 ref={ref}
+                name={name}
                 readOnly={readOnly}
                 type="text"
                 value={value}

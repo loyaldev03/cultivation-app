@@ -20,7 +20,7 @@ class DestroyedPlantDashboardApp extends React.Component {
       {
         headerClassName: 'pl3 tl',
         Header: 'Plant ID',
-        accessor: 'plant_id',
+        accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 150
       },
@@ -78,12 +78,12 @@ class DestroyedPlantDashboardApp extends React.Component {
         Header: (
           <HeaderFilter
             title="Location"
-            accessor="destroy_location"
+            accessor="location_type"
             getOptions={plantStore.getUniqPropValues}
             onUpdate={plantStore.updateFilterOptions}
           />
         ),
-        accessor: 'destroy_location',
+        accessor: 'location_type',
         className: ' pr3 justify-center',
         width: 110
       },

@@ -48,7 +48,7 @@ class DestroyedPlantApp extends React.Component {
             Destroy Plants
           </a>
         </div>
-
+        <div id="toast" className="toast" />
         <SlidePanel
           show={showDestroyedPlants}
           renderBody={props => (

@@ -17,7 +17,7 @@ class Mobile::Worker::WorkLogsController < ApplicationController
     cmd = Common::RemoveOnesignalNotification.call(current_user, {one_signal_id: work_log.one_signal_id}) if work_log.one_signal_id
     current_user.update(work_log_status: 'stopped')
     sign_out(@user)
-    redirect_to mobile_worker_logins_path
+    redirect_to mobile_path
   end
 
   def pause # take a break every two hours

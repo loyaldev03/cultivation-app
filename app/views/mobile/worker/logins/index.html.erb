@@ -3,21 +3,21 @@
   <h1 class="f3 fw5">Welcome !</h1>
   <label class="f7 grey">Select job type</label>
   <div class='mt1 flex overflow-auto'>
-    <%= link_to 'All available', request.params.merge(role: 'all'), class: 'f7 link dim ba ph2 pv2 mb2 dib orange br2 mt1'%>
+    <%= link_to 'All available', mobile_path(role: 'all'), class: params[:role] == 'all' ? 'f7 link dim ba ph2 pv2 mb2 dib orange br2 mt1' : 'f7 link dim ba ph2 pv2 mb2 dib br2 ml2 ba b--light-gray grey mt1'%>
     <% @roles.each do |role| %>
-      <%= link_to role.truncate(20), request.params.except(:filter, :selected, :requested).merge(role: role), class: 'f7 link dim ba ph2 pv2 mb2 dib br2 ml2 ba b--light-gray grey mt1', style: 'box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.05);'%>
+      <%= link_to role.truncate(20), mobile_path(role: role), class: params[:role] == role ? 'f7 link dim ba ph2 pv2 mb2 dib orange br2 mt1' : 'f7 link dim ba ph2 pv2 mb2 dib br2 ml2 ba b--light-gray grey mt1', style: 'box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.05);'%>
     <% end %>
   </div>
   <div class="flex mt2">
     <input id="name" class="input-reset ba b--black-20 pa2 db w-100 br4 tc center f6 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
   </div>
   <div class="mt2 f6 tc flex justify-center bb bt b--light-gray " style="height: 3.0rem">
-    <%= link_to request.params.merge(filter: 'alpha'), class: "pa3 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}" do %>
+    <%= link_to mobile_path(filter: 'alpha', role: params[:role]), class: "pa3 mr2 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}", style: 'box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.05);' do %>
       <div>
         Alphabetically
       </div>
     <% end %>
-    <%= link_to request.params.merge(filter: 'last_login'), class: "pa3 pointer no-underline #{params[:filter] == 'last_login' ? 'orange bb b--orange' : 'black'}" do %>
+    <%= link_to mobile_path(filter: 'last_login', role: params[:role]), class: "pa3 pointer no-underline #{params[:filter] == 'last_login' ? 'orange bb b--orange' : 'black'}", style: 'box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.05);' do %>
       <div>
         Last logged in
       </div>

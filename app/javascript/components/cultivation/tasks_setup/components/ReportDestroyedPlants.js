@@ -252,7 +252,6 @@ class DestroyedPlantsStore {
       if (!res.errors) {
         this.plants = [...this.plants, payload]
       }
-
     }
 
     this.isSaving = false

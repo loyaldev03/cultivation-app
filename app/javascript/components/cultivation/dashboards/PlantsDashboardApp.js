@@ -34,7 +34,7 @@ class PlantsDashboardApp extends React.Component {
       { accessor: 'cultivation_batch_id', show: false },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Plant ID',
+        Header: 'Plant',
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 184,

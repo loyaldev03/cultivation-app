@@ -24,7 +24,7 @@ class FlowerSetupApp extends React.Component {
         },
         { Header: 'Plant ID', accessor: 'plant_id', show: false },
         {
-          Header: 'Plant ID',
+          Header: 'Plant',
           accessor: 'plant_tag',
           headerStyle: { textAlign: 'left' },
           Cell: x => (

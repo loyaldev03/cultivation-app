@@ -15,14 +15,18 @@ module Charts
         facility_strains = Inventory::FacilityStrain.where(facility_id: @facility_id).includes(:plants)
       end
 
-      result = {
-        children: facility_strains.group_by(&:strain_name).map do |strain, strain_value|
+      result = []
+
+      result = facility_strains.group_by(&:strain_name).map do |strain, strain_value|
+        if strain_value.map { |x| x.plants.count }.sum != 0
           {
             name: strain,
             value: strain_value.map { |x| x.plants.count }.sum,
           }
-        end,
-      }
+        end
+      end
+
+      return {children: result.compact}
     end
 
     def resource_shared?

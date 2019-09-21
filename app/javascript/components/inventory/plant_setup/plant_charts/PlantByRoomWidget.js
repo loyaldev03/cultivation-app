@@ -47,10 +47,10 @@ class PlantByRoomWidget extends React.Component {
       const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })
-      const kx = w / 2,
-        ky = h / 1
+      // const kx = w / 2,
+      //   ky = h / 1
 
-      console.log('KX' + kx + 'KY' + ky)
+      //console.log('KX' + kx + 'KY' + ky)
 
       const treeMap = d3
         .treemap()
@@ -58,6 +58,9 @@ class PlantByRoomWidget extends React.Component {
         .paddingInner(1)
 
       treeMap(root)
+
+      const minHeight = 20,
+        minWidth = 180
 
       const cell = svg
         .selectAll('g')
@@ -98,13 +101,22 @@ class PlantByRoomWidget extends React.Component {
         .attr('height', d => d.y1 - d.y0)
         .attr('fill', 'white')
         .attr('dx', d => d.data.name.length)
-        .attr('opacity', d =>
-          Math.max(0, d.x1 - d.x0 - 1) > 75
-            ? d.x1 - d.x0 - d.data.name.length > 71
-              ? 1
-              : 0
-            : 0
-        )
+        .attr('opacity', function(d){
+          if ( d.x1 - d.x0 <= minWidth || d.y1 - d.y0 <= minHeight ) {
+            if(d.data.name.length < 10){
+              return 1
+            }
+            return 0
+            
+          }else{
+            if(d.data.name.length > 20){
+              return 0
+            }
+            return 1
+
+          }
+          
+        })
         .selectAll('tspan')
         .data(d => d.data.name.split('/\n/g'))
         .enter()

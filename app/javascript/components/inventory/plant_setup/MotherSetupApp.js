@@ -24,7 +24,7 @@ class PlantSetupApp extends React.Component {
     super(props)
     this.state = {
       columns: [
-        {Header: 'Plant ID', accessor: 'plant_id', show: false},
+        { Header: 'Plant ID', accessor: 'plant_id', show: false },
         {
           Header: 'Plant',
           accessor: 'plant_tag',

@@ -22,7 +22,7 @@ class FlowerSetupApp extends React.Component {
           accessor: 'id',
           show: false
         },
-        {Header: 'Plant ID', accessor: 'plant_id', show: false},
+        { Header: 'Plant ID', accessor: 'plant_id', show: false },
         {
           Header: 'Plant ID',
           accessor: 'plant_tag',

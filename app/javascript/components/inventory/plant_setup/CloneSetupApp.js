@@ -42,7 +42,7 @@ class CloneSetupApp extends React.Component {
                 className="link grey"
                 onClick={event => openSidebar(event, x.row.id)}
               >
-                {x.value || x.row.plant_id} 
+                {x.value || x.row.plant_id}
               </a>
             )
           }

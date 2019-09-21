@@ -101,21 +101,18 @@ class PlantByRoomWidget extends React.Component {
         .attr('height', d => d.y1 - d.y0)
         .attr('fill', 'white')
         .attr('dx', d => d.data.name.length)
-        .attr('opacity', function(d){
-          if ( d.x1 - d.x0 <= minWidth || d.y1 - d.y0 <= minHeight ) {
-            if(d.data.name.length < 10){
+        .attr('opacity', function(d) {
+          if (d.x1 - d.x0 <= minWidth || d.y1 - d.y0 <= minHeight) {
+            if (d.data.name.length < 10) {
               return 1
             }
             return 0
-            
-          }else{
-            if(d.data.name.length > 20){
+          } else {
+            if (d.data.name.length > 20) {
               return 0
             }
             return 1
-
           }
-          
         })
         .selectAll('tspan')
         .data(d => d.data.name.split('/\n/g'))

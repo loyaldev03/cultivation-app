@@ -44,7 +44,7 @@ class PlantsDashboardApp extends React.Component {
             href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
             title={props.row.plant_id}
           >
-            {props.value ? props.value : props.row.plant_id}
+            {props.value || props.row.plant_id}
           </a>
         )
       },

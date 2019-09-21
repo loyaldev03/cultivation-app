@@ -43,8 +43,8 @@ class PlantStore {
         if (this.isFiltered(b)) {
           return false
         }
-        const field1 = b.plant_id.toLowerCase()
-        const field2 = b.strain_name.toLowerCase()
+        const field1 = `${b.plant_tag}`.toLowerCase()
+        const field2 = `${b.plant_id}`.toLowerCase()
         const filter = this.filter.toLowerCase()
         return field1.includes(filter) || field2.includes(filter)
       })

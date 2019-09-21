@@ -242,7 +242,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             <input
               type="text"
               className="input w5"
-              placeholder="Search Plants"
+              placeholder="Search Batch"
               onChange={e => {
                 store.filter = e.target.value
               }}

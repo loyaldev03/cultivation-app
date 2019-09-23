@@ -198,19 +198,19 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
-        
+
         {!is_parent && (
-        <div className="ph4 mb3 flex flex-column">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc mb2">Instruction</label>
-            <textarea
-              type="text"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              value={instruction}
-              onChange={this.handleChangeText('instruction')}
-            />
+          <div className="ph4 mb3 flex flex-column">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc mb2">Instruction</label>
+              <textarea
+                type="text"
+                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+                value={instruction}
+                onChange={this.handleChangeText('instruction')}
+              />
+            </div>
           </div>
-        </div>
         )}
 
         {!is_parent ? (

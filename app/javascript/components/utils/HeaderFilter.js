@@ -78,7 +78,6 @@ function HeaderFilter({
                 className="z-999 mt1 bg-white shadow-3 ba br2 b--light-grey tc"
                 data-placement={placement}
               >
-                {console.log(title)}
                 <ul className="list pa1 ma0" style={{ minWidth: 150 }}>
                   {options.map((x, i) => {
                     let label

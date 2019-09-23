@@ -4,7 +4,7 @@ import isEmpty from 'lodash.isempty'
 import classNames from 'classnames'
 import { Manager, Reference, Popper } from 'react-popper'
 
-function HeaderFilter({ title, accessor, getOptions, onUpdate }) {
+function HeaderFilter({ title, toLeft = false, accessor, getOptions, onUpdate }) {
   const node = useRef()
   const [expand, setExpand] = useState(false)
   const [options, setOptions] = useState([])
@@ -68,10 +68,11 @@ function HeaderFilter({ title, accessor, getOptions, onUpdate }) {
             {({ ref, style, placement, arrowProps }) => (
               <div
                 ref={ref}
-                style={style}
+                style={{...style, left: (toLeft ? '-140px' : '0px') }}
                 className="z-999 mt1 bg-white shadow-3 ba br2 b--light-grey tc"
                 data-placement={placement}
               >
+                {console.log(title)}
                 <ul className="list pa1 ma0" style={{ minWidth: 150 }}>
                   {options.map((x, i) => {
                     let label

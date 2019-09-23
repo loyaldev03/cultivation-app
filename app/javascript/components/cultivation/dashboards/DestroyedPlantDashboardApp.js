@@ -17,12 +17,15 @@ import plantStore from '../../inventory/plant_setup/store/PlantStore'
 class DestroyedPlantDashboardApp extends React.Component {
   state = {
     columns: [
+      {accessor: 'plant_id', show: false},
       {
         headerClassName: 'pl3 tl',
         Header: 'Plant ID',
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
-        minWidth: 150
+        minWidth: 150,
+        Cell: props => 
+          (<span>{props.value || props.row.plant_id }</span>)
       },
       {
         headerClassName: 'tl',
@@ -136,6 +139,7 @@ class DestroyedPlantDashboardApp extends React.Component {
         Header: (
           <HeaderFilter
             title="Assigned To"
+            toLeft={true}
             accessor="worker_name"
             getOptions={plantStore.getUniqPropValues}
             onUpdate={plantStore.updateFilterOptions}
@@ -144,7 +148,7 @@ class DestroyedPlantDashboardApp extends React.Component {
         accessor: 'worker_name',
         className: ' pr3 justify-center',
         width: 110
-      }
+      },
     ]
   }
   componentDidMount() {
@@ -168,7 +172,7 @@ class DestroyedPlantDashboardApp extends React.Component {
     const { columns } = this.state
     return (
       <div className="pa4">
-        <div className="flex flex-row-reverse" />
+        <div className="flex flex-column justify-between pa4">
         <div className="flex justify-between">
           <input
             type="text"
@@ -187,6 +191,9 @@ class DestroyedPlantDashboardApp extends React.Component {
             isLoading={plantStore.isLoading}
           />
         </div>
+
+        </div>
+       
       </div>
     )
   }

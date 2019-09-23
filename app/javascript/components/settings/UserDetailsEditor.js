@@ -733,7 +733,8 @@ class UserDetailsEditor extends React.PureComponent {
                 />
                 <label className="toggle-button mt1 fr" htmlFor="is_active" />
                 <p className="gray f6 db mv1">
-                  User will be deactivated from accessing the system if selected.
+                  User will be deactivated from accessing the system if
+                  selected.
                 </p>
               </div>
             </div>

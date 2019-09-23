@@ -722,7 +722,7 @@ class UserDetailsEditor extends React.PureComponent {
                     gray: !isActive
                   })}
                 >
-                  {isActive ? 'Active' : 'Deactivated'}
+                  {isActive ? 'Active' : 'Deactivate'}
                 </label>
                 <input
                   id="is_active"
@@ -733,7 +733,7 @@ class UserDetailsEditor extends React.PureComponent {
                 />
                 <label className="toggle-button mt1 fr" htmlFor="is_active" />
                 <p className="gray f6 db mv1">
-                  Only active user are allowed to access the system.
+                  User will be deactivated from accessing the system if selected.
                 </p>
               </div>
             </div>

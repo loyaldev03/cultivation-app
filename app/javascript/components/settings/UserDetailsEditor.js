@@ -145,7 +145,7 @@ class UserDetailsEditor extends React.PureComponent {
         photoData: props.user.photo_data,
         phone_number: props.user.phone_number,
         photoUrl: props.user.photo_url,
-        isActive: props.user.is_active || false,
+        isActive: props.user.id ? props.user.is_active : true,
         isExempt: props.user.exempt || false,
         hourly_rate: props.user.hourly_rate,
         overtime_hourly_rate: props.user.overtime_hourly_rate,
@@ -172,7 +172,7 @@ class UserDetailsEditor extends React.PureComponent {
         phone_number: '',
         photoData: '',
         photoUrl: '',
-        isActive: false,
+        isActive: true,
         isExempt: false,
         hourly_rate: '',
         overtime_hourly_rate: '',
@@ -352,7 +352,9 @@ class UserDetailsEditor extends React.PureComponent {
       isExempt
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
-    const newFacilities = isEmpty(facilities) ? [] : facilities.map(x => x.value)
+    const newFacilities = isEmpty(facilities)
+      ? []
+      : facilities.map(x => x.value)
     const defaultFacilityId = default_facility ? default_facility.value : null
     const photo_data = photoData ? photoData : null
     const newUserMode = user_mode ? user_mode.value : null
@@ -720,7 +722,7 @@ class UserDetailsEditor extends React.PureComponent {
                     gray: !isActive
                   })}
                 >
-                  {isActive ? 'Active' : 'Deactivated'}
+                  {isActive ? 'Active' : 'Deactivate'}
                 </label>
                 <input
                   id="is_active"
@@ -731,7 +733,8 @@ class UserDetailsEditor extends React.PureComponent {
                 />
                 <label className="toggle-button mt1 fr" htmlFor="is_active" />
                 <p className="gray f6 db mv1">
-                  Only active user are allowed to access the system.
+                  User will be deactivated from accessing the system if
+                  selected.
                 </p>
               </div>
             </div>

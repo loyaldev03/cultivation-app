@@ -22,7 +22,7 @@ class S3Check
 
       Aws.config.update({
         region: region,
-        credentials: Aws::Credentials.new(akid, secret)
+        credentials: Aws::Credentials.new(akid, secret),
       })
 
       s3 = Aws::S3::Client.new
@@ -31,7 +31,7 @@ class S3Check
       body = SecureRandom.alphanumeric
 
       s3.put_object(bucket: bucket, key: key, body: body)
-      s3.delete_objects(bucket: bucket, delete: { objects: [{key: key}] })
+      s3.delete_objects(bucket: bucket, delete: {objects: [{key: key}]})
 
       return true
     rescue => err

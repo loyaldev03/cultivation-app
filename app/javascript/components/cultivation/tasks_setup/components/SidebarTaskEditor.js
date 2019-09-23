@@ -17,7 +17,8 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     phase: '',
     estimated_hours: 0.0,
     indelible: '',
-    is_parent: false
+    is_parent: false,
+    instruction: ''
   }
 }
 
@@ -36,6 +37,7 @@ class SidebarTaskEditor extends React.Component {
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
         is_parent: task.is_parent,
+        instruction: task.instruction || '',
         location_id: task.location_id || ''
       })
     } else {
@@ -51,7 +53,8 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
-      location_id
+      location_id,
+      instruction
     } = this.state
     return {
       id,
@@ -60,6 +63,7 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
+      instruction,
       location_id: location_id
     }
   }
@@ -116,6 +120,7 @@ class SidebarTaskEditor extends React.Component {
       actual_hours,
       is_parent,
       location_id,
+      instruction,
       errors
     } = this.state
     return (
@@ -193,6 +198,21 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
+        
+        {!is_parent && (
+        <div className="ph4 mb3 flex flex-column">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc mb2">Instruction</label>
+            <textarea
+              type="text"
+              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+              value={instruction}
+              onChange={this.handleChangeText('instruction')}
+            />
+          </div>
+        </div>
+        )}
+
         {!is_parent ? (
           <div className="ph4 mb3 flex flex-column">
             <div className="w-40">

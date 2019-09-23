@@ -17,7 +17,8 @@ class TaskSerializer
     :indelible,
     :location_type,
     :work_status,
-    :water_ph
+    :water_ph,
+    :instruction
 
   attributes :id do |object|
     object.id.to_s

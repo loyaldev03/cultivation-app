@@ -67,7 +67,7 @@ class PackagePlanForm extends React.Component {
           quantity_type,
           id: product_type,
           package_plans: [],
-          sub_categories: sub_categories,
+          sub_categories: sub_categories
         }
       ],
       productType: '',

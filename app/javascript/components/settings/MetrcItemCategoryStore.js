@@ -106,8 +106,7 @@ class MetrcItemCategoryStore {
     } else {
       res = this.categories
     }
-    res = res.map(c => 
-      ({
+    res = res.map(c => ({
       value: c.name,
       label: c.name,
       sub_categories: c.sub_categories

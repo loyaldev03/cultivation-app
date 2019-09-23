@@ -166,6 +166,7 @@ class TeamSetttingApp extends React.Component {
         store.updateRole({ id: response.data.id, ...response.data.attributes })
         if (roleDetails.role.id) {
           toast('Role updated', 'success')
+          this.closeSidebar()
         } else {
           toast('Role created', 'success')
           this.closeSidebar()

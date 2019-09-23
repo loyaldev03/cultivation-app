@@ -27,10 +27,8 @@ class S3Check
 
       s3 = Aws::S3::Client.new
 
-      resp = s3.list_buckets
-
-      key = Faker::Code.asin
-      body = Faker::Lorem.paragraph
+      key = SecureRandom.alphanumeric
+      body = SecureRandom.alphanumeric
 
       s3.put_object(bucket: bucket, key: key, body: body)
       s3.delete_objects(bucket: bucket, delete: { objects: [{key: key}] })

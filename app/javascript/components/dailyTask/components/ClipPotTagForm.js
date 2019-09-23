@@ -237,7 +237,6 @@ const MotherPlantRow = forwardRef(
               <div className="pb4 pt2">
                 <label className="db pb1">Scan mother plant: </label>
                 <InputBarcode
-                  scanditLicense={scanditLicense}
                   autoFocus={true}
                   ref={input => (motherInput = input)}
                   onKeyPress={onScanMother}
@@ -248,7 +247,6 @@ const MotherPlantRow = forwardRef(
                 <label className="db pb1">Scan each clipping: </label>
                 <div className="">
                   <InputBarcode
-                    scanditLicense={scanditLicense}
                     ref={input => (clippingInput = input)}
                     onKeyPress={onScanClipping}
                     error={errors['clippingInput']}

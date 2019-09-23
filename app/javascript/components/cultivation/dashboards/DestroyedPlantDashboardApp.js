@@ -17,15 +17,14 @@ import plantStore from '../../inventory/plant_setup/store/PlantStore'
 class DestroyedPlantDashboardApp extends React.Component {
   state = {
     columns: [
-      {accessor: 'plant_id', show: false},
+      { accessor: 'plant_id', show: false },
       {
         headerClassName: 'pl3 tl',
         Header: 'Plant ID',
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 150,
-        Cell: props => 
-          (<span>{props.value || props.row.plant_id }</span>)
+        Cell: props => <span>{props.value || props.row.plant_id}</span>
       },
       {
         headerClassName: 'tl',
@@ -148,7 +147,7 @@ class DestroyedPlantDashboardApp extends React.Component {
         accessor: 'worker_name',
         className: ' pr3 justify-center',
         width: 110
-      },
+      }
     ]
   }
   componentDidMount() {
@@ -173,27 +172,25 @@ class DestroyedPlantDashboardApp extends React.Component {
     return (
       <div className="pa4">
         <div className="flex flex-column justify-between pa4">
-        <div className="flex justify-between">
-          <input
-            type="text"
-            className="input w5"
-            placeholder="Search Plant"
-            onChange={e => {
-              plantStore.filter = e.target.value
-            }}
-          />
-          <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          <div className="flex justify-between">
+            <input
+              type="text"
+              className="input w5"
+              placeholder="Search Plant"
+              onChange={e => {
+                plantStore.filter = e.target.value
+              }}
+            />
+            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          </div>
+          <div className="pv3">
+            <ListingTable
+              data={plantStore.filteredList}
+              columns={columns}
+              isLoading={plantStore.isLoading}
+            />
+          </div>
         </div>
-        <div className="pv3">
-          <ListingTable
-            data={plantStore.filteredList}
-            columns={columns}
-            isLoading={plantStore.isLoading}
-          />
-        </div>
-
-        </div>
-       
       </div>
     )
   }

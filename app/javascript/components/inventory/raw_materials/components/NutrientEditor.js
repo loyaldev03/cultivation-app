@@ -577,7 +577,6 @@ class NutrientEditor extends React.Component {
               value={this.state.upc}
               onChange={this.handleChangeUpc}
               onKeyPress={this.handleKeyPress}
-              scanditLicense={this.props.scanditLicense}
               onBarcodeScan={this.onBarcodeScan}
             />
           </div>

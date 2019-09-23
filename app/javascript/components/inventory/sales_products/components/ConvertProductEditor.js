@@ -600,7 +600,6 @@ class ConvertProductEditor extends React.Component {
                 value={this.state.package_tags}
                 ref={this.packageIdTextArea}
                 onChange={this.onChangePackageTags}
-                scanditLicense={this.props.scanditLicense}
                 onBarcodeScan={this.onBarcodeScan}
                 className={
                   'db w-100 pa2 f6 black ba b--black-20 br2 mt1 mb0 outline-0 lh-copy'

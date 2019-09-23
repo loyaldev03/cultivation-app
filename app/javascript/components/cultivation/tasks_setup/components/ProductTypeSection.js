@@ -49,7 +49,7 @@ class ProductTypeSection extends React.Component {
 
     this.props.onAddPackage(
       this.props.productTypeData.product_type,
-      this.state.packageType.value,
+      this.state.packageType.label,
       this.state.quantity,
       converted_qty,
       this.props.harvestBatchUom
@@ -101,13 +101,13 @@ class ProductTypeSection extends React.Component {
 
     const quantityType = this.props.productTypeData.quantity_type
     const unitOptions = this.getOptionsByQuantityType(quantityType)
-
+    const packageTypeOptions = this.props.packageTypeOptions
     return (
       <div className="ph4 mt2 flex items-center">
         <div className="w-100 pa2 bg-black-05 flex items-center">
           <div className="w-40 pr2">
             <Select
-              options={unitOptions}
+              options={packageTypeOptions}
               styles={reactSelectStyle}
               value={this.state.packageType}
               onChange={this.onChangePackageType}

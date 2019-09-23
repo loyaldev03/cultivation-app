@@ -28,7 +28,7 @@ class PackagePlanForm extends React.Component {
       const data = await loadPackagePlans(this.props.batchId)
       const hbResponse = await loadHarvestBatch(this.props.batchId)
       let harvestBatch = { harvest_name: '', uom: 'lb', total_cure_weight: 0 }
-      if (hbResponse.status === 200) {
+      if (hbResponse.status === 200 && hbResponse.data.data) {
         const {
           harvest_name,
           uom,
@@ -56,10 +56,9 @@ class PackagePlanForm extends React.Component {
   }
 
   onAddProductType = event => {
-    // e.g. product_type = Kief
     const product_type = this.state.productType.value
     const quantity_type = this.state.quantityType
-
+    const sub_categories = this.state.productType.sub_categories
     this.setState({
       data: [
         ...this.state.data,
@@ -67,7 +66,8 @@ class PackagePlanForm extends React.Component {
           product_type,
           quantity_type,
           id: product_type,
-          package_plans: []
+          package_plans: [],
+          sub_categories: sub_categories,
         }
       ],
       productType: '',
@@ -145,6 +145,7 @@ class PackagePlanForm extends React.Component {
             onEditPackage={this.onEditPackage}
             onRemovePackage={this.onRemovePackage}
             onRemoveProductType={this.onRemoveProductType}
+            packageTypeOptions={productTypeData.sub_categories}
           />
         ))}
       </div>

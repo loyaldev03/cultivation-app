@@ -352,7 +352,9 @@ class UserDetailsEditor extends React.PureComponent {
       isExempt
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
-    const newFacilities = isEmpty(facilities) ? [] : facilities.map(x => x.value)
+    const newFacilities = isEmpty(facilities)
+      ? []
+      : facilities.map(x => x.value)
     const defaultFacilityId = default_facility ? default_facility.value : null
     const photo_data = photoData ? photoData : null
     const newUserMode = user_mode ? user_mode.value : null

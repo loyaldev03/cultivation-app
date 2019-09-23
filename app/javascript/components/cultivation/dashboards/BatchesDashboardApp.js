@@ -310,7 +310,7 @@ class BatchesDashboardApp extends React.Component {
                 className="mt4 mb5 ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
                 dataclassName="f3"
-                headerClassName="mt4"
+                headerClassName=""
               />
             </div>
           </div>

@@ -28,7 +28,11 @@ class CloneSetupApp extends React.Component {
           show: false
         },
         {
-          Header: 'Plant ID',
+          accessor: 'plant_id',
+          show: false
+        },
+        {
+          Header: 'Plant',
           accessor: 'plant_tag',
           headerStyle: { textAlign: 'left' },
           Cell: x => {
@@ -38,7 +42,7 @@ class CloneSetupApp extends React.Component {
                 className="link grey"
                 onClick={event => openSidebar(event, x.row.id)}
               >
-                {x.value}
+                {x.value || x.row.plant_id}
               </a>
             )
           }
@@ -57,9 +61,18 @@ class CloneSetupApp extends React.Component {
           Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
-          Header: 'Strain',
+          headerClassName: 'tl',
+          Header: (
+            <HeaderFilter
+              title="Strain"
+              accessor="strain_name"
+              getOptions={PlantStore.getUniqPropValues}
+              onUpdate={PlantStore.updateFilterOptions}
+            />
+          ),
           accessor: 'strain_name',
-          headerStyle: { textAlign: 'left' }
+          minWidth: 130,
+          Cell: props => <span className="truncate">{props.value}</span>
         },
         // {
         //   Header: 'Growth stage',

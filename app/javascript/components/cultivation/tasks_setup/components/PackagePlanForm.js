@@ -1,5 +1,4 @@
 import React from 'react'
-import Select from 'react-select'
 import {
   SlidePanelHeader,
   SlidePanelFooter,
@@ -12,7 +11,6 @@ import ProductTypeSection, {
 } from './ProductTypeSection'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 import ItemCategorySelector from './ItemCategorySelector'
-// import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
 class PackagePlanForm extends React.Component {
   state = {
@@ -56,24 +54,26 @@ class PackagePlanForm extends React.Component {
   }
 
   onAddProductType = event => {
-    const product_type = this.state.productType.value
-    const quantity_type = this.state.quantityType
-    const sub_categories = this.state.productType.sub_categories
-    this.setState({
-      data: [
-        ...this.state.data,
-        {
-          product_type,
-          quantity_type,
-          id: product_type,
-          package_plans: [],
-          sub_categories: sub_categories
-        }
-      ],
-      productType: '',
-      quantityType: '',
-      showAddProductType: false
-    })
+    if (this.state.productType){
+      const product_type = this.state.productType.value
+      const quantity_type = this.state.quantityType
+      const sub_categories = this.state.productType.sub_categories
+      this.setState({
+        data: [
+          ...this.state.data,
+          {
+            product_type,
+            quantity_type,
+            id: product_type,
+            package_plans: [],
+            sub_categories: sub_categories
+          }
+        ],
+        productType: '',
+        quantityType: '',
+        showAddProductType: false
+      })
+    }
   }
 
   onAddPackage = (productType, packageType, quantity, converted_qty) => {

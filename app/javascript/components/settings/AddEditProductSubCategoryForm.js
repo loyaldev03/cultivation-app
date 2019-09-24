@@ -246,23 +246,62 @@ class AddEditProductSubCategoryForm extends React.Component {
                       return (
                         <div
                           key={x.value}
-                          className="ph2 pt2 pb1 flex items-center"
+                          className="pa2 flex items-center"
                         >
-                          <input
-                            type="text"
-                            className="input w4"
-                            name={x.value}
-                            value={x.label}
-                            onChange={e => {
-                              this.setState({
-                                packageUnits: this.state.packageUnits.map(y =>
-                                  y.value === e.target.name
-                                    ? { ...y, label: e.target.value }
-                                    : y
-                                )
-                              })
-                            }}
-                          />
+                          <div className="w-20 mr3">
+                            <label className="f6 fw6 db mb1 gray ttc">Label</label>
+                            <input
+                              type="text"
+                              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                              name={x.value}
+                              value={x.label}
+                              onChange={e => {
+                                this.setState({
+                                  packageUnits: this.state.packageUnits.map(y =>
+                                    y.value === e.target.name
+                                      ? { ...y, label: e.target.value }
+                                      : y
+                                  )
+                                })
+                              }}
+                            />
+                          </div>
+                          <div className="w-20 mr3">
+                            <label className="f6 fw6 db mb1 gray ttc">Uom</label>
+                            <Select
+                              styles={reactSelectStyle}
+                              options={[{ label: 'Ounce', value: 'ounce' }, { label: 'Gram', value: 'gram' }]}
+                              value={x.uom}
+                              onChange={e => {
+                                this.setState({
+                                  packageUnits: this.state.packageUnits.map(y =>
+                                    y.value === x.value
+                                      ? { ...y, uom: e }
+                                      : y
+                                  )
+                                })
+                              }}
+
+                            />
+                          </div>
+                          <div className="w-20 mr2">
+                            <label className="f6 fw6 db mb1 gray ttc">Quantity</label>
+                            <input
+                              type="text"
+                              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                              name={x.value}
+                              value={x.quantity}
+                              onChange={e => {
+                                this.setState({
+                                  packageUnits: this.state.packageUnits.map(y =>
+                                    y.value === e.target.name
+                                      ? { ...y, quantity: e.target.value }
+                                      : y
+                                  )
+                                })
+                              }}
+                            />
+                          </div>
                           <i
                             className="material-icons icon--btn red"
                             onClick={this.onDelete(x.value)}

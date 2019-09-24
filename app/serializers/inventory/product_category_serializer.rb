@@ -10,7 +10,7 @@ module Inventory
 
     attribute :sub_categories do |object|
       object.sub_categories.map do |sub|
-        package_units = sub.package_units.map { |u| {value: u.value, label: u.label} }
+        package_units = sub.package_units.map { |u| {value: u.value, label: u.label, uom: {label: u.uom&.capitalize, value: u.uom}, quantity: u.quantity_in_uom} }
         {
           id: sub.id.to_s,
           name: sub.name,

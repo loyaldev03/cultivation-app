@@ -3,6 +3,13 @@ class ProductTypePlanSerializer
 
   attributes :product_type, :quantity_type
 
+  attribute :sub_categories do |object, params|
+    if params[:product_categories]
+      record = params[:product_categories].find { |a| a['name'] == object.product_type }
+      record['package_units']
+    end
+  end
+
   attributes :id do |object|
     object.id.to_s
   end

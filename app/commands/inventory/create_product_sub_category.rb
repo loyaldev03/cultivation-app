@@ -22,7 +22,12 @@ module Inventory
 
       if !@package_units.blank?
         @package_units.each do |x|
-          sub_category.package_units.build(value: x[:value], label: x[:label])
+          sub_category.package_units.build(
+            value: x[:value],
+            label: x[:label],
+            uom: x[:uom].present? ? x[:uom][:value] : '',
+            quantity_in_uom: x[:quantity].present? ? x[:quantity] : '',
+          )
         end
       end
 

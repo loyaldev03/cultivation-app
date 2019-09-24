@@ -1,6 +1,6 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
-import { action, observable, computed } from 'mobx'
+import { action, observable, computed, toJS } from 'mobx'
 import { toast } from '../utils/toast'
 import { httpPostOptions, httpGetOptions } from '../utils'
 
@@ -111,7 +111,7 @@ class MetrcItemCategoryStore {
       label: c.name,
       sub_categories: c.sub_categories
     }))
-    return res
+    return res.filter(e => !this.excludes.includes(e.value))
   }
 
   /* - column filters */

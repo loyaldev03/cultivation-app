@@ -13,13 +13,22 @@ HealthCheck.setup do |config|
   config.standard_checks = ['database', 'redis', 'aws-s3']
 
   # You can set what tests are run with the 'full' or 'all' parameter
-  config.full_checks = ['database', 'email', 'cache', 'redis', 'sidekiq-redis', 'aws-s3']
+  config.full_checks = ['database', 'email', 'cache', 'redis', 'sidekiq-redis', 'aws-s3', 'nexmo']
 
   config.add_custom_check('aws-s3') do
     if S3Check.check
       ""
     else
       "Failed S3Check"
+    end
+  end
+
+  config.add_custom_check('nexmo') do
+    res = NexmoCheck.check
+    if res == true
+      ""
+    else
+      res
     end
   end
 

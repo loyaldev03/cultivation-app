@@ -169,6 +169,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :start_date,
                                  :end_date,
                                  :estimated_hours,
+                                 :instruction,
                                  # :estimated_cost,
                                  :depend_on,
                                  :position,

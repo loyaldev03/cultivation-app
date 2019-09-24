@@ -204,7 +204,26 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     # It should cover both work order from creating product from harvest batch.
     # And also cover work order to convert product to another products.
     product_types = Cultivation::ProductTypePlan.where(batch_id: params[:batch_id])
-    render json: ProductTypePlanSerializer.new(product_types).serialized_json, status: 200
+    result = Inventory::ProductCategory.collection.aggregate([
+      {"$unwind": '$sub_categories'},
+      {"$project": {
+        'id': '$_id',
+        'name': '$sub_categories.name',
+        'category_name': '$name',
+        'quantity_type': 1,
+        'is_used': 1,
+        'is_active': 1,
+        'metrc_item_category': 1,
+        'deleted': 1,
+        'package_units': '$sub_categories.package_units',
+      }},
+    ])
+    render json: ProductTypePlanSerializer.new(
+      product_types,
+      params: {
+        product_categories: result.to_a,
+      },
+    ).serialized_json, status: 200
   end
 
   def save_product_plans

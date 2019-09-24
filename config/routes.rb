@@ -363,6 +363,7 @@ Rails.application.routes.draw do
         post 'item_categories/:id/update',
           on: :collection,
           action: :update_item_category
+        get :product_subcategories, on: :collection
       end
 
       resources :strains, only: [:index, :create, :show] do

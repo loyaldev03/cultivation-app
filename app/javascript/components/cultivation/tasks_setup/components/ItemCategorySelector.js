@@ -59,7 +59,7 @@ class ItemCategorySelector extends React.Component {
         <Select
           styles={reactSelectStyle}
           options={CategoryStore.metrcItemCategoryOptions}
-          value={this.state.selectedCategory}
+          value={this.props.value}
           onChange={this.onChange}
         />
       </div>

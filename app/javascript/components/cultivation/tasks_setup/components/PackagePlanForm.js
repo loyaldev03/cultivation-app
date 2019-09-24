@@ -1,5 +1,4 @@
 import React from 'react'
-import Select from 'react-select'
 import {
   SlidePanelHeader,
   SlidePanelFooter,
@@ -12,8 +11,7 @@ import ProductTypeSection, {
 } from './ProductTypeSection'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 import ItemCategorySelector from './ItemCategorySelector'
-// import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
-
+import { toJS } from 'mobx'
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
@@ -28,7 +26,7 @@ class PackagePlanForm extends React.Component {
       const data = await loadPackagePlans(this.props.batchId)
       const hbResponse = await loadHarvestBatch(this.props.batchId)
       let harvestBatch = { harvest_name: '', uom: 'lb', total_cure_weight: 0 }
-      if (hbResponse.status === 200) {
+      if (hbResponse.status === 200 && hbResponse.data.data) {
         const {
           harvest_name,
           uom,
@@ -56,27 +54,37 @@ class PackagePlanForm extends React.Component {
   }
 
   onAddProductType = event => {
-    // e.g. product_type = Kief
-    const product_type = this.state.productType.value
-    const quantity_type = this.state.quantityType
-
-    this.setState({
-      data: [
-        ...this.state.data,
-        {
-          product_type,
-          quantity_type,
-          id: product_type,
-          package_plans: []
-        }
-      ],
-      productType: '',
-      quantityType: '',
-      showAddProductType: false
-    })
+    if (this.state.productType) {
+      const product_type = this.state.productType.value
+      const quantity_type = this.state.quantityType
+      const sub_categories = this.state.productType.sub_categories
+      this.setState({
+        data: [
+          ...this.state.data,
+          {
+            product_type,
+            quantity_type,
+            id: product_type,
+            package_plans: [],
+            sub_categories: sub_categories
+          }
+        ],
+        productType: '',
+        quantityType: '',
+        showAddProductType: false
+      })
+    }
   }
 
-  onAddPackage = (productType, packageType, quantity, converted_qty) => {
+  onAddPackage = (
+    productType,
+    packageType,
+    quantity,
+    converted_qty,
+    harvest_batch_uom,
+    uom,
+    quantity_in_uom
+  ) => {
     const { data } = this.state
     const harvest_uom = this.state.harvestBatch.uom
     const index = data.findIndex(x => x.product_type === productType)
@@ -86,7 +94,9 @@ class PackagePlanForm extends React.Component {
       package_type: packageType,
       quantity: parseFloat(quantity),
       uom: harvest_uom,
-      conversion: converted_qty
+      conversion: converted_qty,
+      uom,
+      quantity_in_uom
     }
 
     data[index].package_plans.push(item)
@@ -145,6 +155,7 @@ class PackagePlanForm extends React.Component {
             onEditPackage={this.onEditPackage}
             onRemovePackage={this.onRemovePackage}
             onRemoveProductType={this.onRemoveProductType}
+            packageTypeOptions={productTypeData.sub_categories}
           />
         ))}
       </div>
@@ -201,8 +212,11 @@ class PackagePlanForm extends React.Component {
             y.package_type,
             y.quantity || 0,
             this.state.harvestBatch.uom,
-            x.quantity_type
+            x.quantity_type,
+            y.uom,
+            y.quantity_in_uom
           )
+
           return innerSum + converted_qty
         }, 0)
       )

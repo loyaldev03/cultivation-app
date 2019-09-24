@@ -4,9 +4,9 @@ class ProductTypePlanSerializer
   attributes :product_type, :quantity_type
 
   attribute :sub_categories do |object, params|
-    if params[:product_categories]
+    if params[:product_categories].present?
       record = params[:product_categories].find { |a| a['name'] == object.product_type }
-      record['package_units']
+      record['package_units'] if record.present?
     end
   end
 
@@ -18,8 +18,12 @@ class ProductTypePlanSerializer
     object.batch_id.to_s
   end
 
-  attribute :package_plans do |object|
+  attribute :package_plans do |object, params|
     object.package_plans.map do |plan|
+      if params[:product_categories].present?
+        record = params[:product_categories].find { |a| a['name'] == object.product_type }
+      end
+
       {
         id: plan.id.to_s,
         package_type: plan.package_type,
@@ -28,6 +32,7 @@ class ProductTypePlanSerializer
         uom: plan.uom,
         total_weight: plan.total_weight,
         conversion: plan.conversion,
+        sub_categories: record.present? ? record['package_units'] : [],
       }
     end
   end

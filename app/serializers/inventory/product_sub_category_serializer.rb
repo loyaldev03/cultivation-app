@@ -9,12 +9,7 @@ module Inventory
     end
 
     attribute :sub_categories do |object|
-      object.package_units.map do |sub|
-        {
-          value: sub['value'],
-          label: sub['label'],
-        }
-      end
+      object.package_units
     end
   end
 end

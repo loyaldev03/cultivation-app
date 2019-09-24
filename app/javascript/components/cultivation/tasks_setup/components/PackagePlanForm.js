@@ -54,7 +54,7 @@ class PackagePlanForm extends React.Component {
   }
 
   onAddProductType = event => {
-    if (this.state.productType){
+    if (this.state.productType) {
       const product_type = this.state.productType.value
       const quantity_type = this.state.quantityType
       const sub_categories = this.state.productType.sub_categories

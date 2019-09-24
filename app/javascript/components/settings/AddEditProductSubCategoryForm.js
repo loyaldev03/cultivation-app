@@ -244,12 +244,11 @@ class AddEditProductSubCategoryForm extends React.Component {
                     .filter(u => u.value.includes(CUSTOM_PKG_PREFIX))
                     .map(x => {
                       return (
-                        <div
-                          key={x.value}
-                          className="pa2 flex items-center"
-                        >
+                        <div key={x.value} className="pa2 flex items-center">
                           <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">Label</label>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Label
+                            </label>
                             <input
                               type="text"
                               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
@@ -267,25 +266,29 @@ class AddEditProductSubCategoryForm extends React.Component {
                             />
                           </div>
                           <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">Uom</label>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Uom
+                            </label>
                             <Select
                               styles={reactSelectStyle}
-                              options={[{ label: 'Ounce', value: 'ounce' }, { label: 'Gram', value: 'gram' }]}
+                              options={[
+                                { label: 'Ounce', value: 'ounce' },
+                                { label: 'Gram', value: 'gram' }
+                              ]}
                               value={x.uom}
                               onChange={e => {
                                 this.setState({
                                   packageUnits: this.state.packageUnits.map(y =>
-                                    y.value === x.value
-                                      ? { ...y, uom: e }
-                                      : y
+                                    y.value === x.value ? { ...y, uom: e } : y
                                   )
                                 })
                               }}
-
                             />
                           </div>
                           <div className="w-20 mr2">
-                            <label className="f6 fw6 db mb1 gray ttc">Quantity</label>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Quantity
+                            </label>
                             <input
                               type="text"
                               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "

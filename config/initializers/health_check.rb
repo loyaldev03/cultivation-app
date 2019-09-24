@@ -10,10 +10,18 @@ HealthCheck.setup do |config|
 
   # You can customize which checks happen on a standard health check,
   # E.g. to set an explicit list use:
-  config.standard_checks = ['database', 'redis']
+  config.standard_checks = ['database', 'redis', 'aws-s3']
 
   # You can set what tests are run with the 'full' or 'all' parameter
-  config.full_checks = ['database', 'email', 'cache', 'redis', 'sidekiq-redis']
+  config.full_checks = ['database', 'email', 'cache', 'redis', 'sidekiq-redis', 'aws-s3']
+
+  config.add_custom_check('aws-s3') do
+    if S3Check.check
+      ""
+    else
+      "Failed S3Check"
+    end
+  end
 
   # max-age of response in seconds
   # cache-control is public when max_age > 1 and basic_auth_username is not set

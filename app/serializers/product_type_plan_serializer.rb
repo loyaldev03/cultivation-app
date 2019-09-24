@@ -23,7 +23,7 @@ class ProductTypePlanSerializer
       if params[:product_categories].present?
         record = params[:product_categories].find { |a| a['name'] == object.product_type }
       end
-      unit = record['package_units'].find { |b| b['label'] == plan.package_type }
+      unit = record['package_units'].find { |b| b['label'] == plan.package_type } if record.present?
       {
         id: plan.id.to_s,
         package_type: plan.package_type,

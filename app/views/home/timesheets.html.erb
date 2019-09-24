@@ -45,11 +45,20 @@
 </div>
 -->
 
+
 <div class="mh4 mt4">
+<%if RoleCheck.call(@current_user, Constants::APP_MOD_ALL_HOURS_WORKED).result[:read] == true || 
+    RoleCheck.call(@current_user, Constants::APP_MOD_HOURS_ASSIGNED_TO_MY_DIRECT_REPORTS).result[:read] == true %>
   <%= react_component 'people_dashboard/TimesheetApp',
     {
       defaultFacilityId: current_default_facility&.id.to_s,
       currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s)
     }
   %>
+<%else%>
+  <div class="w-100 bg-white ph3 pt2 pb4">
+      <%= render partial: 'layouts/no_permission' %>
+  </div>
+<%end%>
+  
 </div>

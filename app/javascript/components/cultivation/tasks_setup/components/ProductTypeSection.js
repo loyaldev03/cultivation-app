@@ -45,7 +45,7 @@ class ProductTypeSection extends React.Component {
       this.props.harvestBatchUom,
       this.props.productTypeData.quantity_type,
       this.state.packageType.uom,
-      this.state.packageType.quantity_in_uom,
+      this.state.packageType.quantity_in_uom
     )
 
     this.props.onAddPackage(
@@ -55,8 +55,8 @@ class ProductTypeSection extends React.Component {
       converted_qty,
       this.props.harvestBatchUom,
       this.state.packageType.uom,
-      this.state.packageType.quantity_in_uom,
-      )
+      this.state.packageType.quantity_in_uom
+    )
 
     this.setState({
       showNewRow: false,
@@ -195,7 +195,7 @@ class ProductTypeSection extends React.Component {
                       harvestBatchUom,
                       productTypeData.quantity_type,
                       x.uom,
-                      x.quantity_in_uom,
+                      x.quantity_in_uom
                     ).toFixed(2)}
                   </td>
                   <td className="tc pv1">
@@ -248,7 +248,7 @@ const convertToHarvestBatchUom = (
   harvestBatchUom,
   quantityType,
   uom,
-  quantity_in_uom,
+  quantity_in_uom
 ) => {
   if (quantity_in_uom) {
     const total_qty = quantity_in_uom * +quantity

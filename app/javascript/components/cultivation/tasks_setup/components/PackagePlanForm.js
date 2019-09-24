@@ -83,8 +83,7 @@ class PackagePlanForm extends React.Component {
     converted_qty,
     harvest_batch_uom,
     uom,
-    quantity_in_uom,
-
+    quantity_in_uom
   ) => {
     const { data } = this.state
     const harvest_uom = this.state.harvestBatch.uom
@@ -97,7 +96,7 @@ class PackagePlanForm extends React.Component {
       uom: harvest_uom,
       conversion: converted_qty,
       uom,
-      quantity_in_uom,
+      quantity_in_uom
     }
 
     data[index].package_plans.push(item)
@@ -215,7 +214,7 @@ class PackagePlanForm extends React.Component {
             this.state.harvestBatch.uom,
             x.quantity_type,
             y.uom,
-            y.quantity_in_uom,
+            y.quantity_in_uom
           )
 
           return innerSum + converted_qty

@@ -1,5 +1,3 @@
-require 'aws-sdk-s3'
-
 class NexmoCheck
   class << self
     def check

@@ -39,14 +39,13 @@ class ProductTypeSection extends React.Component {
     if (!this.props.harvestBatchUom) {
       console.warn('Missing harvest batch / uom', this.props.harvestBatchUom)
     }
-    console.log('add row')
-    console.log(this.state.packageType)
     const converted_qty = convertToHarvestBatchUom(
       this.state.packageType.value,
       this.state.quantity,
       this.props.harvestBatchUom,
       this.props.productTypeData.quantity_type,
-      this.props.packageTypeOptions
+      this.state.packageType.uom,
+      this.state.packageType.quantity_in_uom,
     )
 
     this.props.onAddPackage(
@@ -55,8 +54,9 @@ class ProductTypeSection extends React.Component {
       this.state.quantity,
       converted_qty,
       this.props.harvestBatchUom,
-      this.props.packageTypeOptions
-    )
+      this.state.packageType.uom,
+      this.state.packageType.quantity_in_uom,
+      )
 
     this.setState({
       showNewRow: false,
@@ -194,7 +194,8 @@ class ProductTypeSection extends React.Component {
                       x.quantity,
                       harvestBatchUom,
                       productTypeData.quantity_type,
-                      this.props.packageTypeOptions
+                      x.uom,
+                      x.quantity_in_uom,
                     ).toFixed(2)}
                   </td>
                   <td className="tc pv1">
@@ -246,18 +247,12 @@ const convertToHarvestBatchUom = (
   quantity,
   harvestBatchUom,
   quantityType,
-  packageTypeOptions
+  uom,
+  quantity_in_uom,
 ) => {
-  const packageTypes = getProductTypesByQuantityType(quantityType)
-  let foundType = ''
-  if (packageTypeOptions){
-    console.log(packageTypeOptions)
-    foundType = packageTypeOptions.find(x => x.label == packageType)
-  }
-  if (foundType) {
-    const total_qty = foundType.quantity_in_uom * +quantity
-    const uom = foundType.uom
-    return total_qty 
+  if (quantity_in_uom) {
+    const total_qty = quantity_in_uom * +quantity
+    return total_qty
   } else {
     return 0
   }

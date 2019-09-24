@@ -11,7 +11,7 @@ import ProductTypeSection, {
 } from './ProductTypeSection'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 import ItemCategorySelector from './ItemCategorySelector'
-import {toJS } from 'mobx'
+import { toJS } from 'mobx'
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
@@ -76,9 +76,16 @@ class PackagePlanForm extends React.Component {
     }
   }
 
-  onAddPackage = (productType, packageType, quantity, converted_qty, harvest_batch_uom, package_type_options) => {
-    console.log('addded new product yowwww ')
-    console.log(package_type_options)
+  onAddPackage = (
+    productType,
+    packageType,
+    quantity,
+    converted_qty,
+    harvest_batch_uom,
+    uom,
+    quantity_in_uom,
+
+  ) => {
     const { data } = this.state
     const harvest_uom = this.state.harvestBatch.uom
     const index = data.findIndex(x => x.product_type === productType)
@@ -89,7 +96,8 @@ class PackagePlanForm extends React.Component {
       quantity: parseFloat(quantity),
       uom: harvest_uom,
       conversion: converted_qty,
-      sub_categories: package_type_options
+      uom,
+      quantity_in_uom,
     }
 
     data[index].package_plans.push(item)
@@ -197,7 +205,6 @@ class PackagePlanForm extends React.Component {
   }
 
   totalPlannedWeight = () => {
-    console.log('calculate total weight')
     const total = this.state.data.reduce((sum, x) => {
       return (
         sum +
@@ -207,9 +214,9 @@ class PackagePlanForm extends React.Component {
             y.quantity || 0,
             this.state.harvestBatch.uom,
             x.quantity_type,
-            y.sub_categories
+            y.uom,
+            y.quantity_in_uom,
           )
-          console.log(toJS(y))
 
           return innerSum + converted_qty
         }, 0)

@@ -19,6 +19,7 @@ module Inventory
     end
 
     def call
+      Rails.logger.debug("#{@plant_tag} - #{@destroyed_reason}")
       if valid_params?
         plant.destroyed_date = Time.current
         plant.destroyed_reason = destroyed_reason
@@ -87,9 +88,13 @@ module Inventory
         errors.add(:plant_tag, 'plant_tag is required')
       end
       if plant.nil?
-        errors.add(:plant_tag, 'Invalid plant_tag')
+        errors.add(:plant_tag, 'Invalid Plant Tag')
         # elsif plant.destroyed_date.present?
         #   errors.add(:plant_id, 'Plant already destroyed')
+      else
+        if plant.destroyed_date.present?
+          errors.add(:plant_tag, 'Plant already destroyed')
+        end
       end
       errors.empty?
     end

@@ -14,7 +14,6 @@ class SeedFacilityDataJob < ApplicationJob
     @facility_id = args[:facility_id]
 
     # Seed built-in roles
-    seed_roles
     seed_facility_users
     seed_uom
     seed_raw_materials

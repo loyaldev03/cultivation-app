@@ -18,6 +18,8 @@ module Charts
           }
         end
 
+        batches_json ||= []
+
         if @args[:order].present?
           if @args[:order] == 'top'
             batches_json = batches_json.sort_by { |a| -a[:total_dry_weight] }

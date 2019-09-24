@@ -192,7 +192,6 @@ class ReceiveCannabisForm extends React.Component {
                     this.onChangeText('manifest_no', e.target.value)
                   }
                   // onKeyPress={this.handleKeyPress}
-                  // scanditLicense={this.props.scanditLicense}
                   // onBarcodeScan={this.onBarcodeScan}
                 />
                 {!isReadOnly && (
@@ -266,7 +265,6 @@ class ReceiveCannabisForm extends React.Component {
                                   )
                                 }
                                 // onKeyPress={this.handleKeyPress}
-                                // scanditLicense={this.props.scanditLicense}
                                 // onBarcodeScan={this.onBarcodeScan}
                               />
                             </div>
@@ -284,7 +282,6 @@ class ReceiveCannabisForm extends React.Component {
                                 }
                                 // onChange={e => this.onChangeText('manifest_no', e.target.value)}
                                 // onKeyPress={this.handleKeyPress}
-                                // scanditLicense={this.props.scanditLicense}
                                 // onBarcodeScan={this.onBarcodeScan}
                               />
                             </div>

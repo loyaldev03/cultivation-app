@@ -34,7 +34,7 @@ class PlantsDashboardApp extends React.Component {
       { accessor: 'cultivation_batch_id', show: false },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Plant ID',
+        Header: 'Plant',
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 184,
@@ -44,7 +44,7 @@ class PlantsDashboardApp extends React.Component {
             href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
             title={props.row.plant_id}
           >
-            {props.row.plant_id || props.value}
+            {props.value || props.row.plant_id}
           </a>
         )
       },
@@ -216,6 +216,7 @@ class PlantsDashboardApp extends React.Component {
             isLoading={PlantStore.isLoading}
           />
         </div>
+        <div id="toast" className="toast" />
         <SlidePanel
           show={showDestroyedPlants}
           renderBody={props => (

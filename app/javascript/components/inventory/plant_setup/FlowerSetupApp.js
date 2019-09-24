@@ -22,9 +22,10 @@ class FlowerSetupApp extends React.Component {
           accessor: 'id',
           show: false
         },
+        { Header: 'Plant ID', accessor: 'plant_id', show: false },
         {
-          Header: 'Plant ID',
-          accessor: 'plant_id',
+          Header: 'Plant',
+          accessor: 'plant_tag',
           headerStyle: { textAlign: 'left' },
           Cell: x => (
             <a
@@ -32,7 +33,7 @@ class FlowerSetupApp extends React.Component {
               className="link grey"
               onClick={event => this.openSidebar(event, x.row.id)}
             >
-              {x.value}
+              {x.value || x.row.plant_id}
             </a>
           )
         },
@@ -50,20 +51,29 @@ class FlowerSetupApp extends React.Component {
           Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
-          Header: 'Strain',
+          headerClassName: 'tl',
+          Header: (
+            <HeaderFilter
+              title="Strain"
+              accessor="strain_name"
+              getOptions={PlantStore.getUniqPropValues}
+              onUpdate={PlantStore.updateFilterOptions}
+            />
+          ),
           accessor: 'strain_name',
-          headerStyle: { textAlign: 'left' }
+          minWidth: 130,
+          Cell: props => <span className="truncate">{props.value}</span>
         },
-        {
-          Header: 'Growth stage',
-          accessor: 'current_growth_stage',
-          headerStyle: { textAlign: 'left' },
-          Cell: props => (
-            <span>
-              {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
-            </span>
-          )
-        },
+        // {
+        //   Header: 'Growth stage',
+        //   accessor: 'current_growth_stage',
+        //   headerStyle: { textAlign: 'left' },
+        //   Cell: props => (
+        //     <span>
+        //       {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
+        //     </span>
+        //   )
+        // },
         {
           Header: 'Clone Date',
           accessor: 'planting_date',

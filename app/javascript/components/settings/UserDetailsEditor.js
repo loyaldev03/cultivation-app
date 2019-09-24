@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+import isEmpty from 'lodash.isempty'
 import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { addDays, format, subDays } from 'date-fns'
@@ -8,7 +9,6 @@ import { toJS } from 'mobx'
 import Tippy from '@tippy.js/react'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import { DefaultAvatar } from '../utils'
 const styles = `
 
 .active{
@@ -145,7 +145,7 @@ class UserDetailsEditor extends React.PureComponent {
         photoData: props.user.photo_data,
         phone_number: props.user.phone_number,
         photoUrl: props.user.photo_url,
-        isActive: props.user.is_active || false,
+        isActive: props.user.id ? props.user.is_active : true,
         isExempt: props.user.exempt || false,
         hourly_rate: props.user.hourly_rate,
         overtime_hourly_rate: props.user.overtime_hourly_rate,
@@ -172,7 +172,7 @@ class UserDetailsEditor extends React.PureComponent {
         phone_number: '',
         photoData: '',
         photoUrl: '',
-        isActive: false,
+        isActive: true,
         isExempt: false,
         hourly_rate: '',
         overtime_hourly_rate: '',
@@ -321,8 +321,11 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onUploadAvatarSuccess = photoData => {
-    const photoUrl = `/uploads/${photoData.body.storage}/${photoData.body.id}`
-    this.setState({ photoUrl: photoUrl, photoData: photoData.body })
+    this.setState({ photoData: JSON.stringify(photoData) })
+  }
+
+  onAvatarPreviewUpdate = preview => {
+    this.setState({ photoUrl: preview })
   }
 
   onSubmit = e => {
@@ -349,9 +352,11 @@ class UserDetailsEditor extends React.PureComponent {
       isExempt
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
-    const newFacilities = facilities ? facilities.map(x => x.value) : []
+    const newFacilities = isEmpty(facilities)
+      ? []
+      : facilities.map(x => x.value)
     const defaultFacilityId = default_facility ? default_facility.value : null
-    const photo_data = photoData ? JSON.stringify(photoData) : null
+    const photo_data = photoData ? photoData : null
     const newUserMode = user_mode ? user_mode.value : null
     const reporting_manager_id = reporting_manager
       ? reporting_manager.value
@@ -570,24 +575,11 @@ class UserDetailsEditor extends React.PureComponent {
               <div className="mt2 fl w-100">
                 <div className="w-100 fl pr3">
                   <label className="f6 fw6 db mb1 gray ttc">Photo</label>
-                  <div
-                    className={classNames('hide-child relative tc fl mb2', {
-                      'w4 h4 bg-black-10': !photoUrl
-                    })}
-                  >
-                    <img
-                      src={photoUrl}
-                      className="fl h4 w4"
-                      onError={e => {
-                        e.target.onerror = null
-                        e.target.src = DefaultAvatar
-                      }}
-                    />
-                    <AvatarPicker
-                      key={photoUrl}
-                      onUploadSuccess={this.onUploadAvatarSuccess}
-                    />
-                  </div>
+                  <AvatarPicker
+                    defaultUrl={photoUrl}
+                    onPreviewUpdate={this.onAvatarPreviewUpdate}
+                    onUploadSuccess={this.onUploadAvatarSuccess}
+                  />
                 </div>
                 <div className="w-50 fl pr3">
                   <label className="f6 fw6 db mb1 gray ttc">First Name</label>
@@ -596,7 +588,7 @@ class UserDetailsEditor extends React.PureComponent {
                     onChange={this.onChangeInput('firstName')}
                     value={firstName}
                     required={true}
-                    disabled={isSameUser}
+                    // disabled={isSameUser}
                   />
                 </div>
                 <div className="w-50 fr pl3">
@@ -606,7 +598,7 @@ class UserDetailsEditor extends React.PureComponent {
                     onChange={this.onChangeInput('lastName')}
                     value={lastName}
                     required={true}
-                    disabled={isSameUser}
+                    // disabled={isSameUser}
                   />
                 </div>
               </div>
@@ -730,7 +722,7 @@ class UserDetailsEditor extends React.PureComponent {
                     gray: !isActive
                   })}
                 >
-                  {isActive ? 'Active' : 'Deactivated'}
+                  {isActive ? 'Active' : 'Deactivate'}
                 </label>
                 <input
                   id="is_active"
@@ -741,7 +733,8 @@ class UserDetailsEditor extends React.PureComponent {
                 />
                 <label className="toggle-button mt1 fr" htmlFor="is_active" />
                 <p className="gray f6 db mv1">
-                  Only active user are allowed to access the system.
+                  User will be deactivated from accessing the system if
+                  selected.
                 </p>
               </div>
             </div>

@@ -106,7 +106,7 @@ Rails.application.routes.draw do
   end
 
   namespace 'mobile' do
-    namespace 'worker' do
+    namespace 'worker', path: '/', as: :worker do
       resources :logins, only: [:index] do
         collection do
           get     'pin_request'
@@ -125,7 +125,7 @@ Rails.application.routes.draw do
       end
     end
   end
-
+  get 'mobile', to: 'mobile/worker/logins#index', as: :mobile
 
 
   get "inventory/setup" => "home#inventory_setup"
@@ -439,6 +439,7 @@ Rails.application.routes.draw do
 
       resources :users, only: [:index] do
         collection do
+          get 'users_by_permissions'
           get 'roles'
           get 'by_facility/:facility_id', action: 'by_facility'
         end

@@ -21,7 +21,14 @@ class HarvestDashboard extends React.Component {
       { accessor: 'cultivation_batch_id', show: false },
       {
         headerClassName: 'tl',
-        Header: 'Harvest Name',
+        Header: (
+          <HeaderFilter
+            title="Harvest Name"
+            accessor="harvest_name"
+            getOptions={HarvestBatchStore.getUniqPropValues}
+            onUpdate={HarvestBatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'harvest_name',
         minWidth: 120,
         className: 'ttu',

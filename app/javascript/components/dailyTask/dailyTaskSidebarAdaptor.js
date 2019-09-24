@@ -4,7 +4,7 @@ import SidebarStore from './stores/SidebarStore'
 import DailyTasksStore from './stores/DailyTasksStore'
 import CurrentIssueStore from '../issues/store/CurrentIssueStore'
 
-const dailyTaskSidebarAdaptor = (IssueSidebar, props) => {
+const dailyTaskSidebarAdaptor = (IssueSidebar, taskId, props) => {
   const comp = class extends React.Component {
     onClose = () => {
       SidebarStore.closeSidebar()
@@ -29,6 +29,7 @@ const dailyTaskSidebarAdaptor = (IssueSidebar, props) => {
           batch_id={batch_id}
           facility_id={facility_id}
           {...props}
+          task_id={taskId}
           onClose={this.onClose}
           onSaved={issue => this.onSaved(batch_id, issue)}
         />

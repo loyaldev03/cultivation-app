@@ -16,10 +16,11 @@ HealthCheck.setup do |config|
   config.full_checks = ['database', 'email', 'cache', 'redis', 'sidekiq-redis', 'aws-s3', 'nexmo']
 
   config.add_custom_check('aws-s3') do
-    if S3Check.check
+    res = S3Check.check
+    if res == true
       ""
     else
-      "Failed S3Check"
+      res
     end
   end
 

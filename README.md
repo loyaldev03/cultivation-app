@@ -131,3 +131,7 @@ Cannected
     }
     ```
 1. Copy Access Key and Secret key from 2 and add to server ENV settings.
+
+## Configure SMS_FROM environement variable
+1. Make sure the value is not too long
+

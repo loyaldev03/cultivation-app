@@ -65,7 +65,7 @@ class Api::V1::PeopleController < Api::V1::BaseApiController
   end
 
   def timesheet_approval
-    result = People::QueryTimesheetApproval.call(current_user, {facility_id: params[:facility_id], role: params[:role], status: params[:status], range: params[:range]}).result
+    result = People::QueryTimesheetApproval.call(current_user, {permission: true, facility_id: params[:facility_id], role: params[:role], status: params[:status], range: params[:range]}).result
     render json: result.to_json, status: 200
   end
 

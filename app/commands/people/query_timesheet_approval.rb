@@ -11,7 +11,6 @@ module People
       }.merge(args)
       @args[:page] = @args[:page].to_i
       @args[:limit] = @args[:limit].to_i
-      @permission = @args[:permission]
     end
 
     def calljjj
@@ -80,26 +79,25 @@ module People
 
     def aggregate_query
       f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
-      if @permission.present? && @permission == true
-        if RoleCheck.call(@current_user, Constants::APP_MOD_ALL_HOURS_WORKED).result[:read] == true
-          User.collection.aggregate([
-            {"$match": {"facilities": {"$in": f_ids}}},
-            match_search,
-            lookup_worklog,
-            agg_project,
-            pagination,
 
-          ]).to_a
-        elsif RoleCheck.call(@current_user, Constants::APP_MOD_HOURS_ASSIGNED_TO_MY_DIRECT_REPORTS).result[:read] == true
-          User.collection.aggregate([
-            {"$match": {"facilities": {"$in": f_ids}}},
-            direct_report_user,
-            match_search,
-            lookup_worklog,
-            agg_project,
-            pagination,
-          ]).to_a
-        end
+      if RoleCheck.call(@current_user, Constants::APP_MOD_ALL_HOURS_WORKED).result[:read] == true
+        User.collection.aggregate([
+          {"$match": {"facilities": {"$in": f_ids}}},
+          match_search,
+          lookup_worklog,
+          agg_project,
+          pagination,
+
+        ]).to_a
+      elsif RoleCheck.call(@current_user, Constants::APP_MOD_HOURS_ASSIGNED_TO_MY_DIRECT_REPORTS).result[:read] == true
+        User.collection.aggregate([
+          {"$match": {"facilities": {"$in": f_ids}}},
+          direct_report_user,
+          match_search,
+          lookup_worklog,
+          agg_project,
+          pagination,
+        ]).to_a
       end
     end
 

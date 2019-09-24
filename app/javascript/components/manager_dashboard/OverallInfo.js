@@ -37,6 +37,7 @@ export default class OverallInfo extends React.Component {
   }
 
   render() {
+    const {cost_permission} = this.props
     return (
       <React.Fragment>
         <div className="ba b--light-gray bg-white br2">
@@ -110,13 +111,17 @@ export default class OverallInfo extends React.Component {
                     ChartStore.cultivation_info.facility_capacity
                   )}
                 />
-                <MiniBoxWidget
+                {cost_permission && cost_permission == true ?
+                  <MiniBoxWidget
                   icon="monetization_on"
                   title="Active batches cost to date"
                   value={`$ ${decimalFormatter.format(
                     ChartStore.cultivation_info.active_batches_cost
-                  )}`}
-                />
+                  )}`} />
+                : ''
+              
+                }
+                
                 <MiniBoxWidget
                   icon="home"
                   title="Facility capacity"

@@ -12,7 +12,6 @@ module People
       @args[:page] = @args[:page].to_i
       @args[:limit] = @args[:limit].to_i
       @permission = @args[:permission]
-      Rails.logger.debug("PERMISSION #{@permission}")
     end
 
     def calljjj

@@ -523,6 +523,8 @@ class UserDetailsEditor extends React.PureComponent {
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
 
     const isSameUser = this.props.currentId === this.props.user.id
+
+    const {wagesPermission} = this.props
     return (
       <div className="h-100 flex flex-auto flex-column">
         <style> {styles} </style>
@@ -742,28 +744,43 @@ class UserDetailsEditor extends React.PureComponent {
 
           {this.state.tabs === 'Wages' && (
             <div className="ph4">
-              <div className="mt2 fl w-100">
-                <div className="w-50 fl pr3">
-                  <label className="f6 fw6 db mb1 gray ttc">Hourly Rate</label>
-                  <input
-                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                    onChange={this.onChangeInput('hourly_rate')}
-                    value={hourly_rate}
-                    required={true}
-                  />
+              
+                {wagesPermission.read ? 
+                  <div className="mt2 fl w-100">
+                  <div className="w-50 fl pr3">
+                    <label className="f6 fw6 db mb1 gray ttc">Hourly Rate</label>
+                    {console.log(`${wagesPermission.update}`)}
+                    <input
+                      className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                      onChange={this.onChangeInput('hourly_rate')}
+                      value={hourly_rate}
+                      required={true}
+                      readOnly={wagesPermission.update ? false : true}
+                    />
+                  </div>
+                  <div className="w-50 fl pl3">
+                    <label className="f6 fw6 db mb1 gray ttc">
+                      Overtime Hourly Rate
+                    </label>
+                    <input
+                      className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                      onChange={this.onChangeInput('overtime_hourly_rate')}
+                      value={overtime_hourly_rate}
+                      required={true}
+                      readOnly={wagesPermission.update ? false : true}
+                    />
+                  </div>
+                </div>: 
+                <div className="mt2 fl w-100">
+                  <p class="pa3 bg-light-yellow ba br2 b--light-grey flex items-center">
+                    <i class="orange material-icons">notification_important</i>
+                    <span class="pl2">
+                      You don't have permissions to access this section.
+                    </span>
+                  </p>
                 </div>
-                <div className="w-50 fl pl3">
-                  <label className="f6 fw6 db mb1 gray ttc">
-                    Overtime Hourly Rate
-                  </label>
-                  <input
-                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                    onChange={this.onChangeInput('overtime_hourly_rate')}
-                    value={overtime_hourly_rate}
-                    required={true}
-                  />
-                </div>
-              </div>
+              }
+                
             </div>
           )}
 

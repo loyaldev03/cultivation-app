@@ -230,7 +230,8 @@ class TeamSetttingApp extends React.Component {
     const {
       userId,
       setting_role_permissions,
-      setting_user_permissions
+      setting_user_permissions,
+      wages_permission
     } = this.props
     return (
       <React.Fragment>
@@ -573,6 +574,7 @@ class TeamSetttingApp extends React.Component {
                 isSaving={isSaving}
                 companyWorkSchedules={companyWorkSchedules}
                 canUpdate={setting_user_permissions.update}
+                wagesPermission={wages_permission}
               />
             )}
             {activeTab === 'rolesTab' && (

@@ -117,8 +117,8 @@ class IssuesDashboard extends React.Component {
           >
             {props.value}
           </span>
-        ),
-      // Cell: props => this.renderOpenIssue(props.row, props.value)
+        )
+        // Cell: props => this.renderOpenIssue(props.row, props.value)
       },
       {
         headerClassName: 'tl',
@@ -154,7 +154,7 @@ class IssuesDashboard extends React.Component {
         headerClassName: 'tl',
         Header: (
           <HeaderFilter
-            toLeft= {true}
+            toLeft={true}
             title="Assigned to"
             accessor="assigned_to_name"
             getOptions={IssueStore.getUniqPropValues}
@@ -173,16 +173,27 @@ class IssuesDashboard extends React.Component {
   }
 
   onCloseSidebar = () => {
-    this.setState({ showIssues: false, issue_batch_id: '', issue_facility_id: '', rowSelected: ''})
+    this.setState({
+      showIssues: false,
+      issue_batch_id: '',
+      issue_facility_id: '',
+      rowSelected: ''
+    })
   }
 
-  renderOpenIssue = (record, value, className ='grey') => {
+  renderOpenIssue = (record, value, className = 'grey') => {
     return (
       <a
         href="#"
-        className= {`link flex truncate ${className}`}
+        className={`link flex truncate ${className}`}
         onClick={event =>
-          this.openSidebar(event, record.id, 'details', record['cultivation_batch.id'], record['cultivation_batch.facility_id'])
+          this.openSidebar(
+            event,
+            record.id,
+            'details',
+            record['cultivation_batch.id'],
+            record['cultivation_batch.facility_id']
+          )
         }
       >
         {value}
@@ -197,7 +208,6 @@ class IssuesDashboard extends React.Component {
       issue_batch_id: batch_id,
       rowSelected: id,
       issue_facility_id: facility_id
-
     })
 
     currentIssueStore.reset()
@@ -223,7 +233,13 @@ class IssuesDashboard extends React.Component {
   }
 
   render() {
-    const { columns, showIssues, issue_batch_id, issue_facility_id, rowSelected } = this.state
+    const {
+      columns,
+      showIssues,
+      issue_batch_id,
+      issue_facility_id,
+      rowSelected
+    } = this.state
     return (
       <div className="pa4">
         <div className="flex flex-row-reverse">
@@ -274,21 +290,21 @@ class IssuesDashboard extends React.Component {
             idSelected={rowSelected}
           />
           <SlidePanel
-              width="500px"
-              show={showIssues}
-              renderBody={props => (
+            width="500px"
+            show={showIssues}
+            renderBody={props => (
               <IssueSidebar
-                  batch_id={issue_batch_id}
-                  facility_id={issue_facility_id}
-                  mode={currentIssueStore.mode}
-                  current_user_first_name={this.props.current_user_first_name}
-                  current_user_last_name={this.props.current_user_last_name}
-                  current_user_photo={this.props.current_user_photo}
-                  onClose={this.onCloseSidebar}
-                  // canUpdate={this.props.batchPermission.update}
-                />
-              )}
-            />
+                batch_id={issue_batch_id}
+                facility_id={issue_facility_id}
+                mode={currentIssueStore.mode}
+                current_user_first_name={this.props.current_user_first_name}
+                current_user_last_name={this.props.current_user_last_name}
+                current_user_photo={this.props.current_user_photo}
+                onClose={this.onCloseSidebar}
+                // canUpdate={this.props.batchPermission.update}
+              />
+            )}
+          />
         </div>
       </div>
     )

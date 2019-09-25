@@ -3,7 +3,7 @@ import { httpGetOptions, formatDate, formatTime, toast } from '../../utils'
 import loadBatchIssues from '../actions/loadBatchIssues'
 import currentIssueStore from './CurrentIssueStore'
 import isEmpty from 'lodash.isempty'
-import {isValid} from 'date-fns'
+import { isValid } from 'date-fns'
 
 const uniq = require('lodash.uniq')
 
@@ -148,7 +148,13 @@ class IssueStore {
     let f
     f = Object.keys(this.columnFilters).find(key => {
       const filter = this.columnFilters[key].filter(x => x.value === false)
-      return filter.find(x => x.label === (isValid(new Date(record[key])) ? formatDate(record[key]) : record[key] ))
+      return filter.find(
+        x =>
+          x.label ===
+          (isValid(new Date(record[key]))
+            ? formatDate(record[key])
+            : record[key])
+      )
     })
     return f ? true : false
   }
@@ -162,12 +168,11 @@ class IssueStore {
   }
 
   getUniqPropValues = propName => {
-    if(propName == 'created_at'){
+    if (propName == 'created_at') {
       return uniq(this.filteredList.map(x => formatDate(x[propName])).sort())
-    }else{
+    } else {
       return uniq(this.filteredList.map(x => x[propName]).sort())
     }
-    
   }
 }
 

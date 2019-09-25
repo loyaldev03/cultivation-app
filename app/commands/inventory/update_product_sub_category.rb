@@ -25,14 +25,34 @@ module Inventory
           sub_category.package_units.build(
             value: x[:value],
             label: x[:label],
-            uom: x[:uom].present? ? x[:uom][:value] : '',
-            quantity_in_uom: x[:quantity].present? ? x[:quantity] : '',
+            uom: get_uom(x),
+            quantity_in_uom: get_quantity_in_uom(x),
           )
         end
       end
 
       product_category.save!
       product_category
+    end
+
+    def get_uom(unit)
+      if unit[:uom].present?
+        return unit[:uom][:value]
+      else
+        wu = Constants::BUILTIN_WEIGHT_UNITS.find { |a| a[:label] == unit[:label] }
+        Rails.logger.debug "get wu here ===> #{wu}"
+        return wu[:uom] if wu.present?
+      end
+    end
+
+    def get_quantity_in_uom(unit)
+      if unit[:quantity].present?
+        return unit[:quantity]
+      else
+        wu = Constants::BUILTIN_WEIGHT_UNITS.find { |a| a[:label] == unit[:label] }
+        Rails.logger.debug "get wu here ===> #{wu}"
+        return wu[:quantity_in_uom] if wu.present?
+      end
     end
   end
 end

@@ -322,16 +322,16 @@ module Constants
   ].freeze
 
   BUILTIN_WEIGHT_UNITS = [
-    {value: 'half_g', label: '1/2 gram'},
-    {value: 'half_kg', label: '1/2 kg'},
-    {value: 'quarter_lb', label: '1/4 lb'},
-    {value: 'quarter_oz', label: '1/4 ounce'},
-    {value: 'eighth', label: 'Eighth'},
-    {value: 'g', label: 'Gram'},
-    {value: 'half_oz', label: 'Half ounce'},
-    {value: 'kg', label: 'Kg'},
-    {value: 'lb', label: 'Lb'},
-    {value: 'oz', label: 'Ounce'},
+    {value: 'half_g', label: '1/2 gram', uom: 'g', quantity_in_uom: '0.5'},
+    {value: 'half_kg', label: '1/2 kg', uom: 'g', quantity_in_uom: '500'},
+    {value: 'quarter_lb', label: '1/4 lb', uom: 'g', quantity_in_uom: '113.4'},
+    {value: 'quarter_oz', label: '1/4 ounce', uom: 'g', quantity_in_uom: '14'},
+    {value: 'eighth', label: 'Eighth', uom: 'g', quantity_in_uom: '3.5'},
+    {value: 'g', label: 'Gram', uom: 'g', quantity_in_uom: '1'},
+    {value: 'half_oz', label: 'Half ounce', uom: 'g', quantity_in_uom: '14'},
+    {value: 'kg', label: 'Kg', uom: 'g', quantity_in_uom: '1000'},
+    {value: 'lb', label: 'Lb', uom: 'g', quantity_in_uom: '453.592'},
+    {value: 'oz', label: 'Ounce', uom: 'g', quantity_in_uom: '28.3495'},
   ].freeze
 
   SALES_PRODUCT_CATEGORY = [

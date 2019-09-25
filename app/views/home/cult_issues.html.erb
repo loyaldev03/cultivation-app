@@ -7,6 +7,9 @@
       {
         defaultFacilityId: current_default_facility&.id.to_s,
         currentFacilityId: current_shared_facility_ids.map{|x| x.to_s},
+        current_user_first_name: current_user.first_name,
+        current_user_last_name: current_user.last_name,
+        current_user_photo: current_user.photo&.url,
         currentTime: Time.current,
       }
     %>
@@ -16,6 +19,9 @@
         defaultFacilityId: current_default_facility&.id.to_s,
         currentFacilityId: current_facility&.id.to_s,
         currentTime: Time.current,
+        current_user_first_name: current_user.first_name,
+        current_user_last_name: current_user.last_name,
+        current_user_photo: current_user.photo&.url,
       }
     %>
   <%end%>

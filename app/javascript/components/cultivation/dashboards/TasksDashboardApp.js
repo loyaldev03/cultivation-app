@@ -378,7 +378,7 @@ class TasksDashboardApp extends React.Component {
             />
             <div className="flex items-center justify-end pv2">
               <label className="grey ph2 f6 pointer" htmlFor="show_all_tasks">
-                My direct report Only
+                My direct report only
               </label>
               <input
                 className="toggle toggle-default"

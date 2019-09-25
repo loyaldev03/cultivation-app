@@ -40,7 +40,6 @@ module Inventory
         return unit[:uom][:value]
       else
         wu = Constants::BUILTIN_WEIGHT_UNITS.find { |a| a[:label] == unit[:label] }
-        Rails.logger.debug "get wu here ===> #{wu}"
         return wu[:uom] if wu.present?
       end
     end
@@ -50,7 +49,6 @@ module Inventory
         return unit[:quantity]
       else
         wu = Constants::BUILTIN_WEIGHT_UNITS.find { |a| a[:label] == unit[:label] }
-        Rails.logger.debug "get wu here ===> #{wu}"
         return wu[:quantity_in_uom] if wu.present?
       end
     end

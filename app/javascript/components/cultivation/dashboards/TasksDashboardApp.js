@@ -33,7 +33,8 @@ class ActiveTaskStore {
   @observable filter = {
     facility_id: '',
     page: 0,
-    limit: 20
+    limit: 20,
+    isShowDirectReport: true
   }
   @observable columnFilters = {}
 
@@ -44,7 +45,7 @@ class ActiveTaskStore {
           if (this.searchTerm === null) {
             this.searchTerm = ''
           }
-          this.loadActiveTasks()
+          this.loadActiveTasks(this.filter.isShowDirectReport)
         }
       },
       { delay: 700 }
@@ -52,11 +53,11 @@ class ActiveTaskStore {
   }
 
   @action
-  async loadActiveTasks() {
+  async loadActiveTasks(isShowDirectReport) {
     this.isLoading = true
     let url = `/api/v1/batches/active_tasks_agg?facility_id=${
       this.filter.facility_id
-    }`
+    }&isShowDirectReport=${isShowDirectReport}`
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
@@ -84,7 +85,8 @@ class ActiveTaskStore {
     this.filter = {
       facility_id: filter.facility_id,
       page: filter.page,
-      limit: filter.limit
+      limit: filter.limit,
+      isShowDirectReport: filter.isShowDirectReport
     }
   }
 
@@ -137,6 +139,7 @@ class TasksDashboardApp extends React.Component {
     DashboardTaskStore.loadTasks_dashboard(this.props.currentFacilityId)
   }
   state = {
+    isShowDirectReport: true,
     showNewTaskPanel: false,
     columns: [
       {
@@ -297,9 +300,10 @@ class TasksDashboardApp extends React.Component {
     activeTaskStore.setFilter({
       facility_id: this.props.currentFacilityId,
       page: state.page,
-      limit: state.pageSize
+      limit: state.pageSize,
+      isShowDirectReport: this.state.isShowDirectReport
     })
-    activeTaskStore.loadActiveTasks()
+    activeTaskStore.loadActiveTasks(this.state.isShowDirectReport)
   }
 
   onToggleColumns = (header, value) => {
@@ -318,9 +322,15 @@ class TasksDashboardApp extends React.Component {
     this.setState({ showNewTaskPanel: true })
   }
 
+  onShowAllTasks = () => {
+    let toggle = !this.state.isShowDirectReport
+    this.setState({ isShowDirectReport: toggle })
+    activeTaskStore.loadActiveTasks(toggle)
+  }
+
   render() {
     const { currentFacilityId, taskPermission } = this.props
-    const { columns, showNewTaskPanel } = this.state
+    const { columns, showNewTaskPanel, isShowDirectReport } = this.state
     return (
       <React.Fragment>
         <SlidePanel
@@ -335,7 +345,6 @@ class TasksDashboardApp extends React.Component {
                   ref={form => (this.NewTaskForm = form)}
                   onClose={() => this.setState({ showNewTaskPanel: false })}
                   onSave={params => {
-                    console.log(params)
                     TaskStore.createNoBatchTask(params)
                     this.setState({ showNewTaskPanel: false })
                   }}
@@ -367,7 +376,22 @@ class TasksDashboardApp extends React.Component {
                 activeTaskStore.searchTerm = e.target.value
               }}
             />
-            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+            <div className="flex items-center justify-end pv2">
+              <label className="grey ph2 f6 pointer" htmlFor="show_all_tasks">
+                My direct report Only
+              </label>
+              <input
+                className="toggle toggle-default"
+                id="show_all_tasks"
+                type="checkbox"
+                value={isShowDirectReport}
+                checked={isShowDirectReport}
+                onChange={this.onShowAllTasks}
+              />
+              <label className=" mr2 toggle-button" htmlFor="show_all_tasks"/>
+              <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+            </div>
+            
           </div>
           <div className="pv3">
             <ListingTable

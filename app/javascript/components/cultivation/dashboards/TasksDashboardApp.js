@@ -388,10 +388,12 @@ class TasksDashboardApp extends React.Component {
                 checked={isShowDirectReport}
                 onChange={this.onShowAllTasks}
               />
-              <label className=" mr2 toggle-button" htmlFor="show_all_tasks"/>
-              <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+              <label className=" mr2 toggle-button" htmlFor="show_all_tasks" />
+              <CheckboxSelect
+                options={columns}
+                onChange={this.onToggleColumns}
+              />
             </div>
-            
           </div>
           <div className="pv3">
             <ListingTable

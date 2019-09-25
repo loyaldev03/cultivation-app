@@ -2,23 +2,29 @@ module Issues
   class QueryReportedIssues
     prepend SimpleCommand
 
-    attr_reader :task_id, :filter_status
-
-    def initialize(current_user, facility_id)
+    def initialize(current_user, args = {})
       @user = current_user
-      @f_ids = facility_id.split(',').map { |x| x.to_bson_id }
+      @f_ids = args[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
     def call
-      u_ids = search_manager(@user.id).map { |x| x[:_id] }
-      b_ids = search_facility_batches(@f_ids).map { |x| x[:_id] }
-      Issues::Issue.in(reported_by_id: u_ids, cultivation_batch_id: b_ids, is_archived: false).
-        includes(:cultivation_batch, :reported_by, :task, :assigned_to, :resolved_by)
+      batches = Cultivation::Batch.in(facility_id: @f_ids).pluck(:id)
+
+      if RoleCheck.call(@user, Constants::APP_MOD_ALL_ISSUES).result[:read] == true
+        issues = Issues::Issue.where(is_archived: false)
+      elsif RoleCheck.call(@user, Constants::APP_MOD_ISSUES_REPORTED_BY_MY_DIRECT_REPORTS).result[:read] == true
+        u_ids = search_manager(@user.id).map { |x| x[:_id] }
+        issues = Issues::Issue.in(reported_by_id: u_ids.push(@user.id), is_archived: false)
+      else
+        issues = Issues::Issue.where(reported_by_id: @user.id, is_archived: false)
+      end
+
+      issues.in(cultivation_batch_id: batches).includes(:cultivation_batch, :reported_by, :task, :assigned_to, :resolved_by)
     end
 
     def search_manager(u_id)
       User.collection.aggregate([
-        {"$match": {"reporting_manager_id": u_id}},
+        {"$match": {"reporting_manager_id": u_id.to_bson_id}},
         {"$project": {
           "_id": 1,
         }},

@@ -3,6 +3,7 @@ import { httpGetOptions, formatDate, formatTime, toast } from '../../utils'
 import loadBatchIssues from '../actions/loadBatchIssues'
 import currentIssueStore from './CurrentIssueStore'
 import isEmpty from 'lodash.isempty'
+import {isValid} from 'date-fns'
 
 const uniq = require('lodash.uniq')
 
@@ -51,7 +52,6 @@ class IssueStore {
   async loadAllIssuesByManager(facility_id) {
     this.isLoading = true
     const url = `/api/v1/issues/by_manager?facility_id=${facility_id}`
-    console.log(url)
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -145,15 +145,15 @@ class IssueStore {
   }
 
   isFiltered = record => {
-    let f = Object.keys(this.columnFilters).find(key => {
+    let f
+    f = Object.keys(this.columnFilters).find(key => {
       const filter = this.columnFilters[key].filter(x => x.value === false)
-      return filter.find(x => x.label === record[key])
+      return filter.find(x => x.label === (isValid(new Date(record[key])) ? formatDate(record[key]) : record[key] ))
     })
     return f ? true : false
   }
 
   updateFilterOptions = (propName, filterOptions) => {
-    console.log('updating')
     const updated = {
       ...this.columnFilters,
       [propName]: filterOptions
@@ -162,7 +162,12 @@ class IssueStore {
   }
 
   getUniqPropValues = propName => {
-    return uniq(this.filteredList.map(x => x[propName]).sort())
+    if(propName == 'created_at'){
+      return uniq(this.filteredList.map(x => formatDate(x[propName])).sort())
+    }else{
+      return uniq(this.filteredList.map(x => x[propName]).sort())
+    }
+    
   }
 }
 

@@ -21,6 +21,14 @@ module Issues
       end
     end
 
+    attribute :task_name do |object|
+      if object.task.present?
+        object.task.name
+      else
+        'No Task Assigned'
+      end
+    end
+
     attribute :location_id do |object|
       object.location_id.to_s
     end
@@ -31,7 +39,16 @@ module Issues
           id: object.cultivation_batch.id.to_s,
           batch_no: object.cultivation_batch.batch_no,
           name: object.cultivation_batch.name,
+          facility_id: object.cultivation_batch.facility_id.to_s,
         }
+      else
+        nil
+      end
+    end
+
+    attribute :cultivation_batch_name do |object|
+      if object.cultivation_batch.present?
+        object.cultivation_batch.name
       else
         nil
       end
@@ -58,6 +75,14 @@ module Issues
         }
       else
         nil
+      end
+    end
+
+    attribute :assigned_to_name do |object|
+      if object.assigned_to.present?
+        object.assigned_to.display_name
+      else
+        'No Worker Assigned'
       end
     end
 

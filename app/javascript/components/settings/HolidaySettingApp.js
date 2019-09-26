@@ -118,9 +118,9 @@ class HolidaySettingApp extends React.Component {
       ) : null
 
     const tileClassName = ({ date, view }) =>
-      view === 'month' && dates.some(d => +d.date === +date) ? (
-        'tile-active'
-      ) : null
+      view === 'month' && dates.some(d => +d.date === +date)
+        ? 'tile-active'
+        : null
 
     let row1 = []
     let date = startOfYear(this.state.current_date)

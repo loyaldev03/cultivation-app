@@ -45,7 +45,7 @@ function HeaderFilter({
     onUpdate(accessor, updated)
   }
   const handlerClear = () => {
-    const updated = options.map(x => ({ ...x, value: true }))
+    const updated = options.map(x => ({ ...x, value: false }))
     setOptions(updated)
     onUpdate(accessor, updated)
   }

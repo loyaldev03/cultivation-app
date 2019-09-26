@@ -230,37 +230,79 @@ class WastesDashboardApp extends React.Component {
       },
       {
         headerClassName: '',
-        Header: 'Grow Phase',
+        Header: (
+          <HeaderFilter
+            title="Grow Phase"
+            accessor="current_growth_stage"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'current_growth_stage',
         className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
-        Header: 'Location Origin',
+        Header: (
+          <HeaderFilter
+            title="Location Origin"
+            accessor="location_name"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'location_name',
         className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
-        Header: 'Location',
+        Header: (
+          <HeaderFilter
+            title="Location"
+            accessor="location_type"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'location_type',
         className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
-        Header: 'Planting Date',
+        Header: (
+          <HeaderFilter
+            title="Planting Date"
+            accessor="planting_date"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'planting_date',
         className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
-        Header: 'Harvest Date',
+        Header: (
+          <HeaderFilter
+            title="Harvest Date"
+            accessor="harvest_date"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'harvest_date',
         className: ' pr3 justify-center'
       },
       {
         headerClassName: '',
-        Header: 'Destroyed Date',
+        Header: (
+          <HeaderFilter
+            title="Destroyed Date"
+            accessor="destroyed_date"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'destroyed_date',
         className: ' pr3 justify-center'
       },
@@ -274,7 +316,7 @@ class WastesDashboardApp extends React.Component {
             onUpdate={orderStore.updateFilterOptions}
           />
         ),
-        accessor: 'customer',
+        accessor: 'destroyed_reason',
         className: ' pr3 justify-center'
       },
       {
@@ -286,6 +328,15 @@ class WastesDashboardApp extends React.Component {
       {
         headerClassName: '',
         Header: 'Assigned To',
+        Header: (
+          <HeaderFilter
+            toLeft={true}
+            title="Assigned To"
+            accessor="assigned_to"
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
+          />
+        ),
         accessor: 'assigned_to',
         className: ' pr3 justify-center'
       }

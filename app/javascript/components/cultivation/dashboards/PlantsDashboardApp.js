@@ -38,10 +38,7 @@ class PlantsDashboardApp extends React.Component {
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 184,
-        Cell: props => (
-          
-          <span>{props.value || props.row.plant_id}</span>
-        )
+        Cell: props => <span>{props.value || props.row.plant_id}</span>
       },
       {
         headerClassName: 'pl3 tl',

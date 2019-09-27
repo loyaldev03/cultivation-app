@@ -1,10 +1,10 @@
 import React from 'react'
 import PermissionRow from './PermissionRow'
 
-class RoleDetailsEditor extends React.PureComponent {
+class RoleDetailsEditor extends React.Component {
   constructor(props) {
     super(props)
-    if (props.role) {
+    if (props.userroleAction === 'edit') {
       this.state = {
         roleId: props.role.id,
         name: props.role.name || '',
@@ -23,15 +23,36 @@ class RoleDetailsEditor extends React.PureComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if (nextProps.userroleAction === 'edit') {
+      this.setState({
+        roleId: this.props.role.id,
+        name: this.props.role.name,
+        desc: this.props.role.desc,
+        permissions: this.props.role.permissions,
+        builtIn: this.props.role.built_in
+      })
+    } else {
+      this.setState({
+        roleId: '',
+        name: '',
+        desc: '',
+        permissions: [],
+        builtIn: false
+      })
+    }
+  }
+
   getPermission = code => {
     if (this.state.builtIn) {
       return { code, value: 15 }
     }
     const p = this.state.permissions.find(x => x.code === code)
-    return p || { code, value: 0 }
+    return p || { code, value: 0}
   }
 
   setPermission = (code, value) => {
+    
     const found = this.state.permissions.findIndex(p0 => p0.code === code)
     const p1 = { code, value }
     let permissions = []
@@ -68,7 +89,7 @@ class RoleDetailsEditor extends React.PureComponent {
   // }
 
   render() {
-    const { onClose, isSaving, modules, canUpdate, canDelete } = this.props
+    const { onClose, isSaving, modules, canUpdate, canDelete, userroleAction } = this.props
     const { name, desc, builtIn } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
@@ -133,6 +154,7 @@ class RoleDetailsEditor extends React.PureComponent {
                           name={feat.name}
                           value={this.getPermission(feat.code).value}
                           isReadOnly={builtIn}
+                          action={userroleAction}
                           onChange={this.setPermission}
                         />
                       ))}

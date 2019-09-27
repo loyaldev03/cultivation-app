@@ -11,7 +11,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     excludes = params[:excludes] || []
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
     if params[:value].present?
-      plants = plants.where(plant_id: /^#{params[:value]}/i)
+      plants = plants.where(plant_id: /#{params[:value]}/i)
     end
     plants = plants.where(current_growth_stage: {'$in': growth_stages}) if growth_stages.any?
     plants = plants.not_in(current_growth_stage: excludes) if excludes&.any?

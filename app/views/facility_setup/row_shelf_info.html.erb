@@ -19,11 +19,21 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow"> 
     <div class="pa4 min-h-600">
-      <div class="fl w-70-l w-100 flex flex-column width-100">
-        <h5 class="tl pa0 ma0 h5--font dark-grey"> <%= @rows_form.breadcrumb_title %> </h5>
-        <p class="mt2 body-1 grey">
-          Boom, you just created a room! Now let's configure your room by adding rows and shelves.
-        </p>
+      <div class="flex flex-column width-100">
+        <div class="flex justify-between">
+          <div>
+            <h5 class="tl pa0 ma0 h5--font dark-grey"> <%= @rows_form.breadcrumb_title %> </h5>
+            <p class="mt2 body-1 grey">
+              Boom, you just created a room! Now let's configure your room by adding rows and shelves.
+            </p>
+          </div>
+          <div class="dim flex flex-row items-center pointer">
+            <i class="material-icons md-gray">keyboard_arrow_left</i>
+            <%= link_to "Back to Facility Configuration", facility_setup_rooms_info_path(facility_id: @rows_form.facility_id), 
+                class: "db tr ttu link button--font grey" %>
+          </div>
+        </div>
+        
 
         <div id="rows_grid" class="pv4 carousel-wrapper">
           <%= render partial: 'rows_list',
@@ -38,10 +48,10 @@
 
     <%= render partial: "bottom_back_button",
       locals: {
-        left_button_url: facility_setup_room_summary_path(facility_id: @rows_form.facility_id, room_id: @rows_form.room_id),
+        left_button: false,
         right_button: true,
         right_button_text: "save & continue",
-        right_button_url: facility_setup_rooms_info_path(facility_id: @rows_form.facility_id)
+        right_button_url: facility_setup_room_summary_path(facility_id: @rows_form.facility_id, room_id: @rows_form.room_id)
       } %>
   </div>
 </div>

@@ -9,20 +9,12 @@ s3_options = {
   region:            ENV['AWS_REGION'],
 }
 
-# Avatar would allow public access without signed url
-s3_public_options = {
-  access_key_id:     ENV['AWS_ACCESS_KEY_ID'],
-  secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
-  bucket:            ENV['AWS_PUBLIC_BUCKET'],
-  region:            ENV['AWS_REGION'],
-}
-
 if Rails.env.development? || Rails.env.test?
-  s3_options = s3_public_options = {
-    access_key_id: Rails.application.credentials.aws[:access_key_id],
-    secret_access_key: Rails.application.credentials.aws[:secret_access_key],
-    bucket: 'dev.cannected.com',
-    region: 'ap-southeast-1',
+  s3_options = {
+    access_key_id: ENV['AWS_ACCESS_KEY_ID'] || Rails.application.credentials.aws[:access_key_id],
+    secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'] || Rails.application.credentials.aws[:secret_access_key],
+    bucket: ENV['AWS_BUCKET'] || 'dev.cannected.com',
+    region: ENV['AWS_REGION'] || 'ap-southeast-1',
   }
 end
 

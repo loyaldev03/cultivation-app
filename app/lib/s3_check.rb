@@ -20,10 +20,10 @@ class S3Check
         ENV['AWS_BUCKET'] :
         'dev.cannected.com'
 
-      Aws.config.update({
+      Aws.config.update(
         region: region,
         credentials: Aws::Credentials.new(akid, secret),
-      })
+      )
 
       s3 = Aws::S3::Client.new
 
@@ -33,10 +33,9 @@ class S3Check
       s3.put_object(bucket: bucket, key: key, body: body)
       s3.delete_objects(bucket: bucket, delete: {objects: [{key: key}]})
 
-      return true
-    rescue => err
-      pp err
-      return false
+      true
+    rescue StandardError => err
+      err.to_s
     end
   end
 end

@@ -147,7 +147,6 @@ class HarvestBatchWeightForm extends React.Component {
         <div className="ph4 mt2 flex flex-column w-100">
           <InputBarcode
             value={plant_id}
-            scanditLicense={scanditLicense}
             autoFocus={true}
             onChange={this.onChange}
             onKeyPress={this.onScanMother}

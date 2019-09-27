@@ -29,8 +29,8 @@ class HolidayForm extends React.Component {
       id: '',
       title: '',
       start_date: date,
-      end_date: '',
-      duration: ''
+      end_date: date,
+      duration: 0
     })
   }
 

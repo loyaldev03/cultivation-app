@@ -146,7 +146,7 @@ module Cultivation
         task.user_ids = []
       end
       task.end_date = task.start_date + task.duration.days
-
+      task.instruction = args[:instruction]
       # Map location info to task
       if task.indelible != 'clip_mother_plant'
         task.location_id = args[:location_id].to_bson_id if args[:location_id].present?

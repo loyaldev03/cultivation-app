@@ -32,7 +32,7 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   end
 
   def by_manager
-    issues = Issues::QueryReportedIssues.call(current_user, params[:facility_id]).result
+    issues = Issues::QueryReportedIssues.call(current_user, {facility_id: params[:facility_id]}).result
     render json: Issues::IssueSerializer.new(issues).serialized_json
   end
 

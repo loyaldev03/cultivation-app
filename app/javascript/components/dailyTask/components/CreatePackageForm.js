@@ -160,7 +160,6 @@ class PackageTracking extends React.Component {
       <div className="flex flex-column w-100 mt3 ph3">
         {showScanner && (
           <InputBarcode
-            scanditLicense={'xxx'}
             autoFocus={true}
             value={packageID}
             onChange={this.onChangePackageID}

@@ -132,6 +132,34 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: Inventory::ProductCategorySerializer.new(records).serialized_json
   end
 
+  def product_subcategories
+    result = Inventory::ProductCategory.collection.aggregate([
+      {"$unwind": '$sub_categories'},
+      {"$project": {
+        'id': '$_id',
+        'name': '$sub_categories.name',
+        'category_name': '$name',
+        'quantity_type': 1,
+        'is_used': 1,
+        'is_active': 1,
+        'metrc_item_category': 1,
+        'deleted': 1,
+        'package_units': '$sub_categories.package_units',
+      }},
+    ])
+    sub_category = Struct.new(:id, :name, :quantity_type, :is_used, :is_active, :metrc_item_category, :deleted, :package_units, :category_name)
+
+    arrays_result = result.to_a.map { |a|
+      sub_category.new(
+        a['id'], a['name'], a['quantity_type'], a['is_used'],
+        a['is_active'], a['metrc_item_category'], a['deleted'],
+        a['package_units'], a['category_name']
+      )
+    }
+
+    render json: Inventory::ProductSubCategorySerializer.new(arrays_result).serialized_json
+  end
+
   def update_product_categories
     # Try to find category by id first, follow by name
     category = Inventory::ProductCategory.find_by(id: params[:id])

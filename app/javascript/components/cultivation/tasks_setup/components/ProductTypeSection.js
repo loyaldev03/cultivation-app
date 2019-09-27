@@ -39,20 +39,23 @@ class ProductTypeSection extends React.Component {
     if (!this.props.harvestBatchUom) {
       console.warn('Missing harvest batch / uom', this.props.harvestBatchUom)
     }
-
     const converted_qty = convertToHarvestBatchUom(
       this.state.packageType.value,
       this.state.quantity,
       this.props.harvestBatchUom,
-      this.props.productTypeData.quantity_type
+      this.props.productTypeData.quantity_type,
+      this.state.packageType.uom,
+      this.state.packageType.quantity_in_uom
     )
 
     this.props.onAddPackage(
       this.props.productTypeData.product_type,
-      this.state.packageType.value,
+      this.state.packageType.label,
       this.state.quantity,
       converted_qty,
-      this.props.harvestBatchUom
+      this.props.harvestBatchUom,
+      this.state.packageType.uom,
+      this.state.packageType.quantity_in_uom
     )
 
     this.setState({
@@ -101,13 +104,13 @@ class ProductTypeSection extends React.Component {
 
     const quantityType = this.props.productTypeData.quantity_type
     const unitOptions = this.getOptionsByQuantityType(quantityType)
-
+    const packageTypeOptions = this.props.packageTypeOptions
     return (
       <div className="ph4 mt2 flex items-center">
         <div className="w-100 pa2 bg-black-05 flex items-center">
           <div className="w-40 pr2">
             <Select
-              options={unitOptions}
+              options={packageTypeOptions}
               styles={reactSelectStyle}
               value={this.state.packageType}
               onChange={this.onChangePackageType}
@@ -190,7 +193,9 @@ class ProductTypeSection extends React.Component {
                       x.package_type,
                       x.quantity,
                       harvestBatchUom,
-                      productTypeData.quantity_type
+                      productTypeData.quantity_type,
+                      x.uom,
+                      x.quantity_in_uom
                     ).toFixed(2)}
                   </td>
                   <td className="tc pv1">
@@ -241,16 +246,13 @@ const convertToHarvestBatchUom = (
   packageType,
   quantity,
   harvestBatchUom,
-  quantityType
+  quantityType,
+  uom,
+  quantity_in_uom
 ) => {
-  const packageTypes = getProductTypesByQuantityType(quantityType)
-  const foundType = packageTypes.find(x => x.value == packageType)
-  if (foundType) {
-    const total_qty = foundType.qty_per_package * +quantity
-    const uom = foundType.uom
-    return convert(total_qty)
-      .from(uom)
-      .to(harvestBatchUom)
+  if (quantity_in_uom) {
+    const total_qty = quantity_in_uom * +quantity
+    return total_qty
   } else {
     return 0
   }

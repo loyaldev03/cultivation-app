@@ -363,6 +363,7 @@ Rails.application.routes.draw do
         post 'item_categories/:id/update',
           on: :collection,
           action: :update_item_category
+        get :product_subcategories, on: :collection
       end
 
       resources :strains, only: [:index, :create, :show] do
@@ -438,6 +439,7 @@ Rails.application.routes.draw do
 
       resources :users, only: [:index] do
         collection do
+          get 'users_by_permissions'
           get 'roles'
           get 'by_facility/:facility_id', action: 'by_facility'
         end

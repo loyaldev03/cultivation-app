@@ -12,7 +12,7 @@ class UserStore {
   @action
   async loadUsers(facilityId) {
     this.isLoading = true
-    let url = '/api/v1/users?1=1'
+    let url = '/api/v1/users/users_by_permissions?1=1'
     if (facilityId) url += `&facility_id=${facilityId}`
     try {
       const res = await (await fetch(url, httpGetOptions)).json()

@@ -20,6 +20,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def active_tasks_agg
     query_cmd = Cultivation::QueryTasksAggregate.call(
       current_user,
+      isShowDirectReport: params[:isShowDirectReport],
       facility_id: params[:facility_id],
       page: params[:page],
       limit: params[:limit],
@@ -169,6 +170,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :start_date,
                                  :end_date,
                                  :estimated_hours,
+                                 :instruction,
                                  # :estimated_cost,
                                  :depend_on,
                                  :position,

@@ -1,6 +1,6 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
-import { action, observable, computed } from 'mobx'
+import { action, observable, computed, toJS } from 'mobx'
 import { toast } from '../utils/toast'
 import { httpPostOptions, httpGetOptions } from '../utils'
 
@@ -15,7 +15,7 @@ class MetrcItemCategoryStore {
   @action
   async loadCategories() {
     this.isLoading = true
-    const url = '/api/v1/products/item_categories' // Item Category is Metrc Item Category
+    const url = '/api/v1/products/product_subcategories' // Item Category is Metrc Item Category
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -108,9 +108,10 @@ class MetrcItemCategoryStore {
     }
     res = res.map(c => ({
       value: c.name,
-      label: c.name
+      label: c.name,
+      sub_categories: c.sub_categories
     }))
-    return res
+    return res.filter(e => !this.excludes.includes(e.value))
   }
 
   /* - column filters */

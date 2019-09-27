@@ -8,10 +8,10 @@ module Common
     end
 
     def call
-      from = ENV['MAILER_URL_HOST'] || 'Cannected.com'
+      from_name = ENV['SMS_FROM'] || 'Cannected'
       @client = initialize_nextmo
       res = @client.sms.send(
-        from: from,
+        from: from_name,
         to: @phone_number,
         text: @message,
       )

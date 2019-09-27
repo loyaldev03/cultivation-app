@@ -24,6 +24,11 @@ const styles = `
   right: 43%;
 }
 
+.tile-active{
+  background: var(--orange) !important;
+  color: white !important;
+}
+
 .hide-holiday{
   visibility: hidden;
 }
@@ -112,6 +117,11 @@ class HolidaySettingApp extends React.Component {
         />
       ) : null
 
+    const tileClassName = ({ date, view }) =>
+      view === 'month' && dates.some(d => +d.date === +date)
+        ? 'tile-active'
+        : null
+
     let row1 = []
     let date = startOfYear(this.state.current_date)
     for (let i = 0; i < 4; i++) {
@@ -125,6 +135,7 @@ class HolidaySettingApp extends React.Component {
           prev2Label={null}
           next2Label={null}
           tileContent={tileContent}
+          tileClassName={tileClassName}
           onChange={this.handleShowHolidayForm}
         />
       )
@@ -142,6 +153,7 @@ class HolidaySettingApp extends React.Component {
           prev2Label={null}
           next2Label={null}
           tileContent={tileContent}
+          tileClassName={tileClassName}
           onChange={this.handleShowHolidayForm}
         />
       )
@@ -159,6 +171,7 @@ class HolidaySettingApp extends React.Component {
           prev2Label={null}
           next2Label={null}
           tileContent={tileContent}
+          tileClassName={tileClassName}
           onChange={this.handleShowHolidayForm}
         />
       )

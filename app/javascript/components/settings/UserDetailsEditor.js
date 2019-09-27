@@ -47,7 +47,7 @@ const user_modes = [
   { label: 'Worker', value: 'worker' }
 ]
 
-class UserDetailsEditor extends React.PureComponent {
+class UserDetailsEditor extends React.Component {
   constructor(props) {
     super(props)
     if (props.user) {
@@ -180,6 +180,35 @@ class UserDetailsEditor extends React.PureComponent {
         roles: [],
         default_facility: {}
       }
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userroleAction === 'new') {
+      this.setState({
+        tabs: 'General',
+        userId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        title: '',
+        photoData: '',
+        phone_number: '',
+        photoUrl: '',
+        isActive: true,
+        isExempt: false,
+        hourly_rate: 0,
+        overtime_hourly_rate: 0,
+        user_mode: null,
+        reporting_manager: null,
+        facilities: [],
+        roles: [],
+        default_facility: null,
+        work_schedules: [],
+        non_exempt_schedules: [],
+        array_of_weeks: [],
+        exempt_schedules: []
+      })
     }
   }
 

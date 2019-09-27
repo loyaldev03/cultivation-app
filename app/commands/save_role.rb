@@ -8,7 +8,7 @@ class SaveRole
   end
 
   def call
-    if args[:id]
+    if args[:id].present?
       role = Common::Role.find(args[:id])
       return role if role.readonly?
     else

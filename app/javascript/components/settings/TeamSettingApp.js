@@ -55,7 +55,8 @@ class TeamSetttingApp extends React.Component {
     editingUser: {},
     editingRole: {},
     activeTab: 'rolesTab',
-    isListView: true
+    isListView: true,
+    userroleAction: ''
   }
   async componentDidMount() {
     await store.loadUsers(true)
@@ -86,7 +87,8 @@ class TeamSetttingApp extends React.Component {
 
   closeSidebar = () => {
     this.setState({
-      editingUser: {}
+      editingUser: {},
+      userroleAction: ''
     })
     window.editorSidebar.close()
   }
@@ -109,14 +111,15 @@ class TeamSetttingApp extends React.Component {
 
   onClickRoleEdit = roleId => e => {
     const editingRole = store.getRole(roleId)
+    const userroleAction = 'edit'
     if (editingRole) {
-      this.setState({ editingRole })
+      this.setState({ editingRole, userroleAction })
       this.openSidebar()
     }
   }
 
   onAddNew = () => {
-    this.setState({ editingUser: {}, editingRole: {} })
+    this.setState({ userroleAction: 'new', editingUser: {}, editingRole: {} })
     this.openSidebar()
   }
 
@@ -222,7 +225,8 @@ class TeamSetttingApp extends React.Component {
       editingRole,
       isSaving,
       activeTab,
-      isListView
+      isListView,
+      userroleAction
     } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
@@ -572,6 +576,7 @@ class TeamSetttingApp extends React.Component {
                 userManagerOptions={userManagerOptions}
                 rolesOptions={rolesOptions}
                 isSaving={isSaving}
+                userroleAction={userroleAction}
                 companyWorkSchedules={companyWorkSchedules}
                 canUpdate={setting_user_permissions.update}
                 wagesPermission={wages_permission}
@@ -583,6 +588,7 @@ class TeamSetttingApp extends React.Component {
                 role={editingRole}
                 onSave={this.onRoleSave}
                 // onDelete={this.onRoleDelete}
+                userroleAction={userroleAction}
                 onClose={this.closeSidebar}
                 modules={modules}
                 isSaving={isSaving}

@@ -10,6 +10,9 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
     excludes = params[:excludes] || []
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
+    if params[:value].present?
+      plants = plants.where(plant_id: /#{params[:value]}/i)
+    end
     plants = plants.where(current_growth_stage: {'$in': growth_stages}) if growth_stages.any?
     plants = plants.not_in(current_growth_stage: excludes) if excludes&.any?
     plants = plants.where(facility_strain_id: params[:facility_strain_id]) if params[:facility_strain_id]
@@ -86,6 +89,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def show
+    id = params[:search] || params[:id]
     plant = Inventory::Plant.find(params[:id])
     render json: Inventory::PlantSerializer.new(
       plant,
@@ -184,10 +188,13 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def include_options
+    facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
     options = {}
     if params[:include]
       include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
       options = {params: {include: include_rels}}
+    elsif params[:facility_id]
+      options = {params: {locations: QueryLocations.call(facility)}}
     end
     options
   end

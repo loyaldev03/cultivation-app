@@ -38,15 +38,7 @@ class PlantsDashboardApp extends React.Component {
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 184,
-        Cell: props => (
-          <a
-            className="link grey truncate"
-            href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
-            title={props.row.plant_id}
-          >
-            {props.value || props.row.plant_id}
-          </a>
-        )
+        Cell: props => <span>{props.value || props.row.plant_id}</span>
       },
       {
         headerClassName: 'pl3 tl',

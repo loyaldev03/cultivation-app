@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import isEmpty from 'lodash.isempty'
 import classNames from 'classnames'
-import { httpGetOptions, httpPostOptions } from '../utils'
+import { httpGetOptions } from '../utils'
 import { observer } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
-
+import QuickSearchBox from './QuickSearchBox'
 class SearchStore {
   @observable results = []
+  @observable plant
 
   @action
   async search() {
@@ -31,7 +32,7 @@ class SearchStore {
 
 const store = new SearchStore()
 
-function SearchBox() {
+function SearchBox(props) {
   const node = useRef()
   const [expand, setExpand] = useState(false)
 
@@ -64,16 +65,11 @@ function SearchBox() {
     window.location.replace(url)
   }
 
+  const { facility_id } = props.facility_id
+
   return (
-    <div ref={node}>
-      <label>
-        <span className="grey">Quick Search </span>
-        <input
-          type="search"
-          className="input min-w200 mr2"
-          placeholder="e.g. 1A4FF0100000022000041"
-        />
-      </label>
+    <div ref={node} style={{ width: 300 + 'px' }}>
+      <QuickSearchBox facility_id={props.facility_id} />
       {expand && (
         <div className="notification shadow-3 ba br2 b--light-grey fixed top-3 right-1">
           <div className="notification__header">

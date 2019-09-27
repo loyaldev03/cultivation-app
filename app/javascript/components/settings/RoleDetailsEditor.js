@@ -23,7 +23,7 @@ class RoleDetailsEditor extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (nextProps.userroleAction === 'edit') {
       this.setState({
         roleId: this.props.role.id,
@@ -48,11 +48,10 @@ class RoleDetailsEditor extends React.Component {
       return { code, value: 15 }
     }
     const p = this.state.permissions.find(x => x.code === code)
-    return p || { code, value: 0}
+    return p || { code, value: 0 }
   }
 
   setPermission = (code, value) => {
-    
     const found = this.state.permissions.findIndex(p0 => p0.code === code)
     const p1 = { code, value }
     let permissions = []
@@ -89,7 +88,14 @@ class RoleDetailsEditor extends React.Component {
   // }
 
   render() {
-    const { onClose, isSaving, modules, canUpdate, canDelete, userroleAction } = this.props
+    const {
+      onClose,
+      isSaving,
+      modules,
+      canUpdate,
+      canDelete,
+      userroleAction
+    } = this.props
     const { name, desc, builtIn } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (

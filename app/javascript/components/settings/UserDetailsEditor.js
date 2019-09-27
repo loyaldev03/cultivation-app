@@ -183,7 +183,7 @@ class UserDetailsEditor extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (nextProps.userroleAction === 'new') {
       this.setState({
         tabs: 'General',
@@ -202,14 +202,14 @@ class UserDetailsEditor extends React.Component {
         user_mode: null,
         reporting_manager: null,
         facilities: [],
-        roles : [],
+        roles: [],
         default_facility: null,
         work_schedules: [],
         non_exempt_schedules: [],
         array_of_weeks: [],
         exempt_schedules: []
       })
-    } 
+    }
   }
 
   renderNonExemptSchedules = (i, data) => {

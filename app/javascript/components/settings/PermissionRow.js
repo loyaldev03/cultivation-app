@@ -15,7 +15,7 @@ class PermissionRow extends React.PureComponent {
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     if (nextProps.action === 'new' && nextProps.value < 1) {
       this.setState({
         value: 0

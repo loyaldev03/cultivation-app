@@ -7,11 +7,19 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
-      <div class="fl w-70-l w-100 flex flex-column width-100">
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Tell us about your facility</h5>
-        <p class="mt2 body-1 grey">
-          Let's get a few details of your facility to get things rolling...
-        </p>
+      <div class="flex flex-column width-100">
+        <div class="flex justify-between">
+          <div>
+            <h5 class="tl pa0 ma0 h5--font dark-grey">Tell us about your facility</h5>
+            <p class="mt2 body-1 grey">
+              Let's get a few details of your facility to get things rolling...
+            </p>
+          </div>
+          <div class="dim flex flex-row items-center pointer">
+            <i class="material-icons md-gray">keyboard_arrow_left</i>
+            <%= link_to "Back to Facilities Setting", settings_facility_facilities_path, class: "db tr ttu link button--font grey" %>
+          </div>
+        </div>
 
         <%= form_with scope: :facility,
           url: facility_setup_update_basic_info_path(facility_id: @wizard_form.id),
@@ -165,8 +173,8 @@
               </div>
             </div>
 
-            <div class="mt3 flex flex-row items-center">
-              <div class="w-100">
+            <div class="mb4 flex flex-row-l flex-column">
+              <div class="w-20">
                 <label class="grey subtitle-2 ttc db mb1">
                   Facility Status
                 </label>
@@ -174,9 +182,13 @@
                   Active or Diactive.
                 </p>
               </div>
-              <div class="dib pointer w-20-l w-10 flex justify-end">
-                <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>
-                <label class="toggle-button" for="facility_is_enabled"></label>
+              <div class="fl w-70-l w-100 flex flex-column pt0-l pt3">
+                <div class="flex flex-row">
+                  <div class="mr4 w-40">
+                    <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>
+                    <label class="toggle-button" for="facility_is_enabled"></label>
+                  </div>
+                </div>
               </div>
             </div>
 

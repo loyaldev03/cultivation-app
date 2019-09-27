@@ -10,11 +10,20 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
-      <div class="fl w-70-l w-100 flex flex-column width-100">
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Facility Configuration</h5>
-        <p class="mt2 body-1 grey">
-          Now that we have the basic info done, let’s configure your facility.
-        </p>
+      <div class="flex flex-column width-100">
+        <div class="flex justify-between">
+          <div>
+            <h5 class="tl pa0 ma0 h5--font dark-grey">Facility Configuration</h5>
+            <p class="mt2 body-1 grey">
+              Now that we have the basic info done, let’s configure your facility.
+            </p>
+          </div>
+          <div class="dim flex flex-row items-center pointer">
+            <i class="material-icons md-gray">keyboard_arrow_left</i>
+            <%= link_to "Back to facility", facility_setup_new_path(facility_id: @rooms_info_form.facility_id), class: "db tr ttu link button--font grey" %>
+          </div>
+        </div>
+        
         <div id="rooms_grid" class="pv4 carousel-wrapper">
           <%= render partial: 'rooms_list',
             locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
@@ -22,11 +31,6 @@
         </div>
       </div>
     </div>
-
-    <%= render partial: "bottom_back_button", 
-        locals: { 
-          right_button: false,
-          left_button_url: facility_setup_new_path(facility_id: @rooms_info_form.facility_id) } %>
   </div>
 </div>
 

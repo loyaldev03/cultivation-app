@@ -102,38 +102,37 @@ class PlantByRoomWidget extends React.Component {
         .attr('fill', 'white')
         .attr('dx', d => d.data.name.length)
         .attr('opacity', function(d) {
-          if(d.x1 - d.x0 < 130){
-            if(d.y1 - d.y0 <= 20){
+          if (d.x1 - d.x0 < 130) {
+            if (d.y1 - d.y0 <= 20) {
               return 0
-            }else{
-              if(d.x1 - d.x0 < 80){
+            } else {
+              if (d.x1 - d.x0 < 85) {
                 return 0
-              }else{
-                if(d.data.name.length < 10){
+              } else {
+                if (d.data.name.length < 10) {
                   return 1
-                }else{
+                } else {
                   return 0
                 }
               }
-
             }
-          }else if ((d.x1 - d.x0 >= 130) && (d.x1 - d.x0 <= 180)){
-            if(d.y1 - d.y0 <= 20){
+          } else if (d.x1 - d.x0 >= 130 && d.x1 - d.x0 <= 180) {
+            if (d.y1 - d.y0 <= 20) {
               return 0
-            }else{
+            } else {
               if (d.data.name.length < 15) {
                 return 1
-              }else{
+              } else {
                 return 0
               }
             }
-          }else{
-            if(d.y1 - d.y0 <= 20){
+          } else {
+            if (d.y1 - d.y0 <= 20) {
               return 0
-            }else{
+            } else {
               if (d.data.name.length > 20) {
                 return 0
-              }else{
+              } else {
                 return 1
               }
             }

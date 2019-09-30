@@ -8,11 +8,36 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
-    excludes = params[:excludes] || []
-    plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
-    if params[:value].present?
-      plants = plants.where(plant_id: /#{params[:value]}/i)
+    excludes = *params[:excludes] || []
+
+    if params[:facility_strain_id].present?
+      facility_strain_id = params[:facility_strain_id]
+    else
+      facility_strain_id = nil
     end
+
+    data = Inventory::QueryPlantsInfo.call({facility_strain_id: params[:facility_strain_id], facility_strain_ids: facility_strain_ids,
+                                            locations: QueryLocations.call(facility),
+                                            growth_stages: growth_stages,
+                                            excludes: excludes,
+                                            page: params[:page],
+                                            limit: params[:limit],
+                                            search: params[:search]}).result
+    render json: data
+  end
+
+  def all_plants_wstrain
+    facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
+    if resource_shared?
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
+    else
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
+    end
+    growth_stages = *params[:current_growth_stage] # convert to array
+    growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
+    excludes = *params[:excludes] || []
+
+    plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
     plants = plants.where(current_growth_stage: {'$in': growth_stages}) if growth_stages.any?
     plants = plants.not_in(current_growth_stage: excludes) if excludes&.any?
     plants = plants.where(facility_strain_id: params[:facility_strain_id]) if params[:facility_strain_id]

@@ -48,7 +48,9 @@ export default function loadPlants(
     })
     .then(({ status, data }) => {
       if (status >= 400) {
-        console.log('Something wrong when calling /api/v1/plants/all_plants_wstrain')
+        console.log(
+          'Something wrong when calling /api/v1/plants/all_plants_wstrain'
+        )
       } else {
         plantStore.load(data)
         plantStore.isLoading = false

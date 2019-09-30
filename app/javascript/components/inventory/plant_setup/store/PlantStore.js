@@ -1,9 +1,7 @@
 import { observable, action, computed, toJS, autorun } from 'mobx'
 import isEmpty from 'lodash.isempty'
 const uniq = require('lodash.uniq')
-import {
-  httpGetOptions
-} from '../../../utils'
+import { httpGetOptions } from '../../../utils'
 
 class PlantStore {
   @observable plants = []
@@ -39,19 +37,27 @@ class PlantStore {
     this.isLoading = true
     let apiUrl = '/api/v1/plants/all'
 
-    if (this.filter.current_growth_stage && this.filter.current_growth_stage.length > 0) {
+    if (
+      this.filter.current_growth_stage &&
+      this.filter.current_growth_stage.length > 0
+    ) {
       apiUrl = apiUrl + '/' + this.filter.current_growth_stage
     }
     if (facility_id && this.filter.facility_strain_id) {
       if (this.filter.facility_strain_id.length > 0) {
-        apiUrl = apiUrl + '?facility_strain_id=' + this.filter.facility_strain_id
+        apiUrl =
+          apiUrl + '?facility_strain_id=' + this.filter.facility_strain_id
       }
       if (this.filter.facility_id.length > 0) {
         apiUrl = apiUrl + '&facility_id=' + this.filter.facility_id
       }
     } else {
-      if (this.filter.facility_strain_id && this.filter.facility_strain_id.length > 0) {
-        apiUrl = apiUrl + '?facility_strain_id=' + this.filter.facility_strain_id
+      if (
+        this.filter.facility_strain_id &&
+        this.filter.facility_strain_id.length > 0
+      ) {
+        apiUrl =
+          apiUrl + '?facility_strain_id=' + this.filter.facility_strain_id
       }
       if (this.filter.facility_id && this.filter.facility_id.length > 0) {
         apiUrl = apiUrl + '?facility_id=' + this.filter.facility_id
@@ -84,7 +90,6 @@ class PlantStore {
       this.isLoading = false
     }
   }
-
 
   @action
   load(newPlants) {

@@ -201,24 +201,24 @@ class PlantsDashboardApp extends React.Component {
         </div>
         <div className="flex justify-between">
           <input
-              type="text"
-              className="input w5"
-              placeholder="Search Plants"
-              onChange={e => {
-                PlantStore.searchTerm = e.target.value
-              }}
-            />
+            type="text"
+            className="input w5"
+            placeholder="Search Plants"
+            onChange={e => {
+              PlantStore.searchTerm = e.target.value
+            }}
+          />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
-            <ListingTable
-              ajax={true}
-              onFetchData={this.onFetchData}
-              data={PlantStore.filteredList}
-              pages={PlantStore.metadata.pages}
-              columns={columns}
-              isLoading={PlantStore.isLoading}
-            />
+          <ListingTable
+            ajax={true}
+            onFetchData={this.onFetchData}
+            data={PlantStore.filteredList}
+            pages={PlantStore.metadata.pages}
+            columns={columns}
+            isLoading={PlantStore.isLoading}
+          />
         </div>
         <div id="toast" className="toast" />
         <SlidePanel

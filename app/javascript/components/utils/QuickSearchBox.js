@@ -18,7 +18,12 @@ class StorePlant {
 
   @action
   async searchPlant(facility_id, search) {
-    const url = '/api/v1/plants/' + search + '?facility_id=' + facility_id + '&limit=10&page=0'
+    const url =
+      '/api/v1/plants/' +
+      search +
+      '?facility_id=' +
+      facility_id +
+      '&limit=10&page=0'
     const response = await (await fetch(url, httpGetOptions)).json()
     if (response && response.data) {
       this.isLoadingPlants = true
@@ -31,15 +36,18 @@ class StorePlant {
   @action
   async queryPlants(facility_id, value) {
     const url =
-      '/api/v1/plants/all?facility_id=' + facility_id + '&limit=10&page=0&search=' + value
+      '/api/v1/plants/all?facility_id=' +
+      facility_id +
+      '&limit=10&page=0&search=' +
+      value
     const response = await (await fetch(url, httpGetOptions)).json()
-    
-    return (response.data.map(x => ({
-      value: x.id,
-      label: x.plant_id || x.plant_tag
-    })) || []
+
+    return (
+      response.data.map(x => ({
+        value: x.id,
+        label: x.plant_id || x.plant_tag
+      })) || []
     )
-    
   }
 }
 const storePlant = new StorePlant()

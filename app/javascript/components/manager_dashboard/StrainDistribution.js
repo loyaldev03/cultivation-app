@@ -71,9 +71,6 @@ export default class StrainDistribution extends React.Component {
             .style('opacity', 0)
         })
 
-      const minHeight = 20,
-        minWidth = 180
-
       cell
         .append('rect')
         .attr('classclass', 'tile')
@@ -90,16 +87,40 @@ export default class StrainDistribution extends React.Component {
         .attr('fill', 'white')
         .attr('dx', d => (d.data ? d.data.name.length : 0))
         .attr('opacity', function(d) {
-          if (d.x1 - d.x0 <= minWidth || d.y1 - d.y0 <= minHeight) {
-            if (d.data.name.length < 10) {
-              return 1
-            }
-            return 0
-          } else {
-            if (d.data.name.length > 20) {
+          if (d.x1 - d.x0 < 130) {
+            if (d.y1 - d.y0 <= 20) {
               return 0
+            } else {
+              if (d.x1 - d.x0 < 85) {
+                return 0
+              } else {
+                if (d.data.name.length < 10) {
+                  return 1
+                } else {
+                  return 0
+                }
+              }
             }
-            return 1
+          } else if (d.x1 - d.x0 >= 130 && d.x1 - d.x0 <= 180) {
+            if (d.y1 - d.y0 <= 20) {
+              return 0
+            } else {
+              if (d.data.name.length < 15) {
+                return 1
+              } else {
+                return 0
+              }
+            }
+          } else {
+            if (d.y1 - d.y0 <= 20) {
+              return 0
+            } else {
+              if (d.data.name.length > 20) {
+                return 0
+              } else {
+                return 1
+              }
+            }
           }
         })
         .selectAll('tspan')

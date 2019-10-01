@@ -161,8 +161,8 @@ class PlantSetupApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onSave = (payload) =>{
-    if(payload){
+  onSave = payload => {
+    if (payload) {
       PlantStore.loadPlants()
     }
   }

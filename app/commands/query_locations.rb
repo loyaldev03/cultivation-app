@@ -169,9 +169,7 @@ class QueryLocations
   end
 
   def match_facility
-    Rails.logger.debug('match facility')
     if @facility_id.is_a?(Array)
-      Rails.logger.debug('TRUEE')
       facility_ids = @facility_id.map { |x| x.to_bson_id } rescue []
       {"$match": {_id: {"$in": facility_ids}}}
     else

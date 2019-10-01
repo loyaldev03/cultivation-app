@@ -284,6 +284,7 @@ Rails.application.routes.draw do
         collection do
           get 'show_by_plant_tag/:plant_tag', action: :show_by_plant_tag
           get 'all/(:current_growth_stage)', action: :all
+          get 'all_plants_wstrain/(:current_growth_stage)', action: :all_plants_wstrain
           get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
           get 'search_by_location'
           get 'all_destroyed_plant'

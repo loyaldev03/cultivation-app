@@ -1,12 +1,95 @@
-import { observable, action, computed, toJS } from 'mobx'
+import { observable, action, computed, toJS, autorun } from 'mobx'
 import isEmpty from 'lodash.isempty'
 const uniq = require('lodash.uniq')
+import { httpGetOptions } from '../../../utils'
 
 class PlantStore {
   @observable plants = []
   @observable isLoading = false
-  @observable filter = ''
   @observable columnFilters = {}
+  @observable metadata = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_strain_id: '',
+    current_growth_stage: '',
+    facility_id: '',
+    excludes: [],
+    page: 0,
+    limit: 20
+  }
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadPlants()
+        }
+      },
+      { delay: 700 }
+    )
+  }
+
+  @action
+  async loadPlants() {
+    this.isLoading = true
+    let apiUrl = '/api/v1/plants/all'
+
+    if (
+      this.filter.current_growth_stage &&
+      this.filter.current_growth_stage.length > 0
+    ) {
+      apiUrl = apiUrl + '/' + this.filter.current_growth_stage
+    }
+    if (facility_id && this.filter.facility_strain_id) {
+      if (this.filter.facility_strain_id.length > 0) {
+        apiUrl =
+          apiUrl + '?facility_strain_id=' + this.filter.facility_strain_id
+      }
+      if (this.filter.facility_id.length > 0) {
+        apiUrl = apiUrl + '&facility_id=' + this.filter.facility_id
+      }
+    } else {
+      if (
+        this.filter.facility_strain_id &&
+        this.filter.facility_strain_id.length > 0
+      ) {
+        apiUrl =
+          apiUrl + '?facility_strain_id=' + this.filter.facility_strain_id
+      }
+      if (this.filter.facility_id && this.filter.facility_id.length > 0) {
+        apiUrl = apiUrl + '?facility_id=' + this.filter.facility_id
+      }
+    }
+
+    if (!isEmpty(this.filter.excludes)) {
+      apiUrl = apiUrl + `&excludes=${this.filter.excludes}`
+    }
+
+    apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
+
+    try {
+      const response = await (await fetch(apiUrl, httpGetOptions)).json()
+      if (response && response.data) {
+        this.plants = response.data
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
+        this.isDataLoaded = true
+      } else {
+        this.plants = []
+        this.metadata = { pages: 0 }
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
 
   @action
   load(newPlants) {
@@ -37,19 +120,30 @@ class PlantStore {
 
   @computed
   get filteredList() {
-    const list = this.plants.map(x => x.attributes)
     if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
-      return list.filter(b => {
+      return this.plants.filter(b => {
         if (this.isFiltered(b)) {
           return false
         }
-        const field1 = `${b.plant_tag}`.toLowerCase()
-        const field2 = `${b.plant_id}`.toLowerCase()
-        const filter = this.filter.toLowerCase()
-        return field1.includes(filter) || field2.includes(filter)
+        const filterLc = this.searchTerm.toLowerCase()
+        const field1 = `${b.plant_id}`.toLowerCase()
+        const field2 = `${b.plant_tag}`.toLowerCase()
+        const results = field1.includes(filterLc) || field2.includes(filterLc)
+        return results
       })
     } else {
-      return list
+      return this.plants
+    }
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      excludes: filter.excludes,
+      current_growth_stage: filter.current_growth_stage,
+      page: filter.page,
+      limit: filter.limit
     }
   }
 
@@ -83,7 +177,7 @@ class PlantStore {
   getPlantsOptions() {
     return this.plants.map(p => ({
       value: p.id,
-      label: p.attributes.plant_id
+      label: p.plant_id
     }))
   }
 }

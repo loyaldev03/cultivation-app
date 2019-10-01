@@ -12,7 +12,7 @@ export default function loadPlants(
   excludes = []
 ) {
   plantStore.isLoading = true
-  let apiUrl = '/api/v1/plants/all'
+  let apiUrl = '/api/v1/plants/all_plants_wstrain'
 
   if (current_growth_stage.length > 0) {
     apiUrl = apiUrl + '/' + current_growth_stage
@@ -48,7 +48,9 @@ export default function loadPlants(
     })
     .then(({ status, data }) => {
       if (status >= 400) {
-        console.log('Something wrong when calling /api/v1/plants/plants')
+        console.log(
+          'Something wrong when calling /api/v1/plants/all_plants_wstrain'
+        )
       } else {
         plantStore.load(data)
         plantStore.isLoading = false

@@ -43,7 +43,7 @@ class StorePlant {
     const response = await (await fetch(url, httpGetOptions)).json()
 
     return (
-      response.data.map(x => ({
+      response.data.attributes.map(x => ({
         value: x.id,
         label: x.plant_id || x.plant_tag
       })) || []

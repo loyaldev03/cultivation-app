@@ -10,6 +10,8 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def mothers
+    facilities = params[:facility_id] == 'All' ? current_shared_facility_ids.map { |x| x.to_s } : current_facility&.id.to_s
+    @facility_strains = Inventory::QueryFacilityStrains.call(facilities).result
     if params[:onboarding_type].present?
       current_facility.update_onboarding('ONBOARDING_ACTIVE_PLANTS')
     end

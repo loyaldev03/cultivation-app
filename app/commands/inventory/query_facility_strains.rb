@@ -8,7 +8,7 @@ module Inventory
 
     def call
       query = Inventory::FacilityStrain.includes(:facility)
-      query = query.where(facility_id: @facility_id) if @facility_id
+      query = query.in(facility_id: @facility_id) if @facility_id
 
       query.map do |x|
         {

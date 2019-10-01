@@ -75,7 +75,7 @@ class PlantStore {
     try {
       const response = await (await fetch(apiUrl, httpGetOptions)).json()
       if (response && response.data) {
-        this.plants = response.data
+        this.plants = response.data.attributes
         this.metadata = Object.assign({ pages: 0 }, response.metadata)
         this.isDataLoaded = true
       } else {

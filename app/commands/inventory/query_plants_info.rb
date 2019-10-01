@@ -205,7 +205,7 @@ module Inventory
 
         new_tasks_info = {
           metadata: @metadata,
-          data: plants_info,
+          data: {attributes: plants_info},
         }
 
         new_tasks_info
@@ -230,7 +230,7 @@ module Inventory
       if !@facility_strain_ids.empty?
         {"$match": {"facility_strain_id": {"$in": @facility_strain_ids.map { |x| x.to_bson_id }}}}
       else
-        {"$match": {}}
+        {"$match": {"facility_strain_id": {"$in": @facility_strain_ids}}}
       end
     end
 

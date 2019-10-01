@@ -1,11 +1,7 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
-    facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
-    if resource_shared?
-      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
-    else
-      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
-    end
+    facility = params[:facility_id].split(',').map { |x| x.to_bson_id }
+    facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
     excludes = *params[:excludes] || []
@@ -213,7 +209,8 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def include_options
-    facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
+    facility_ids = *params[:facility_id]
+    facility = Facility.in(id: facility_ids)
     options = {}
     if params[:include]
       include_rels = params[:include].split(',').map { |x| x.strip.to_sym }

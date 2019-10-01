@@ -173,7 +173,7 @@ class QueryLocations
       facility_ids = @facility_id.map { |x| x.to_bson_id } rescue []
       {"$match": {_id: {"$in": facility_ids}}}
     else
-      {"$match": {_id: @facility_id}}
+      {"$match": {_id: @facility_id.to_s}}
     end
   end
 

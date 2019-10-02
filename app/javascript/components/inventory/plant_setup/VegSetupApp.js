@@ -54,7 +54,13 @@ class VegSetupApp extends React.Component {
           Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
-          Header: 'Strain',
+          Header: (
+            <HeaderFilter
+              title="Strain"
+              accessor="strain_name"
+              getOptions={PlantStore.getUniqPropValues}
+              onUpdate={PlantStore.updateFilterOptions}
+            />),
           accessor: 'strain_name',
           headerStyle: { textAlign: 'left' }
         },

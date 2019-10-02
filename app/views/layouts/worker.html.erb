@@ -10,8 +10,8 @@
           <%= flash_messages %>
           <main class="min-vh-100 h-100">
             <div 
-              style="height: 50px" 
-              class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
+              style="height: 50px; position: sticky; top: 0; z-index : 1; box-shadow: 11px 3px 10px 0 #0000000f;"
+              class="ph4 f6 w-100 bg-white flex flex-row items-center justify-between"
             >
 
               <% if content_for? :breadcrumb %>
@@ -48,6 +48,10 @@
 
                   <div class="dropdown">
                     <div id="myDropdown" class="dropdown-content box--shadow-header">
+                      <%if ['manager', 'admin'].include? current_user.user_mode %>
+                        <%= link_to 'Dashboard', root_path,
+                            class: 'ttc grey subtitle-2 pv3 tc dim' %>
+                      <%end%>
                       <%= link_to 'Edit profile', edit_user_registration_path,
                            class: 'ttc grey subtitle-2 pv3 tc dim' %>
                       <%= link_to "Sign out", destroy_user_session_path, method: :delete, 

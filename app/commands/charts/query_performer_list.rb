@@ -9,6 +9,11 @@ module Charts
 
     def call
       batches = Cultivation::Batch.all.includes(:harvest_batch)
+      if batches.blank?
+        return []
+      end
+
+      batches_json = []
       if @args[:order_type].nil? or @args[:order_type] == 'yield'
         batches_json = batches.map do |batch|
           {
@@ -17,8 +22,6 @@ module Charts
             total_dry_weight: batch.harvest_batch.sum(:total_dry_weight),
           }
         end
-
-        batches_json ||= []
 
         if @args[:order].present?
           if @args[:order] == 'top'

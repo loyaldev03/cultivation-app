@@ -22,10 +22,13 @@ class FlowerSetupApp extends React.Component {
           accessor: 'id',
           show: false
         },
-        { Header: 'Plant ID', accessor: 'plant_id', show: false },
         {
-          Header: 'Plant',
-          accessor: 'plant_tag',
+          accessor: 'plant_id',
+          show: false
+        },
+        {
+          Header: 'Plant ID',
+          accessor: 'plant_id',
           headerStyle: { textAlign: 'left' },
           Cell: x => (
             <a
@@ -41,28 +44,19 @@ class FlowerSetupApp extends React.Component {
           Header: (
             <HeaderFilter
               title="Batch ID"
-              accessor="cultivation_batch_name"
+              accessor="cultivation_batch"
               getOptions={PlantStore.getUniqPropValues}
               onUpdate={PlantStore.updateFilterOptions}
             />
           ),
-          accessor: 'cultivation_batch_name',
+          accessor: 'cultivation_batch',
           headerStyle: { textAlign: 'left' },
           Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
-          headerClassName: 'tl',
-          Header: (
-            <HeaderFilter
-              title="Strain"
-              accessor="strain_name"
-              getOptions={PlantStore.getUniqPropValues}
-              onUpdate={PlantStore.updateFilterOptions}
-            />
-          ),
+          Header: 'Strain',
           accessor: 'strain_name',
-          minWidth: 130,
-          Cell: props => <span className="truncate">{props.value}</span>
+          headerStyle: { textAlign: 'left' }
         },
         // {
         //   Header: 'Growth stage',
@@ -132,11 +126,34 @@ class FlowerSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('flower', '', this.props.facility_id)
+    //loadPlants('flower', '', this.props.facility_id)
   }
 
   openSidebar(event, id) {
     window.editorSidebar.open({ width: '500px', id }) // this is a very awkward way to set default sidepanel width
+  }
+
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
+    }
+  }
+
+
+  onFetchData = (state, instance) => {
+    PlantStore.setFilter({
+      facility_id: this.props.facility_id,
+      current_growth_stage: this.props.current_growth_stage,
+      page: state.page,
+      limit: state.pageSize
+    })
+    PlantStore.loadPlants()
   }
 
   render() {
@@ -167,7 +184,7 @@ class FlowerSetupApp extends React.Component {
               className="input w5"
               placeholder="Search Plants"
               onChange={e => {
-                PlantStore.filter = e.target.value
+                PlantStore.searchTerm = e.target.value
               }}
             />
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
@@ -175,9 +192,11 @@ class FlowerSetupApp extends React.Component {
 
           <div className="pv3">
             <ListingTable
-              columns={columns}
+              ajax={true}
+              onFetchData={this.onFetchData}
               data={PlantStore.filteredList}
-              className="f6 -highlight"
+              pages={PlantStore.metadata.pages}
+              columns={columns}
               isLoading={PlantStore.isLoading}
             />
           </div>

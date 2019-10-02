@@ -60,7 +60,8 @@ class VegSetupApp extends React.Component {
               accessor="strain_name"
               getOptions={PlantStore.getUniqPropValues}
               onUpdate={PlantStore.updateFilterOptions}
-            />),
+            />
+          ),
           accessor: 'strain_name',
           headerStyle: { textAlign: 'left' }
         },

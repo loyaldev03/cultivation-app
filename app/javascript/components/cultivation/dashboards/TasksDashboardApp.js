@@ -7,6 +7,7 @@ import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import { SlidePanel } from '../../utils'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
+import { isValid } from 'date-fns'
 const NewTaskForm = lazy(() => import('./tasks/NewTaskForm'))
 
 import {
@@ -92,9 +93,21 @@ class ActiveTaskStore {
 
   /* + column filters */
   isFiltered = record => {
-    let f = Object.keys(this.columnFilters).find(key => {
+    let f
+    f = Object.keys(this.columnFilters).find(key => {
       const filter = this.columnFilters[key].filter(x => x.value === false)
-      return filter.find(x => x.label === record[key])
+      if (key == 'workers') {
+        const workers = record[key].map(w => w['name'])
+        return filter.find(x => workers.includes(x.label))
+      } else {
+        return filter.find(
+          x =>
+            x.label ===
+            (isValid(new Date(record[key]))
+              ? formatDate2(record[key])
+              : record[key])
+        )
+      }
     })
     return f ? true : false
   }
@@ -108,7 +121,20 @@ class ActiveTaskStore {
   }
 
   getUniqPropValues = propName => {
-    return uniq(this.filteredList.map(x => x[propName]).sort())
+    if (propName == 'workers') {
+      const datas = this.filteredList.map(x => x[propName].map(w => w['name']))
+      return uniq([].concat(...datas)).sort()
+    } else {
+      return uniq(
+        this.filteredList
+          .map(x =>
+            isValid(new Date(x[propName]))
+              ? formatDate2(x[propName])
+              : x[propName]
+          )
+          .sort()
+      )
+    }
   }
   /* - column filters */
 
@@ -170,19 +196,7 @@ class TasksDashboardApp extends React.Component {
           <HeaderFilter
             title="Phase"
             accessor="phase"
-            getOptions={() => {
-              return [
-                'clone',
-                'veg1',
-                'veg2',
-                'flower',
-                'harvest',
-                'dry',
-                'trim',
-                'cure',
-                'packaging'
-              ]
-            }}
+            getOptions={activeTaskStore.getUniqPropValues}
             onUpdate={activeTaskStore.updateFilterOptions}
           />
         ),
@@ -192,7 +206,14 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Batch ID',
+        Header: (
+          <HeaderFilter
+            title="Batch ID"
+            accessor="batch_name"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'batch_name',
         className: 'pl3',
         minWidth: 128,
@@ -208,7 +229,14 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Start date',
+        Header: (
+          <HeaderFilter
+            title="Start Date"
+            accessor="start_date"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'start_date',
         className: 'justify-end pr3',
         width: 88,
@@ -216,7 +244,14 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'End date',
+        Header: (
+          <HeaderFilter
+            title="End Date"
+            accessor="end_date"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'end_date',
         className: 'justify-end pr3',
         width: 88,
@@ -282,7 +317,15 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tc',
-        Header: 'Assigned to',
+        Header: (
+          <HeaderFilter
+            toLeft={true}
+            title="Assigned to"
+            accessor="workers"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'workers',
         className: 'justify-center',
         minWidth: 150,

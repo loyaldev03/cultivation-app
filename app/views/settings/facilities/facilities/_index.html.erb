@@ -6,7 +6,7 @@
         <th>Name</th>
         <th>ID</th>
         <th>License</th>
-        <th>Rooms</th>
+        <th class="tr"># of Rooms</th>
         <th></th>
       </tr>
     </thead>
@@ -26,8 +26,8 @@
           </td>
           <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>"><%= blank(f.code) %></td>
           <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>"><%= blank(f.site_license) %></td>
-          <td data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>"><%= f.rooms&.size %></td>
-          <td>
+          <td class="tr mw4" data-toggle-right="<%= edit_settings_facility_facility_path(f.id)%>"><%= f.rooms&.size %></td>
+          <td class="tc mw3">
             <% status = if !f.is_complete 
                         "Continue setup"
                       elsif f.is_enabled

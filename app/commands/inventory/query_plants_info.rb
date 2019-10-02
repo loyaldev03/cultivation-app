@@ -19,9 +19,9 @@ module Inventory
                            :manifest_no,
                            :destroyed_date,
                            :destroyed_reason,
-                           :batch,
-                           :batch_id,
-                           :batch_name,
+                           :cultivation_batch,
+                           :cultivation_batch_id,
+                           :cultivation_batch_name,
                            :batch_growth_stage,
                            :batch_start_date,
                            :estimated_harvest_date,
@@ -153,8 +153,8 @@ module Inventory
         ])
         result = plants.to_a[0]
         @metadata = result['metadata'][0]
-
-        plants_info = result['data'].map do |x|
+        json_data = []
+        result['data'].each do |x|
           if x[:location_id].present?
             location_name = @locations.get_location_code(x[:location_id])
           else
@@ -167,7 +167,7 @@ module Inventory
             batch = nil
           end
 
-          PlantInfo.new(
+          plants = PlantInfo.new(
             x[:_id]&.to_s,
             x[:plant_id],
             x[:plant_tag],
@@ -199,13 +199,19 @@ module Inventory
             x[:c_at],
             x[:location_id]&.to_s,
             x[:location_type],
-            location_name,
+            location_name
           )
+
+          json_data << {
+            id: x[:_id]&.to_s,
+            type: 'plant',
+            attributes: plants,
+          }
         end
 
         new_tasks_info = {
           metadata: @metadata,
-          data: {attributes: plants_info},
+          data: json_data,
         }
 
         new_tasks_info

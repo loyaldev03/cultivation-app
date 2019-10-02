@@ -51,7 +51,14 @@ class Inventory::PlantsController < ApplicationController
   private
 
   def load_batches
-    cultivation_batches = Cultivation::Batch.where(facility_id: params[:facility_id]).includes(:facility_strain, :tasks)
+    if resource_shared?
+      facilities = params[:facility_id] == 'All' ? current_shared_facility_ids.map { |x| x.to_s } : current_facility&.id.to_s
+      cultivation_batches = Cultivation::Batch.in(facility_id: facilities).includes(:facility_strain, :tasks)
+    else
+      facility_id = current_facility&.id.to_s
+      cultivation_batches = Cultivation::Batch.where(facility_id: facility_id).includes(:facility_strain, :tasks)
+    end
+
     @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
   end
 

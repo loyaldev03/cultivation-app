@@ -32,7 +32,11 @@ class CloneSetupApp extends React.Component {
           show: false
         },
         {
-          Header: 'Plant',
+          accessor: 'cultivation_batch_id',
+          show: false
+        },
+        {
+          Header: 'Plant ID',
           accessor: 'plant_tag',
           headerStyle: { textAlign: 'left' },
           Cell: x => {
@@ -51,28 +55,19 @@ class CloneSetupApp extends React.Component {
           Header: (
             <HeaderFilter
               title="Batch ID"
-              accessor="cultivation_batch_name"
+              accessor="cultivation_batch"
               getOptions={PlantStore.getUniqPropValues}
               onUpdate={PlantStore.updateFilterOptions}
             />
           ),
-          accessor: 'cultivation_batch_name',
+          accessor: 'cultivation_batch',
           headerStyle: { textAlign: 'left' },
           Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
         },
         {
-          headerClassName: 'tl',
-          Header: (
-            <HeaderFilter
-              title="Strain"
-              accessor="strain_name"
-              getOptions={PlantStore.getUniqPropValues}
-              onUpdate={PlantStore.updateFilterOptions}
-            />
-          ),
+          Header: 'Strain',
           accessor: 'strain_name',
-          minWidth: 130,
-          Cell: props => <span className="truncate">{props.value}</span>
+          headerStyle: { textAlign: 'left' }
         },
         // {
         //   Header: 'Growth stage',
@@ -140,7 +135,7 @@ class CloneSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('clone', '', this.props.facility_id)
+    //loadPlants('clone', '', this.props.facility_id)
   }
 
   onToggleColumns = (header, value) => {
@@ -152,6 +147,22 @@ class CloneSetupApp extends React.Component {
           x.Header === column.Header ? column : x
         )
       })
+    }
+  }
+
+  onFetchData = (state, instance) => {
+    PlantStore.setFilter({
+      facility_id: this.props.facility_id,
+      current_growth_stage: this.props.current_growth_stage,
+      page: state.page,
+      limit: state.pageSize
+    })
+    PlantStore.loadPlants()
+  }
+
+  onSave = payload => {
+    if (payload) {
+      PlantStore.loadPlants()
     }
   }
 
@@ -184,16 +195,18 @@ class CloneSetupApp extends React.Component {
               className="input w5"
               placeholder="Search Plants"
               onChange={e => {
-                PlantStore.filter = e.target.value
+                PlantStore.searchTerm = e.target.value
               }}
             />
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
           </div>
           <div className="pv3">
             <ListingTable
-              columns={columns}
+              ajax={true}
+              onFetchData={this.onFetchData}
               data={PlantStore.filteredList}
-              className="f6 -highlight"
+              pages={PlantStore.metadata.pages}
+              columns={columns}
               isLoading={PlantStore.isLoading}
             />
           </div>
@@ -203,6 +216,7 @@ class CloneSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}
+          onSave={this.onSave}
           canUpdate={plantPermission.update}
           canCreate={plantPermission.create}
         />

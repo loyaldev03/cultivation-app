@@ -67,27 +67,27 @@
                   </div>
                 </div>
               </div>
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
+              <table class="std-table pv2 ph3 w-100 mb2">
                 <thead>
                   <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Name</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Code</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Facility</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Room</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc "># of levels/shelves</th>
+                    <th class="pv2 ph3">#</th>
+                    <th class="pv2 ph3">Name</th>
+                    <th class="pv2 ph3">Code</th>
+                    <th class="pv2 ph3">Facility</th>
+                    <th class="pv2 ph3">Room</th>
+                    <th class="pv2 ph3 tr "># of levels/shelves</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   <% @rows.each_with_index do |f, i| %>
                     <tr data-toggle-right="<%= edit_settings_facility_row_path(f)%>" class="dim pointer">
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.name) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f.room.facility.name %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f.room.name %></td>
-                      <td class="bb b--black-20 pv3 tc "><%= f.shelves.count %></td>
+                      <td class="pv3"><%= i+1 %></td>
+                      <td class="pv3"><%= blank(f.name) %></td>
+                      <td class="pv3"><%= blank(f.code) %></td>
+                      <td class="pv3"><%= f.room.facility.name %></td>
+                      <td class="pv3"><%= f.room.name %></td>
+                      <td class="pv3 tr mw1"><%= f.shelves.count %></td>
                     </tr>
                   <% end %>
                 </tbody>

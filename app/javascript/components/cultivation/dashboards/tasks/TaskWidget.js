@@ -17,10 +17,10 @@ const TaskWidgetList = ({
     >
       <div className="flex" style={{ flex: ' 1 1 auto' }}>
         <i
-          className={`material-icons white bg-orange md-48 ${className}`}
+          className={`material-icons bg-white orange md-48 ${className}`}
           style={{ borderRadius: '50%' }}
         >
-          access_time
+          assignment
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>

@@ -173,7 +173,7 @@ class QueryLocations
       facility_ids = @facility_id.map { |x| x.to_bson_id } rescue []
       {"$match": {_id: {"$in": facility_ids}}}
     else
-      {"$match": {_id: @facility_id.to_s}}
+      {"$match": {_id: @facility_id}}
     end
   end
 
@@ -181,7 +181,8 @@ class QueryLocations
 
   class << self
     def select_options(facility_id, purposes)
-      result = QueryLocations.call([facility_id], purposes).result
+      facilities = facility_id.split(',')
+      result = QueryLocations.call(facilities, purposes).result
       result.map do |loc|
         if loc[:tray_id].blank?
           LocationOption.new("#{loc[:room_name]} - #{loc[:room_code]}", loc[:room_id].to_s)

@@ -39,19 +39,19 @@ class PlantSetupApp extends React.Component {
             </a>
           )
         },
-        {
-          Header: (
-            <HeaderFilter
-              title="Batch ID"
-              accessor="batch"
-              getOptions={PlantStore.getUniqPropValues}
-              onUpdate={PlantStore.updateFilterOptions}
-            />
-          ),
-          accessor: 'batch',
-          headerStyle: { textAlign: 'left' },
-          Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
-        },
+        // {
+        //   Header: (
+        //     <HeaderFilter
+        //       title="Batch ID"
+        //       accessor="cultivation_batch"
+        //       getOptions={PlantStore.getUniqPropValues}
+        //       onUpdate={PlantStore.updateFilterOptions}
+        //     />
+        //   ),
+        //   accessor: 'cultivation_batch',
+        //   headerStyle: { textAlign: 'left' },
+        //   Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
+        // },
         {
           Header: (
             <HeaderFilter

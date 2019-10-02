@@ -209,13 +209,12 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def include_options
-    facility_ids = *params[:facility_id]
-    facility = Facility.in(id: facility_ids)
     options = {}
     if params[:include]
       include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
       options = {params: {include: include_rels}}
     elsif params[:facility_id]
+      facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
       options = {params: {locations: QueryLocations.call(facility)}}
     end
     options

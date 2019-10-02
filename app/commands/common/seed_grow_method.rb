@@ -30,6 +30,7 @@ module Common
         {name: 'Mineral Wool', is_active: true},
         {name: 'Peat', is_active: true},
         {name: 'Perlite', is_active: true},
+        {name: 'Rockwool', is_active: true},
         {name: 'Soil', is_active: true},
         {name: 'Sphagnum', is_active: true},
         {name: 'Vermiculite', is_active: true},

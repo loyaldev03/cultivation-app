@@ -146,8 +146,7 @@ class PlantEditor extends React.Component {
               form_type: 'Edit',
               // relationships
               ...vendor_attr,
-              ...invoice_attr,
-              
+              ...invoice_attr
             })
 
             if (batch) {

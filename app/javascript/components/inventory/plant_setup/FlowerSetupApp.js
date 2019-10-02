@@ -145,7 +145,6 @@ class FlowerSetupApp extends React.Component {
     }
   }
 
-
   onFetchData = (state, instance) => {
     PlantStore.setFilter({
       facility_id: this.props.facility_id,

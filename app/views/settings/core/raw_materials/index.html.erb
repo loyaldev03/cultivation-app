@@ -87,57 +87,61 @@
                       <th></th>
                     </tr>
                     <% @raw_materials.each_with_index do |f, i| %>
-                      <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%> <%= f.category if f.category != '' and f.sub_category != ''%>">
-                        <td data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>" class="dark-grey tl">
-                          <div class="flex justify-between-ns">
-                            <% if f.category == '' and f.sub_category == ''%>
-                              <div>
-                                <% if @specials.include?(f.key.try(:capitalize))%>
-                                  <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
-                                <% end %>
-                                <%= f.label%>
-                              </div>
-                            <% elsif f.category != '' and f.sub_category == ''%>
-                              <div class='ml4'>
-                                <% if @second_levels.include?(f.key.try(:capitalize))%>
-                                  <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
-                                <% end %>
-                                <%= f.label%>
-                              </div>
-                            <% elsif f.category != '' and f.sub_category != ''%>
-                              <div class='ml5'>
-                                <%= f.label%>
-                              </div>
+                      <%unless f.label == "Grow medium" or f.category == "Grow medium".parameterize.underscore%>
+                        <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%> <%= f.category if f.category != '' and f.sub_category != ''%>">
+                          <td data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>" class="dark-grey tl">
+                            <div class="flex justify-between-ns">
+                              <% if f.category == '' and f.sub_category == ''%>
+                                <div class='ml2'>
+                                  <% if @specials.include?(f.key.try(:capitalize))%>
+                                    <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
+                                  <% end %>
+                                  <%= f.label%>
+                                </div>
+                              <% elsif f.category != '' and f.sub_category == ''%>
+                                <div class='ml4'>
+                                  <% if @second_levels.include?(f.key.try(:capitalize))%>
+                                    <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
+                                  <% end %>
+                                  <%= f.label%>
+                                </div>
+                              <% elsif f.category != '' and f.sub_category != ''%>
+                                <div class='ml5'>
+                                  <%= f.label%>
+                                </div>
+                              <% end %>
+                            </div>
+                          </td>
+                          <%# <td class="pv2 ph3 dark-grey tl">
+                            <%= f.uom_dimension %>
+                          </td>
+                          <%# <td class="pv2 ph3 dark-grey tl">
+                            <%= f.default_price %>
+                          </td>
+                          <td class="pv2 ph3 dark-grey tr ">
+                            <% if f.is_active? %>
+                              <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]" checked>
+                            <% else %>
+                              <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]">
                             <% end %>
-                          </div>
-                        </td>
-                        <%# <td class="pv2 ph3 dark-grey tl">
-                          <%= f.uom_dimension %>
-                        </td>
-                        <%# <td class="pv2 ph3 dark-grey tl">
-                          <%= f.default_price %>
-                        </td>
-                        <td class="pv2 ph3 dark-grey tr ">
-                          <% if f.is_active? %>
-                            <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]" checked>
-                          <% else %>
-                            <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]">
-                          <% end %>
-                        </td>
-                        <td class="pv2 ph3 dark-grey tr ">
-                          <% unless @second_levels.include?(f.key.try(:capitalize)) %> 
-                            <%if @used_rw and @used_rw.include?(f.label.parameterize.underscore)%>
+                          </td>
+                          <td class="pv2 ph3 dark-grey tr ">
+                            <% if f.category == '' and f.sub_category == '' and f.children.count > 0%>
                               <i class="material-icons md-15 grey dim pointer">lock</i>
-                            <% else%>
-                              <%= link_to settings_core_raw_material_path(f.id), method: :delete, data: {remote: true, confirm: 'Are you sure?'}, class: 'grey subtitle-2 pv3 tc dim' do %>
-                                <i class="material-icons md-15 orange dim pointer">delete</i>
+                            <% elsif @second_levels.include?(f.key.try(:capitalize)) %> 
+                              <i class="material-icons md-15 grey dim pointer">lock</i>
+                            <%else%>
+                              <%if @used_rw and @used_rw.include?(f.label.parameterize.underscore)%>
+                                <i class="material-icons md-15 grey dim pointer">lock</i>
+                              <% else%>
+                                <%= link_to settings_core_raw_material_path(f.id), method: :delete, data: {remote: true, confirm: 'Are you sure?'}, class: 'grey subtitle-2 pv3 tc dim' do %>
+                                  <i class="material-icons md-15 orange dim pointer">delete</i>
+                                <% end%>
                               <% end%>
-                            <% end%>
-                          <%else%>
-                            <i class="material-icons md-15 grey dim pointer">lock</i> 
-                          <%end%>
-                        </td>
-                      </tr>
+                            <%end%>
+                          </td>
+                        </tr>
+                      <%end%>
                     <% end %>
                   </tbody>
                 </table>

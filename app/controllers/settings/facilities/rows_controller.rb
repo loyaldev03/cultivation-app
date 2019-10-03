@@ -17,7 +17,7 @@ class Settings::Facilities::RowsController < ApplicationController
   def update
     @row = FacilitiesForm::RowUpdate.find(params[:id])
     if @row.update(update_params)
-      render 'layouts/hide_sidebar', layout: nil
+      render 'layouts/hide_sidebar', layout: nil, locals: {message: 'Row successfully updated'}
     else
       render 'edit'
     end

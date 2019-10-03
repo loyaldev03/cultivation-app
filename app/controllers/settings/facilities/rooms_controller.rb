@@ -16,7 +16,7 @@ class Settings::Facilities::RoomsController < ApplicationController
     @room = FacilitiesForm::RoomCreate.new(room_params)
 
     if @room.save
-      render 'layouts/hide_sidebar', layout: nil
+      render 'layouts/hide_sidebar', layout: nil, locals: {message: 'Room successfully created'}
     else
       render 'new'
     end
@@ -30,7 +30,7 @@ class Settings::Facilities::RoomsController < ApplicationController
   def update
     @room = FacilitiesForm::RoomUpdate.find(params[:id])
     if @room.update(room_update_params)
-      render 'layouts/hide_sidebar', layout: nil
+      render 'layouts/hide_sidebar', layout: nil, locals: {message: 'Room successfully updated'}
     else
       render 'edit', layout: nil
     end

@@ -62,7 +62,7 @@ class BatchEditor extends React.Component {
           start_date: new Date(attrs.start_date),
           current_growth_stage: attrs.current_growth_stage || '',
           current_growth_stage_disabled: attrs.plant_count > 0,
-          form_type: 'Edit',
+          form_type: 'Edit'
         }
         this.setState(newState)
 

@@ -4,7 +4,6 @@ import { httpGetOptions } from '../../../utils'
 const uniq = require('lodash.uniq')
 
 class CultivationBatchStore {
-
   @observable batches = []
   @observable filter = ''
   @observable isLoading = false
@@ -36,11 +35,11 @@ class CultivationBatchStore {
   async loadCultBatches() {
     this.isLoading = true
     let apiUrl = `/api/v1/batches?facility_id=${this.filter.facility_id}`
-    
-    if(this.filter.exclude_tasks && this.filter.exclude_tasks == 'true'){
+
+    if (this.filter.exclude_tasks && this.filter.exclude_tasks == 'true') {
       apiUrl + '?exclude_tasks=' + this.filter.exclude_tasks
     }
-    
+
     apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
@@ -136,7 +135,6 @@ class CultivationBatchStore {
     return uniq(this.filteredList.map(x => x[propName]).sort())
   }
   /* - Required for column filter */
-
 }
 
 const cultivationBatchStore = new CultivationBatchStore()

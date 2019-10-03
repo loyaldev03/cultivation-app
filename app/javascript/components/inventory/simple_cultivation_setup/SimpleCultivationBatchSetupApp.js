@@ -316,7 +316,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             /> */}
           </div>
         </div>
-      </React.Fragment> 
+      </React.Fragment>
     )
   }
 

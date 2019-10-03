@@ -1,10 +1,6 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
-    if resource_shared?
-      facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
-    else
-      facilities = [current_facility&.id]
-    end
+    facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
     # batches = Cultivation::Batch.all.order(c_at: :desc)
     # phases = extract_phases(batches)
     exclude_tasks = params[:exclude_tasks] == 'true' || false

@@ -163,13 +163,19 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def harvests
     if resource_shared?
-      facility_strains_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id)
+      facilities = active_facility_ids
     else
-      facility_strains_ids = Inventory::FacilityStrain.where(facility_id: params[:facility_id]).pluck(:id)
+      facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
-    batches = Inventory::HarvestBatch.in(facility_strain_id: facility_strains_ids).includes(:cultivation_batch, :facility_strain, :plants).order(c_at: :desc)
-    render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
+    data = Inventory::QueryHarvestBatches.call(facilities,
+                                               {page: params[:page],
+                                                limit: params[:limit],
+                                                search: params[:search]}).result
+
+    render json: data
+    # batches = Inventory::HarvestBatch.in(facility_strain_id: facility_strains_ids).includes(:cultivation_batch, :facility_strain, :plants).order(c_at: :desc)
+    # render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
   end
 
   def show_harvest

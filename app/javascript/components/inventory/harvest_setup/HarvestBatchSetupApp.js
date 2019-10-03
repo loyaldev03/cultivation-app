@@ -35,7 +35,7 @@ class HarvestbatchSetupApp extends React.Component {
         {
           Header: 'Strain',
           accessor: 'strain_name',
-          headerStyle: { textAlign: 'left' },
+          headerStyle: { textAlign: 'left' }
         },
         {
           Header: (
@@ -54,15 +54,13 @@ class HarvestbatchSetupApp extends React.Component {
           accessor: 'plant_count',
           headerStyle: { textAlign: 'center' },
           width: 88,
-          className: 'justify-end',
+          className: 'justify-end'
         },
         {
           Header: 'Locations',
           accessor: 'location_name',
           headerStyle: { textAlign: 'left' },
-          Cell: props => (
-            <span>{props.value ? props.value : '--'}</span>
-          )
+          Cell: props => <span>{props.value ? props.value : '--'}</span>
         },
         {
           Header: 'Harvest date',
@@ -80,13 +78,17 @@ class HarvestbatchSetupApp extends React.Component {
             }
           }
         },
-        {accessor: 'uom', show: false},
+        { accessor: 'uom', show: false },
         {
           Header: 'Total weight',
           accessor: 'total_wet_weight',
           width: 88,
           className: 'justify-end',
-          Cell: props => (<span>{props.value} {props.row.uom}</span>)
+          Cell: props => (
+            <span>
+              {props.value} {props.row.uom}
+            </span>
+          )
         },
         {
           Header: (
@@ -99,7 +101,7 @@ class HarvestbatchSetupApp extends React.Component {
           ),
           accessor: 'status',
           headerStyle: { textAlign: 'left' },
-          className: 'tl',
+          className: 'tl'
         }
       ]
     }
@@ -173,12 +175,12 @@ class HarvestbatchSetupApp extends React.Component {
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
           </div>
           <ListingTable
-              ajax={true}
-              onFetchData={this.onFetchData}
-              data={harvestBatchStore.filteredList}
-              pages={harvestBatchStore.metadata.pages}
-              columns={columns}
-              isLoading={harvestBatchStore.isLoading}
+            ajax={true}
+            onFetchData={this.onFetchData}
+            data={harvestBatchStore.filteredList}
+            pages={harvestBatchStore.metadata.pages}
+            columns={columns}
+            isLoading={harvestBatchStore.isLoading}
           />
         </div>
         <HarvestBatchEditor

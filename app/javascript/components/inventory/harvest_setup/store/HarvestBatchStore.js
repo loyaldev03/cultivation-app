@@ -33,7 +33,9 @@ class HarvestBatchStore {
   @action
   async loadHarvestBatches() {
     this.isLoading = true
-    let apiUrl = `/api/v1/plants/harvests?facility_id=${this.filter.facility_id}`
+    let apiUrl = `/api/v1/plants/harvests?facility_id=${
+      this.filter.facility_id
+    }`
 
     apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm

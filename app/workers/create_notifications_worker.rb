@@ -42,7 +42,7 @@ class CreateNotificationsWorker
       rec.save
     rescue Mongo::Error::OperationFailure => e
       if Rollbar
-        Rollbar.info("Duplicate notification. Skipped.")
+        Rollbar.info('Duplicate notification. Skipped.')
       end
       next
     end

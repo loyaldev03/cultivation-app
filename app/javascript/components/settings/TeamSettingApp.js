@@ -242,13 +242,26 @@ class TeamSetttingApp extends React.Component {
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 fl w-100">
+            <div className="flex justify-between">
+              <div>
+                <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
+                  Team Settings
+                </h5>
+                <p className="mt2 body-1 grey">
+                  Browses through your team's information here.
+                </p>
+              </div>
+              <div className="dim flex flex-row items-center pointer">
+                <i className="material-icons md-gray">keyboard_arrow_left</i>
+                <a
+                  className="db tr ttu link button--font grey"
+                  href="/settings"
+                >
+                  Back to Setting
+                </a>
+              </div>
+            </div>
             <div className="fl w-80-l w-100-m">
-              <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
-                Team Settings
-              </h5>
-              <p className="mt2 mb4 db body-1 grey">
-                Browses through your team's information here.
-              </p>
               <TabButton
                 title="Roles & Permissions"
                 isActive={activeTab === 'rolesTab'}

@@ -18,7 +18,7 @@ class Settings::Facilities::SectionsController < ApplicationController
   def update
     @section = FacilitiesForm::SectionUpdate.find(params[:id])
     if @section.update(section_params)
-      render 'layouts/hide_sidebar', layout: nil
+      render 'layouts/hide_sidebar', layout: nil, locals: {message: 'Section successfully updated'}
     else
       render 'edit'
     end

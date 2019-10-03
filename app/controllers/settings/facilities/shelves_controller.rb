@@ -19,7 +19,7 @@ class Settings::Facilities::ShelvesController < ApplicationController
   def update
     @shelf = FacilitiesForm::ShelfUpdate.find(params[:id])
     if @shelf.update(update_params)
-      render 'layouts/hide_sidebar', layout: nil
+      render 'layouts/hide_sidebar', layout: nil, locals: {message: 'Shelf successfully updated'}
     else
       render 'edit'
     end

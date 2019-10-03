@@ -10,7 +10,7 @@ class Purchasing::VendorsController < ApplicationController
   def create
     @record = PurchasingForm::VendorForm.new
     if @record.submit(record_params)
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Vendor successfully updated'}
     else
       render 'new', layout: nil
     end
@@ -27,7 +27,7 @@ class Purchasing::VendorsController < ApplicationController
   def update
     @record = PurchasingForm::VendorForm.new(params[:id])
     if @record.submit(update_params)
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Vendor successfully updated'}
     else
       render 'edit', layout: nil
     end
@@ -36,7 +36,7 @@ class Purchasing::VendorsController < ApplicationController
   def destroy
     command = DestroyVendor.call(params[:id])
     if command.success?
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Vendor successfully updated'}
     else
       flash[:error] = 'Unable to delete'
       render 'edit', layout: nil

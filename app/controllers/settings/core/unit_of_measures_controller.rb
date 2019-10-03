@@ -15,7 +15,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   def create
     @record = CoreForm::UnitOfMeasureForm.new
     if @record.submit(record_params)
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'UOM successfully created'}
     else
       render 'new', layout: nil
     end
@@ -28,7 +28,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   def update
     form_object = CoreForm::UnitOfMeasureForm.new(params[:id])
     if form_object.submit(update_params)
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'UOM successfully updated'}
     else
       render 'edit', layout: nil
     end
@@ -37,7 +37,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   def destroy
     command = DestroyUnitOfMeasure.call(params[:id])
     if command.success?
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'UOM successfully deleted'}
     else
       flash[:error] = 'Unable to delete'
       render 'edit', layout: nil

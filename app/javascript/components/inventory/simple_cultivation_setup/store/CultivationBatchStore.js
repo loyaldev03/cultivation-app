@@ -1,11 +1,68 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun } from 'mobx'
 import isEmpty from 'lodash.isempty'
+import { httpGetOptions } from '../../../utils'
+const uniq = require('lodash.uniq')
 
 class CultivationBatchStore {
-  @observable isLoading = false
+
   @observable batches = []
   @observable filter = ''
+  @observable isLoading = false
   @observable columnFilters = {}
+  @observable metadata = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_id: '',
+    exclude_tasks: 'false',
+    page: 0,
+    limit: 20
+  }
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadCultBatches()
+        }
+      },
+      { delay: 700 }
+    )
+  }
+
+  @action
+  async loadCultBatches() {
+    this.isLoading = true
+    let apiUrl = `/api/v1/batches?facility_id=${this.filter.facility_id}`
+    
+    if(this.filter.exclude_tasks && this.filter.exclude_tasks == 'true'){
+      apiUrl + '?exclude_tasks=' + this.filter.exclude_tasks
+    }
+    
+    apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
+
+    try {
+      const response = await (await fetch(apiUrl, httpGetOptions)).json()
+      if (response && response.data) {
+        this.batches = response.data.map(x => x.attributes)
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
+        this.isDataLoaded = true
+      } else {
+        this.batches = []
+        this.metadata = { pages: 0 }
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
 
   @action
   load(newBatches) {
@@ -32,19 +89,19 @@ class CultivationBatchStore {
 
   @computed
   get filteredList() {
-    const list = this.batches.map(x => x.attributes)
     if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
-      return list.filter(b => {
+      return this.batches.filter(b => {
         if (this.isFiltered(b)) {
           return false
         }
+        const filterLc = this.searchTerm.toLowerCase()
         const field1 = `${b.batch_no}`.toLowerCase()
         const field2 = `${b.name}`.toLowerCase()
-        const filter = this.filter.toLowerCase()
-        return field1.includes(filter) || field2.includes(filter)
+        const results = field1.includes(filterLc) || field2.includes(filterLc)
+        return results
       })
     } else {
-      return list
+      return this.batches
     }
   }
 
@@ -55,6 +112,16 @@ class CultivationBatchStore {
       return filter.find(x => x.label === record[key])
     })
     return f ? true : false
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      exclude_tasks: filter.exclude_tasks,
+      page: filter.page,
+      limit: filter.limit
+    }
   }
 
   updateFilterOptions = (propName, filterOptions) => {
@@ -70,11 +137,6 @@ class CultivationBatchStore {
   }
   /* - Required for column filter */
 
-  getPlantById(plantId) {
-    if (plantId) {
-      return toJS(this.plants.find(x => x.id === plantId))
-    }
-  }
 }
 
 const cultivationBatchStore = new CultivationBatchStore()

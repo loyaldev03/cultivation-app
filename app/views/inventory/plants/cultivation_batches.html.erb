@@ -15,8 +15,10 @@
     <div class="flex flex-column">
       <%= react_component('inventory/simple_cultivation_setup/SimpleCultivationBatchSetupApp', {
           facility_strains: @facility_strains,
+          facility_id: params[:facility_id] == 'All' ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s,
           batch_sources: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
           grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
+          currentTime: Time.current,
           plantPermission: RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result
         }) %>
       <div class="w-100 bg-white ph3 pt2 pb4">

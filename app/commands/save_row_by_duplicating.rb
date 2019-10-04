@@ -53,7 +53,9 @@ class SaveRowByDuplicating
           target_shelf.code = NextFacilityCode.call(:shelf, nil, index + 1).result
           target_shelf.full_code = Constants.generate_full_code(facility, room, target_row, target_shelf)
           # copy trays fields
-          copy_trays(target_row, source_shelf.trays, target_shelf)
+          trays_id = []
+          copy_trays(target_row, source_shelf.trays, target_shelf, trays_id)
+          target_shelf.trays.not_in(:_id => trays_id).delete_all
         end
         target_row.is_complete = source_row.is_complete
         target_row.save!
@@ -72,14 +74,15 @@ class SaveRowByDuplicating
     @room ||= facility.rooms.detect { |r| r.id == @room_id.to_bson_id }
   end
 
-  def copy_trays(target_row, source_trays, target_shelf)
+  def copy_trays(target_row, source_trays, target_shelf, trays_id)
     source_trays.each_with_index do |source_tray, index|
-      target_tray = Tray.new
+      target_tray = target_shelf.trays.find_by(code: source_tray.code) || Tray.new
       copy_attrs(COPY_TRAY_ATTRS, source_tray, target_tray)
       target_tray.shelf = target_shelf
       target_tray.code = NextFacilityCode.call(:tray, nil, index + 1).result
       target_tray.full_code = Constants.generate_full_code(facility, room, target_row, target_shelf, target_tray)
       target_tray.save!
+      trays_id.push(target_tray.id)
     end
   end
 end

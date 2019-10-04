@@ -1,25 +1,73 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, autorun } from 'mobx'
 import isEmpty from 'lodash.isempty'
-import uniq from 'lodash.uniq'
+import { httpGetOptions } from '../../../utils'
+const uniq = require('lodash.uniq')
 
 class HarvestBatchStore {
-  batches = observable([])
-  @observable isLoading = false
+  @observable batches = []
   @observable filter = ''
+  @observable isLoading = false
   @observable columnFilters = {}
+  @observable metadata = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_id: '',
+    page: 0,
+    limit: 20
+  }
 
-  @action
-  load(batches) {
-    this.batches.replace(batches)
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadHarvestBatches()
+        }
+      },
+      { delay: 700 }
+    )
   }
 
   @action
-  prepend(newBatch = []) {
-    if (Array.isArray(newBatch)) {
-      this.batches.replace(newBatch.concat(this.batches.slice()))
-    } else {
-      this.batches.replace([newBatch, ...this.batches.slice()])
+  async loadHarvestBatches() {
+    this.isLoading = true
+    let apiUrl = `/api/v1/plants/harvests?facility_id=${
+      this.filter.facility_id
+    }`
+
+    apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
+
+    try {
+      const response = await (await fetch(apiUrl, httpGetOptions)).json()
+      if (response && response.data) {
+        this.batches = response.data.map(x => x.attributes)
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
+        this.isDataLoaded = true
+      } else {
+        this.batches = []
+        this.metadata = { pages: 0 }
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
+    } finally {
+      this.isLoading = false
     }
+  }
+
+  @action
+  load(newBatches) {
+    this.batches.replace(newBatches)
+  }
+
+  @action
+  prepend(newBatch) {
+    this.batches.replace([newBatch, ...this.batches.slice()])
   }
 
   @action
@@ -37,19 +85,18 @@ class HarvestBatchStore {
 
   @computed
   get filteredList() {
-    const list = this.batches.map(x => x.attributes)
     if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
-      return list.filter(b => {
+      return this.batches.filter(b => {
         if (this.isFiltered(b)) {
           return false
         }
+        const filterLc = this.searchTerm.toLowerCase()
         const field1 = `${b.harvest_name}`.toLowerCase()
-        const field2 = b.cultivation_batch_name.toLowerCase()
-        const filter = this.filter.toLowerCase()
-        return field1.includes(filter) || field2.includes(filter)
+        const results = field1.includes(filterLc)
+        return results
       })
     } else {
-      return list
+      return this.batches
     }
   }
 
@@ -60,6 +107,15 @@ class HarvestBatchStore {
       return filter.find(x => x.label === record[key])
     })
     return f ? true : false
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      page: filter.page,
+      limit: filter.limit
+    }
   }
 
   updateFilterOptions = (propName, filterOptions) => {
@@ -73,7 +129,8 @@ class HarvestBatchStore {
   getUniqPropValues = propName => {
     return uniq(this.filteredList.map(x => x[propName]).sort())
   }
+  /* - Required for column filter */
 }
 
-const batchestore = new HarvestBatchStore()
-export default batchestore
+const harvestBatchStore = new HarvestBatchStore()
+export default harvestBatchStore

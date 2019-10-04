@@ -20,12 +20,12 @@ module Charts
           residualPesticidesValue: 425,
         }
       end
-      if @args[:order].present?
-        if @args[:order] == 'top'
-          json_output = json_output.sort_by { |a| -a[:thcValue] }
-        else
-          json_output = json_output.sort_by { |a| a[:thcValue] }
-        end
+      if !json_output.blank? && @args[:order].present?
+        json_output = if @args[:order] == 'top'
+                        json_output.sort_by { |a| -a[:thcValue] }
+                      else
+                        json_output.sort_by { |a| a[:thcValue] }
+                      end
       end
       json_output
     end

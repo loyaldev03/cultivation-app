@@ -39,9 +39,11 @@
               <td class="bb b--black-10"></td>
             <% else %>
             <td class="bb b--black-10 f6 tr pv3 pr2">
-              <%= link_to "delete", settings_core_raw_material_path(id: subcat.id, edit_form: true, category: subcat.category), method: :delete, 
-                        data: {remote: true, confirm: 'Are you sure?'},
-                        class: 'link material-icons orange mr3 ml1' %>
+              <%unless @used_rw and @used_rw.include?(subcat.label.parameterize.underscore)%>
+                <%= link_to "delete", settings_core_raw_material_path(id: subcat.id, edit_form: true, category: subcat.category), method: :delete, 
+                          data: {remote: true, confirm: 'Are you sure?'},
+                          class: 'link material-icons orange mr3 ml1' %>
+              <%end%>
             </td>
             <%end%>
           </tr>

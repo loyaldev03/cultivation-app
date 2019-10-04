@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   httpGetOptions,
-  selectStyles,
+  reactSelectStyle,
   SlidePanel,
   SlidePanelHeader,
   formatDate
@@ -10,6 +10,51 @@ import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 import { observable, action, computed } from 'mobx'
 import { differenceInDays } from 'date-fns'
+
+const searchBoxSelect = {
+  control: (base, state) => ({
+    ...base,
+    fontSize: '0.800rem',
+    boxShadow: 'none',
+    backgroundColor: state.isDisabled ? '#eee' : '#fff',
+    height: '34px',
+    minHeight: '34px',
+    borderColor: state.isFocused ? '#F66830' : '#C7C7C7',
+    ':hover': {
+      borderColor: '#F66830'
+    }
+  }),
+  indicatorSeparator: () => ({
+    display: 'none'
+  }),
+  menu: (base, state) => ({
+    ...base,
+    marginTop: 2
+  }),
+  dropdownIndicator: () => ({
+    display: 'inline-block',
+    color: 'rgba(100,100,100, 0.2)',
+    width: '30px'
+  }),
+  option: (base, state) => {
+    return {
+      ...base,
+      backgroundColor:
+        state.isFocused || state.isSelected
+          ? 'rgba(100, 100, 100, 0.1)'
+          : 'transparent',
+      ':active': 'rgba(100, 100, 100, 0.1)',
+      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
+      color: '#707A8B',
+      fontSize: '0.800rem'
+    }
+  },
+  singleValue: base => ({
+    ...base,
+    color: '#707A8B'
+  })
+}
+
 
 class StorePlant {
   @observable plants = []
@@ -103,17 +148,18 @@ export default class QuickSearchBox extends React.Component {
   }
 
   render() {
+   
     const { plantShow, isLoading, isLoadingPlants } = this.state
     const today = new Date()
     return (
       <React.Fragment>
         <div className="flex items-center pr2">
-          <div className="grey w-30">Quick Search</div>
-          <div className="grey w-70">
+          <div className="grey w-20">Quick Search</div>
+          <div className="grey w-80">
             <AsyncSelect
               isClearable="true"
               placeholder="Search Plant ID ..."
-              styles={selectStyles}
+              styles={searchBoxSelect}
               value={this.state.selected}
               defaultOptions={true}
               cacheOptions={false}

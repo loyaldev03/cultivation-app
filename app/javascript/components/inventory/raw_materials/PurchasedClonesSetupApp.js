@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import PurchasedCloneEditor from './components/PurchasedCloneEditor'
 import rawMaterialStore from './store/RawMaterialStore'
-import loadRawMaterials from './actions/loadRawMaterials'
+//import loadRawMaterials from './actions/loadRawMaterials'
 import {
   ListingTable,
   HeaderFilter,
@@ -24,8 +24,19 @@ class PurchasedClonesSetupApp extends React.Component {
     this.state = {
       columns: [
         {
-          Header: 'Strain',
-          accessor: 'facility_strain.strain_name',
+          accessor: 'order_uom',
+          show: false
+        },
+        {
+          Header: (
+            <HeaderFilter
+              title="Strain"
+              accessor="strain_name"
+              getOptions={rawMaterialStore.getUniqPropValues}
+              onUpdate={rawMaterialStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'strain_name',
           headerClassName: 'tl ttc'
         },
         {
@@ -53,30 +64,34 @@ class PurchasedClonesSetupApp extends React.Component {
           headerClassName: 'tl'
         },
         {
-          Header: 'Supplier',
-          accessor: 'vendor.name',
+          Header: (
+            <HeaderFilter
+              title="Supplier"
+              accessor="supplier"
+              getOptions={rawMaterialStore.getUniqPropValues}
+              onUpdate={rawMaterialStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'supplier',
           headerClassName: 'tl'
         },
         {
           Header: 'PO Number',
-          accessor: 'purchase_order.purchase_order_no',
+          accessor: 'po_number',
           headerClassName: 'tl'
         },
         {
           Header: 'Invoice No',
-          accessor: 'vendor_invoice.invoice_no',
+          accessor: 'invoice_number',
           headerClassName: 'tl'
         },
         {
-          accessor: 'order_uom',
-          show: false
-        },
-        {
           Header: 'Order quantity',
+          headerClassName: 'tl',
           accessor: 'order_quantity',
-          headerClassName: 'tr',
+          className: 'justify-end pr3',
           Cell: record => (
-            <div className="tr">
+            <div className="tc">
               {record.value} {record.row.order_uom}
             </div>
           )
@@ -87,7 +102,8 @@ class PurchasedClonesSetupApp extends React.Component {
         },
         {
           Header: 'Quantity',
-          headerClassName: 'tr',
+          headerClassName: 'tl',
+          className: 'justify-end pr3',
           accessor: 'quantity',
           Cell: record => (
             <div className="tr">
@@ -96,20 +112,18 @@ class PurchasedClonesSetupApp extends React.Component {
           )
         },
         {
-          accessor: 'vendor_invoice.item_price',
+          accessor: 'currency',
           show: false
         },
         {
           Header: 'Cost',
-          accessor: 'vendor_invoice.item_currency',
-          headerClassName: 'tr',
+          headerClassName: 'tc',
+          accessor: 'cost',
+          className: 'justify-end pr3',
           Cell: record => (
             <div className="tr">
-              {record.value} &nbsp;
-              {(
-                parseFloat(record.row.order_quantity) *
-                parseFloat(record.row['vendor_invoice.item_price'])
-              ).toFixed(2)}
+              {record.row.currency}{' '}
+              {record.value ? record.value.toFixed(2) : 0.0}
             </div>
           )
         },
@@ -117,8 +131,8 @@ class PurchasedClonesSetupApp extends React.Component {
           Header: '',
           className: 'tc',
           filterable: false,
-          maxWidth: 45,
           accessor: 'id',
+          maxWidth: 45,
           Cell: record => (
             <a
               href="#"
@@ -137,11 +151,25 @@ class PurchasedClonesSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials('purchased_clones', this.props.facility_id)
+    //loadRawMaterials('purchased_clones', this.props.facility_id)
   }
 
   onAddRecord = () => {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
+  }
+
+  onFetchData = (state, instance) => {
+    rawMaterialStore.setFilter({
+      facility_id: this.props.facility_id,
+      type: this.props.type,
+      page: state.page,
+      limit: state.pageSize
+    })
+  }
+  onSave = payload => {
+    if (payload) {
+      rawMaterialStore.loadRawMaterials()
+    }
   }
 
   renderList() {
@@ -173,16 +201,19 @@ class PurchasedClonesSetupApp extends React.Component {
               className="input w5"
               placeholder="Search Product Name/ Strain/ PO No"
               onChange={e => {
-                rawMaterialStore.filter = e.target.value
+                rawMaterialStore.searchTerm = e.target.value
               }}
             />
             {/* <CheckboxSelect options={columns} onChange={this.onToggleColumns} /> */}
           </div>
 
           <ListingTable
-            columns={columns}
+            ajax={true}
+            onFetchData={this.onFetchData}
             data={rawMaterialStore.filteredList}
-            className="f6 -highlight"
+            pages={rawMaterialStore.metadata.pages}
+            columns={columns}
+            isLoading={rawMaterialStore.loading}
           />
         </div>
       </React.Fragment>
@@ -197,6 +228,7 @@ class PurchasedClonesSetupApp extends React.Component {
           facility_strains={this.props.facility_strains}
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
+          onSave={this.onSave}
           facility_id={this.props.facility_id}
           scanditLicense={this.props.scanditLicense}
           canUpdate={this.props.plantPermission.update}

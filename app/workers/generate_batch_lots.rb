@@ -9,16 +9,16 @@ class GenerateBatchLots
     @batch_id = batch_id
     @logger = Logger.new(STDOUT)
 
-    if clipping_task.work_status != Constants::WORK_STATUS_DONE
-      # Here we wait for the work complete before pushing to Metrc.
-      # In order to push to Metrc. Each PlantBatch would needs to be
-      # record together with the Mother Plant tag and total number of
-      # clippings from the Mother Plant.
-      @logger.debug '>>> move to clone task not done'
-      return 0
-    end
-
     if batch.batch_source == 'clones_from_mother'
+      if clipping_task.nil? || clipping_task.work_status != Constants::WORK_STATUS_DONE
+        # Wait for worker to complete clipping task before pushing to Metrc.
+        # In order to push to Metrc. Each PlantBatch would needs to be
+        # record together with the Mother Plant tag and total number of
+        # clippings from the Mother Plant.
+        @logger.debug '>>> move to clone task not done'
+        return 0
+      end
+
       @logger.debug '>>> generate_plant_batches_by_clipping'
       generate_plant_batches_by_clipping
     else

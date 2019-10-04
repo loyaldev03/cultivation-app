@@ -7,10 +7,8 @@ class MetrcUpdateUomWorker
     results = MetrcApi.get_unit_of_measure
     results.each do |h|
       # Parse downloaded data, and map to local UoM model
-      uom = Common::UnitOfMeasure.find_or_initialize_by(
-        unit: h['Abbreviation'],
-      )
-      uom.name = h['Name'],
+      uom = Common::UnitOfMeasure.find_or_initialize_by(unit: h['Abbreviation'])
+      uom.name = h['Name']
       uom.quantity_type = h['QuantityType']
       uom.dimension = if uom.quantity_type == Constants::UOM_QTY_TYPE_COUNT
                         Constants::UOM_DMS_PIECES

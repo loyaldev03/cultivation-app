@@ -122,7 +122,8 @@ class SeedSetupApp extends React.Component {
           className: 'justify-end pr3',
           Cell: record => (
             <div className="tr">
-              {record.row.currency} {record.value ? record.value.toFixed(2) : 0.00}
+              {record.row.currency}{' '}
+              {record.value ? record.value.toFixed(2) : 0.0}
             </div>
           )
         },
@@ -210,12 +211,12 @@ class SeedSetupApp extends React.Component {
           </div>
 
           <ListingTable
-              ajax={true}
-              onFetchData={this.onFetchData}
-              data={rawMaterialStore.filteredList}
-              pages={rawMaterialStore.metadata.pages}
-              columns={columns}
-              isLoading={rawMaterialStore.loading}
+            ajax={true}
+            onFetchData={this.onFetchData}
+            data={rawMaterialStore.filteredList}
+            pages={rawMaterialStore.metadata.pages}
+            columns={columns}
+            isLoading={rawMaterialStore.loading}
           />
         </div>
       </React.Fragment>

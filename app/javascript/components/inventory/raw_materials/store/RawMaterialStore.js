@@ -33,9 +33,9 @@ class RawMaterialStore {
   @action
   async loadRawMaterials() {
     this.loading = true
-    let apiUrl = `/api/v1/raw_materials/all_seeds?type=${this.filter.type}&facility_id=${
-      this.filter.facility_id
-    }`
+    let apiUrl = `/api/v1/raw_materials/all_seeds?type=${
+      this.filter.type
+    }&facility_id=${this.filter.facility_id}`
 
     apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
@@ -46,7 +46,6 @@ class RawMaterialStore {
       if (response && response.data) {
         this.materials = response.data.map(x => x.attributes)
         this.metadata = Object.assign({ pages: 0 }, response.metadata)
-
       } else {
         this.materials = []
         this.metadata = { pages: 0 }
@@ -98,7 +97,10 @@ class RawMaterialStore {
         const field1 = `${b.product_name}`.toLowerCase()
         const field2 = `${b.po_number}`.toLowerCase()
         const field3 = `${b.invoice_number}`.toLowerCase()
-        const results = field1.includes(filterLc) || field2.includes(filterLc) || field3.includes(filterLc)
+        const results =
+          field1.includes(filterLc) ||
+          field2.includes(filterLc) ||
+          field3.includes(filterLc)
         return results
       })
     } else {
@@ -124,7 +126,6 @@ class RawMaterialStore {
     })
     return f ? true : false
   }
-  
 
   updateFilterOptions = (propName, filterOptions) => {
     const updated = {

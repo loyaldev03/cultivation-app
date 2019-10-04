@@ -113,7 +113,7 @@ export default class QuickSearchBox extends React.Component {
             <AsyncSelect
               isClearable="true"
               placeholder="Search Plant ID ..."
-              styles={selectstyle}
+              styles={selectStyles}
               value={this.state.selected}
               defaultOptions={true}
               cacheOptions={false}

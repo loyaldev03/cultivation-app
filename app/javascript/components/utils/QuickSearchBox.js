@@ -108,12 +108,12 @@ export default class QuickSearchBox extends React.Component {
     return (
       <React.Fragment>
         <div className="flex items-center pr2">
-          <div className="grey w-30">Quick Search</div>
-          <div className="grey w-70">
+          <div className="grey w-20">Quick Search</div>
+          <div className="grey w-80">
             <AsyncSelect
               isClearable="true"
               placeholder="Search Plant ID ..."
-              styles={selectStyles}
+              styles={selectstyle}
               value={this.state.selected}
               defaultOptions={true}
               cacheOptions={false}

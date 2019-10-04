@@ -68,7 +68,7 @@ export default class TestResultList extends React.Component {
   }
 
   parseTestResultData = () => {
-    const data = ChartStore.batch_test_result
+    const data = ChartStore.batch_test_result || []
     const data2 = {
       labels: data.map(e => e.batch),
       datasets: [

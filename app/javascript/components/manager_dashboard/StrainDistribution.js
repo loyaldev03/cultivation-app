@@ -85,7 +85,7 @@ export default class StrainDistribution extends React.Component {
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
         .attr('fill', 'white')
-        .attr('dx', d => (d.data ? d.data.name.length : 0))
+        .attr('dx', d => (d.data && d.data.name ? d.data.name.length : 0))
         .attr('opacity', function(d) {
           if (d.x1 - d.x0 < 130) {
             if (d.y1 - d.y0 <= 20) {

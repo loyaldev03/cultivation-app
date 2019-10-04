@@ -4,6 +4,21 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
     render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
   end
 
+  def all_seeds
+    catalogue_type = params[:type]
+    if resource_shared?
+      facilities = active_facility_ids
+    else
+      facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
+    end
+
+    event_types = %w(inventory_setup)
+
+    data = Inventory::QuerySeeds.call(facilities, {catalogue_type: catalogue_type, event_types: event_types, page: params[:page], limit: params[:limit], search: params[:search]}).result
+
+    render json: data
+  end
+
   def setup
     command = Inventory::SetupRawMaterial.call(current_user, raw_material_params)
     if command.success?

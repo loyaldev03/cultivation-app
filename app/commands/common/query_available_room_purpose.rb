@@ -4,16 +4,19 @@ module Common
 
     attr_accessor :active_growth_stages
 
-    def initialize
-    end
+    def initialize; end
 
     def call
-      active_purposes = Common::GrowPhase.where(is_active: true).pluck(:name)
-      growth_purposes = Constants::ROOM_ONLY_SETUP
+      all_purposes = Constants::FACILITY_ROOMS_ORDER
+      growth_phases = Common::GrowPhase.all.to_a
 
-      self.active_growth_stages = active_purposes &
+      active_phases = growth_phases.select(&:is_active).pluck(:name)
+      inactive_phases = growth_phases.reject(&:is_active).pluck(:name)
+
+      self.active_growth_stages = active_phases &
                                   Constants::REQUIRED_BOOKING_PHASES
-      active_purposes | growth_purposes
+
+      all_purposes - inactive_phases
     end
 
     def result_options

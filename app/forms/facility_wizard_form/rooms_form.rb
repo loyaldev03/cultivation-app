@@ -62,7 +62,7 @@ module FacilityWizardForm
           custom_order = Constants::FACILITY_ROOMS_ORDER
           @sorted_rooms = facility.rooms.sort_by do |r|
             # Order by rooms purpose then by creation time
-            order_i = if r.purpose.blank?
+            order_i = if r[:purpose].blank?
                         facility.rooms.size
                       else
                         custom_order.index { |s| r[:purpose].downcase.ends_with?(s) }

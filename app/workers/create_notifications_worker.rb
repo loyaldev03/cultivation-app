@@ -41,9 +41,7 @@ class CreateNotificationsWorker
       rec = Notification.new(notification)
       rec.save
     rescue Mongo::Error::OperationFailure => e
-      if Rollbar
-        Rollbar.info('Duplicate notification. Skipped.')
-      end
+      # Ignore duplicate notification error
       next
     end
   end

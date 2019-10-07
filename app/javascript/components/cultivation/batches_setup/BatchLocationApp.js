@@ -290,7 +290,7 @@ class BatchLocationApp extends React.Component {
               >
                 <input
                   type="number"
-                  className="dark-grey bn f2 fw6 w3 h2"
+                  className="dark-grey bn f2 fw6 w4 h2"
                   autoFocus={true}
                   value={quantity}
                   onChange={e => this.setState({ quantity: e.target.value })}

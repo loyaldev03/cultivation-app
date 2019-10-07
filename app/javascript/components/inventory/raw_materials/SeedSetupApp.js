@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import SeedEditor from './components/SeedEditor'
 import rawMaterialStore from './store/RawMaterialStore'
-import loadRawMaterials from './actions/loadRawMaterials'
+//import loadRawMaterials from './actions/loadRawMaterials'
 import {
   ListingTable,
   HeaderFilter,
@@ -28,8 +28,15 @@ class SeedSetupApp extends React.Component {
           show: false
         },
         {
-          Header: 'Strain',
-          accessor: 'facility_strain.strain_name',
+          Header: (
+            <HeaderFilter
+              title="Strain"
+              accessor="strain_name"
+              getOptions={rawMaterialStore.getUniqPropValues}
+              onUpdate={rawMaterialStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'strain_name',
           headerClassName: 'tl ttc'
         },
         {
@@ -57,18 +64,25 @@ class SeedSetupApp extends React.Component {
           headerClassName: 'tl'
         },
         {
-          Header: 'Supplier',
-          accessor: 'vendor.name',
+          Header: (
+            <HeaderFilter
+              title="Supplier"
+              accessor="supplier"
+              getOptions={rawMaterialStore.getUniqPropValues}
+              onUpdate={rawMaterialStore.updateFilterOptions}
+            />
+          ),
+          accessor: 'supplier',
           headerClassName: 'tl'
         },
         {
           Header: 'PO Number',
-          accessor: 'purchase_order.purchase_order_no',
+          accessor: 'po_number',
           headerClassName: 'tl'
         },
         {
           Header: 'Invoice No',
-          accessor: 'vendor_invoice.invoice_no',
+          accessor: 'invoice_number',
           headerClassName: 'tl'
         },
         {
@@ -98,20 +112,18 @@ class SeedSetupApp extends React.Component {
           )
         },
         {
-          accessor: 'vendor_invoice.item_price',
+          accessor: 'currency',
           show: false
         },
         {
           Header: 'Cost',
           headerClassName: 'tc',
-          accessor: 'vendor_invoice.item_currency',
+          accessor: 'cost',
+          className: 'justify-end pr3',
           Cell: record => (
             <div className="tr">
-              {record.value} &nbsp;
-              {(
-                parseFloat(record.row.order_quantity) *
-                parseFloat(record.row['vendor_invoice.item_price'])
-              ).toFixed(2)}
+              {record.row.currency}{' '}
+              {record.value ? record.value.toFixed(2) : 0.0}
             </div>
           )
         },
@@ -139,7 +151,7 @@ class SeedSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials('seeds', this.props.facility_id)
+    //loadRawMaterials('seeds', this.props.facility_id)
   }
 
   openSidebar() {
@@ -148,6 +160,19 @@ class SeedSetupApp extends React.Component {
 
   onAddRecord = () => {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
+  }
+  onFetchData = (state, instance) => {
+    rawMaterialStore.setFilter({
+      facility_id: this.props.facility_id,
+      type: this.props.type,
+      page: state.page,
+      limit: state.pageSize
+    })
+  }
+  onSave = payload => {
+    if (payload) {
+      rawMaterialStore.loadRawMaterials()
+    }
   }
 
   renderList() {
@@ -177,18 +202,21 @@ class SeedSetupApp extends React.Component {
             <input
               type="text"
               className="input w5"
-              placeholder="Search Product Name/ Strain/ PO No"
+              placeholder="Search Product/Invoice/PO"
               onChange={e => {
-                rawMaterialStore.filter = e.target.value
+                rawMaterialStore.searchTerm = e.target.value
               }}
             />
             {/* <CheckboxSelect options={columns} onChange={this.onToggleColumns} /> */}
           </div>
 
           <ListingTable
-            columns={columns}
+            ajax={true}
+            onFetchData={this.onFetchData}
             data={rawMaterialStore.filteredList}
-            className="f6 -highlight"
+            pages={rawMaterialStore.metadata.pages}
+            columns={columns}
+            isLoading={rawMaterialStore.loading}
           />
         </div>
       </React.Fragment>
@@ -203,6 +231,7 @@ class SeedSetupApp extends React.Component {
           facility_strains={this.props.facility_strains}
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
+          onSave={this.onSave}
           facility_id={this.props.facility_id}
           scanditLicense={this.props.scanditLicense}
           canUpdate={this.props.plantPermission.update}

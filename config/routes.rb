@@ -304,6 +304,7 @@ Rails.application.routes.draw do
 
       resources :raw_materials, only: [:index, :show] do
         collection do
+          get 'all_seeds'
           post 'setup'
           post 'setup_seed'
           post 'setup_purchased_clones'

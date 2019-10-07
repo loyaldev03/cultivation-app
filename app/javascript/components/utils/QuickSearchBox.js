@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   httpGetOptions,
-  selectStyles,
+  reactSelectStyle,
   SlidePanel,
   SlidePanelHeader,
   formatDate
@@ -10,6 +10,50 @@ import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 import { observable, action, computed } from 'mobx'
 import { differenceInDays } from 'date-fns'
+
+const searchBoxSelect = {
+  control: (base, state) => ({
+    ...base,
+    fontSize: '0.800rem',
+    boxShadow: 'none',
+    backgroundColor: state.isDisabled ? '#eee' : '#fff',
+    height: '34px',
+    minHeight: '34px',
+    borderColor: state.isFocused ? '#F66830' : '#C7C7C7',
+    ':hover': {
+      borderColor: '#F66830'
+    }
+  }),
+  indicatorSeparator: () => ({
+    display: 'none'
+  }),
+  menu: (base, state) => ({
+    ...base,
+    marginTop: 2
+  }),
+  dropdownIndicator: () => ({
+    display: 'inline-block',
+    color: 'rgba(100,100,100, 0.2)',
+    width: '30px'
+  }),
+  option: (base, state) => {
+    return {
+      ...base,
+      backgroundColor:
+        state.isFocused || state.isSelected
+          ? 'rgba(100, 100, 100, 0.1)'
+          : 'transparent',
+      ':active': 'rgba(100, 100, 100, 0.1)',
+      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
+      color: '#707A8B',
+      fontSize: '0.800rem'
+    }
+  },
+  singleValue: base => ({
+    ...base,
+    color: '#707A8B'
+  })
+}
 
 class StorePlant {
   @observable plants = []
@@ -108,12 +152,12 @@ export default class QuickSearchBox extends React.Component {
     return (
       <React.Fragment>
         <div className="flex items-center pr2">
-          <div className="grey w-30">Quick Search</div>
-          <div className="grey w-70">
+          <div className="grey w-20">Quick Search</div>
+          <div className="grey w-80">
             <AsyncSelect
               isClearable="true"
               placeholder="Search Plant ID ..."
-              styles={selectStyles}
+              styles={searchBoxSelect}
               value={this.state.selected}
               defaultOptions={true}
               cacheOptions={false}
@@ -136,76 +180,76 @@ export default class QuickSearchBox extends React.Component {
                   <div className="red">Loading...</div>
                 ) : (
                   <React.Fragment>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Plant ID </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Plant ID </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.plant_tag || plantShow.plant_id}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Strain </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Strain </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.strain_name || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Batch </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Batch </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.cultivation_batch || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Grow Phase </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Grow Phase </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.current_growth_stage || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Location Type </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Location Type </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.location_type || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Location Origin </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Location Origin </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.location_name || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Planted Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Planted Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.planting_date
                           ? formatDate(plantShow.planting_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Batch Start Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Batch Start Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.batch_start_date
                           ? formatDate(plantShow.batch_start_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Phase Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Phase Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.current_stage_start_date
                           ? formatDate(plantShow.current_stage_start_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Est Harvest Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Est Harvest Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.estimated_harvest_date
                           ? formatDate(plantShow.estimated_harvest_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40"># of days in current stage </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40"># of days in current stage </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.current_stage_start_date
                           ? differenceInDays(

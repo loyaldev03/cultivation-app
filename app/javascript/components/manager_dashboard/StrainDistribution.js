@@ -38,11 +38,11 @@ export default class StrainDistribution extends React.Component {
         return d.value
       })
       //console.log(`${Object.keys(data)}`)
-      if(Object.keys(data).length == 0){
+      if (Object.keys(data).length == 0) {
         const el = document.getElementById('treemapStrain')
         el.classList.add('grey')
         el.textContent += 'No data available'
-      }else{
+      } else {
         const treeMap = d3
           .treemap()
           .size([w, h])
@@ -135,10 +135,7 @@ export default class StrainDistribution extends React.Component {
           .attr('x', 4)
           .attr('y', (d, i) => 13 + 10 * i)
           .text(d => d)
-
       }
-
-      
     })
   }
 

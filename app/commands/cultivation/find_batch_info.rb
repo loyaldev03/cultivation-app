@@ -26,34 +26,32 @@ module Cultivation
 
       growth_stages = Common::QueryAvailableRoomPurpose.call.active_growth_stages
 
-      @batch_attributes = {
-        id: @batch.id.to_s,
-        batch_no: @batch.batch_no,
-        name: @batch.name,
-        quantity: @batch.quantity,
-        facility_id: @batch.facility_id.to_s,
-        facility_strain_id: @batch.facility_strain.id.to_s,
-        strain: @batch.facility_strain.strain_name,
-        batch_source: @batch.batch_source,
-        grow_method: @batch.grow_method,
-        start_date: @batch.start_date,
-        estimated_harvest_date: @batch.estimated_harvest_date,
-        current_growth_stage: @batch.current_growth_stage,
-        total_estimated_hour: total_estimated_hour,
-        total_estimated_cost: total_estimated_cost,
-        materials: @batch.material_summary,
-        cultivation_phases: growth_stages,
-        actual_cost: @batch.actual_cost,
-        actual_hours: @batch.actual_hours,
-        is_template: @batch.is_template,
-        status: @batch.status,
-      }
-
       if @batch.nil?
         errors.add :not_found, 'Record Not Found'
         nil
       else
-        @batch_attributes
+        {
+          id: @batch.id.to_s,
+          batch_no: @batch.batch_no,
+          name: @batch.name,
+          quantity: @batch.quantity,
+          facility_id: @batch.facility_id.to_s,
+          facility_strain_id: @batch.facility_strain.id.to_s,
+          strain: @batch.facility_strain.strain_name,
+          batch_source: @batch.batch_source,
+          grow_method: @batch.grow_method,
+          start_date: @batch.start_date,
+          estimated_harvest_date: @batch.estimated_harvest_date,
+          current_growth_stage: @batch.current_growth_stage,
+          total_estimated_hour: total_estimated_hour,
+          total_estimated_cost: total_estimated_cost,
+          materials: @batch.material_summary,
+          cultivation_phases: growth_stages,
+          actual_cost: @batch.actual_cost,
+          actual_hours: @batch.actual_hours,
+          is_template: @batch.is_template,
+          status: @batch.status,
+        }
       end
     end
   end

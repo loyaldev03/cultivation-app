@@ -14,7 +14,7 @@ module Common
       inactive_phases = growth_phases.reject(&:is_active).pluck(:name)
 
       self.active_growth_stages = active_phases &
-        Constants::REQUIRED_BOOKING_PHASES
+                                  Constants::REQUIRED_BOOKING_PHASES
 
       all_purposes - inactive_phases
     end

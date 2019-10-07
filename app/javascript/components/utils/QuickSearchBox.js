@@ -55,7 +55,6 @@ const searchBoxSelect = {
   })
 }
 
-
 class StorePlant {
   @observable plants = []
   @observable plant_loaded = false
@@ -148,7 +147,6 @@ export default class QuickSearchBox extends React.Component {
   }
 
   render() {
-   
     const { plantShow, isLoading, isLoadingPlants } = this.state
     const today = new Date()
     return (
@@ -182,76 +180,76 @@ export default class QuickSearchBox extends React.Component {
                   <div className="red">Loading...</div>
                 ) : (
                   <React.Fragment>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Plant ID </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Plant ID </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.plant_tag || plantShow.plant_id}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Strain </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Strain </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.strain_name || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Batch </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Batch </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.cultivation_batch || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Grow Phase </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Grow Phase </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.current_growth_stage || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Location Type </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Location Type </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.location_type || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Location Origin </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Location Origin </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.location_name || '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Planted Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Planted Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.planting_date
                           ? formatDate(plantShow.planting_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Batch Start Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Batch Start Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.batch_start_date
                           ? formatDate(plantShow.batch_start_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Phase Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Phase Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.current_stage_start_date
                           ? formatDate(plantShow.current_stage_start_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40">Est Harvest Date </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40">Est Harvest Date </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.estimated_harvest_date
                           ? formatDate(plantShow.estimated_harvest_date)
                           : '-'}
                       </div>
                     </div>
-                    <div className="flex items-center f5 mt3">
-                      <div className="b w-40"># of days in current stage </div>
+                    <div className="flex items-center f6 mt3">
+                      <div className="w-40"># of days in current stage </div>
                       <div className="ml0 pl3 w-60">
                         {plantShow.current_stage_start_date
                           ? differenceInDays(

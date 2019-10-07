@@ -10,7 +10,7 @@ class GenerateBatchLots
     @logger = Logger.new(STDOUT)
 
     if batch.batch_source == 'clones_from_mother'
-      if clipping_task.nil? || clipping_task.work_status != Constants::WORK_STATUS_DONE
+      if clipping_task.nil? || clipping_task&.work_status != Constants::WORK_STATUS_DONE
         # Wait for worker to complete clipping task before pushing to Metrc.
         # In order to push to Metrc. Each PlantBatch would needs to be
         # record together with the Mother Plant tag and total number of

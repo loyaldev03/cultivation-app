@@ -5,7 +5,7 @@ class Settings::Core::GrowMethodsController < ApplicationController
       @facility.update_onboarding('ONBOARDING_GROW_METHOD')
     end
     @grow_methods = Common::GrowMethod.all
-    @used_grow_methods = Inventory::ItemTransaction.all.map { |item| item.catalogue.key.downcase }.uniq.compact
+    @used_grow_methods = Inventory::ItemTransaction.count > 0 ? Inventory::ItemTransaction.all.map { |item| item.catalogue.key.downcase }.uniq.compact : []
     # @used_grow_methods = Cultivation::Batch.pluck(:grow_method).uniq.compact.map(&:downcase)
   end
 

@@ -35,7 +35,7 @@ const formatIssueNo = issueNo => {
 }
 
 const IssueList = React.memo(
-  ({ cn1 = '', cn2= '', onShow, onDelete, issues = [], show = true }) => {
+  ({ cn1 = '', cn2 = '', onShow, onDelete, issues = [], show = true }) => {
     if (!show) {
       return null
     }
@@ -51,10 +51,13 @@ const IssueList = React.memo(
               >
                 <div className="f5 fw4 dark-gray pb1">{x.title}</div>
 
-                <div 
-                  className={x.severity == 'severe' ? 
-                  `flex items-center justify-end ${cn1}` : 
-                  `flex items-center justify-end ${cn2}`}>
+                <div
+                  className={
+                    x.severity == 'severe'
+                      ? `flex items-center justify-end ${cn1}`
+                      : `flex items-center justify-end ${cn2}`
+                  }
+                >
                   <div className="f7 fw6 silver">
                     ISSUE {formatIssueNo(x.issue_no)}
                   </div>

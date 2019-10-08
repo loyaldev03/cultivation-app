@@ -256,7 +256,7 @@ class BatchSetupApp extends React.Component {
                 styles={selectStyles}
                 options={growMethods}
                 className="w-100"
-                onChange={e => this.handleChange('batchGrowMethod', e.label)}
+                onChange={e => this.handleChange('batchGrowMethod', e.value)}
                 value={batchGrowMethodvalue}
                 isDisabled={this.state.useTemplate}
               />

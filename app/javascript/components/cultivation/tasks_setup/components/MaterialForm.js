@@ -3,6 +3,7 @@ import AsyncSelect from 'react-select/lib/Async'
 import Select from 'react-select'
 import { selectStyles, NUTRITION_LIST } from '../../../utils'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
+import isEmpty from 'lodash.isempty'
 import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import {
   SlidePanelHeader,
@@ -358,7 +359,9 @@ export default class MaterialForm extends React.Component {
                         />
                       </td>
                       <td className="tc w3 grey tc">
-                        {x.uoms.length != 0 ? (
+                        {isEmpty(x.uoms) ? (
+                          'Not available'
+                        ) : (
                           <select
                             value={x.uom}
                             className="input"
@@ -374,9 +377,7 @@ export default class MaterialForm extends React.Component {
                                 </option>
                               ))}
                           </select>
-                        ) : (
-                          'Not available'
-                        )}
+                        ) }
                       </td>
                       <td className="tr w1 pt2">
                         <i

@@ -235,8 +235,8 @@ class BatchesDashboardApp extends React.Component {
         className: 'justify-end pr3',
         width: 110,
         Cell: props => {
-          if(props.row.status == "DRAFT"){
-            return(
+          if (props.row.status == 'DRAFT') {
+            return (
               <a
                 className={`pa2 flex link dim pointer items-center red`}
                 onClick={() => {
@@ -247,7 +247,6 @@ class BatchesDashboardApp extends React.Component {
               </a>
             )
           }
-          
         }
       }
     ]
@@ -272,7 +271,7 @@ class BatchesDashboardApp extends React.Component {
     if (window.confirm('Are you sure you want to delete this batch?')) {
       BatchStore.deleteBatch(batchId)
       //console.log(batchId)
-      toast("The Draft Batch has been successfully deleted", 'success')
+      toast('The Draft Batch has been successfully deleted', 'success')
     }
   }
 

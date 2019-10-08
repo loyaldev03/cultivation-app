@@ -14,7 +14,8 @@ import {
   CheckboxSelect,
   HeaderFilter,
   ListingTable,
-  TempBatchWidgets
+  TempBatchWidgets,
+  toast
 } from '../../utils'
 
 const Batcheslist = ({
@@ -226,6 +227,28 @@ class BatchesDashboardApp extends React.Component {
         accessor: 'actual_cost',
         className: 'justify-end pr3',
         width: 110
+      },
+      {
+        headerClassName: 'tr pr3',
+        Header: '',
+        accessor: 'id',
+        className: 'justify-end pr3',
+        width: 110,
+        Cell: props => {
+          if(props.row.status == "DRAFT"){
+            return(
+              <a
+                className={`pa2 flex link dim pointer items-center red`}
+                onClick={() => {
+                  this.onDelete(props.original.id)
+                }}
+              >
+                <i className="material-icons md-17 pr2">delete</i>
+              </a>
+            )
+          }
+          
+        }
       }
     ]
   }
@@ -245,11 +268,20 @@ class BatchesDashboardApp extends React.Component {
     }
   }
 
+  onDelete = batchId => {
+    if (window.confirm('Are you sure you want to delete this batch?')) {
+      BatchStore.deleteBatch(batchId)
+      //console.log(batchId)
+      toast("The Draft Batch has been successfully deleted", 'success')
+    }
+  }
+
   render() {
     const { currentFacilityId, batchesPermission } = this.props
     const { columns } = this.state
     return (
       <div className="pa4">
+        <div id="toast" className="toast" />
         {Array.isArray(this.props.currentFacilityId)
           ? ''
           : batchesPermission.create && (

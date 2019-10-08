@@ -56,17 +56,18 @@ class OtForm extends React.Component {
     const start_date = this.state.start_date
     const start_time = this.state.start_time.split(':')
     const start_date_time = new Date(
-      start_date.getYear(),
+      start_date.getFullYear(),
       start_date.getMonth(),
       start_date.getDay(),
       start_time[0],
       start_time[1]
     )
 
+
     const end_date = this.state.end_date
     const end_time = this.state.end_time.split(':')
     const end_date_time = new Date(
-      end_date.getYear(),
+      end_date.getFullYear(),
       end_date.getMonth(),
       end_date.getDay(),
       end_time[0],
@@ -118,7 +119,7 @@ class OtForm extends React.Component {
                 tileContent={({ date, view }) => (
                   <div
                     className="react-calendar__tile__content"
-                    //onClick={e => console.log(formatYDM(date))}
+                    onClick={e => console.log(formatYDM(date))}
                   >
                     {getView(date, view)}
                   </div>

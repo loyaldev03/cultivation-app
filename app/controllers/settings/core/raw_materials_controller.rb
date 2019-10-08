@@ -81,7 +81,11 @@ class Settings::Core::RawMaterialsController < ApplicationController
   def set_specialkeys
     @specials = Constants::SPECIAL_TYPE.pluck(:name)
     @second_levels = Constants::NUTRIENT_TYPE.pluck(:name)
-    @used_rw = Inventory::ItemTransaction.count > 0 ? Inventory::ItemTransaction.all.map { |item| item.catalogue.key.downcase }.uniq.compact : []
+    if Inventory::ItemTransaction.count > 0
+      @used_rw = Inventory::ItemTransaction.all.map { |item| item.catalogue.label.parameterize.underscore }.uniq.compact
+    else
+      @used_rw = []
+    end
   end
 
   def create_subcategory

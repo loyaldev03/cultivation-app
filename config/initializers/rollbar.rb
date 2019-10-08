@@ -9,15 +9,15 @@ Rollbar.configure do |config|
       accessToken: Rails.application.credentials.rollbar[:post_client],
       captureUncaught: true,
       payload: {
-        environment: "production"
-      }
+        environment: ENV["ROLLBAR_ENV"],
+      },
     }
   else
     config.access_token = ENV["ROLLBAR_ACCESS_TOKEN"]
   end
-  
-  # Enable Rollbar only on Staging / Production
-  unless Rails.env.production? || Rails.env.staging?
+
+  # Disable Rollbar in other environments
+  if ENV["ROLLBAR_ENV"] != "staging" && ENV["ROLLBAR_ENV"] != "legionofbloom"
     config.enabled = false
   end
 

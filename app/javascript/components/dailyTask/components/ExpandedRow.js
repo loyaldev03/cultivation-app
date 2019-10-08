@@ -107,7 +107,11 @@ class ExpandedRow extends React.Component {
     const showDoneButton = this.showDoneButton()
     return (
       <React.Fragment>
-        <div className="flex w100 justify-end tr pv3 ph3">
+        <div className="flex w100 justify-between ma2">
+          <div class="ba b--black-20 br2 mb2 flex-auto mr4 bg-light-yellow pa2">
+            <span className="gray fw6 f5 mb2">Instruction</span>
+            <p className="f6 grey mt2 mb0">{this.props.instruction}</p>
+          </div>
           <div>
             {indelible === 'add_nutrient' && (
               <a

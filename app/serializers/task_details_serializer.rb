@@ -7,7 +7,8 @@ class TaskDetailsSerializer
     :work_status,
     :wbs,
     :indelible,
-    :estimated_hours
+    :estimated_hours,
+    :instruction
 
   attribute :id do |object|
     object.id.to_s

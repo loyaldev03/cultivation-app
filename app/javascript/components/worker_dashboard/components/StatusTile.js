@@ -114,6 +114,8 @@ export default class StatusTile extends React.Component {
 
             <div className="overflow-y-scroll" style={{ height: 330 + 'px' }}>
               <IssueList
+                cn1="mr2"
+                cn2="mr3"
                 show={true}
                 issues={issue}
                 onShow={this.onShowIssue}

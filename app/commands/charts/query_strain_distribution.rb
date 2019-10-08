@@ -12,7 +12,7 @@ module Charts
       if resource_shared?
         facility_strains = Inventory::FacilityStrain.in(facility_id: active_facility_ids).includes(:plants)
       else
-        facility_strains = Inventory::FacilityStrain.where(facility_id: @facility_id).includes(:plants)
+        facility_strains = Inventory::FacilityStrain.in(facility_id: @facility_id).includes(:plants)
       end
 
       result = []
@@ -26,7 +26,11 @@ module Charts
         end
       end
 
-      return {children: result.compact}
+      if result.compact.empty?
+        return result.compact
+      else
+        return {children: result.compact}
+      end
     end
 
     def resource_shared?

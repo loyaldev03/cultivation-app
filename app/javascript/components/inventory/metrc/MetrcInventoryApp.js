@@ -254,7 +254,7 @@ class MetrcInventoryApp extends React.Component {
       page: state.page,
       limit: state.pageSize
     })
-    activeTaskStore.loadActiveTasks()
+    //activeTaskStore.loadActiveTasks()
   }
 
   onToggleColumns = (header, value) => {

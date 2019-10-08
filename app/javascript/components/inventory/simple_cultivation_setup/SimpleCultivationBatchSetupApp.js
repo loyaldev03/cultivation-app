@@ -3,14 +3,15 @@ import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import store from './store/CultivationBatchStore'
-import loadCultivationBatch from './actions/loadCultivationBatch'
+//import loadCultivationBatch from './actions/loadCultivationBatch'
 import BatchEditor from './components/BatchEditor'
 
 import {
   ListingTable,
   HeaderFilter,
   formatDate2,
-  CheckboxSelect
+  CheckboxSelect,
+  decimalFormatter
 } from '../../utils'
 import { differenceInDays } from 'date-fns'
 
@@ -64,9 +65,28 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             </a>
           )
         },
+        {
+          Header: (
+            <HeaderFilter
+              title="Strain"
+              accessor="strain_name"
+              getOptions={store.getUniqPropValues}
+              onUpdate={store.updateFilterOptions}
+            />
+          ),
+          accessor: 'strain_name',
+          headerStyle: { textAlign: 'left' }
+        },
 
         {
-          Header: 'Phase',
+          Header: (
+            <HeaderFilter
+              title="Grow Phase"
+              accessor="current_growth_stage"
+              getOptions={store.getUniqPropValues}
+              onUpdate={store.updateFilterOptions}
+            />
+          ),
           accessor: 'current_growth_stage',
           headerClassName: 'tc',
           className: 'tc',
@@ -80,7 +100,14 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           width: 100
         },
         {
-          Header: 'Batch Source',
+          Header: (
+            <HeaderFilter
+              title="Batch Source"
+              accessor="batch_source"
+              getOptions={store.getUniqPropValues}
+              onUpdate={store.updateFilterOptions}
+            />
+          ),
           accessor: 'batch_source',
           headerClassName: 'tl',
           Cell: props => {
@@ -174,7 +201,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
         {
           headerClassName: 'tr pr3',
           Header: 'Est. cost',
-          accessor: 'estimated_cost',
+          accessor: 'estimated_labor_cost',
           className: 'justify-end pr3',
           width: 110,
           Cell: props =>
@@ -183,13 +210,20 @@ class SimpleCultivationBatchSetupApp extends React.Component {
         {
           headerClassName: 'tr pr3',
           Header: 'Cost to date',
-          accessor: 'actual_cost',
+          accessor: 'actual_labor_cost',
           className: 'justify-end pr3',
           width: 110
         },
         {
-          Header: 'Facility',
-          accessor: 'facility',
+          Header: (
+            <HeaderFilter
+              title="Facility"
+              accessor="facility_name"
+              getOptions={store.getUniqPropValues}
+              onUpdate={store.updateFilterOptions}
+            />
+          ),
+          accessor: 'facility_name',
           headerClassName: 'tl'
         }
       ]
@@ -198,7 +232,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadCultivationBatch()
+    //loadCultivationBatch(this.props.facility_id)
   }
 
   onAddRecord = () => {
@@ -214,6 +248,21 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           x.Header === column.Header ? column : x
         )
       })
+    }
+  }
+
+  onFetchData = (state, instance) => {
+    store.setFilter({
+      facility_id: this.props.facility_id,
+      exclude_tasks: 'false',
+      page: state.page,
+      limit: state.pageSize
+    })
+    //store.loadCultBatches()
+  }
+  onSave = payload => {
+    if (payload) {
+      store.loadCultBatches()
     }
   }
 
@@ -244,7 +293,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
               className="input w5"
               placeholder="Search Batch"
               onChange={e => {
-                store.filter = e.target.value
+                store.searchTerm = e.target.value
               }}
             />
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
@@ -252,11 +301,19 @@ class SimpleCultivationBatchSetupApp extends React.Component {
 
           <div className="pv3">
             <ListingTable
+              ajax={true}
+              onFetchData={this.onFetchData}
+              data={store.filteredList}
+              pages={store.metadata.pages}
+              columns={columns}
+              isLoading={store.isLoading}
+            />
+            {/* <ListingTable
               columns={columns}
               data={store.filteredList}
               className="f6 -highlight"
               isLoading={store.isLoading}
-            />
+            /> */}
           </div>
         </div>
       </React.Fragment>
@@ -271,6 +328,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           facility_strains={this.props.facility_strains}
           batch_sources={this.props.batch_sources}
           grow_methods={this.props.grow_methods}
+          onSave={this.onSave}
           canUpdate={this.props.plantPermission.update}
           canCreate={this.props.plantPermission.create}
         />

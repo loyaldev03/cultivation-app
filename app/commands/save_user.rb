@@ -9,7 +9,7 @@ class SaveUser
   end
 
   def call
-    if args[:id]
+    if args[:id].present?
       user = User.find(args[:id])
       user.email = args[:email]
       user.password = args[:password]
@@ -85,16 +85,20 @@ class SaveUser
                         end
       user.timezone = get_timezone(user, @current_user)
     else
-      if args[:default_facility_id].present?
+      if args[:default_facility_id]
         args[:default_facility_id] = args[:default_facility_id].to_bson_id
       end
-      if args[:facilities].present?
-        args[:facilities] = args[:facilities].map(&:to_bson_id)
-      end
-      if args[:roles].present?
+      if args[:roles]
         args[:roles] = args[:roles].map(&:to_bson_id)
+      else
+        args[:roles] = []
       end
-      user = User.new(args.except(:non_exempt_schedules, :work_schedules))
+      if args[:facilities]
+        args[:facilities] = args[:facilities].map(&:to_bson_id)
+      else
+        args[:facilities] = []
+      end
+      user = User.new(args.except(:non_exempt_schedules, :work_schedules, :id))
     end
     user.save!
     user

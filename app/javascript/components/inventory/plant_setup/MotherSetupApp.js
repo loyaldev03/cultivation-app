@@ -24,9 +24,9 @@ class PlantSetupApp extends React.Component {
     super(props)
     this.state = {
       columns: [
-        { Header: 'Plant ID', accessor: 'plant_id', show: false },
+        { accessor: 'plant_id', show: false },
         {
-          Header: 'Plant',
+          Header: 'Plant ID',
           accessor: 'plant_tag',
           headerStyle: { textAlign: 'left' },
           Cell: x => (
@@ -39,21 +39,20 @@ class PlantSetupApp extends React.Component {
             </a>
           )
         },
+        // {
+        //   Header: (
+        //     <HeaderFilter
+        //       title="Batch ID"
+        //       accessor="cultivation_batch"
+        //       getOptions={PlantStore.getUniqPropValues}
+        //       onUpdate={PlantStore.updateFilterOptions}
+        //     />
+        //   ),
+        //   accessor: 'cultivation_batch',
+        //   headerStyle: { textAlign: 'left' },
+        //   Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
+        // },
         {
-          Header: (
-            <HeaderFilter
-              title="Batch ID"
-              accessor="cultivation_batch_name"
-              getOptions={PlantStore.getUniqPropValues}
-              onUpdate={PlantStore.updateFilterOptions}
-            />
-          ),
-          accessor: 'cultivation_batch_name',
-          headerStyle: { textAlign: 'left' },
-          Cell: props => <span>{props.value || 'Unnamed Batch'}</span>
-        },
-        {
-          headerClassName: 'tl',
           Header: (
             <HeaderFilter
               title="Strain"
@@ -63,8 +62,7 @@ class PlantSetupApp extends React.Component {
             />
           ),
           accessor: 'strain_name',
-          minWidth: 130,
-          Cell: props => <span className="truncate">{props.value}</span>
+          headerStyle: { textAlign: 'left' }
         },
         // {
         //   Header: 'Growth stage',
@@ -134,7 +132,7 @@ class PlantSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('mother', '', this.props.facility_id)
+    //loadPlants('mother', '', this.props.facility_id)
   }
 
   onToggleColumns = (header, value) => {
@@ -149,8 +147,24 @@ class PlantSetupApp extends React.Component {
     }
   }
 
+  onFetchData = (state, instance) => {
+    PlantStore.setFilter({
+      facility_id: this.props.facility_id,
+      current_growth_stage: this.props.current_growth_stage,
+      page: state.page,
+      limit: state.pageSize
+    })
+    PlantStore.loadPlants()
+  }
+
   openSidebar() {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
+  }
+
+  onSave = payload => {
+    if (payload) {
+      PlantStore.loadPlants()
+    }
   }
 
   render() {
@@ -180,22 +194,25 @@ class PlantSetupApp extends React.Component {
               className="input w5"
               placeholder="Search Plants"
               onChange={e => {
-                PlantStore.filter = e.target.value
+                PlantStore.searchTerm = e.target.value
               }}
             />
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
           </div>
           <div className="pv3">
             <ListingTable
-              columns={columns}
+              ajax={true}
+              onFetchData={this.onFetchData}
               data={PlantStore.filteredList}
-              className="f6 -highlight"
+              pages={PlantStore.metadata.pages}
+              columns={columns}
               isLoading={PlantStore.isLoading}
             />
           </div>
         </div>
         <MotherEditor
           isOpened={false}
+          onSave={this.onSave}
           facilityStrains={this.props.facility_strains}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}

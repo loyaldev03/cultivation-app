@@ -69,7 +69,6 @@ class PlantEditor extends React.Component {
             if (status != 200) {
               return
             }
-
             const invoice = data.attributes.vendor_invoice
             const purchase_order = data.attributes.purchase_order
             let invoice_attr = {}
@@ -144,7 +143,7 @@ class PlantEditor extends React.Component {
               isBought: batch
                 ? batch.batch_source === BATCH_SOURCE.PURCHASED
                 : false,
-
+              form_type: 'Edit',
               // relationships
               ...vendor_attr,
               ...invoice_attr
@@ -194,7 +193,8 @@ class PlantEditor extends React.Component {
       errors: {},
       motherOption: {},
       showScanner: false,
-      scannerReady: false
+      scannerReady: false,
+      form_type: 'Add'
     }
   }
 
@@ -307,6 +307,7 @@ class PlantEditor extends React.Component {
         } else {
           this.reset()
           window.editorSidebar.close()
+          this.props.onSave(payload)
         }
       })
     }
@@ -544,11 +545,11 @@ class PlantEditor extends React.Component {
 
   renderTitle() {
     if (this.props.growth_stage === 'clone') {
-      return 'Add Clone'
+      return `${this.state.form_type} Clone`
     } else if (['veg', 'veg1', 'veg2'].indexOf(this.props.growth_stage) >= 0) {
-      return 'Add Vegs'
+      return `${this.state.form_type} Vegs`
     } else if (this.props.growth_stage === 'flower') {
-      return 'Add Flowers'
+      return `${this.state.form_type} Flowers`
     }
     return ''
   }

@@ -59,7 +59,7 @@ class SaveShelvesByDuplicating
     target_trays = target_shelf.trays || []
     if source_trays.any?
       source_trays.each_with_index do |source_tray, index|
-        target_tray = target_trays[index] || Tray.new({code: NextFacilityCode.call(:tray, nil, index + 1).result})
+        target_tray = target_trays.find_by(code: source_tray.code) || Tray.new({code: NextFacilityCode.call(:tray, nil, index + 1).result})
         target_tray.full_code = Constants.generate_full_code(facility, room, row, target_shelf, target_tray)
         copy_attrs(COPY_TRAY_ATTRS, source_tray, target_tray)
         target_tray.shelf = target_shelf

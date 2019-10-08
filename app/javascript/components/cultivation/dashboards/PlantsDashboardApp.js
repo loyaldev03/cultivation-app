@@ -31,34 +31,26 @@ class PlantsDashboardApp extends React.Component {
     columns: [
       { accessor: 'id', show: false },
       { accessor: 'plant_id', show: false },
-      { accessor: 'cultivation_batch_id', show: false },
+      { accessor: 'batch_id', show: false },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Plant',
-        accessor: 'plant_tag',
+        Header: 'Plant ID',
+        accessor: 'plant_id',
         className: 'dark-grey pl3 fw6',
         minWidth: 184,
-        Cell: props => (
-          <a
-            className="link grey truncate"
-            href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
-            title={props.row.plant_id}
-          >
-            {props.value || props.row.plant_id}
-          </a>
-        )
+        Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'pl3 tl',
         Header: (
           <HeaderFilter
             title="Batch ID"
-            accessor="cultivation_batch_name"
+            accessor="batch"
             getOptions={PlantStore.getUniqPropValues}
             onUpdate={PlantStore.updateFilterOptions}
           />
         ),
-        accessor: 'cultivation_batch_name',
+        accessor: 'batch',
         className: 'pl3 fw6',
         minWidth: 144,
         Cell: props => (
@@ -162,7 +154,7 @@ class PlantsDashboardApp extends React.Component {
     ]
   }
   componentDidMount() {
-    loadPlants('', '', this.props.currentFacilityId, ['mother'])
+    //loadPlants('', '', this.props.currentFacilityId, ['mother'])
   }
 
   onToggleColumns = (header, value) => {
@@ -175,6 +167,15 @@ class PlantsDashboardApp extends React.Component {
         )
       })
     }
+  }
+  onFetchData = (state, instance) => {
+    PlantStore.setFilter({
+      facility_id: this.props.currentFacilityId,
+      excludes: this.props.excludes,
+      page: state.page,
+      limit: state.pageSize
+    })
+    PlantStore.loadPlants()
   }
 
   render() {
@@ -204,14 +205,17 @@ class PlantsDashboardApp extends React.Component {
             className="input w5"
             placeholder="Search Plants"
             onChange={e => {
-              PlantStore.filter = e.target.value
+              PlantStore.searchTerm = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable
+            ajax={true}
+            onFetchData={this.onFetchData}
             data={PlantStore.filteredList}
+            pages={PlantStore.metadata.pages}
             columns={columns}
             isLoading={PlantStore.isLoading}
           />

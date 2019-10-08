@@ -181,7 +181,8 @@ class QueryLocations
 
   class << self
     def select_options(facility_id, purposes)
-      result = QueryLocations.call([facility_id], purposes).result
+      facilities = facility_id.split(',')
+      result = QueryLocations.call(facilities, purposes).result
       result.map do |loc|
         if loc[:tray_id].blank?
           LocationOption.new("#{loc[:room_name]} - #{loc[:room_code]}", loc[:room_id].to_s)

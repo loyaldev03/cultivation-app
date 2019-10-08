@@ -14,7 +14,6 @@ HealthCheck.setup do |config|
 
   # You can set what tests are run with the 'full' or 'all' parameter
   config.full_checks = ['database',
-                        'email',
                         'cache',
                         'redis',
                         'sidekiq-redis',

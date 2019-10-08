@@ -4,6 +4,7 @@
 
 
 <div class="pa4">
+  <%= render 'toast'%>
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
       <div class="fl w-100 flex flex-column width-100">
@@ -67,39 +68,39 @@
                   </div>
                 </div>
               </div>
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
+              <table class="std-table pv2 ph3 w-100 mb2">
                 <thead>
                   <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Code</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Tables</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Capacity</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purpose</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purpose details</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Facility</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Room</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Rows</th>
+                    <th class="pv2 ph3">#</th>
+                    <th class="pv2 ph3">Code</th>
+                    <th class="pv2 ph3 tr">Tables</th>
+                    <th class="pv2 ph3 tr">Capacity</th>
+                    <th class="pv2 ph3">Purpose</th>
+                    <th class="pv2 ph3">Purpose details</th>
+                    <th class="pv2 ph3">Facility</th>
+                    <th class="pv2 ph3">Room</th>
+                    <th class="pv2 ph3">Rows</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   <% @shelves.each_with_index do |f, i| %>
                     <tr data-toggle-right="<%= edit_settings_facility_shelf_path(f)%>" class="dim pointer ">
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.code) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.trays.count) %></td>
-                      <td class="bb b--black-20 pv3 tc">
+                      <td class="pv3 gray"><%= i+1 %></td>
+                      <td class="pv3"><%= blank(f.code) %></td>
+                      <td class="pv3 tr"><%= blank(f.trays.count) %></td>
+                      <td class="pv3 tr">
                         <%= f.capacity %>
                       </td>
-                      <td class="bb b--black-20 pv3 tc">
+                      <td class="pv3">
                         <!-- purpose -->
                       </td>
-                      <td class="bb b--black-20 pv3 tc">
+                      <td class="pv3">
                         <!-- purpose details -->
                       </td>
-                      <td class="bb b--black-20 pv3 tc"><%= f.row.room.facility.name %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f.row.room.name %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f.row.name %></td>
+                      <td class="pv3"><%= f.row.room.facility.name %></td>
+                      <td class="pv3"><%= f.row.room.name %></td>
+                      <td class="pv3"><%= f.row.name %></td>
                     </tr>
                   <% end %>
                 </tbody>

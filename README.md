@@ -135,3 +135,6 @@ Cannected
 ## Configure SMS_FROM environement variable
 1. Make sure the value is not too long
 
+## Configure OneSignal
+1. Create new app id from OneSignal site
+1. Copy the app id & api key to the env variables

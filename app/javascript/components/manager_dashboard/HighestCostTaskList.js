@@ -31,11 +31,13 @@ export default class HighestCostTaskList extends React.Component {
   }
 
   render() {
+    const { cost_permission } = this.props
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
           <h1 className="f5 fw6 dark-grey">
-            Task with Highest Costs In Time and $ Value
+            Task with Highest Costs In Time{' '}
+            {cost_permission && cost_permission == true ? 'and $ Value' : ''}
           </h1>
 
           <Tippy
@@ -85,7 +87,11 @@ export default class HighestCostTaskList extends React.Component {
               <tr className="tl mb2 dark-grey">
                 <th className="w-40">Tasks</th>
                 <th className="tc">Average Time (hrs)</th>
-                <th className="tc">Average Cost</th>
+                {cost_permission && cost_permission == true ? (
+                  <th className="tc">Average Cost</th>
+                ) : (
+                  ''
+                )}
               </tr>
             </thead>
             <tbody>
@@ -97,7 +103,11 @@ export default class HighestCostTaskList extends React.Component {
                         <div className="mb2 mt2">{u.name}</div>
                       </td>
                       <td className="tc">{u.sum_actual_hours}</td>
-                      <td className="tc">{u.actual_cost}</td>
+                      {cost_permission && cost_permission == true ? (
+                        <td className="tc">{u.actual_cost}</td>
+                      ) : (
+                        ''
+                      )}
                     </tr>
                   ))}
                   <tr className="pa2 dark-grey">
@@ -105,7 +115,11 @@ export default class HighestCostTaskList extends React.Component {
                       <div className="b mb2 mt2">Total</div>
                     </td>
                     <td className="tc b">{e.total_sum_actual_hours}</td>
-                    <td className="tc b">{e.total_actual_cost}</td>
+                    {cost_permission && cost_permission == true ? (
+                      <td className="tc b">{e.total_actual_cost}</td>
+                    ) : (
+                      ''
+                    )}
                   </tr>
                 </React.Fragment>
               ))}

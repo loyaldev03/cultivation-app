@@ -40,6 +40,9 @@ class CreateNotificationsWorker
       }
       rec = Notification.new(notification)
       rec.save
+    rescue Mongo::Error::OperationFailure => e
+      # Ignore duplicate notification error
+      next
     end
   end
 

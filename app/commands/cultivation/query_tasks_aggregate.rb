@@ -24,6 +24,7 @@ module Cultivation
     def initialize(current_user, args = {})
       @current_user = current_user
       @args = {
+        isShowDirectReport: true,
         facility_id: nil,
         batch_status: nil,
         task_status: nil,
@@ -50,6 +51,7 @@ module Cultivation
                        localField: 'user_ids',
                        foreignField: '_id',
                        as: 'worker'}},
+          match_direct_report,
           {"$lookup": {from: 'issues_issues',
                        localField: '_id',
                        foreignField: 'task_id',
@@ -129,6 +131,14 @@ module Cultivation
       if args[:facility_id]
         f_ids = args[:facility_id].split(',').map { |x| x.to_bson_id }
         {"$match": {"batch.facility_id": {"$in": f_ids}}}
+      else
+        {"$match": {}}
+      end
+    end
+
+    def match_direct_report
+      if args[:isShowDirectReport] == 'true'
+        {"$match": {"worker.reporting_manager_id": @current_user.id.to_bson_id}}
       else
         {"$match": {}}
       end

@@ -1,11 +1,20 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
-    batches = Cultivation::Batch.all.order(c_at: :desc)
-    phases = extract_phases(batches)
+    facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
+    # batches = Cultivation::Batch.all.order(c_at: :desc)
+    # phases = extract_phases(batches)
     exclude_tasks = params[:exclude_tasks] == 'true' || false
-    options = {params: {exclude_tasks: exclude_tasks, phases: phases}}
+    # options = {params: {exclude_tasks: exclude_tasks, phases: phases}}
+    data = Inventory::QueryCultBatch.call(facilities,
+                                          {
+      page: params[:page],
+      limit: params[:limit],
+      search: params[:search],
+      exclude_tasks: exclude_tasks,
+    }).result
 
-    render json: BatchSerializer.new(batches, options).serialized_json
+    render json: data
+    #render json: BatchSerializer.new(batches, options).serialized_json
   end
 
   def show

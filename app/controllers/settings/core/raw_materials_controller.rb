@@ -7,7 +7,6 @@ class Settings::Core::RawMaterialsController < ApplicationController
       @facility.update_onboarding('ONBOARDING_MATERIAL_TYPE')
     end
     @raw_materials = Inventory::QueryRawMaterial.call.result
-    @used_rw = Inventory::Catalogue.where(catalogue_type: 'raw_materials').pluck(:key).uniq.compact.map(&:downcase)
     ###should standardize the name to catalogue example -> Inventory::QueryCatalogue
   end
 
@@ -32,7 +31,7 @@ class Settings::Core::RawMaterialsController < ApplicationController
         @children = @record.children
         render 'edit', layout: nil
       else
-        render 'layouts/hide_sidebar', layouts: nil
+        render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Raw Material successfully created'}
       end
     else
       render 'new', layout: nil
@@ -56,7 +55,7 @@ class Settings::Core::RawMaterialsController < ApplicationController
       create_subcategory
       render 'edit', layout: nil
     else
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Raw Material successfully updated'}
     end
   end
 
@@ -73,7 +72,7 @@ class Settings::Core::RawMaterialsController < ApplicationController
       @children = @record.children
       render 'edit', layout: nil
     else
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Raw Material successfully deleted'}
     end
   end
 
@@ -82,6 +81,7 @@ class Settings::Core::RawMaterialsController < ApplicationController
   def set_specialkeys
     @specials = Constants::SPECIAL_TYPE.pluck(:name)
     @second_levels = Constants::NUTRIENT_TYPE.pluck(:name)
+    @used_rw = Inventory::ItemTransaction.count > 0 ? Inventory::ItemTransaction.all.map { |item| item.catalogue.key.downcase }.uniq.compact : []
   end
 
   def create_subcategory

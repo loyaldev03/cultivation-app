@@ -3,6 +3,7 @@
 <% end %>
 
 <div class="pa4">
+  <%= render 'toast'%>
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
       <div class="fl w-100 flex flex-column width-100">
@@ -58,39 +59,39 @@
                 </a>
               </div>
 
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt4 w-100 mb2">
+              <table class="std-table pv2 ph3 mt4 w-100">
                 <thead>
                   <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Name</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Code</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Purpose</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Facility Name</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Plant Capacity</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Total Used</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc">Total Available</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Sections</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Rows</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Shelves</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tc"># of Tables</th>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Purpose</th>
+                    <th>Facility Name</th>
+                    <th class="tr">Plant Capacity</th>
+                    <th class="tr">Total Used</th>
+                    <th class="tr">Total Available</th>
+                    <th class="tr"># of Sections</th>
+                    <th class="tr"># of Rows</th>
+                    <th class="tr"># of Shelves</th>
+                    <th class="tr"># of Tables</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   <% @rooms.result.map.each_with_index do |f, i| %>
                     <tr data-toggle-right="<%= edit_settings_facility_room_path(f[:room_id])%>" class="dim pointer">
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1%></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:room_name] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:room_code] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:purpose] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:facility_name] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:total_capacity] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:planned_capacity] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:available_capacity] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:section_count] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:row_count] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:shelf_count] %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= f[:tray_count] %></td>
+                      <td class="pv3 gray"><%= i+1%></td>
+                      <td class="pv3"><%= f[:room_name] %></td>
+                      <td class="pv3"><%= f[:room_code] %></td>
+                      <td class="pv3"><%= f[:purpose] %></td>
+                      <td class="pv3"><%= f[:facility_name] %></td>
+                      <td class="pv3 tr"><%= f[:total_capacity] %></td>
+                      <td class="pv3 tr"><%= f[:planned_capacity] %></td>
+                      <td class="pv3 tr"><%= f[:available_capacity] %></td>
+                      <td class="pv3 tr"><%= f[:section_count] %></td>
+                      <td class="pv3 tr"><%= f[:row_count] %></td>
+                      <td class="pv3 tr"><%= f[:shelf_count] %></td>
+                      <td class="pv3 tr"><%= f[:tray_count] %></td>
                     </tr>
                   <% end %>
                 </tbody>

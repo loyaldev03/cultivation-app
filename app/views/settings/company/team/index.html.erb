@@ -6,5 +6,6 @@
   userId:current_user.id.to_s,
   first_day_of_week: CompanyInfo.first.first_day_of_week,
   setting_role_permissions: RoleCheck.call(current_user, Constants::APP_MOD_TEAM_SETTINGS_ROLES).result,
-  setting_user_permissions: RoleCheck.call(current_user, Constants::APP_MOD_TEAM_SETTINGS_USERS).result
+  setting_user_permissions: RoleCheck.call(current_user, Constants::APP_MOD_TEAM_SETTINGS_USERS).result,
+  wages_permission: RoleCheck.call(current_user, Constants::APP_MOD_USER_COSTS).result,
 } %>

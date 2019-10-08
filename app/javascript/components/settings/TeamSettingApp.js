@@ -55,7 +55,8 @@ class TeamSetttingApp extends React.Component {
     editingUser: {},
     editingRole: {},
     activeTab: 'rolesTab',
-    isListView: true
+    isListView: true,
+    userroleAction: ''
   }
   async componentDidMount() {
     await store.loadUsers(true)
@@ -86,7 +87,8 @@ class TeamSetttingApp extends React.Component {
 
   closeSidebar = () => {
     this.setState({
-      editingUser: {}
+      editingUser: {},
+      userroleAction: ''
     })
     window.editorSidebar.close()
   }
@@ -109,14 +111,15 @@ class TeamSetttingApp extends React.Component {
 
   onClickRoleEdit = roleId => e => {
     const editingRole = store.getRole(roleId)
+    const userroleAction = 'edit'
     if (editingRole) {
-      this.setState({ editingRole })
+      this.setState({ editingRole, userroleAction })
       this.openSidebar()
     }
   }
 
   onAddNew = () => {
-    this.setState({ editingUser: {}, editingRole: {} })
+    this.setState({ userroleAction: 'new', editingUser: {}, editingRole: {} })
     this.openSidebar()
   }
 
@@ -222,7 +225,8 @@ class TeamSetttingApp extends React.Component {
       editingRole,
       isSaving,
       activeTab,
-      isListView
+      isListView,
+      userroleAction
     } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
@@ -230,20 +234,34 @@ class TeamSetttingApp extends React.Component {
     const {
       userId,
       setting_role_permissions,
-      setting_user_permissions
+      setting_user_permissions,
+      wages_permission
     } = this.props
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 fl w-100">
+            <div className="flex justify-between">
+              <div>
+                <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
+                  Team Settings
+                </h5>
+                <p className="mt2 body-1 grey">
+                  Browses through your team's information here.
+                </p>
+              </div>
+              <div className="dim flex flex-row items-center pointer">
+                <i className="material-icons md-gray">keyboard_arrow_left</i>
+                <a
+                  className="db tr ttu link button--font grey"
+                  href="/settings"
+                >
+                  Back to Setting
+                </a>
+              </div>
+            </div>
             <div className="fl w-80-l w-100-m">
-              <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
-                Team Settings
-              </h5>
-              <p className="mt2 mb4 db body-1 grey">
-                Browses through your team's information here.
-              </p>
               <TabButton
                 title="Roles & Permissions"
                 isActive={activeTab === 'rolesTab'}
@@ -571,8 +589,10 @@ class TeamSetttingApp extends React.Component {
                 userManagerOptions={userManagerOptions}
                 rolesOptions={rolesOptions}
                 isSaving={isSaving}
+                userroleAction={userroleAction}
                 companyWorkSchedules={companyWorkSchedules}
                 canUpdate={setting_user_permissions.update}
+                wagesPermission={wages_permission}
               />
             )}
             {activeTab === 'rolesTab' && (
@@ -581,6 +601,7 @@ class TeamSetttingApp extends React.Component {
                 role={editingRole}
                 onSave={this.onRoleSave}
                 // onDelete={this.onRoleDelete}
+                userroleAction={userroleAction}
                 onClose={this.closeSidebar}
                 modules={modules}
                 isSaving={isSaving}

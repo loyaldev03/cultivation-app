@@ -61,7 +61,8 @@ class BatchEditor extends React.Component {
           id: data.id,
           start_date: new Date(attrs.start_date),
           current_growth_stage: attrs.current_growth_stage || '',
-          current_growth_stage_disabled: attrs.plant_count > 0
+          current_growth_stage_disabled: attrs.plant_count > 0,
+          form_type: 'Edit'
         }
         this.setState(newState)
 
@@ -130,6 +131,7 @@ class BatchEditor extends React.Component {
       cure_duration: '',
       current_growth_stage: 'clone',
       current_growth_stage_disabled: false,
+      form_type: 'Add',
       errors: {}
     }
   }
@@ -186,6 +188,7 @@ class BatchEditor extends React.Component {
         } else {
           this.reset()
           window.editorSidebar.close()
+          this.props.onSave(payload)
         }
       })
     }
@@ -281,7 +284,7 @@ class BatchEditor extends React.Component {
             style={{ height: '51px' }}
           >
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              Add Cultivation Batch
+              {this.state.form_type} Cultivation Batch
             </h1>
             <span
               className="rc-slide-panel__close-button dim"

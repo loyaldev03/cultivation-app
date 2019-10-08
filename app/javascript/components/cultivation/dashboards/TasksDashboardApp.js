@@ -7,6 +7,7 @@ import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import { SlidePanel } from '../../utils'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
+import { isValid } from 'date-fns'
 const NewTaskForm = lazy(() => import('./tasks/NewTaskForm'))
 
 import {
@@ -33,7 +34,8 @@ class ActiveTaskStore {
   @observable filter = {
     facility_id: '',
     page: 0,
-    limit: 20
+    limit: 20,
+    isShowDirectReport: true
   }
   @observable columnFilters = {}
 
@@ -44,7 +46,7 @@ class ActiveTaskStore {
           if (this.searchTerm === null) {
             this.searchTerm = ''
           }
-          this.loadActiveTasks()
+          this.loadActiveTasks(this.filter.isShowDirectReport)
         }
       },
       { delay: 700 }
@@ -52,11 +54,11 @@ class ActiveTaskStore {
   }
 
   @action
-  async loadActiveTasks() {
+  async loadActiveTasks(isShowDirectReport) {
     this.isLoading = true
     let url = `/api/v1/batches/active_tasks_agg?facility_id=${
       this.filter.facility_id
-    }`
+    }&isShowDirectReport=${isShowDirectReport}`
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
@@ -84,15 +86,28 @@ class ActiveTaskStore {
     this.filter = {
       facility_id: filter.facility_id,
       page: filter.page,
-      limit: filter.limit
+      limit: filter.limit,
+      isShowDirectReport: filter.isShowDirectReport
     }
   }
 
   /* + column filters */
   isFiltered = record => {
-    let f = Object.keys(this.columnFilters).find(key => {
+    let f
+    f = Object.keys(this.columnFilters).find(key => {
       const filter = this.columnFilters[key].filter(x => x.value === false)
-      return filter.find(x => x.label === record[key])
+      if (key == 'workers') {
+        const workers = record[key].map(w => w['name'])
+        return filter.find(x => workers.includes(x.label))
+      } else {
+        return filter.find(
+          x =>
+            x.label ===
+            (isValid(new Date(record[key]))
+              ? formatDate2(record[key])
+              : record[key])
+        )
+      }
     })
     return f ? true : false
   }
@@ -106,7 +121,20 @@ class ActiveTaskStore {
   }
 
   getUniqPropValues = propName => {
-    return uniq(this.filteredList.map(x => x[propName]).sort())
+    if (propName == 'workers') {
+      const datas = this.filteredList.map(x => x[propName].map(w => w['name']))
+      return uniq([].concat(...datas)).sort()
+    } else {
+      return uniq(
+        this.filteredList
+          .map(x =>
+            isValid(new Date(x[propName]))
+              ? formatDate2(x[propName])
+              : x[propName]
+          )
+          .sort()
+      )
+    }
   }
   /* - column filters */
 
@@ -137,6 +165,7 @@ class TasksDashboardApp extends React.Component {
     DashboardTaskStore.loadTasks_dashboard(this.props.currentFacilityId)
   }
   state = {
+    isShowDirectReport: true,
     showNewTaskPanel: false,
     columns: [
       {
@@ -167,19 +196,7 @@ class TasksDashboardApp extends React.Component {
           <HeaderFilter
             title="Phase"
             accessor="phase"
-            getOptions={() => {
-              return [
-                'clone',
-                'veg1',
-                'veg2',
-                'flower',
-                'harvest',
-                'dry',
-                'trim',
-                'cure',
-                'packaging'
-              ]
-            }}
+            getOptions={activeTaskStore.getUniqPropValues}
             onUpdate={activeTaskStore.updateFilterOptions}
           />
         ),
@@ -189,7 +206,14 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Batch ID',
+        Header: (
+          <HeaderFilter
+            title="Batch ID"
+            accessor="batch_name"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'batch_name',
         className: 'pl3',
         minWidth: 128,
@@ -205,7 +229,14 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Start date',
+        Header: (
+          <HeaderFilter
+            title="Start Date"
+            accessor="start_date"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'start_date',
         className: 'justify-end pr3',
         width: 88,
@@ -213,7 +244,14 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'End date',
+        Header: (
+          <HeaderFilter
+            title="End Date"
+            accessor="end_date"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'end_date',
         className: 'justify-end pr3',
         width: 88,
@@ -279,7 +317,15 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tc',
-        Header: 'Assigned to',
+        Header: (
+          <HeaderFilter
+            toLeft={true}
+            title="Assigned to"
+            accessor="workers"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'workers',
         className: 'justify-center',
         minWidth: 150,
@@ -297,9 +343,10 @@ class TasksDashboardApp extends React.Component {
     activeTaskStore.setFilter({
       facility_id: this.props.currentFacilityId,
       page: state.page,
-      limit: state.pageSize
+      limit: state.pageSize,
+      isShowDirectReport: this.state.isShowDirectReport
     })
-    activeTaskStore.loadActiveTasks()
+    activeTaskStore.loadActiveTasks(this.state.isShowDirectReport)
   }
 
   onToggleColumns = (header, value) => {
@@ -318,9 +365,15 @@ class TasksDashboardApp extends React.Component {
     this.setState({ showNewTaskPanel: true })
   }
 
+  onShowAllTasks = () => {
+    let toggle = !this.state.isShowDirectReport
+    this.setState({ isShowDirectReport: toggle })
+    activeTaskStore.loadActiveTasks(toggle)
+  }
+
   render() {
     const { currentFacilityId, taskPermission } = this.props
-    const { columns, showNewTaskPanel } = this.state
+    const { columns, showNewTaskPanel, isShowDirectReport } = this.state
     return (
       <React.Fragment>
         <SlidePanel
@@ -335,7 +388,6 @@ class TasksDashboardApp extends React.Component {
                   ref={form => (this.NewTaskForm = form)}
                   onClose={() => this.setState({ showNewTaskPanel: false })}
                   onSave={params => {
-                    console.log(params)
                     TaskStore.createNoBatchTask(params)
                     this.setState({ showNewTaskPanel: false })
                   }}
@@ -367,7 +419,24 @@ class TasksDashboardApp extends React.Component {
                 activeTaskStore.searchTerm = e.target.value
               }}
             />
-            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+            <div className="flex items-center justify-end pv2">
+              <label className="grey ph2 f6 pointer" htmlFor="show_all_tasks">
+                My direct report only
+              </label>
+              <input
+                className="toggle toggle-default"
+                id="show_all_tasks"
+                type="checkbox"
+                value={isShowDirectReport}
+                checked={isShowDirectReport}
+                onChange={this.onShowAllTasks}
+              />
+              <label className=" mr2 toggle-button" htmlFor="show_all_tasks" />
+              <CheckboxSelect
+                options={columns}
+                onChange={this.onToggleColumns}
+              />
+            </div>
           </div>
           <div className="pv3">
             <ListingTable

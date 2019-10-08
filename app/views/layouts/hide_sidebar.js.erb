@@ -1,3 +1,7 @@
+<%if defined?(message)%>
+  console.log('enter here');
+  toast('<%=message%>');
+<%end%>
 $_("#right-sidebar").addEventListener("transitionend", function(event) {
   window.location.reload();
 });

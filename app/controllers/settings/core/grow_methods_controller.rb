@@ -5,7 +5,8 @@ class Settings::Core::GrowMethodsController < ApplicationController
       @facility.update_onboarding('ONBOARDING_GROW_METHOD')
     end
     @grow_methods = Common::GrowMethod.all
-    @used_grow_methods = Cultivation::Batch.pluck(:grow_method).uniq.compact.map(&:downcase)
+    @used_grow_methods = Inventory::ItemTransaction.count > 0 ? Inventory::ItemTransaction.all.map { |item| item.catalogue.key.downcase }.uniq.compact : []
+    # @used_grow_methods = Cultivation::Batch.pluck(:grow_method).uniq.compact.map(&:downcase)
   end
 
   def new
@@ -15,7 +16,7 @@ class Settings::Core::GrowMethodsController < ApplicationController
   def create
     @grow_method = Common::GrowMethod.new(grow_method_params)
     if @grow_method.save
-      render 'layouts/hide_sidebar', layouts: nil
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Grow Method successfully created'}
     else
       render 'new', layout: nil
     end
@@ -32,18 +33,19 @@ class Settings::Core::GrowMethodsController < ApplicationController
   def update
     @grow_method = Common::GrowMethod.find(params[:id])
     @grow_method.update(grow_method_params)
-    render 'layouts/hide_sidebar', layouts: nil
+    render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Grow Method successfully updated'}
   end
 
   def bulk_update
     ids = params[:grow_method][:ids]
     result = Common::BulkUpdateGrowMethod.call(current_user, {ids: ids})
+    render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Grow Method successfully updated'}
   end
 
   def destroy
     @grow_method = Common::GrowMethod.find(params[:id])
     @grow_method.destroy
-    render 'layouts/hide_sidebar', layouts: nil
+    render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Grow Method successfully deleted'}
   end
 
   private

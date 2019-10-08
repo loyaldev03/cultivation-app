@@ -79,12 +79,14 @@ class ManagerDashboardApp extends React.Component {
   }
 
   render() {
+    const { cost_permission } = this.props
     return (
       <React.Fragment>
         <OverallInfo
           batches={this.state.batches}
           arr_months={this.state.arr_months}
           facility_id={this.props.facilityId}
+          cost_permission={cost_permission}
         />
         <div className="flex mt4 h-50">
           <div className="w-50">
@@ -105,7 +107,11 @@ class ManagerDashboardApp extends React.Component {
           </div>
         </div>
         <div className="flex mt4 h-50">
-          <div className="w-60">
+          <div
+            className={
+              cost_permission && cost_permission == true ? 'w-60' : 'w-100'
+            }
+          >
             <div
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
@@ -113,17 +119,21 @@ class ManagerDashboardApp extends React.Component {
               <ScheduleList />
             </div>
           </div>
-          <div className="w-40">
-            <div
-              className="ba b--light-gray pa3 bg-white br2"
-              style={{ height: 420 + 'px' }}
-            >
-              <CostBreakdown
-                batches={this.props.batches}
-                arr_months={this.state.arr_months}
-              />
+          {cost_permission && cost_permission == true ? (
+            <div className="w-40">
+              <div
+                className="ba b--light-gray pa3 bg-white br2"
+                style={{ height: 420 + 'px' }}
+              >
+                <CostBreakdown
+                  batches={this.props.batches}
+                  arr_months={this.state.arr_months}
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            ''
+          )}
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
@@ -170,7 +180,7 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <HighestCostTaskList />
+              <HighestCostTaskList cost_permission={cost_permission} />
             </div>
           </div>
           <div className="w-50">

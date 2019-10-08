@@ -1,5 +1,28 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
+    facility = params[:facility_id].split(',').map { |x| x.to_bson_id }
+    facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
+    growth_stages = *params[:current_growth_stage] # convert to array
+    growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
+    excludes = *params[:excludes] || []
+
+    if params[:facility_strain_id].present?
+      facility_strain_id = params[:facility_strain_id]
+    else
+      facility_strain_id = nil
+    end
+
+    data = Inventory::QueryPlantsInfo.call({facility_strain_id: params[:facility_strain_id], facility_strain_ids: facility_strain_ids,
+                                            locations: QueryLocations.call(facility),
+                                            growth_stages: growth_stages,
+                                            excludes: excludes,
+                                            page: params[:page],
+                                            limit: params[:limit],
+                                            search: params[:search]}).result
+    render json: data
+  end
+
+  def all_plants_wstrain
     facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
     if resource_shared?
       facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
@@ -8,7 +31,8 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
-    excludes = params[:excludes] || []
+    excludes = *params[:excludes] || []
+
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
     plants = plants.where(current_growth_stage: {'$in': growth_stages}) if growth_stages.any?
     plants = plants.not_in(current_growth_stage: excludes) if excludes&.any?
@@ -86,6 +110,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def show
+    id = params[:search] || params[:id]
     plant = Inventory::Plant.find(params[:id])
     render json: Inventory::PlantSerializer.new(
       plant,
@@ -138,13 +163,19 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def harvests
     if resource_shared?
-      facility_strains_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id)
+      facilities = active_facility_ids
     else
-      facility_strains_ids = Inventory::FacilityStrain.where(facility_id: params[:facility_id]).pluck(:id)
+      facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
-    batches = Inventory::HarvestBatch.in(facility_strain_id: facility_strains_ids).includes(:cultivation_batch, :facility_strain, :plants).order(c_at: :desc)
-    render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
+    data = Inventory::QueryHarvestBatches.call(facilities,
+                                               {page: params[:page],
+                                                limit: params[:limit],
+                                                search: params[:search]}).result
+
+    render json: data
+    # batches = Inventory::HarvestBatch.in(facility_strain_id: facility_strains_ids).includes(:cultivation_batch, :facility_strain, :plants).order(c_at: :desc)
+    # render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
   end
 
   def show_harvest
@@ -188,6 +219,9 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     if params[:include]
       include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
       options = {params: {include: include_rels}}
+    elsif params[:facility_id]
+      facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
+      options = {params: {locations: QueryLocations.call(facility)}}
     end
     options
   end

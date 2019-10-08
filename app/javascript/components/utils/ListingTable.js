@@ -11,7 +11,8 @@ class ListingTable extends React.PureComponent {
       onFetchData,
       pages = -1,
       sortable = false,
-      ajax = false
+      ajax = false,
+      idSelected = ''
     } = this.props
     if (ajax) {
       return (
@@ -28,6 +29,20 @@ class ListingTable extends React.PureComponent {
           onFetchData={onFetchData}
           pages={pages}
           defaultPageSize={20}
+          getTrProps={(state, rowInfo, column) => {
+            let className = 'task-row'
+            if (
+              rowInfo &&
+              rowInfo.row &&
+              idSelected &&
+              idSelected === rowInfo.row.id
+            ) {
+              className = 'task-row shadow-1'
+            }
+            return {
+              className
+            }
+          }}
         />
       )
     }
@@ -42,6 +57,20 @@ class ListingTable extends React.PureComponent {
         sortable={sortable}
         showPagination={data && data.length > 20}
         defaultPageSize={20}
+        getTrProps={(state, rowInfo, column) => {
+          let className = 'task-row'
+          if (
+            rowInfo &&
+            rowInfo.row &&
+            idSelected &&
+            idSelected === rowInfo.row.id
+          ) {
+            className = 'task-row shadow-1'
+          }
+          return {
+            className
+          }
+        }}
       />
     )
   }

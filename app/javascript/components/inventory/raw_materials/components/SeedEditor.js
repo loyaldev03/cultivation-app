@@ -149,6 +149,7 @@ class SeedEditor extends React.Component {
         } else {
           this.reset()
           window.editorSidebar.close()
+          this.props.onSave(payload)
         }
       })
     }

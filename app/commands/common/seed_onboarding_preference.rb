@@ -1,5 +1,5 @@
 module Common
-  class SeedOnBoardingPreference
+  class SeedOnboardingPreference
     prepend SimpleCommand
 
     def initialize(facility_id)

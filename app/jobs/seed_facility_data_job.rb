@@ -33,7 +33,7 @@ class SeedFacilityDataJob < ApplicationJob
   end
 
   def seed_preferences
-    Common::SeedOnBoardingPreference.call(@facility_id)
+    Common::SeedOnboardingPreference.call(@facility_id)
   end
 
   def seed_uom

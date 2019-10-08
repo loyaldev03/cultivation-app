@@ -31,7 +31,7 @@ class Facility
   def purposes
     # Consolidate all purposes of rooms & sections - This is used in Batch Setup to check if specific
     # phase / purpose room is available in the facility
-    self.rooms.map { |r| r.sections.any? ? r.sections.pluck(:purpose) : r.purpose }.flatten.compact
+    rooms.map { |r| r.sections.any? ? r.sections.pluck(:purpose) : r.purpose }.flatten.compact
   end
 
   def growth_stages
@@ -44,20 +44,20 @@ class Facility
   end
 
   def growth_stages_by_settings
-    self.growth_stages.select { |a| self.purposes.include? a }
+    growth_stages.select { |a| purposes.include? a }
     # we assume purposes rooms created by the purpose in setting page
     # take Constants::CULTIVATION_PHASES_2V and find which is exist in purposes
   end
 
   def onboarding_val(code)
-    self.preferences.find_by(code: code)&.value
+    preferences.find_by(code: code)&.value
   end
 
   def update_onboarding(code)
-    self.preferences.find_by(code: code).update(value: true)
-    unless self.preferences.pluck(:value).include?(false)
+    preferences.find_by(code: code).update(value: true)
+    unless preferences.pluck(:value).include?(false)
       if onboarding_val('ONBOARDING_DONE') == false
-        self.preferences.find_by(code: 'ONBOARDING_DONE').update(value: true)
+        preferences.find_by(code: 'ONBOARDING_DONE').update(value: true)
       end
     end
   end

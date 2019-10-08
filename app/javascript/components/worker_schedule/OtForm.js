@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { SlidePanelHeader, SlidePanelFooter } from '../utils'
+import { SlidePanelHeader, SlidePanelFooter, formatYDM } from '../utils'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import WorkerScheduleStore from './stores/WorkerScheduleStore'
 const otCalendar = `
@@ -13,6 +13,18 @@ const otCalendar = `
       color: white;
   }
 `
+const monthNames = ["Jan", "Feb", "Mac", "Apr", "May", "June",
+  "July", "Augt", "Sept", "Oct", "Nov", "Dec"
+];
+
+const getView = (date,view) =>{
+  if(view == "month"){
+    return date.getDate()
+  }else if(view == "year"){
+    return monthNames[date.getMonth()]
+  }
+}
+
 
 @observer
 class OtForm extends React.Component {
@@ -89,8 +101,18 @@ class OtForm extends React.Component {
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3">
-            <div className="flex justify-center" id="ot-calendar">
-              <Calendar onChange={this.onChangeDate} value={this.state.date} />
+            <div className="flex justify-center schedule-calendar">
+              <Calendar onChange={this.onChangeDate} value={this.state.date }
+              tileContent={({ date, view }) => (
+                <div
+                  className="react-calendar__tile__content"
+                  //onClick={e => console.log(formatYDM(date))}
+                >
+                  {getView(date,view)}
+                 
+                </div>
+              )}
+              />
             </div>
 
             <div className="mt4 fl w-100 flex justify-between">

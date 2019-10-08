@@ -63,7 +63,6 @@ class OtForm extends React.Component {
       start_time[1]
     )
 
-
     const end_date = this.state.end_date
     const end_time = this.state.end_time.split(':')
     const end_date_time = new Date(

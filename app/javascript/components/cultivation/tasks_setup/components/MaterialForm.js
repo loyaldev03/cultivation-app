@@ -377,7 +377,7 @@ export default class MaterialForm extends React.Component {
                                 </option>
                               ))}
                           </select>
-                        ) }
+                        )}
                       </td>
                       <td className="tr w1 pt2">
                         <i

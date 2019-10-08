@@ -358,7 +358,9 @@ export default class MaterialForm extends React.Component {
                         />
                       </td>
                       <td className="tc w3 grey tc">
-                        <select
+                        {
+                          x.uoms.length != 0 ? 
+                          <select
                           value={x.uom}
                           className="input"
                           onChange={e =>
@@ -372,7 +374,10 @@ export default class MaterialForm extends React.Component {
                                 {y}
                               </option>
                             ))}
-                        </select>
+                        </select> :
+                        'Not available'
+                        }
+                        
                       </td>
                       <td className="tr w1 pt2">
                         <i

@@ -18,8 +18,6 @@ class SeedFacilityDataJob < ApplicationJob
     seed_uom
     seed_raw_materials
     seed_preferences
-  rescue StandardError => error
-    Rollbar.error(error)
   end
 
   private

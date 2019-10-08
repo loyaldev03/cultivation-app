@@ -358,26 +358,25 @@ export default class MaterialForm extends React.Component {
                         />
                       </td>
                       <td className="tc w3 grey tc">
-                        {
-                          x.uoms.length != 0 ? 
+                        {x.uoms.length != 0 ? (
                           <select
-                          value={x.uom}
-                          className="input"
-                          onChange={e =>
-                            this.handleChangeUom(x.product_id, e.target.value)
-                          }
-                          style={{ minWidth: 67 + 'px' }}
-                        >
-                          {x.uoms &&
-                            x.uoms.map((y, index) => (
-                              <option key={index} value={y}>
-                                {y}
-                              </option>
-                            ))}
-                        </select> :
-                        'Not available'
-                        }
-                        
+                            value={x.uom}
+                            className="input"
+                            onChange={e =>
+                              this.handleChangeUom(x.product_id, e.target.value)
+                            }
+                            style={{ minWidth: 67 + 'px' }}
+                          >
+                            {x.uoms &&
+                              x.uoms.map((y, index) => (
+                                <option key={index} value={y}>
+                                  {y}
+                                </option>
+                              ))}
+                          </select>
+                        ) : (
+                          'Not available'
+                        )}
                       </td>
                       <td className="tr w1 pt2">
                         <i

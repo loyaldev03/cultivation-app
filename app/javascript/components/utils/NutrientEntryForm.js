@@ -40,45 +40,45 @@ class NutrientEntryForm extends React.Component {
       <div className={`${className}`}>
         {fields.length == 0 ? (
           <div class="ba b--black-20 br2 flex-auto bg-light-yellow pa3">
-            <span className="gray fw6 f5 tc ml3">No nutrients available, please contact your manager.</span>
-          </div>) :
-          (
-            <table className="w-100 ttc gray">
-              <thead>
-                <tr className="f6">
-                  <th className="tl w5">Product Name</th>
-                  <th className="w4 tr">PPM</th>
-                  <th className="w4 tr">Amt</th>
-                  <th className="w4 tc">UoM</th>
-                  <th className="" />
+            <span className="gray fw6 f5 tc ml3">
+              No nutrients available, please contact your manager.
+            </span>
+          </div>
+        ) : (
+          <table className="w-100 ttc gray">
+            <thead>
+              <tr className="f6">
+                <th className="tl w5">Product Name</th>
+                <th className="w4 tr">PPM</th>
+                <th className="w4 tr">Amt</th>
+                <th className="w4 tc">UoM</th>
+                <th className="" />
+              </tr>
+            </thead>
+            <tbody className="lh-copy">
+              {fields.map(f => (
+                <tr key={f.id} className="nutrient-form__group">
+                  {fieldType === 'checkboxes' && (
+                    <React.Fragment>
+                      <td className="tl v-top">{f.product_name}</td>
+                      <td className="tr v-top">{f.ppm}</td>
+                      <td className="tr v-top">{f.quantity}</td>
+                      <td className="tc v-top">{f.uom}</td>
+                      <td className="v-top">
+                        <input
+                          type="checkbox"
+                          className="nutrient-form__input"
+                          onChange={this.onChangeCheckBox(f)}
+                          defaultChecked={f.checked}
+                        />
+                      </td>
+                    </React.Fragment>
+                  )}
                 </tr>
-              </thead>
-              <tbody className="lh-copy">
-                {fields.map(f => (
-                  <tr key={f.id} className="nutrient-form__group">
-                    {fieldType === 'checkboxes' && (
-                      <React.Fragment>
-                        <td className="tl v-top">{f.product_name}</td>
-                        <td className="tr v-top">{f.ppm}</td>
-                        <td className="tr v-top">{f.quantity}</td>
-                        <td className="tc v-top">{f.uom}</td>
-                        <td className="v-top">
-                          <input
-                            type="checkbox"
-                            className="nutrient-form__input"
-                            onChange={this.onChangeCheckBox(f)}
-                            defaultChecked={f.checked}
-                          />
-                        </td>
-                      </React.Fragment>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )
-        } 
-        
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     )
   }

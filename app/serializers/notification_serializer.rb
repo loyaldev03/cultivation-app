@@ -25,6 +25,8 @@ class NotificationSerializer
       "#{object.actor_name} assigned task \"#{object.notifiable_name}\" to you"
     elsif object.notifiable_type == Constants::NOTIFY_TYPE_TASK && object.action == 'task_unassigned'
       "#{object.actor_name} has unassigned task \"#{object.notifiable_name}\""
+    elsif object.notifiable_type == Constants::NOTIFY_TYPE_TASK && object.action == 'task_stucked'
+      "#{object.actor_name} has stucked on task \"#{object.notifiable_name}\" from batch \"#{object.alt_notifiable_name}\" "
     elsif object.notifiable_type == Constants::NOTIFY_TYPE_TASK
       object.notifiable_name
     else

@@ -38,18 +38,20 @@ module Charts
       total_batches = 0
       total_plant = 0
       phases.each do |phase|
-        batch_phase = batches.select { |a| a.current_growth_stage == phase }
-        count = 0
-        total_batches += batch_phase.count
-        batch_phase.each do |batch|
-          count += batch.plants.count
+        if active_phase?(phase)
+          batch_phase = batches.select { |a| a.current_growth_stage == phase }
+          count = 0
+          total_batches += batch_phase.count
+          batch_phase.each do |batch|
+            count += batch.plants.count
+          end
+          total_plant += count
+          json_array << {
+            phase: phase.capitalize,
+            batch_count: batch_phase.count,
+            plant_count: count,
+          }
         end
-        total_plant += count
-        json_array << {
-          phase: phase.capitalize,
-          batch_count: batch_phase.count,
-          plant_count: count,
-        }
       end
       {
         total_plant: total_plant,
@@ -60,6 +62,15 @@ module Charts
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
+    end
+
+    def active_phase?(phase)
+      ph = Common::GrowPhase.find_by(name: phase)
+      if ph.present?
+        return ph&.is_active
+      else
+        return false
+      end
     end
 
     def active_facility_ids

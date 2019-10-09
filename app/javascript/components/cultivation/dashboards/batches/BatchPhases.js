@@ -49,6 +49,9 @@ export default class BatchPhases extends React.Component {
           {
             gridLines: {
               display: false
+            },
+            ticks: {
+              stepSize: 1
             }
           }
         ]

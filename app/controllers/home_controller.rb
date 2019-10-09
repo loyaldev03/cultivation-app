@@ -148,7 +148,7 @@ class HomeController < ApplicationController
     CompanyInfo.destroy_all
 
     Common::UnitOfMeasure.delete_all
-    Common::SeedUnitOfMeasure.call
+    MetrcUpdateUomWorker.perform_async
     Inventory::SeedCatalogue.call
 
     User.update_all(facilities: [], default_facility_id: nil)

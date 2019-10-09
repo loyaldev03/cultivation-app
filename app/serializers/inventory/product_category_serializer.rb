@@ -20,5 +20,17 @@ module Inventory
         }
       end
     end
+
+    attribute :package_units do |object|
+      object.package_units.map do |pu|
+        {
+          id: pu.id.to_s,
+          value: pu.value,
+          label: pu.label,
+          uom: {label: pu.uom, value: pu.uom},
+          quantity: pu.quantity_in_uom,
+        }
+      end
+    end
   end
 end

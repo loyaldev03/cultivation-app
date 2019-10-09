@@ -32,5 +32,6 @@ module Inventory
 
     # Sub categories that belongs to this category
     embeds_many :sub_categories, class_name: 'Inventory::ProductSubCategory'
+    embeds_many :package_units, class_name: 'Inventory::PackageUnit'
   end
 end

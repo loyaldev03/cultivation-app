@@ -15,7 +15,7 @@ class MetrcItemCategoryStore {
   @action
   async loadCategories() {
     this.isLoading = true
-    const url = '/api/v1/products/product_subcategories' // Item Category is Metrc Item Category
+    const url = '/api/v1/products/item_categories' //product_subcategories' // Item Category is Metrc Item Category
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {

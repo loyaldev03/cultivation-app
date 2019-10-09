@@ -13,6 +13,7 @@ const decimalFormatter = new Intl.NumberFormat('en', {
 const moneyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
+  minimumFractionDigits: 0,
   maximumFractionDigits: 0
 })
 

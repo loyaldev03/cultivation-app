@@ -1,5 +1,7 @@
 import React from 'react'
 import { decimalFormatter } from '../utils'
+import { isEmptyString } from './StringHelper'
+import isEmpty from 'lodash.isempty'
 
 class NutrientEntryForm extends React.Component {
   state = {
@@ -38,7 +40,7 @@ class NutrientEntryForm extends React.Component {
     if (!fields || !fieldType) return null
     return (
       <div className={`${className}`}>
-        {fields.length == 0 ? (
+        {isEmpty(fields) ? (
           <div class="ba b--black-20 br2 flex-auto bg-light-yellow pa3">
             <span className="gray fw6 f5 tc ml3">
               No nutrients available, please contact your manager.

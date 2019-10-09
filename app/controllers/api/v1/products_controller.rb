@@ -70,12 +70,12 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
         ]},
       ).
         where(
-          key: {'$nin': [
-            Constants::NUTRIENTS_KEY,
-            Constants::SEEDS_KEY,
-            Constants::PURCHASED_CLONES_KEY,
-          ]},
-        ).
+        key: {'$nin': [
+          Constants::NUTRIENTS_KEY,
+          Constants::SEEDS_KEY,
+          Constants::PURCHASED_CLONES_KEY,
+        ]},
+      ).
         concat(Inventory::Catalogue.non_sales).
         pluck(:id)
 

@@ -45,7 +45,8 @@ module People
                   total_hours += ((work_logs.last[:end_time] - work_logs.first[:start_time]) / 1.hour)
                   data << {
                     user_id: user[:_id].to_s,
-                    worker_name: "#{user[:first_name]} #{user[:last_name]}",
+                    first_name: user[:first_name],
+                    last_name: user[:last_name],
                     roles: roles.join(','),
                     photo_url: nil,
                     approver: manager.nil? ? manager : "#{manager.first_name} #{manager.last_name}",

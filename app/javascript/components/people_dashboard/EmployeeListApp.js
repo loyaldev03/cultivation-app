@@ -6,6 +6,7 @@ import treeTableHOC from './treeTableHOC'
 import { ProgressBar } from '../utils'
 import PeopleDashboardStore from './PeopleDashboardStore'
 import { DefaultAvatar } from '../utils'
+import LetterAvatar from '../utils/LetterAvatar'
 import {
   decimalFormatter,
   CheckboxSelect,
@@ -118,6 +119,7 @@ class ActiveTaskStore {
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
+    console.log(url)
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -204,32 +206,41 @@ class EmployeeListApp extends React.Component {
           minWidth: 150,
           show: false
         },
-        {
-          accessor: 'photo_url',
-          show: false
-        },
+        { accessor: 'photo_url', show: false},
+        { accessor: 'last_name', show: false},
         {
           headerClassName: 'pl3 tl',
           Header: 'Name',
-          accessor: 'user',
+          accessor: 'first_name',
           minWidth: 200,
           className: 'dark-grey pl3 fw6',
           Cell: props => {
             return (
               <div className="flex items-center">
-                <img
-                  src={props.row['photo_url']}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '18px'
-                  }}
-                  onError={x => {
-                    x.target.onerror = null
-                    x.target.src = DefaultAvatar
-                  }}
-                />
-                <span className="f6 fw6 dark-grey ml2 w-20">{props.value}</span>
+                {props.row['photo_url'] ? (
+                  <div>
+                    <img
+                      src={props.row['photo_url']}
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '18px'
+                      }}
+                      onError={e => {
+                        e.target.onerror = null
+                        e.target.src = DefaultAvatar
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <LetterAvatar
+                    firstName={props.value}
+                    lastName={props.row['last_name']}
+                    size={36}
+                    radius={18}
+                  />
+                )}
+                <span className="f6 fw6 dark-grey ml2 w-20">{`${props.value} ${props.row['last_name']}`}</span>
               </div>
             )
           }

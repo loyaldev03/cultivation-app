@@ -9,7 +9,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     facility_strain_id = params[:facility_strain_id].to_s
 
     if type == 'raw_materials'
-      #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
+      # same as query in products index, query_raw_material_with_relationship, should move to cmd ?
       special_type = ['seeds', 'purchased_clones']
       catalogue_ids = if special_type.include?(category)
                         # find parent only one
@@ -46,7 +46,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = products.where(facility_strain_id: facility_strain_id) if facility_strain_id.present?
 
-    products = products.where(name: /#{params[:filter]}/i) if params[:filter].present?
+    products = products.where(name: /.*#{params[:filter]}.*/i) if params[:filter].present?
 
     products = products.limit(7).order(name: :asc)
     render json: Inventory::ProductSerializer.new(products).serialized_json
@@ -70,12 +70,12 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
         ]},
       ).
         where(
-        key: {'$nin': [
-          Constants::NUTRIENTS_KEY,
-          Constants::SEEDS_KEY,
-          Constants::PURCHASED_CLONES_KEY,
-        ]},
-      ).
+          key: {'$nin': [
+            Constants::NUTRIENTS_KEY,
+            Constants::SEEDS_KEY,
+            Constants::PURCHASED_CLONES_KEY,
+          ]},
+        ).
         concat(Inventory::Catalogue.non_sales).
         pluck(:id)
 
@@ -89,7 +89,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
-      where(name: /^#{params[:filter]}/i).
+      where(name: /.*#{params[:filter]}.*/i).
       where(id: {'$nin': exclude_ids}).
       limit(20).
       order(name: :asc)
@@ -134,28 +134,28 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
   def product_subcategories
     result = Inventory::ProductCategory.collection.aggregate([
-      {"$unwind": '$sub_categories'},
-      {"$project": {
-        'id': '$_id',
-        'name': '$sub_categories.name',
-        'category_name': '$name',
-        'quantity_type': 1,
-        'is_used': 1,
-        'is_active': 1,
-        'metrc_item_category': 1,
-        'deleted': 1,
-        'package_units': '$sub_categories.package_units',
-      }},
-    ])
+                                                               {"$unwind": '$sub_categories'},
+                                                               {"$project": {
+                                                                 'id': '$_id',
+                                                                 'name': '$sub_categories.name',
+                                                                 'category_name': '$name',
+                                                                 'quantity_type': 1,
+                                                                 'is_used': 1,
+                                                                 'is_active': 1,
+                                                                 'metrc_item_category': 1,
+                                                                 'deleted': 1,
+                                                                 'package_units': '$sub_categories.package_units',
+                                                               }},
+                                                             ])
     sub_category = Struct.new(:id, :name, :quantity_type, :is_used, :is_active, :metrc_item_category, :deleted, :package_units, :category_name)
 
-    arrays_result = result.to_a.map { |a|
+    arrays_result = result.to_a.map do |a|
       sub_category.new(
         a['id'], a['name'], a['quantity_type'], a['is_used'],
         a['is_active'], a['metrc_item_category'], a['deleted'],
         a['package_units'], a['category_name']
       )
-    }
+    end
 
     render json: Inventory::ProductSubCategorySerializer.new(arrays_result).serialized_json
   end

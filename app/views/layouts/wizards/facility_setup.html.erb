@@ -11,9 +11,10 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div id="main" class="main flex flex-column flex-auto">
-          <%= flash_messages %>
-          <div id="toast" class="toast animated" data-toast=<%=@toast %> data-message=<%=@message.nil? ? false : true %>>
-          </div>
+          <% flash.each do |key, value| %>
+            <div id="toast" class="toast animated" data-message="<%=value %>" data-toast=<%=value.nil? ? false : true %>>
+            </div>
+          <% end %>
           <% if @home.have_company %>
             <%= render 'layouts/sidebar2' %>
             <main class="min-vh-100" style="padding-left: 230px;">
@@ -71,7 +72,7 @@
     <% content_for :before_body_end do %>
       <script>
         if($_('#toast').dataset.toast == 'true'){
-          toast($_('#toast').dataset.message == "true" ? '<%=@message%>' : '')
+          toast($_('#toast').dataset.toast == "true" ? $_('#toast').dataset.message : '')
         }
         function fadeToast() {
           elm = $_('#toast')

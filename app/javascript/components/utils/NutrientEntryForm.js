@@ -40,7 +40,7 @@ class NutrientEntryForm extends React.Component {
     if (!fields || !fieldType) return null
     return (
       <div className={`${className}`}>
-        {isEmpty(fields)? (
+        {isEmpty(fields) ? (
           <div class="ba b--black-20 br2 flex-auto bg-light-yellow pa3">
             <span className="gray fw6 f5 tc ml3">
               No nutrients available, please contact your manager.

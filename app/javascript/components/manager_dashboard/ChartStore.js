@@ -40,7 +40,7 @@ class ChartStore {
   async cultivationInfo(facilityId, period) {
     this.isLoading = true
     this.cultivation_info_loaded = false
-    const url = `/api/v1/dashboard_charts/cultivation_info?facility_id=${facilityId}&period="${period}`
+    const url = `/api/v1/dashboard_charts/cultivation_info?facility_id=${facilityId}&period=${period}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {

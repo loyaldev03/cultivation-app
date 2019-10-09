@@ -5,6 +5,7 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
+      @period = args[:period]
     end
 
     def call
@@ -13,11 +14,11 @@ module Charts
       batches_sum = 0
       batches.each do |b|
         sum = 0
-        if (@args[:period] == 'This Week')
+        if (@period.present? && @period == 'this_week')
           harvest_batches = b.harvest_batch.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)
-        elsif (@args[:period] == 'This Year')
+        elsif (@period.present? && @period == 'this_year')
           harvest_batches = b.harvest_batch.where(:created_at.gt => date.beginning_of_year, :created_at.lt => date.end_of_year)
-        elsif (@args[:period] == 'This Month')
+        elsif (@period.present? && @period == 'this_month')
           harvest_batches = b.harvest_batch.where(:created_at.gt => date.beginning_of_month, :created_at.lt => date.end_of_month)
         else
           harvest_batches = b.harvest_batch.all

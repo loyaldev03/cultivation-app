@@ -107,11 +107,28 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       cmd = DailyTask::StopTimeLog.call(current_user.id, params[:task_id])
     when Constants::WORK_STATUS_STUCK
       cmd = DailyTask::StuckTask.call(current_user.id, params[:task_id])
+      notify_manager(current_user.id, params[:task_id])
     when Constants::WORK_STATUS_DONE
       cmd = DailyTask::DoneTask.call(current_user.id, params[:task_id])
     end
     data = TaskDetailsSerializer.new(cmd.result).serialized_json
     render json: data
+  end
+
+  def notify_manager(user_id, task_id)
+    task = Cultivation::Task.find(task_id)
+    user = User.find(user_id)
+    CreateNotificationsWorker.perform_async(
+      user_id.to_s,
+      'task_stucked',
+      [user.reporting_manager_id.to_s],
+      task.id.to_s,
+      Constants::NOTIFY_TYPE_TASK,
+      task.name,
+      task.batch_id.to_s,
+      Constants::NOTIFY_TYPE_BATCH,
+      task.batch.name,
+    )
   end
 
   def update_note

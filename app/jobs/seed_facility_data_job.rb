@@ -35,6 +35,6 @@ class SeedFacilityDataJob < ApplicationJob
   end
 
   def seed_uom
-    Common::SeedUnitOfMeasure.call
+    MetrcUpdateUomWorker.perform_async
   end
 end

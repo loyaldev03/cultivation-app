@@ -53,7 +53,6 @@ export default class BatchPhases extends React.Component {
             ticks: {
               stepSize: 1
             }
-
           }
         ]
       }

@@ -206,8 +206,8 @@ class EmployeeListApp extends React.Component {
           minWidth: 150,
           show: false
         },
-        { accessor: 'photo_url', show: false},
-        { accessor: 'last_name', show: false},
+        { accessor: 'photo_url', show: false },
+        { accessor: 'last_name', show: false },
         {
           headerClassName: 'pl3 tl',
           Header: 'Name',
@@ -240,7 +240,9 @@ class EmployeeListApp extends React.Component {
                     radius={18}
                   />
                 )}
-                <span className="f6 fw6 dark-grey ml2 w-20">{`${props.value} ${props.row['last_name']}`}</span>
+                <span className="f6 fw6 dark-grey ml2 w-20">{`${props.value} ${
+                  props.row['last_name']
+                }`}</span>
               </div>
             )
           }

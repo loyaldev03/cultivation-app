@@ -240,7 +240,9 @@ class TimesheetApp extends React.Component {
                   radius={18}
                 />
               )}
-              <span className="f6 fw6 dark-grey ml2 w-20">{`${props.value} ${props.row['last_name']}`}</span>
+              <span className="f6 fw6 dark-grey ml2 w-20">{`${props.value} ${
+                props.row['last_name']
+              }`}</span>
             </div>
           )
         }
@@ -251,9 +253,7 @@ class TimesheetApp extends React.Component {
         accessor: 'roles',
         minWidth: 200,
         className: 'justify-center ttu tc',
-        Cell: props => (
-          <span className="truncate">{props.value}</span>
-        )
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tc',

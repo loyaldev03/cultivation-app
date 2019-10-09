@@ -1,15 +1,16 @@
 module Charts
-  class QueryTotalYield
+  class QueryProjectedYield
     prepend SimpleCommand
 
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
       @period = args[:period]
+      @facilities = args[:facility_id]
     end
 
     def call
-      batches = Cultivation::Batch.where(facility_id: {"$in": @args[:facility_id]}).includes(:harvest_batch)
+      batches = Cultivation::Batch.active.where(facility_id: {"$in": @facilities}).includes(:harvest_batch)
       date = Time.zone.now
       batches_sum = 0
       batches.each do |b|

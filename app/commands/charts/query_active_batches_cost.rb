@@ -5,6 +5,7 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
+      @period = args[:period]
     end
 
     def call
@@ -16,11 +17,11 @@ module Charts
       )
       date = Time.zone.now
       sum_cost = 0
-      if (@args[:period] == 'This Week')
+      if (@period.present? && @period == 'this_week')
         batches = batches.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)
-      elsif (@args[:period] == 'This Year')
+      elsif (@period.present? && @period == 'this_year')
         batches = batches.where(:created_at.gt => date.beginning_of_year, :created_at.lt => date.end_of_year)
-      elsif (@args[:period] == 'This Month')
+      elsif (@period.present? && @period == 'this_month')
         batches = batches.where(:created_at.gt => date.beginning_of_month, :created_at.lt => date.end_of_month)
       else
         batches = batches.all

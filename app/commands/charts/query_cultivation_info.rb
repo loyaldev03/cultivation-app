@@ -5,13 +5,15 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
+      @period = args[:period]
     end
 
     def call
       facilities = @args[:facility_id].split(',').map { |x| x.to_bson_id }
-      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: facilities}).result
-      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: facilities, period: @args[:period]}).result
-      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: facilities, period: @args[:period]}).result
+      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: facilities, period: @period}).result
+      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: facilities, period: @period}).result
+      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: facilities, period: @period}).result
+      projected_yield = Charts::QueryProjectedYield.call(@user, {facility_id: facilities, period: @period}).result
 
       result = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
       total_used = 0
@@ -29,7 +31,7 @@ module Charts
       json = {
         total_plants: total_plants,
         total_yield: total_yield,
-        projected_yield: 0,
+        projected_yield: projected_yield,
         active_batches_cost: active_batches_cost,
         facility_capacity: facility_capacity_used,
       }

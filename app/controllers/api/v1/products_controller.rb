@@ -46,7 +46,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = products.where(facility_strain_id: facility_strain_id) if facility_strain_id.present?
 
-    products = products.where(name: /#{params[:filter]}/i) if params[:filter].present?
+    products = products.where(name: /.*#{params[:filter]}.*/i) if params[:filter].present?
 
     products = products.limit(7).order(name: :asc)
     render json: Inventory::ProductSerializer.new(products).serialized_json
@@ -89,7 +89,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
-      where(name: /^#{params[:filter]}/i).
+      where(name: /.*#{params[:filter]}.*/i).
       where(id: {'$nin': exclude_ids}).
       limit(20).
       order(name: :asc)

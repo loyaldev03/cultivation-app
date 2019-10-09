@@ -154,7 +154,6 @@ class AddEditProductCategoryForm extends React.Component {
     return res >= 0
   }
 
-
   onDelete = value => e => {
     if (confirm('Confirm delete?')) {
       this.setState({
@@ -187,7 +186,12 @@ class AddEditProductCategoryForm extends React.Component {
 
   render() {
     const { onClose, onSave, mode = 'add' } = this.props
-    const { name, metrc_item_category, selectedQuantityType, packageUnits } = this.state
+    const {
+      name,
+      metrc_item_category,
+      selectedQuantityType,
+      packageUnits
+    } = this.state
 
     if (!mode) {
       return null
@@ -286,137 +290,150 @@ class AddEditProductCategoryForm extends React.Component {
                     />
                   </div>
                 </div>
-                { selectedQuantityType && selectedQuantityType.value === 'WeightBased' &&
-                  <React.Fragment>
-                  <div className="grey f6">
-                    <span className="fw6 mt2 dib">Weight:</span>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr'
-                      }}
-                    >
-                      {BUILTIN_WEIGHT_UNITS.map(pkgUnit => (
-                        <PkgUnitCheckbox
-                          className="pa2"
-                          key={pkgUnit.value}
-                          label={pkgUnit.label}
-                          value={pkgUnit.value}
-                          onChange={this.onChangeCb}
-                          checked={this.isChecked(pkgUnit.value)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="grey f6">
-                    <span className="fw6 mt2 dib">Custom Units:</span>
-                    <div>
-                      {packageUnits
-                        .filter(u => u.value.includes(CUSTOM_PKG_PREFIX))
-                        .map(x => {
-                          return (
-                            <div key={x.value} className="pa2 flex items-center">
-                              <div className="w-20 mr3">
-                                <label className="f6 fw6 db mb1 gray ttc">
-                                  Label
-                            </label>
-                                <input
-                                  type="text"
-                                  className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
-                                  name={x.value}
-                                  value={x.label}
-                                  onChange={e => {
-                                    console.log(e)
-                                    this.setState({
-                                      packageUnits: this.state.packageUnits.map(y =>
-                                        y.value === e.target.name
-                                          ? { ...y, label: e.target.value }
-                                          : y
-                                      )
-                                    })
-                                  }}
-                                />
-                              </div>
-                              <div className="w-20 mr3">
-                                <label className="f6 fw6 db mb1 gray ttc">
-                                  Uom
-                                </label>
-                                <Select
-                                  styles={reactSelectStyle}
-                                  options={[
-                                    { label: 'Ounce', value: 'ounce' },
-                                    { label: 'Gram', value: 'gram' }
-                                  ]}
-                                  value={x.uom}
-                                  onChange={e => {
-                                    this.setState({
-                                      packageUnits: this.state.packageUnits.map(y =>
-                                        y.value === x.value ? { ...y, uom: e } : y
-                                      )
-                                    })
-                                  }}
-                                />
-                              </div>
-                              <div className="w-20 mr2">
-                                <label className="f6 fw6 db mb1 gray ttc">
-                                  Quantity
-                                </label>
-                                <input
-                                  type="text"
-                                  className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
-                                  name={x.value}
-                                  value={x.quantity}
-                                  onChange={e => {
-                                    this.setState({
-                                      packageUnits: this.state.packageUnits.map(y =>
-                                        y.value === e.target.name
-                                          ? { ...y, quantity: e.target.value }
-                                          : y
-                                      )
-                                    })
-                                  }}
-                                />
-                              </div>
-                              <i
-                                className="material-icons icon--btn red"
-                                onClick={this.onDelete(x.value)}
-                              >
-                                delete
-                          </i>
-                            </div>
-                          )
-                        })}
-                      <a
-                        href="#0"
-                        className="link pa2 dib"
-                        onClick={() => {
-                          const customIdx = new Date().getTime()
-                          this.setState({
-                            packageUnits: [
-                              ...packageUnits,
-                              {
-                                value: `${CUSTOM_PKG_PREFIX}${customIdx}`,
-                                label: ''
-                              }
-                            ]
-                          })
-                        }}
-                      >
-                        Add
-                  </a>
-                    </div>
-                  </div>
-                  </React.Fragment>              
-                }
+                {selectedQuantityType &&
+                  selectedQuantityType.value === 'WeightBased' && (
+                    <React.Fragment>
+                      <div className="grey f6">
+                        <span className="fw6 mt2 dib">Weight:</span>
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr'
+                          }}
+                        >
+                          {BUILTIN_WEIGHT_UNITS.map(pkgUnit => (
+                            <PkgUnitCheckbox
+                              className="pa2"
+                              key={pkgUnit.value}
+                              label={pkgUnit.label}
+                              value={pkgUnit.value}
+                              onChange={this.onChangeCb}
+                              checked={this.isChecked(pkgUnit.value)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="grey f6">
+                        <span className="fw6 mt2 dib">Custom Units:</span>
+                        <div>
+                          {packageUnits
+                            .filter(u => u.value.includes(CUSTOM_PKG_PREFIX))
+                            .map(x => {
+                              return (
+                                <div
+                                  key={x.value}
+                                  className="pa2 flex items-center"
+                                >
+                                  <div className="w-20 mr3">
+                                    <label className="f6 fw6 db mb1 gray ttc">
+                                      Label
+                                    </label>
+                                    <input
+                                      type="text"
+                                      className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                                      name={x.value}
+                                      value={x.label}
+                                      onChange={e => {
+                                        console.log(e)
+                                        this.setState({
+                                          packageUnits: this.state.packageUnits.map(
+                                            y =>
+                                              y.value === e.target.name
+                                                ? {
+                                                    ...y,
+                                                    label: e.target.value
+                                                  }
+                                                : y
+                                          )
+                                        })
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="w-20 mr3">
+                                    <label className="f6 fw6 db mb1 gray ttc">
+                                      Uom
+                                    </label>
+                                    <Select
+                                      styles={reactSelectStyle}
+                                      options={[
+                                        { label: 'Ounce', value: 'ounce' },
+                                        { label: 'Gram', value: 'gram' }
+                                      ]}
+                                      value={x.uom}
+                                      onChange={e => {
+                                        this.setState({
+                                          packageUnits: this.state.packageUnits.map(
+                                            y =>
+                                              y.value === x.value
+                                                ? { ...y, uom: e }
+                                                : y
+                                          )
+                                        })
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="w-20 mr2">
+                                    <label className="f6 fw6 db mb1 gray ttc">
+                                      Quantity
+                                    </label>
+                                    <input
+                                      type="text"
+                                      className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                                      name={x.value}
+                                      value={x.quantity}
+                                      onChange={e => {
+                                        this.setState({
+                                          packageUnits: this.state.packageUnits.map(
+                                            y =>
+                                              y.value === e.target.name
+                                                ? {
+                                                    ...y,
+                                                    quantity: e.target.value
+                                                  }
+                                                : y
+                                          )
+                                        })
+                                      }}
+                                    />
+                                  </div>
+                                  <i
+                                    className="material-icons icon--btn red"
+                                    onClick={this.onDelete(x.value)}
+                                  >
+                                    delete
+                                  </i>
+                                </div>
+                              )
+                            })}
+                          <a
+                            href="#0"
+                            className="link pa2 dib"
+                            onClick={() => {
+                              const customIdx = new Date().getTime()
+                              this.setState({
+                                packageUnits: [
+                                  ...packageUnits,
+                                  {
+                                    value: `${CUSTOM_PKG_PREFIX}${customIdx}`,
+                                    label: ''
+                                  }
+                                ]
+                              })
+                            }}
+                          >
+                            Add
+                          </a>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
 
-
-                {selectedQuantityType && selectedQuantityType.value === 'CountBased' &&
-                  <React.Fragment>
-                  <h1>CountBased</h1>
-                  </React.Fragment>
-                }
-
-
+                {selectedQuantityType &&
+                  selectedQuantityType.value === 'CountBased' && (
+                    <React.Fragment>
+                      <h1>CountBased</h1>
+                    </React.Fragment>
+                  )}
               </React.Fragment>
             )}
             {this.state.tab === 'metrc' && (

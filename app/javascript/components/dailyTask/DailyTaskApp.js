@@ -22,7 +22,7 @@ import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
 import IssueSidebar from '../issues/IssueSidebar2'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
-
+import isEmpty from 'lodash.isempty'
 import {
   formatDate3,
   SlidePanel,
@@ -316,8 +316,7 @@ class DailyTaskApp extends React.Component {
           />
           <label className="toggle-button" htmlFor="show_all_tasks" />
         </div>
-        {DailyTasksStore.batches.length == 0 &&
-        DailyTasksStore.isShowAllTasks == false ? (
+        {isEmpty(DailyTasksStore.batches) && !DailyTasksStore.isShowAllTasks ? (
           <div className="ba b--black-20 br2 flex-auto bg-white pa3">
             <span className="gray fw6 f5 tc ml3 i">
               No task assigned to you.

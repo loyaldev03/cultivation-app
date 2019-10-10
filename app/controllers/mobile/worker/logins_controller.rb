@@ -28,7 +28,7 @@ class Mobile::Worker::LoginsController < ApplicationController
     @user = User.find(params[:user_id])
     cmd = Common::GenerateCodeLogin.call(@user)
     if cmd.success?
-      flash[:notice] == 'Code sent to your number'
+      flash[:notice] == 'Your login OTP has been sent to your number'
       redirect_to pin_request_mobile_worker_logins_path(user_id: params[:user_id])
     end
   end

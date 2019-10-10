@@ -55,7 +55,7 @@ module People
         main << {
           id: role.id,
           title: role.name,
-          color: color_pick,
+          color: "##{'%05x' % (rand * 0xffffff)}",
           capacity: total_capacity.round(0),
           actual: total_actual.round(0),
           percentage: percentage,

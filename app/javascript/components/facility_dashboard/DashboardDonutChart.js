@@ -59,7 +59,7 @@ class DashboardDonutChart extends React.Component {
           onElementsClick={e => {
             let room = FacilityDashboardStore.data_list_rooms.rooms[e[0]._index]
             FacilityDashboardStore.loadRoomsDetail(
-              this.props.facility_id,
+              room.facility_id,
               room.purpose,
               room.room_code,
               room.room_name

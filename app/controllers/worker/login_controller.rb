@@ -28,7 +28,7 @@ class Worker::LoginController < ApplicationController
     @user = User.find(params[:selected])
     cmd = Common::GenerateCodeLogin.call(@user)
     if cmd.success?
-      flash[:notice] == 'Code sent to your number'
+      flash[:notice] == 'Your login OTP has been sent to your number'
       redirect_to worker_login_index_path(request.params.except(:controller, :_method, :action, :authenticity_token).merge(requested: true))
     else
     end

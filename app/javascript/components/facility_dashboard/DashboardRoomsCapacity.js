@@ -17,12 +17,16 @@ const RoomCapcitySpot = ({ text, height, purpose, rooms, color, onClick }) => {
           <div
             className="tc"
             style={{ height: `${height}%`, background: 'white', opacity: 0.5 }}
-          ></div>
+          />
         ) : (
           <React.Fragment>
             <div
-            className="tc"
-            style={{ height: `${height}%`, background: 'white', opacity: 0.5 }}
+              className="tc"
+              style={{
+                height: `${height}%`,
+                background: 'white',
+                opacity: 0.5
+              }}
             >
               {height > 60.5 ? (
                 <span className="f6 fw6 black tc pa1 ">{text} spots free</span>
@@ -36,8 +40,7 @@ const RoomCapcitySpot = ({ text, height, purpose, rooms, color, onClick }) => {
               ''
             )}
           </React.Fragment>
-        ) }
-        
+        )}
       </div>
 
       <div>

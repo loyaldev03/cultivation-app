@@ -2,7 +2,6 @@
   <h5 class="h6--font dark-grey ma0"><%= room.name %> Setup</h5>
 </div>
 
-
 <%= form_with scope: :room_info, url: facility_setup_update_room_info_path,
     class: "mt4 flex-auto flex flex-column justify-between" do |f| %>
   <%= f.hidden_field :id, value: room.id %>

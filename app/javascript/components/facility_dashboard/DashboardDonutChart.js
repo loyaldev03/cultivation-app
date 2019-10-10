@@ -23,7 +23,7 @@ class DashboardDonutChart extends React.Component {
         labels: {
           render: 'label',
           overlap: true,
-          fontSize: 14,
+          fontSize: 12,
           fontStyle: 'bold',
           fontColor: 'white'
         }

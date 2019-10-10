@@ -5,6 +5,5 @@ class Settings::Company::TeamController < ApplicationController
       @facility = Facility.find(params[:facility_id])
       @facility.update_onboarding('ONBOARDING_INVITE_TEAM')
     end
-    authorize! :index, Settings::Company::TeamController
   end
 end

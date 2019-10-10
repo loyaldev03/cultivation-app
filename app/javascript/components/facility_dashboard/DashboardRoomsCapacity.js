@@ -1,6 +1,5 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { FacilityRoomCapacityWidget } from '../utils'
 import FacilityDashboardStore from './FacilityDashboardStore'
 import DashboardDonutChart from './DashboardDonutChart'
 import DashboardRoomDetails from './DashboardRoomDetails'
@@ -52,7 +51,7 @@ class DashboardRoomsCapacity extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between">
-          <h1 className="f5 fw6 dark-grey">Rooms Capacity</h1>
+          <h1 className="f5 fw6 dark-grey pb3">Rooms Capacity</h1>
         </div>
         <div className="flex justify-center mb3">
           {FacilityDashboardStore.data_rooms_capacity.map((e, i) => (
@@ -67,19 +66,15 @@ class DashboardRoomsCapacity extends React.Component {
             />
           ))}
         </div>
-        <div className="flex justify-between">
-          <div className="w-50">
-            {FacilityDashboardStore.current_room_purpose ? (
+        <div className="flex mb4">
+          <div className="">
+            {FacilityDashboardStore.current_room_purpose && (
               <DashboardDonutChart facility_id={this.props.facility_id} />
-            ) : (
-              ''
             )}
           </div>
-          <div className="w-50">
-            {FacilityDashboardStore.rooms_detail_loaded ? (
+          <div className="ph4 flex flex-column">
+            {FacilityDashboardStore.rooms_detail_loaded && (
               <DashboardRoomDetails facility_id={this.props.facility_id} />
-            ) : (
-              ''
             )}
           </div>
         </div>

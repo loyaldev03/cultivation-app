@@ -15,6 +15,10 @@
   min-width: 800px;
 }
 
+.min-w250 {
+  min-width: 250px;
+}
+
 .min-w200 {
   min-width: 200px;
 }
@@ -102,6 +106,14 @@
 /* hover */
 .hover-bg-grey:hover {
   background-color: rgba(100, 100, 100, 0.1);
+}
+
+.sticky {
+  position: sticky;
+}
+
+.h-nav {
+  height: 50px;
 }
 
 /* navbar hover */

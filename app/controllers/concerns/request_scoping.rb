@@ -14,6 +14,7 @@ module RequestScoping
     helper_method :active_facility_ids
     helper_method :resource_shared?
     helper_method :has_default_facility?
+    helper_method :current_user_facilities
   end
 
   protected
@@ -102,6 +103,10 @@ module RequestScoping
       f_ids = Facility.where(id: {'$in': current_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
       ids = f_ids.push(current_facility.id)
     end
+  end
+
+  def current_user_facilities
+    @current_user_facilities ||= QueryUserFacilities.call(current_user).result
   end
 
   def active_facility_ids

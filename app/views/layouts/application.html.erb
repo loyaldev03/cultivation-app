@@ -2,7 +2,7 @@
 <html>
   <%= render "layouts/head", include_sidebar: true, include_popper: true %>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>You need to enable JavaScript to run this app. 400</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
         <% if company_info&.is_active %>
@@ -11,70 +11,14 @@
         <div
           id="main"
           class="main flex flex-column flex-auto"
-          style="<%= (company_info&.is_active ? 'padding-left: 230px;' : '0') %>">
+          style="<%= (company_info&.is_active ? 'padding-left: 230px;' : '0') %>"
+        >
+          <%= render "top_nav" %>
           <% flash.each do |key, value| %>
             <div id="apptoast" class="toast animated" data-message="<%=value %>" data-apptoast=<%=value.nil? ? false : true %>>
             </div>
           <% end %>
           <main class="min-vh-100 h-100">
-            <div 
-              style="height: 50px; position: sticky; top: 0; z-index : 1; box-shadow: 11px 3px 10px 0 #0000000f;"
-              class="ph4 f6 w-100 bg-white flex flex-row items-center justify-between"
-            >
-              <div class="flex items-center">
-                <% if company_info&.is_active %>
-                <span class="f5 fw4 gray flex items-center">
-                  <i class="material-icons mr2 black-20 md-18">business</i>
-                  <%= select_tag :facility_id, options_for_select(['All'] + Facility.where(id: {'$in': current_user.facilities}, is_enabled: true).pluck(:name, :id), selected: params[:facility_id]), :onchange => "changeDefaultFacility()"%>
-
-                </span>
-                <% end %>
-              </div>
-
-              <% if content_for? :breadcrumb %>
-                <div class="flex flex-row items-center">
-                  <%= react_component 'utils/SearchBox', {facility_id: current_facility&.id.to_s} %>
-
-                  <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>
-                    <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
-                  <% end %>
-                  <%= switch_user_select if Rails.env.development? %>
-                  <%= react_component 'notification/NotificationApp' %>
-
-                  <div class="ph2">
-                    <%= react_component 'utils/Avatar', {
-                      firstName: current_user&.first_name,
-                      lastName: current_user&.last_name,
-                      photoUrl: current_user&.photo_url
-                    }, {
-                      tag: 'span'
-                    }%> 
-                  </div>
-
-                  <% if !current_user.first_name %>
-                    <span class="grey subtitle-2"> <%= current_user.email %> </span>
-                  <% else %>
-                    <span class="ttc grey subtitle-2"> 
-                      <%= current_user.first_name %> <%= current_user.last_name %>
-                    </span>
-                  <% end %>
-
-                  <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
-
-                  <div class="dropdown">
-                    <div id="myDropdown" class="dropdown-content box--shadow-header">
-                      <%= link_to 'My Task', daily_tasks_path,
-                      class: 'ttc grey subtitle-2 pv3 tc dim' %>  
-                      <%= link_to 'Edit profile', edit_user_registration_path,
-                           class: 'ttc grey subtitle-2 pv3 tc dim' %>
-
-                      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
-                          class: 'grey subtitle-2 pv3 tc dim' %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
             <%= yield %>
           </main>
           <%= render "layouts/right_sidebar" %>

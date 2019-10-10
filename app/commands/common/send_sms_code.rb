@@ -8,6 +8,11 @@ module Common
     end
 
     def call
+      if @phone_number.nil?
+        # stop app from crashing when no phone
+        return;
+      end
+
       from_name = ENV['SMS_FROM'] || 'Cannected'
       @client = initialize_nextmo
       res = @client.sms.send(

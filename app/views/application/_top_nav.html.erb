@@ -1,4 +1,4 @@
-<div class="flex bg-white h-nav sticky top-0 items-center justify-between ph3">
+<div class="flex bg-white h-nav sticky top-0 items-center justify-between ph3 z-1 shadow--bottom">
   <% if company_info&.is_active %>
     <span class="f5 fw4 grey flex items-center">
       <i class="material-icons mr2 black-20 md-18">business</i>
@@ -33,7 +33,7 @@
       </span>
       <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
       <div class="dropdown">
-        <div id="myDropdown" class="dropdown-content box--shadow-header">
+        <div id="myDropdown" class="dropdown-content shadow-3">
           <%= link_to 'My Task', daily_tasks_path,
           class: 'ttc grey subtitle-2 pv3 tc dim' %>  
           <%= link_to 'Edit profile', edit_user_registration_path,

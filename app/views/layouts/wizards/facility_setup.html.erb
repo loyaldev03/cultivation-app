@@ -21,50 +21,7 @@
           <% else %>
             <main class="min-vh-100">
           <% end %>
-            <div 
-              style="height: 50px; position: sticky; top: 0; z-index : 1; box-shadow: 11px 3px 10px 0 #0000000f;"
-              class="ph4 f6 w-100 bg-white flex flex-row items-center justify-between"
-            >
-              <% if content_for? :breadcrumb %>
-                <div class="flex items-center">
-                  <%= yield :breadcrumb %>
-                </div>
-
-                <div class="flex flex-row items-center">
-                  <%= react_component 'notification/NotificationApp' %>
-                  <div class="ph2">
-                    <%= react_component 'utils/Avatar', {
-                      firstName: current_user&.first_name,
-                      lastName: current_user&.last_name,
-                      photoUrl: current_user&.photo_url,
-                    }, {
-                      tag: 'span'
-                    }%> 
-                  </div>
-
-                  <% if !current_user.first_name %>
-                    <span class="grey subtitle-2"> <%= current_user.email %> </span>
-                  <% else %>
-                    <span class="ttc grey subtitle-2"> 
-                      <%= current_user.first_name %> <%= current_user.last_name %>
-                    </span>
-                  <% end %>
-
-                  <i onclick="toggleDropdown()"
-                     id="toggle-dropdown"
-                     class="material-icons dim grey ml2 pointer">keyboard_arrow_down</i>
-
-                  <div class="dropdown">
-                    <div id="myDropdown" class="dropdown-content box--shadow-header">
-                      <%= link_to 'Edit profile', edit_user_registration_path,
-                           class: 'ttc grey subtitle-2 pv3 tc dim' %>
-                      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
-                          class: 'grey subtitle-2 pv3 tc dim' %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
+            <%= render "top_nav" %>
             <%= yield %>
           </main>
         </div>

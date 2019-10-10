@@ -13,20 +13,33 @@ const RoomCapcitySpot = ({ text, height, purpose, rooms, color, onClick }) => {
       style={{ cursor: 'pointer', width: '70px' }}
     >
       <div className="tc" style={{ height: '120px', background: `${color}` }}>
-        <div
-          className="tc"
-          style={{ height: `${height}%`, background: 'white', opacity: 0.5 }}
-        >
-          {height > 60.5 ? (
-            <span className="f6 fw6 black tc pa1 ">{text} spots free</span>
-          ) : (
-            ''
-          )}
-        </div>
-        {height <= 60.5 ? (
-          <span className="f6 fw6 white tc pa1">{text} spots free</span>
+        {text == 'ROOM_ONLY_SETUP' ? (
+          <div
+            className="tc"
+            style={{ height: `${height}%`, background: 'white', opacity: 0.5 }}
+          />
         ) : (
-          ''
+          <React.Fragment>
+            <div
+              className="tc"
+              style={{
+                height: `${height}%`,
+                background: 'white',
+                opacity: 0.5
+              }}
+            >
+              {height > 60.5 ? (
+                <span className="f6 fw6 black tc pa1 ">{text} spots free</span>
+              ) : (
+                ''
+              )}
+            </div>
+            {height <= 60.5 ? (
+              <span className="f6 fw6 white tc pa1">{text} spots free</span>
+            ) : (
+              ''
+            )}
+          </React.Fragment>
         )}
       </div>
 

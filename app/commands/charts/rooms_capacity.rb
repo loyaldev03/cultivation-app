@@ -12,20 +12,26 @@ module Charts
       json = []
       facility_by_rooms = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
       facility_by_rooms.group_by { |d| d[:purpose] }.each_with_index do |(k, v), i|
-        planned_capacity = 0
-        total_capacity = 0
-        percentage = 0
-        v.map do |room|
-          planned_capacity += room[:planned_capacity]
-          total_capacity += room[:total_capacity]
-        end
-        available_spots = total_capacity - planned_capacity
-        unless planned_capacity == 0 or total_capacity == 0
-          percentage = (planned_capacity.to_f / total_capacity.to_f * 100.to_f).ceil
-          percentage = 100 if percentage > 100
-        end
-        if (planned_capacity > 0 and total_capacity == 0) or (planned_capacity == total_capacity)
+        if Constants::ROOM_ONLY_SETUP.include?(k.downcase)
+          total_capacity = 'ROOM_ONLY_SETUP'
+          available_spots = 'ROOM_ONLY_SETUP'
           percentage = 100
+        else
+          planned_capacity = 0
+          total_capacity = 0
+          percentage = 0
+          v.map do |room|
+            planned_capacity += room[:planned_capacity]
+            total_capacity += room[:total_capacity]
+          end
+          available_spots = total_capacity - planned_capacity
+          unless planned_capacity == 0 or total_capacity == 0
+            percentage = (planned_capacity.to_f / total_capacity.to_f * 100.to_f).ceil
+            percentage = 100 if percentage > 100
+          end
+          if (planned_capacity > 0 and total_capacity == 0) or (planned_capacity == total_capacity)
+            percentage = 100
+          end
         end
         bar_colors.shuffle
         color_pick = bar_colors.sample

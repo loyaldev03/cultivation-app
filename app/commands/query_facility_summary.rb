@@ -61,6 +61,7 @@ class QueryFacilitySummary
       room_name: room_info.room_name,
       room_code: room_info.room_code,
       purpose: room_info.room_purpose,
+      facility_id: room_info.facility_id,
       facility_name: room_info.facility_name,
       room_has_sections: room_info.room_has_sections,
       total_capacity: total_capacity,

@@ -10,7 +10,7 @@ module Common
     def call
       if @phone_number.nil?
         # stop app from crashing when no phone
-        return;
+        return
       end
 
       from_name = ENV['SMS_FROM'] || 'Cannected'

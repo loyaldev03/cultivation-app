@@ -43,7 +43,7 @@ class NutrientEntryForm extends React.Component {
         {isEmpty(fields) ? (
           <div class="ba b--black-20 br2 flex-auto bg-light-yellow pa3">
             <span className="gray fw6 f5 tc ml3">
-              No nutrients available, please contact your manager.
+              Item is not in stock, please contact your manager.
             </span>
           </div>
         ) : (

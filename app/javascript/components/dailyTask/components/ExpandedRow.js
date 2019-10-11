@@ -108,7 +108,7 @@ class ExpandedRow extends React.Component {
     return (
       <React.Fragment>
         <div className="flex w100 justify-between ma2">
-          <div class="ba b--black-20 br2 mb2 flex-auto mr4 bg-light-yellow pa2">
+          <div class="ba b--black-20 br2 mb2 flex-auto mr4 pa2">
             <span className="gray fw6 f5 mb2">Instruction</span>
             <p className="f6 grey mt2 mb0">{this.props.instruction}</p>
           </div>

@@ -15,7 +15,7 @@ class Worker::LoginController < ApplicationController
         end
         @users = @users.order_by(last_sign_in_at: :asc) if params[:filter] == 'last_login'
         @users = @users.order_by(first_name: :asc) if params[:filter] == 'alpha'
-        @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" == params[:search] } if params[:search].present?
+        @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" =~ /#{params[:search]}/i } if params[:search].present?
         @user = @users.detect { |a| a[:id].to_s == params[:selected] } if params[:selected].present?
       end
     else

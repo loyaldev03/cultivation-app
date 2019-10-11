@@ -10,41 +10,19 @@
   <body>
     <noscript>You need to enable JavaScript to run this app. 430</noscript>
     <div id="root">
+      <%= render 'toast' %>
       <div id="main" class="main flex flex-column flex-auto">
-          <% flash.each do |key, value| %>
-            <div id="toast" class="toast animated" data-message="<%=value %>" data-toast=<%=value.nil? ? false : true %>>
-            </div>
-          <% end %>
-          <% if @home.have_company %>
-            <%= render 'layouts/sidebar2' %>
-            <main class="min-vh-100" style="padding-left: 230px;">
-          <% else %>
-            <main class="min-vh-100">
-          <% end %>
-            <%= render "top_nav" %>
-            <%= yield %>
-          </main>
-        </div>
+        <% if @home.have_company %>
+          <%= render 'layouts/sidebar2' %>
+          <main class="min-vh-100" style="padding-left: 230px;">
+        <% else %>
+          <main class="min-vh-100">
+        <% end %>
+          <%= render "top_nav" %>
+          <%= yield %>
+        </main>
+      </div>
     </div>
-    <% content_for :before_body_end do %>
-      <script>
-        if($_('#toast').dataset.toast == 'true'){
-          toast($_('#toast').dataset.toast == "true" ? $_('#toast').dataset.message : '')
-        }
-        function fadeToast() {
-          elm = $_('#toast')
-          elm.classList.replace('fadeIn', 'fadeOut');
-          setTimeout(function(){ $_('#toast').classList.remove('fadeOut', 'db'); }, 1000);
-        }
-        function toast(message, type) {
-          elm = $_('#toast')
-          elm.innerHTML = message;
-          elm.classList.add('fadeIn', 'toast--'+ type, 'db');
-          setTimeout(function(){ fadeToast(); }, 3000);
-        }
-      </script>
-    <% end %>
     <%= render "layouts/before_body_end" %>
   </body>
 </html>
-

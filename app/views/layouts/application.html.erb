@@ -27,6 +27,7 @@
     </div>
     <% content_for :before_body_end do %>
       <script>
+        // FIXME: NOT SUPPOSE TO BE ADDED 003
         if($_('#toast').dataset.toast == 'true'){
           toast($_('#toast').dataset.toast == "true" ? $_('#toast').dataset.message : '')
         }

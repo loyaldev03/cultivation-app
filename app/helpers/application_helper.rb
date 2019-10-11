@@ -18,24 +18,6 @@ module ApplicationHelper
     ).html_safe
   end
 
-  def flash_css_class(msg_type)
-    case msg_type
-    when 'notice' then 'subtitle-2 ph3 pv2 mb2 bg-orange white tc'
-    when 'success' then 'subtitle-2 ph3 pv2 mb2 bg-green white tc'
-    when 'error' then 'subtitle-2 ph3 pv2 mb2 bg-yellow tc'
-    when 'alert' then 'subtitle-2 ph3 pv2 mb2 bg-yellow tc'
-    end
-  end
-
-  def flash_messages(opts = {})
-    flash.each do |msg_type, message|
-      concat(content_tag(:div, message, class: flash_css_class(msg_type)) do
-        concat message
-      end)
-    end
-    nil
-  end
-
   def active_link(path)
     if path == 'plant'
       paths = [mothers_inventory_plants_path, cultivation_batches_inventory_plants_path, clones_inventory_plants_path, vegs_inventory_plants_path, flowers_inventory_plants_path, harvests_inventory_plants_path, harvest_batches_inventory_plants_path, seeds_inventory_plants_path, purchased_clones_inventory_plants_path]

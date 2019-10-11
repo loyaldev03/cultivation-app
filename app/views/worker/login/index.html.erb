@@ -23,7 +23,10 @@
     </div>
     <div class="w-41 bg-white overflow-y-scroll">
       <div class="pa2 bb b--light-gray bw1 h3">
-        <input id="name" class="input-reset ba b--black-20 pa2 db w-80 br4 tc center f4 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
+        <form action="<%= worker_login_index_path %>" method="get">
+          <%= hidden_field_tag :role, (params[:role] || 'all') %>
+          <%= text_field_tag :search, params[:search], class: 'input-reset ba b--black-20 pa2 db w-80 br4 tc center f4 grey fw5', placeholder: 'Search by name' %>
+        </form>
       </div>
       <div class="f4 tc flex justify-center bb b--light-gray h3 ">
         <%= link_to request.params.merge(filter: 'alpha'), class: "pa3 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}" do %>

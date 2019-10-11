@@ -54,7 +54,7 @@ class BatchStore {
     } finally {
     }
   }
-  
+
   @computed get plantDistribution() {
     if (this.batch_distribution_loaded) {
       let final_result = {

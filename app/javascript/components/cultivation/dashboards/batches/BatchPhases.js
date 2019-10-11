@@ -63,10 +63,7 @@ export default class BatchPhases extends React.Component {
         </div>
         {PlantStore.plant_distribution_loaded ? (
           <div style={{ overflow: 'auto', height: '320px' }}>
-            <Bar
-              data={PlantStore.plantDistribution}
-              options={options}
-            />
+            <Bar data={PlantStore.plantDistribution} options={options} />
           </div>
         ) : (
           'loading...'

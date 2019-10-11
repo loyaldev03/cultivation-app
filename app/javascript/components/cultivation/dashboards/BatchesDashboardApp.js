@@ -16,7 +16,7 @@ import {
   TempBatchWidgets,
   toast
 } from '../../utils'
-import PlantByPhaseWidget from '../../inventory/plant_setup/plant_charts/PlantByPhaseWidget';
+import PlantByPhaseWidget from '../../inventory/plant_setup/plant_charts/PlantByPhaseWidget'
 
 const Batcheslist = ({
   title,

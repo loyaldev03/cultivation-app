@@ -16,6 +16,16 @@ class Settings::Facilities::FacilitiesController < ApplicationController
     # end
   end
 
+  def destroy
+    command = DestroyFacility.call(current_user, params[:id])
+    if command.success?
+      render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Facility successfully deleted'}
+    else
+      flash[:error] = 'Unable to delete'
+      render 'edit', layout: nil
+    end
+  end
+
   def update
     @facility = FacilitiesForm::FacilityUpdate.find(params[:id])
     if @facility.update(facility_params)

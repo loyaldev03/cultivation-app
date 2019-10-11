@@ -4,7 +4,8 @@
   <body>
     <noscript>You need to enable JavaScript to run this app. 400</noscript>
     <div id="root">
-      <div class="flex flex-row min-vh-100 ">
+      <%= render 'toast' %>
+      <div class="flex flex-row min-vh-100">
         <% if company_info&.is_active %>
           <%= render 'layouts/sidebar2' %>
         <% end %>
@@ -14,10 +15,6 @@
           style="<%= (company_info&.is_active ? 'padding-left: 230px;' : '0') %>"
         >
           <%= render "top_nav" %>
-          <% flash.each do |key, value| %>
-            <div id="toast" class="toast animated" data-message="<%=value %>" data-toast=<%=value.nil? ? false : true %>>
-            </div>
-          <% end %>
           <main class="min-vh-100 h-100">
             <%= yield %>
           </main>
@@ -25,27 +22,7 @@
         </div>
       </div>
     </div>
-    <% content_for :before_body_end do %>
-      <script>
-        // FIXME: NOT SUPPOSE TO BE ADDED 003
-        if($_('#toast').dataset.toast == 'true'){
-          toast($_('#toast').dataset.toast == "true" ? $_('#toast').dataset.message : '')
-        }
-        function fadeToast() {
-          elm = $_('#toast')
-          elm.classList.replace('fadeIn', 'fadeOut');
-          setTimeout(function(){ $_('#toast').classList.remove('fadeOut', 'db'); }, 1000);
-        }
-        function toast(message, type) {
-          elm = $_('#toast')
-          elm.innerHTML = message;
-          elm.classList.add('fadeIn', 'toast--'+ type, 'db');
-          setTimeout(function(){ fadeToast(); }, 3000);
-        }
-      </script>
-    <% end %>
     <%= render "layouts/before_body_end" %>
-
     <script type="text/javascript">
       function changeDefaultFacility(){
         var x = document.getElementById("facility_id").value;

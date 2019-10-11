@@ -8,13 +8,13 @@
       </div>
       <div class="f3 overflow-auto" style="height: 90%;">
         <div class="pa3 pointer hover-bg-light-gray h3">
-          <%= link_to request.params.merge(role: 'all'), class: "ml2 no-underline black" do %>
+          <%= link_to request.params.except(:search).merge(role: 'all'), class: "ml2 no-underline black" do %>
             All available
           <% end %>
         </div>
         <% @roles.each do |role| %>
           <div class="pa3 pointer hover-bg-light-gray h3">
-            <%= link_to request.params.except(:filter, :selected, :requested).merge(role: role), class: "ml2 no-underline black" do %>
+            <%= link_to request.params.except(:filter, :selected, :requested, :search).merge(role: role), class: "ml2 no-underline black" do %>
               <%= role %>
             <% end %>
           </div>

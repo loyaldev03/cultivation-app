@@ -10,6 +10,7 @@ module Cultivation
       else
         raise "Expected current_time to be of type 'Time'"
       end
+      @company_info = CompanyInfo.last
     end
 
     def call
@@ -56,7 +57,9 @@ module Cultivation
         # Activate batch by changing it's status to active
         batch.update(status: Constants::BATCH_STATUS_ACTIVE)
         # Schedule job to update plant batches to Metrc
-        MetrcUpdatePlantBatches.perform_async(batch.id.to_s)
+        if @company_info.enable_metrc_integration && @company_info.metrc_ready
+          MetrcUpdatePlantBatches.perform_async(batch.id.to_s)
+        end
       else
         # Revert back to schedule state
         batch.update(status: Constants::BATCH_STATUS_SCHEDULED)

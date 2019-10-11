@@ -15,11 +15,13 @@ class MetrcOnboardingWorker
     # Download unit of measure
     company_info = CompanyInfo.where({}).first
 
+    # FIXME: Disabling this because right now it's downloading fake facilities
+    # from the sandbox env of Metrc, spaming the database with unnecessary facilities
     # Download all facilities from Metrc
-    facilities = MetrcApi.get_facilities
-    facilities.each_with_index do |fas, i|
-      download_for_facility(fas, i, company_info.timezone)
-    end
+    # facilities = MetrcApi.get_facilities
+    # facilities.each_with_index do |fas, i|
+    #   download_for_facility(fas, i, company_info.timezone)
+    # end
   end
 
   def download_for_facility(fas, index, timezone)

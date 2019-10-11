@@ -64,7 +64,7 @@
                   <td class="pv2 ph3"><%= work_application[:date] %></td>
                   <td class="pv2 ph3 orange fw6 pointer">
                       <%= link_to 'View Schedule', 'javascript:void(0);',
-                            data: {remote: true, 'toggle-right': worker_schedule_path(work_application[:user_id])},
+                            data: {remote: true, 'toggle-right': worker_calendar_path(work_application[:user_id])},
                             class: 'ttc subtitle-2 pv3 tc dim no-underline orange' 
                       %>
                   </td>

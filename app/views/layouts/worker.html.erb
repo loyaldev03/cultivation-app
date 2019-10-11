@@ -8,7 +8,7 @@
         <%= render 'layouts/worker_sidebar' %>
         <div id="main" class="main flex flex-column flex-auto" style="padding-left: 75px;">
           <% flash.each do |key, value| %>
-            <div id="toast" class="toast animated" data-message="<%=value %>" data-toast=<%=value.nil? ? false : true %>>
+            <div id="apptoast" class="toast animated" data-message="<%=value %>" data-apptoast=<%=value.nil? ? false : true %>>
             </div>
           <% end %>
           <main class="min-vh-100 h-100">
@@ -73,19 +73,19 @@
     </div>
     <% content_for :before_body_end do %>
       <script>
-        if($_('#toast').dataset.toast == 'true'){
-          toast($_('#toast').dataset.toast == "true" ? $_('#toast').dataset.message : '')
+        if($_('#apptoast') && $_('#apptoast').dataset.apptoast == 'true'){
+          apptoast($_('#apptoast').dataset.apptoast == "true" ? $_('#apptoast').dataset.message : '')
         }
-        function fadeToast() {
-          elm = $_('#toast')
+        function fadeappToast() {
+          elm = $_('#apptoast')
           elm.classList.replace('fadeIn', 'fadeOut');
-          setTimeout(function(){ $_('#toast').classList.remove('fadeOut', 'db'); }, 1000);
+          setTimeout(function(){ $_('#apptoast').classList.remove('fadeOut', 'db'); }, 1000);
         }
-        function toast(message, type) {
-          elm = $_('#toast')
+        function apptoast(message, type) {
+          elm = $_('#apptoast')
           elm.innerHTML = message;
-          elm.classList.add('fadeIn', 'toast--'+ type, 'db');
-          setTimeout(function(){ fadeToast(); }, 3000);
+          elm.classList.add('fadeIn', 'apptoast--'+ type, 'db');
+          setTimeout(function(){ fadeappToast(); }, 3000);
         }
       </script>
     <% end %>

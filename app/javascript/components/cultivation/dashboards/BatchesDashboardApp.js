@@ -2,10 +2,9 @@ import React, { memo, useState, lazy, Suspense } from 'react'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import BatchPhases from './batches/BatchPhases'
-import DahboardBatchStore from './batches/DahboardBatchStore'
+import DashboardBatchStore from './batches/DashboardBatchStore'
 import BatchStore from '../batches/BatchStore'
 import StrainDistribution from '../../manager_dashboard/StrainDistribution'
-
 import {
   decimalFormatter,
   numberFormatter,
@@ -17,6 +16,7 @@ import {
   TempBatchWidgets,
   toast
 } from '../../utils'
+import PlantByPhaseWidget from '../../inventory/plant_setup/plant_charts/PlantByPhaseWidget';
 
 const Batcheslist = ({
   title,
@@ -58,11 +58,11 @@ const Batcheslist = ({
 class BatchesDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DahboardBatchStore.loadBatchDistribution(
-      'all',
-      this.props.currentFacilityId
-    )
-    DahboardBatchStore.loadBatches_info(this.props.currentFacilityId)
+    // DashboardBatchStore.loadBatchDistribution(
+    //   'all',
+    //   this.props.currentFacilityId
+    // )
+    DashboardBatchStore.loadBatches_info(this.props.currentFacilityId)
   }
   state = {
     columns: [
@@ -309,18 +309,18 @@ class BatchesDashboardApp extends React.Component {
               <Batcheslist
                 title="Active Batches"
                 count={numberFormatter.format(
-                  DahboardBatchStore.data_batches_info.active_batches
+                  DashboardBatchStore.data_batches_info.active_batches
                 )}
                 className="mt4 mb5 ma3"
-                loaded={DahboardBatchStore.batches_info_loaded}
+                loaded={DashboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Batches In Draft"
                 count={numberFormatter.format(
-                  DahboardBatchStore.data_batches_info.draft_batches
+                  DashboardBatchStore.data_batches_info.draft_batches
                 )}
                 className="mt4 mb5 ma3"
-                loaded={DahboardBatchStore.batches_info_loaded}
+                loaded={DashboardBatchStore.batches_info_loaded}
               />
             </div>
 
@@ -328,18 +328,18 @@ class BatchesDashboardApp extends React.Component {
               <Batcheslist
                 title="Scheduled Batches"
                 count={numberFormatter.format(
-                  DahboardBatchStore.data_batches_info.scheduled_batches
+                  DashboardBatchStore.data_batches_info.scheduled_batches
                 )}
                 className="mt4 mb5 ma3"
-                loaded={DahboardBatchStore.batches_info_loaded}
+                loaded={DashboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Cost of Active Batches to Date"
                 count={`$ ${decimalFormatter.format(
-                  DahboardBatchStore.data_batches_info.active_batches_cost
+                  DashboardBatchStore.data_batches_info.active_batches_cost
                 )}`}
                 className="mt4 mb5 ma3"
-                loaded={DahboardBatchStore.batches_info_loaded}
+                loaded={DashboardBatchStore.batches_info_loaded}
                 dataclassName="f3"
                 headerClassName=""
               />

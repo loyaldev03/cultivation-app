@@ -54,6 +54,36 @@ class BatchStore {
     } finally {
     }
   }
+  
+  @computed get plantDistribution() {
+    if (this.batch_distribution_loaded) {
+      let final_result = {
+        labels: this.data_batch_distribution.query_batches.map(d => d.phase),
+        datasets: [
+          {
+            label: 'Plant',
+            data: this.data_batch_distribution.query_batches.map(
+              d => d.plant_count
+            ),
+            backgroundColor: 'rgba(241, 90, 34, 1)'
+          },
+          {
+            label: 'Batch',
+            data: this.data_batch_distribution.query_batches.map(
+              d => d.batch_count
+            ),
+            type: 'line',
+            pointRadius: 0,
+            hoverRadius: 0
+          }
+        ]
+      }
+
+      return final_result
+    } else {
+      return {}
+    }
+  }
 
   @computed get batchDistribution() {
     if (this.batch_distribution_loaded) {

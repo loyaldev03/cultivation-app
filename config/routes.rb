@@ -202,7 +202,7 @@ Rails.application.routes.draw do
     end
 
     namespace 'facilities', as: :facility do
-      resources :facilities, only: [:edit, :update, :index] do
+      resources :facilities, only: [:edit, :update, :index, :destroy] do
         get 'all', on: :collection
       end
       resources :rooms,     only: [:index, :edit, :update, :new, :create]

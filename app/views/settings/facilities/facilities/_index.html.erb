@@ -1,4 +1,5 @@
 <div class="bg-white">
+  <div id="toast" class="toast" ></div>
   <table class="std-table pv2 ph3 mt4 w-100">
     <thead>
       <tr class="bg-light-gray">
@@ -8,6 +9,7 @@
         <th>License</th>
         <th class="tr"># of Rooms</th>
         <th></th>
+        <th class="tc">Remove</th>
       </tr>
     </thead>
 
@@ -15,7 +17,7 @@
       <% @facilities.each_with_index do |f, i| %>
         <% if f.is_enabled == true%>
           <% color = 'pointer'%>
-        <%else%>
+      <%else%>
           <% color = 'pointer gray'%>
         <%end%>
         <tr class="<%= color %>">
@@ -37,6 +39,12 @@
                       end
             %>
             <%= link_to "Configure", facility_setup_new_path(facility_id: f.id), class: "pv2 ph3 bg-orange white button--font bn box--br3 link dim pointer" %>
+          </td>
+          <td class="tc mw3">
+            
+            <%= link_to settings_facility_facility_path(f.id), class: "pv2 ph3 orange link dim pointer", method: :delete, data: {confirm: 'Are you sure want to remove this facility ? All data that are related to the facility also will be removed', remote: true} do  %>
+              <i class="material-icons md-17 pr2">delete</i>
+            <%end%>
           </td>
 
         </tr>

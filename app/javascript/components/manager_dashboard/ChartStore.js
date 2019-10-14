@@ -77,16 +77,16 @@ class ChartStore {
   @action
   async unassignedTask(facility_id) {
     this.isLoading = true
-    this.unassigned_task = false
+    this.unassigned_task_loaded = false
     const url = `/api/v1/dashboard_charts/unassigned_task?facility_id=${facility_id}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
         this.data_unassigned_task = response
-        this.unassigned_task = true
+        this.unassigned_task_loaded = true
       } else {
         this.data_unassigned_task = []
-        this.unassigned_task = false
+        this.unassigned_task_loaded = false
       }
     } catch (error) {
       console.error(error)

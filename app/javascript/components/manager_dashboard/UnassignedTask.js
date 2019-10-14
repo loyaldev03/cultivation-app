@@ -2,6 +2,7 @@ import React from 'react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { TempHomeUnassignTask } from '../utils'
+import { formatDate } from '../utils/DateHelper'
 
 @observer
 export default class UnassignedTask extends React.Component {
@@ -13,66 +14,43 @@ export default class UnassignedTask extends React.Component {
     return (
       <React.Fragment>
         <h3 className="f5 fw6 dark-grey">Unassigned Task</h3>
-        <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
-          <table className="w-100">
-            <thead className="grey">
-              <tr className="tl mb2">
-                <th className="w-40">Tasks</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                {/* <th className="tc">Worker</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {ChartStore.unassigned_task ? (
-                ChartStore.data_unassigned_task.map((e, y) => (
-                  <React.Fragment>
-                    <tr key={y}>
-                      <td className="f4 b">
-                        <div className="mb3 mt2 dark-grey" key={`ut_${y}`}>
-                          Batch {e.batch}
-                        </div>
-                      </td>
-                    </tr>
-                    {e.tasks.map((u, i) => (
-                      <tr className="grey" key={i}>
-                        <td className="w-50 ">
-                          <div className="fw6 mb3 dark-grey" key={i}>
-                            {u.name}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="fw6 mb3" key={i}>
-                            {u.start_date}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="fw6 mb3" key={i}>
-                            {u.end_date}
-                          </div>
-                        </td>
-                        {/* <td className="tc">
-                          <a
-                            href={`/cultivation/batches/${
-                              u.batch_id
-                            }?openTaskid=${u.id}`}
-                          >
-                            <span className="material-icons mb2 mt2 dark-grey">
-                              person_add
-                            </span>
-                          </a>
-                        </td> */}
-                      </tr>
-                    ))}
-                  </React.Fragment>
-                ))
-              ) : (
-                <tr className="grey pt2">
-                  <td>No data found</td>
+        <div className="overflow-y-scroll" style={{ height: '320px' }}>
+          {ChartStore.unassigned_task_loaded ? (
+            <table>
+              <tbody>
+                <tr className="grey tl">
+                  <th>
+                    <div className="mb2">Task Name</div>
+                  </th>
+                  <th>
+                    <div className="mb2">Start Date</div>
+                  </th>
+                  <th>
+                    <div className="mb2">End Date</div>
+                  </th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+                {ChartStore.data_unassigned_task.map((e, y) => (
+                  <tr className="grey mb3" key={y}>
+                    <td className="w-50">
+                      <div className="mb3">{e.name}</div>
+                    </td>
+                    <td className="f5">
+                      <div className="mb3">{formatDate(e.start_date)}</div>
+                    </td>
+                    <td className="f5">
+                      <div className="mb3">{formatDate(e.end_date)}</div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <section className="mw5 mw7-ns center ph5-ns">
+              <p className="lh-copy measure tc grey f4">
+                No unassigned tasks available
+              </p>
+            </section>
+          )}
         </div>
       </React.Fragment>
     )

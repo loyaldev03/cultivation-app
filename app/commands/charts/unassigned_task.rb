@@ -5,35 +5,54 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id].split(',')
+      @facility_id = @args[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
     def call
-      batch_tasks = Cultivation::Task.where(:batch_id.nin => ['', nil])
-        .where(user_ids: nil)
-        .in(facility_id: @facility_id)
-        .includes(:batch)
-        .group_by(&:batch_id)
-
-      json_array = []
-      batch_tasks.map do |batch, tasks|
-        if tasks.last.batch && tasks.last.batch.status == 'ACTIVE'
-          json_array << {
-            batch: tasks.last.batch.batch_no,
-            tasks: tasks.map do |task|
-              {
-                id: task.id.to_s,
-                name: task.name,
-                batch_id: task.batch_id.to_s,
-                start_date: task.start_date.to_date,
-                end_date: task.end_date.to_date,
-                user_ids: task.user_ids,
-              }
-            end,
-          }
-        end
-      end
-      json_array
+      start_date = Time.current.beginning_of_month
+      end_date = Time.current.end_of_month
+      Cultivation::Task.collection.aggregate([
+        {"$match": {"facility_id": {"$in": @facility_id}}},
+        {"$match": {"user_ids": {"$eq": nil}}},
+        {"$match": {
+          "$expr": {
+            "$or": [
+              {"$and": [{"$gte": ['$end_date', start_date]}, {"$lte": ['$start_date', end_date]}]},
+              {"$and": [{"$gte": ['$start_date', start_date]}, {"$lte": ['$start_date', end_date]}]},
+              {"$and": [{"$lte": ['$start_date', start_date]}, {"$gte": ['$end_date', end_date]}]},
+            ],
+          },
+        }},
+        {"$lookup": {
+          "from": 'cultivation_batches',
+          "let": {"batch_id": '$batch_id'},
+          "pipeline": [
+            {
+              "$match": {
+                "$expr": {
+                  "$and": [
+                    {"$eq": ['$id', '$$batch_id']},
+                  ],
+                },
+              },
+              "$match": {
+                "$expr": {
+                  "$and": [
+                    {"$eq": ['$status', 'ACTIVE']},
+                  ],
+                },
+              },
+            },
+          ],
+          "as": 'batches',
+        }},
+        {"$project": {
+          name: 1,
+          batch_id: 1,
+          start_date: 1,
+          end_date: 1,
+        }},
+      ])
     end
   end
 end

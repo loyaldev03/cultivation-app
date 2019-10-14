@@ -18,10 +18,10 @@ module Charts
       result = []
 
       result = facility_strains.group_by(&:strain_name).map do |strain, strain_value|
-        if strain_value.map { |x| x.plants.count }.sum != 0
+        if strain_value.map { |x| x.plants.size }.sum != 0
           {
             name: strain,
-            value: strain_value.map { |x| x.plants.count }.sum,
+            value: strain_value.map { |x| x.plants.size }.sum,
           }
         end
       end

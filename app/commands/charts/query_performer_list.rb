@@ -8,45 +8,59 @@ module Charts
     end
 
     def call
-      batches = Cultivation::Batch.all.includes(:harvest_batch)
-      if batches.blank?
-        return []
-      end
-
-      batches_json = []
       if @args[:order_type].nil? or @args[:order_type] == 'yield'
-        batches_json = batches.map do |batch|
-          {
-            batch_id: batch.id.to_s,
-            batch_name: batch.name,
-            total_dry_weight: batch.harvest_batch.sum(:total_dry_weight),
-          }
+        order = -1
+
+        if @args[:order].present? && @args[:order] == 'top'
+          order = -1
+        else
+          order = 1
         end
 
-        if @args[:order].present?
-          if @args[:order] == 'top'
-            batches_json = batches_json.sort_by { |a| -a[:total_dry_weight] }
-            highest_dry_weight = batches_json.first[:total_dry_weight]
-          else
-            batches_json = batches_json.sort_by { |a| a[:total_dry_weight] }
-            highest_dry_weight = batches_json.last[:total_dry_weight]
-          end
-        end
+        #get maximum value of total dry weight
+        max_result = Cultivation::Batch.collection.aggregate([
+          {"$lookup": {
+            from: 'inventory_harvest_batches',
+            localField: '_id',
+            foreignField: 'cultivation_batch_id',
+            as: 'harvest_batch',
+          }},
+          {"$unwind": {path: '$harvest_batch'}},
 
-        highest_dry_weight ||= 0
+          {"$project": {
+            "max_dry_weight": {"$max": {"$sum": '$harvest_batch.total_dry_weight'}},
+          }},
+          {"$sort": {"max_dry_weight": -1}},
 
-        batches_json = batches_json.map do |batch|
-          percentage = highest_dry_weight > 0 ? ((batch[:total_dry_weight] / highest_dry_weight) * 100) : 0
-          batch.merge({percentage: percentage})
-        end
+        ]).to_a
+
+        batches_json = Cultivation::Batch.collection.aggregate([
+          {"$lookup": {
+            from: 'inventory_harvest_batches',
+            localField: '_id',
+            foreignField: 'cultivation_batch_id',
+            as: 'harvest_batch',
+          }},
+          {"$unwind": {path: '$harvest_batch'}},
+          {"$project": {
+            "batch_id": '$_id',
+            "batch_name": '$name',
+            "total_dry_weight": {"$sum": '$harvest_batch.total_dry_weight'},
+            "harvest_name": '$harvest_batch.harvest_name',
+            "max_dry_weight": {"$max": {"$sum": '$harvest_batch.total_dry_weight'}},
+            "percentage": {"$multiply": [{"$divide": [{"$sum": '$harvest_batch.total_dry_weight'}, max_result[0]['max_dry_weight']]}, 100]},
+          }},
+          {"$sort": {"total_dry_weight": order}},
+
+        ]).to_a
       else
-        batches_json = batches.map do |batch|
-          {
-            batch_id: batch.id.to_s,
-            batch_name: batch.name,
-            revenue: 0,
-          }
-        end
+        batches_json = Cultivation::Batch.collection.aggregate([
+          {"$project": {
+            "batch_id": '$_id',
+            "batch_name": '$name',
+            "revenue": '0',
+          }},
+        ]).to_a
       end
       batches_json
     end

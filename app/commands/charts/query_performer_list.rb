@@ -54,13 +54,13 @@ module Charts
 
         ]).to_a
       else
-        batches_json = batches.map do |batch|
-          {
-            batch_id: batch.id.to_s,
-            batch_name: batch.name,
-            revenue: 0,
-          }
-        end
+        batches_json = Cultivation::Batch.collection.aggregate([
+          {"$project": {
+            "batch_id": '$_id',
+            "batch_name": '$name',
+            "revenue": '0',
+          }},
+        ]).to_a
       end
       batches_json
     end

@@ -9,9 +9,20 @@ module Charts
     end
 
     def call
+      start_date = Time.current.beginning_of_month
+      end_date = Time.current.end_of_month
       Cultivation::Task.collection.aggregate([
         {"$match": {"facility_id": {"$in": @facility_id}}},
         {"$match": {"user_ids": {"$eq": nil}}},
+        {"$match": {
+          "$expr": {
+            "$or": [
+              {"$and": [{"$gte": ['$end_date', start_date]}, {"$lte": ['$start_date', end_date]}]},
+              {"$and": [{"$gte": ['$start_date', start_date]}, {"$lte": ['$start_date', end_date]}]},
+              {"$and": [{"$lte": ['$start_date', start_date]}, {"$gte": ['$end_date', end_date]}]},
+            ],
+          },
+        }},
         {"$lookup": {
           "from": 'cultivation_batches',
           "let": {"batch_id": '$batch_id'},

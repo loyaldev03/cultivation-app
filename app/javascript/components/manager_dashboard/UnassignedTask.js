@@ -45,8 +45,8 @@ export default class UnassignedTask extends React.Component {
               </tbody>
             </table>
           ) : (
-            <section class="mw5 mw7-ns center ph5-ns">
-              <p class="lh-copy measure tc grey f4">
+            <section className="mw5 mw7-ns center ph5-ns">
+              <p className="lh-copy measure tc grey f4">
                 No unassigned tasks available
               </p>
             </section>

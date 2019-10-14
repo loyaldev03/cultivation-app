@@ -1,5 +1,5 @@
 import React from 'react'
-import { ProgressBar } from '../../../utils'
+import { ProgressBar, Loading, NoRecordFound } from '../../../utils'
 import Tippy from '@tippy.js/react'
 import HarvestStore from './HarvestStore'
 import { observer } from 'mobx-react'
@@ -84,25 +84,27 @@ export default class HarvestByYeildWidget extends React.Component {
         </div>
         {HarvestStore.harvest_yield_list_loaded ? (
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-            {HarvestStore.harvest_yield_list.length > 0
-              ? HarvestStore.harvest_yield_list.map((e, i) => (
-                  <div className="flex items-center" key={i}>
-                    <h1 className="f6 fw6 w-20 dark-grey">{e.harvest_batch}</h1>
-                    <ProgressBar
-                      percent={e.yield}
-                      height={10}
-                      className="w-60 mr2"
-                      barColor={this.getProgressBarColor(e.yield)}
-                    />
-                    <h1 className="f6 fw6 w-20 dark-grey">
-                      <span>{e.yield} lbs</span>
-                    </h1>
-                  </div>
-                ))
-              : 'No Result Found'}
+            {HarvestStore.harvest_yield_list.length > 0 ? (
+              HarvestStore.harvest_yield_list.map((e, i) => (
+                <div className="flex items-center" key={i}>
+                  <h1 className="f6 fw6 w-20 dark-grey">{e.harvest_batch}</h1>
+                  <ProgressBar
+                    percent={e.yield}
+                    height={10}
+                    className="w-60 mr2"
+                    barColor={this.getProgressBarColor(e.yield)}
+                  />
+                  <h1 className="f6 fw6 w-20 dark-grey">
+                    <span>{e.yield} lbs</span>
+                  </h1>
+                </div>
+              ))
+            ) : (
+              <NoRecordFound />
+            )}
           </div>
         ) : (
-          <div>Loading ... </div>
+          <Loading />
         )}
       </React.Fragment>
     )

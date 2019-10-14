@@ -1,9 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 
-
 export default class StrainDistribution extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -41,7 +39,7 @@ export default class StrainDistribution extends React.Component {
       .style('color', 'white')
 
     const color = d3.scaleOrdinal(d3.schemeSet1)
-    let t = this 
+    let t = this
     d3.json(this.props.url).then(function(data) {
       t.setState({
         loading: false
@@ -152,11 +150,9 @@ export default class StrainDistribution extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <React.Fragment>
-        {this.state.loading &&
-          <div>loading ... </div>
-        }
+        {this.state.loading && <div>loading ... </div>}
         <div id="treemapStrain" />
       </React.Fragment>
     )

@@ -50,7 +50,7 @@ export default class HarvestByYeildWidget extends React.Component {
       <React.Fragment>
         {/* <img src={TempHomePerformer} height={350} /> */}
         <div className="flex justify-between mb2">
-          <h1 className="f5 fw6 dark-grey">Yield/Sqft</h1>
+          <h1 className="f5 fw6 grey">Yield / sq. ft</h1>
           <div className="flex">
             <Tippy
               placement="bottom-end"

@@ -31,7 +31,7 @@ class PlantsDashboardApp extends React.Component {
     columns: [
       { accessor: 'id', show: false },
       { accessor: 'plant_id', show: false },
-      { accessor: 'batch_id', show: false },
+      { accessor: 'cultivation_batch_id', show: false },
       {
         headerClassName: 'pl3 tl',
         Header: 'Plant ID',
@@ -44,13 +44,13 @@ class PlantsDashboardApp extends React.Component {
         headerClassName: 'pl3 tl',
         Header: (
           <HeaderFilter
-            title="Batch ID"
+            title="Batch"
             accessor="batch"
             getOptions={PlantStore.getUniqPropValues}
             onUpdate={PlantStore.updateFilterOptions}
           />
         ),
-        accessor: 'batch',
+        accessor: 'cultivation_batch',
         className: 'pl3 fw6',
         minWidth: 144,
         Cell: props => (
@@ -175,7 +175,6 @@ class PlantsDashboardApp extends React.Component {
       page: state.page,
       limit: state.pageSize
     })
-    PlantStore.loadPlants()
   }
 
   render() {

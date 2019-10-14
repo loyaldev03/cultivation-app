@@ -60,7 +60,7 @@ class FacilityOverview extends React.Component {
             loaded={FacilityDashboardStore.facility_overview_loaded}
           />
           <FacilityWidget
-            title="Average yeild/ sq ft"
+            title="Average yield / sq. ft"
             count={` ${numberFormatter.format(
               FacilityDashboardStore.data_facility_overview.average_yield
             )} lbs`}

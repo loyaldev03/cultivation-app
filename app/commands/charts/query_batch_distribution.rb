@@ -27,16 +27,16 @@ module Charts
       json_array = []
 
       batch_plants = Cultivation::Batch.collection.aggregate([
-        {"$match": {"current_growth_stage": {"$in": active_phases}}},
-        match_facility,
-        match_date,
-        {"$lookup": {from: 'inventory_plants',
-                     localField: '_id',
-                     foreignField: 'cultivation_batch_id',
-                     as: 'plants'}},
-        {"$group": {_id: '$current_growth_stage', plant_count: {"$sum": {"$size": '$plants'}}, batch_count: {"$sum": 1}}},
-
-      ])
+                                                               {"$match": {"current_growth_stage": {"$in": active_phases}}},
+                                                               match_facility,
+                                                               match_date,
+                                                               {"$lookup": {from: 'inventory_plants',
+                                                                            localField: '_id',
+                                                                            foreignField: 'cultivation_batch_id',
+                                                                            as: 'plants'}},
+                                                               {"$group": {_id: '$current_growth_stage', plant_count: {"$sum": {"$size": '$plants'}}, batch_count: {"$sum": 1}}},
+                                                       
+                                                             ])
       batch_plants.each do |plant|
         json_array << {
           phase: plant[:_id],
@@ -60,14 +60,14 @@ module Charts
         query_batches: plants_by_phases,
       }
 
-      return all_counts
+      all_counts
     end
 
     def match_facility
       if resource_shared?
         {"$match": {"facility_id": {"$in": active_facility_ids}}}
       else
-        {"$match": {"facility_id": {"$in": @facility_id.map { |x| x.to_bson_id }}}}
+        {"$match": {"facility_id": {"$in": @facility_id.map(&:to_bson_id)}}}
       end
     end
 

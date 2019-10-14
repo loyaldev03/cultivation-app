@@ -28,10 +28,7 @@ class PlantStore {
     }
   }
 
- 
-
   @computed get plantDistribution() {
-    
     if (this.plant_distribution_loaded) {
       let final_result = {
         labels: this.data_plant_distribution.query_batches.map(d => d.phase),

@@ -44,11 +44,20 @@ module Charts
           plant_count: plant[:plant_count],
         }
       end
+      plants_by_phases = []
+      active_phases.each do |phase|
+        data = json_array.select { |x| x if x[:phase] == phase }.first
+        plants_by_phases << {
+          phase: phase,
+          batch_count: data.present? ? data[:batch_count] : 0,
+          plant_count: data.present? ? data[:plant_count] : 0,
+        }
+      end
 
       all_counts = {
-        total_plant: json_array.map { |x| x[:plant_count] }.sum,
-        total_batches: json_array.map { |x| x[:batch_count] }.sum,
-        query_batches: json_array,
+        total_plant: plants_by_phases.map { |x| x[:plant_count] }.sum,
+        total_batches: plants_by_phases.map { |x| x[:batch_count] }.sum,
+        query_batches: plants_by_phases,
       }
 
       return all_counts

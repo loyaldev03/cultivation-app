@@ -15,50 +15,32 @@ module Charts
         match_range,
         {"$match": {
           "$or": [
-            {"user_ids": {"$ne": 'null'}},
+            {"user_ids": {"$ne": 'nil'}},
             {"user_ids": {"$exists": true}},
           ],
         }},
-        {"$lookup": {
-          from: 'cultivation_batches',
-          localField: 'batch_id',
-          foreignField: '_id',
-          as: 'batch',
+        {"$match": {
+          "$or": [
+            {"batch_status": {"$eq": 'ACTIVE'}},
+            {"batch_status": {"$eq": 'SCHEDULED'}},
+          ],
+          assignable: true,
         }},
-        {"$unwind": '$batch'},
-        {"$match": {"batch.status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
-        {"$lookup": {
-          from: 'cultivation_time_logs',
-          localField: '_id',
-          foreignField: 'task_id',
-          as: 'time_logs',
-        }},
-        {"$addFields": {
-          "sum_actual_hours": {
-            "$sum": {
-              "$map": {
-                "input": '$time_logs',
-                "in": {"$divide": [{"$subtract": ['$$this.end_time', '$$this.start_time']}, 3600000]},
-              },
-            },
-          },
-        }},
-        {"$sort": {"actual_cost": -1, "sum_actual_hours": -1}},
+        {"$sort": {"actual_labor_cost": -1, "actual_hours": -1}},
         {"$limit": 5},
         {"$project": {
           name: 1,
           batch_id: 1,
           start_date: 1,
           end_date: 1,
-          actual_cost: {"$ifNull": ['$actual_cost', 0]},
-          # batch_status: '$batch.status',
-          sum_actual_hours: 1,
+          actual_labor_cost: 1,
+          actual_hours: 1,
         }},
       ]).to_a
       [{
         range: @args[:range],
-        total_actual_cost: tasks_query.map { |h| h[:actual_cost].nil? ? 0 : h[:actual_cost] }.sum.round(2),
-        total_sum_actual_hours: tasks_query.map { |h| h[:sum_actual_hours] }.sum.round(2),
+        total_actual_cost: tasks_query.map { |h| h[:actual_labor_cost] }.sum,
+        total_sum_actual_hours: tasks_query.map { |h| h[:actual_hours] }.sum,
         tasks: tasks_query,
       }]
     end

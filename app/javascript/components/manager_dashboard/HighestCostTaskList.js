@@ -94,7 +94,7 @@ export default class HighestCostTaskList extends React.Component {
                 </th>
                 {cost_permission && cost_permission == true ? (
                   <th>
-                    <div className="mb2">End Date</div>
+                    <div className="mb2 ml4">End Date</div>
                   </th>
                 ) : (
                   ''
@@ -108,14 +108,14 @@ export default class HighestCostTaskList extends React.Component {
                         <div className="mb3">{u.name}</div>
                       </td>
                       <td className="f5">
-                        <div className="mb3 tc">
-                          {decimalFormatter.format(u.sum_actual_hours)}
+                        <div className="mb3 tc mr3">
+                          {decimalFormatter.format(u.actual_hours)}
                         </div>
                       </td>
                       {cost_permission && cost_permission == true ? (
                         <td className="f5">
-                          <div className="mb3 tc">
-                            {decimalFormatter.format(u.actual_cost)}
+                          <div className="mb3 tc ml4">
+                            {decimalFormatter.format(u.actual_labor_cost)}
                           </div>
                         </td>
                       ) : (
@@ -127,12 +127,16 @@ export default class HighestCostTaskList extends React.Component {
                     <td>
                       <div className="b mb2 mt2">Total</div>
                     </td>
-                    <td className="tc b">
-                      {decimalFormatter.format(e.total_sum_actual_hours)}
+                    <td className="b">
+                      <div className="mb3 tc mr3">
+                        {decimalFormatter.format(e.total_sum_actual_hours)}
+                      </div>
                     </td>
                     {cost_permission && cost_permission == true ? (
-                      <td className="tc b">
-                        {decimalFormatter.format(e.total_actual_cost)}
+                      <td className="b">
+                        <div className="mb3 tc ml4">
+                          {decimalFormatter.format(e.total_actual_cost)}
+                        </div>
                       </td>
                     ) : (
                       ''

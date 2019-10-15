@@ -13,6 +13,7 @@ module Charts
       end_date = Time.current.end_of_month
       Cultivation::Task.collection.aggregate([
         {"$match": {"facility_id": {"$in": @facility_id}}},
+        {"$match": {"batch_status": {"$eq": 'ACTIVE'}}},
         {"$match": {"user_ids": {"$eq": nil}}},
         {"$match": {
           "$expr": {
@@ -23,34 +24,12 @@ module Charts
             ],
           },
         }},
-        {"$lookup": {
-          "from": 'cultivation_batches',
-          "let": {"batch_id": '$batch_id'},
-          "pipeline": [
-            {
-              "$match": {
-                "$expr": {
-                  "$and": [
-                    {"$eq": ['$id', '$$batch_id']},
-                  ],
-                },
-              },
-              "$match": {
-                "$expr": {
-                  "$and": [
-                    {"$eq": ['$status', 'ACTIVE']},
-                  ],
-                },
-              },
-            },
-          ],
-          "as": 'batches',
-        }},
         {"$project": {
           name: 1,
           batch_id: 1,
           start_date: 1,
           end_date: 1,
+          batch_name: '$batch_name',
         }},
       ])
     end

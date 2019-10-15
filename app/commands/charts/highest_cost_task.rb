@@ -15,14 +15,14 @@ module Charts
         match_range,
         {"$match": {
           "$or": [
-            {"user_ids": {"$ne": 'nil'}},
+            {"user_ids": {"$ne": nil}},
             {"user_ids": {"$exists": true}},
           ],
         }},
         {"$match": {
           "$or": [
-            {"batch_status": {"$eq": 'ACTIVE'}},
-            {"batch_status": {"$eq": 'SCHEDULED'}},
+            {"batch_status": {"$eq": BATCH_STATUS_SCHEDULED}},
+            {"batch_status": {"$eq": BATCH_STATUS_ACTIVE}},
           ],
           assignable: true,
         }},

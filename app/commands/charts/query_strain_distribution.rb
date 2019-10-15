@@ -15,21 +15,27 @@ module Charts
         facility_strains = Inventory::FacilityStrain.in(facility_id: @facility_id).includes(:plants)
       end
 
-      result = []
+      result = Inventory::Plant.collection.aggregate([
+        {"$match": {"facility_strain_id": {"$in": facility_strains.pluck(:id)}}},
+        {"$lookup": {
+          from: 'inventory_facility_strains',
+          localField: 'facility_strain_id',
+          foreignField: '_id',
+          as: 'facility_strain',
+        }},
+        {"$unwind": {path: '$facility_strain', preserveNullAndEmptyArrays: true}},
+        {"$group": {
+          "_id": '$facility_strain_id',
+          "name": {"$first": '$facility_strain.strain_name'},
+          "value": {"$sum": 1},
+        }},
 
-      result = facility_strains.group_by(&:strain_name).map do |strain, strain_value|
-        if strain_value.map { |x| x.plants.count }.sum != 0
-          {
-            name: strain,
-            value: strain_value.map { |x| x.plants.count }.sum,
-          }
-        end
-      end
+      ]).to_a
 
-      if result.compact.empty?
-        return result.compact
+      if result.any?
+        return {children: result}
       else
-        return {children: result.compact}
+        return {}
       end
     end
 

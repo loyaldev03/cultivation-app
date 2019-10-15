@@ -29,7 +29,7 @@ export default class PlantByPhaseWidget extends React.Component {
             if (t.datasetIndex === 0) {
               return 'Plant: ' + t.yLabel.toString()
             } else if (t.datasetIndex === 1) {
-              return 'Bacth: ' + t.yLabel.toString()
+              return 'Batch: ' + t.yLabel.toString()
             }
           }
         }

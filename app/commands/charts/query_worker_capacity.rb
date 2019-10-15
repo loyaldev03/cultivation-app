@@ -8,41 +8,72 @@ module Charts
     end
 
     def call
-      batch = Cultivation::Batch.find(@args[:batch_id])
-      phases = Constants::FACILITY_ROOMS_ORDER
-      #Common::GrowPhase.active.map { |a| a.name.downcase }
-      tasks = batch.tasks.includes(:time_logs, :users)
-      result = []
-      i = 0
-      phases.each do |phase|
-        if active_phase?(phase)
-          count_actual_worker = 0
-          count_planned_worker = 0
+      result = Cultivation::Task.collection.aggregate([
+        {"$match": {"batch_id": @args[:batch_id].to_bson_id}},
+        {"$lookup": {
+          from: 'cultivation_time_logs',
+          localField: '_id',
+          foreignField: 'task_id',
+          as: 'time_logs',
+        }},
+        {"$lookup": {
+          from: 'users',
+          localField: 'user_ids',
+          foreignField: '_id',
+          as: 'users',
+        }},
 
-          tasks.where(phase: phase).each do |task|
-            count_actual_worker += 1 if task.time_logs.count > 0
-            count_planned_worker += task.users.count if task.users.count > 0
+        {"$addFields": {"time_log_count": {"$cond": {"if": {"$gt": [{"$size": '$time_logs'}, 0]}, "then": 1, "else": 0}}}},
+        {"$addFields": {"user_id_count": {"$size": {"$ifNull": ['$user_ids', []]}}}},
+        {"$group": {
+          "_id": '$phase',
+          "stage": {"$first": '$phase'},
+          "needed": {"$sum": '$user_id_count'},
+          "actual": {"$sum": '$time_log_count'},
+          "actualColor": {"$first": '#f86822'},
+          "neededColor": {"$first": '#4a65b3'},
+        }},
+      ]).to_a
+
+      phases = Constants::FACILITY_ROOMS_ORDER
+      grow_phases = Common::GrowPhase.collection.aggregate([
+        {"$project": {
+          "name": 1,
+          "is_active": 1,
+        }},
+      ]).to_a
+
+      new_array = []
+      idx = 1
+      phases.each do |phase|
+        if active_phase?(grow_phases, phase)
+          c = result.find { |b| b['stage'] == phase }
+          if c.present?
+            c = c.merge({"index": idx})
+            new_array << c
+          else
+            new_array << {
+              "actual": 0,
+              "needed": 0,
+              "stage": phase,
+              "actualColor": '#f86822',
+              "neededColor": '#4a65b3',
+              "index": idx,
+            }
           end
-          i += 1
-          result << {
-            actual: count_actual_worker,
-            needed: count_planned_worker,
-            stage: phase,
-            actualColor: '#f86822',
-            neededColor: '#4a65b3',
-            index: i,
-          }
+          idx += 1
         end
       end
-      result
+
+      new_array
     end
 
     private
 
-    def active_phase?(phase)
-      ph = Common::GrowPhase.find_by(name: phase)
+    def active_phase?(grow_phases, phase)
+      ph = grow_phases.find { |a| a['name'] == phase }
       if ph.present?
-        return ph.is_active
+        return ph['is_active']
       else
         return false
       end

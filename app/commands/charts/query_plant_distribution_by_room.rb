@@ -5,38 +5,46 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id].split(',')
+      @facility_id = args[:facility_id]
     end
 
     def call
-      if resource_shared?
-        facilities = Facility.in(id: active_facility_ids)
-      else
-        facilities = Facility.in(id: @facility_id)
+      locations = QueryLocations.call(@facility_id)
+      plants = Inventory::Plant.collection.aggregate([
+        {"$lookup": {
+          from: 'inventory_facility_strains',
+          localField: 'facility_strain_id',
+          foreignField: '_id',
+          as: 'facility_strain',
+        }},
+        {"$unwind": {path: '$facility_strain', preserveNullAndEmptyArrays: true}},
+        {"$match": {"facility_strain.facility_id": {"$in": @facility_id}}},
+        {"$project": {
+          "plant_id": 1,
+          "location_id": 1,
+
+        }},
+
+      ])
+
+      group_plants = plants.group_by do |a|
+        location = locations.query_trays(a[:location_id])
+        location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
       end
 
       json_fac = []
-      facilities.each do |facility|
-        facility_strain_ids = facility.strains.map { |a| a.id.to_s }
-        plants = Inventory::Plant.where(facility_strain_id: {'$in': facility_strain_ids})
-        locations = QueryLocations.call([facility.id])
-        #raise ""
-        group_plants = plants.group_by do |a|
-          location = locations.query_trays(a.location_id)
-          location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
-        end
-        json_fac << {
-          group_plant: group_plants.map do |n|
-            {
-              group: n[0],
-              count: n[1].count,
-            }
-          end,
-        }
-      end
+
+      json_fac << {
+        group_plant: group_plants.map do |n|
+          {
+            group: n[0],
+            count: n[1].count,
+          }
+        end,
+      }
+
       array = json_fac.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
 
-      #return array
       if array.present?
         array2 = array.map { |x| x[1] }
 
@@ -54,7 +62,11 @@ module Charts
         grouped_plant_json = []
       end
 
-      return {children: grouped_plant_json.compact}
+      if grouped_plant_json.compact.any?
+        return {children: grouped_plant_json.compact}
+      else
+        return {}
+      end
     end
 
     private

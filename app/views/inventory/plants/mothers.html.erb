@@ -10,7 +10,7 @@
 
 <div class="pa4">
   <% if RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result[:read] == true %>
-    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id])%>
+    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s)%>
     <%= render partial: 'setupNavigation', locals: { selected: 'mother' } %>
     <div class="flex flex-column">
       <%= react_component('inventory/plant_setup/MotherSetupApp', {

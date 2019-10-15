@@ -15,7 +15,6 @@ module Charts
     end
 
     def call
-      unassigned_tasks_count = 0
       tasks_with_issues_count = 0
       delayed_tasks_count = 0
       unscheduled_tasks_count = 0
@@ -26,7 +25,6 @@ module Charts
       batches = find_batches(statuses).includes(:tasks)
 
       batches.map do |b|
-        unassigned_tasks_count += b.tasks.where(users: nil).count
         b.tasks.includes(:issues).map { |task| tasks_with_issues_count += 1 if task.issues.present? }
       end
 
@@ -39,7 +37,7 @@ module Charts
       end
 
       {
-        unassigned_tasks_count: unassigned_tasks_count,
+        unassigned_tasks_count: Charts::QueryUnassignedTasksCount.call.result,
         tasks_with_issues_count: tasks_with_issues_count,
         unscheduled_tasks_count: unscheduled_tasks_count,
         delayed_tasks_count: delayed_tasks_count,

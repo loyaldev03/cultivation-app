@@ -49,7 +49,7 @@ class PlantByRoomWidget extends React.Component {
     return (
       <React.Fragment>
         <AverageWidget
-          title="Average Cost per gram"
+          title="Average cost / gram"
           count={`$ ${
             HarvestStore.average_harvest_cost
               ? HarvestStore.average_harvest_cost
@@ -59,7 +59,7 @@ class PlantByRoomWidget extends React.Component {
           className="mb3"
         />
         <AverageWidget
-          title="Average yeild / square feet"
+          title="Average yield / sq. ft"
           count={` ${
             HarvestStore.average_harvest_yield
               ? HarvestStore.average_harvest_yield

@@ -157,7 +157,6 @@ class CloneSetupApp extends React.Component {
       page: state.page,
       limit: state.pageSize
     })
-    PlantStore.loadPlants()
   }
 
   onSave = payload => {

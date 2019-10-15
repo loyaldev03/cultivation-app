@@ -8,7 +8,6 @@ module Cultivation
                           :name,
                           :batch_id,
                           :batch_name,
-                          :batch_no,
                           :start_date,
                           :end_date,
                           :estimated_hours,
@@ -40,11 +39,6 @@ module Cultivation
     def call
       if valid_params?
         criteria = Cultivation::Task.collection.aggregate([
-          {"$lookup": {from: 'cultivation_batches',
-                       localField: 'batch_id',
-                       foreignField: '_id',
-                       as: 'batch'}},
-          {"$unwind": '$batch'},
           match_facility,
           match_search,
           {"$lookup": {from: 'users',
@@ -59,10 +53,9 @@ module Cultivation
           {"$project": {"wbs": 1,
                         "issue_count": {"$size": '$issues'},
                         "name": 1,
-                        "batch_id": '$batch._id',
-                        "batch_name": '$batch.name',
-                        "batch_no": '$batch.batch_no',
-                        "batch_status": '$batch.status',
+                        "batch_id": 1,
+                        "batch_name": 1,
+                        "batch_status": 1,
                         "start_date": 1,
                         "duration": 1,
                         "estimated_hours": 1,
@@ -109,7 +102,6 @@ module Cultivation
             x[:name] || 'Unnamed task',
             x[:batch_id]&.to_s,
             x[:batch_name],
-            x[:batch_no],
             x[:start_date],
             end_date,
             x[:estimated_hours],
@@ -129,8 +121,8 @@ module Cultivation
 
     def match_facility
       if args[:facility_id]
-        f_ids = args[:facility_id].split(',').map { |x| x.to_bson_id }
-        {"$match": {"batch.facility_id": {"$in": f_ids}}}
+        f_ids = args[:facility_id].split(',').map(&:to_bson_id)
+        {"$match": {"facility_id": {"$in": f_ids}}}
       else
         {"$match": {}}
       end

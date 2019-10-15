@@ -38,6 +38,8 @@ module Cultivation
     field :work_status, type: String, default: Constants::WORK_STATUS_NEW
     field :package_id, type: BSON::ObjectId   # Used by task related to sales product.
 
+    field :assignable, type: Boolean, default: false
+
     #notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted
     belongs_to :batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility, class_name: 'Facility'

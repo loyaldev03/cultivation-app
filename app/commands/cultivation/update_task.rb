@@ -38,6 +38,7 @@ module Cultivation
         update_root_siblings(task, batch_tasks, days_diff)
         # Save if no errors
         detect_cascade_changes(task, batch_tasks)
+        task.assignable = task.have_children(batch_tasks)
         task.modifier = current_user
         task.facility = batch.facility
         task.save! if errors.empty?
@@ -116,7 +117,8 @@ module Cultivation
 
       # NOTE: Background job would activate all scheduled batch
       if batch.start_date <= Time.current
-        ActivateBatchWorker.new.perform
+        Cultivation::ActivateBatch.call(Time.current, batch.id)
+        UpdateBatchTasksWorker.perform_async(batch.id.to_s)
       end
 
       update_tray_plans(batch)

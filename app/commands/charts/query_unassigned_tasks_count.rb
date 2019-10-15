@@ -9,7 +9,6 @@ module Charts
         {"$match": {
           "$or": [
             {"batch_status": {"$eq": Constants::BATCH_STATUS_ACTIVE}},
-            {"batch_status": {"$eq": Constants::BATCH_STATUS_SCHEDULED}},
           ],
           assignable: true,
         }},

@@ -1,5 +1,5 @@
 module Charts
-  class QueryUnassignedTasksCount
+  class QueryUnscheduledTasksCount
     prepend SimpleCommand
 
     def initialize; end
@@ -15,13 +15,14 @@ module Charts
         }},
         {"$match": {
           "$or": [
-            {"user_ids": {"$eq": nil}},
-            {"user_ids": {"$exists": false}},
+            {"estimated_hours": {"$eq": nil}},
+            {"estimated_hours": {"$exists": false}},
+            {"estimated_hours": {"$lte": 0}},
           ],
         }},
-        {"$count": 'unassigned_tasks'},
+        {"$count": 'unscheduled_tasks'},
       ])
-      result = criteria.to_a[0]['unassigned_tasks']
+      result = criteria.to_a[0]['unscheduled_tasks']
     end
   end
 end

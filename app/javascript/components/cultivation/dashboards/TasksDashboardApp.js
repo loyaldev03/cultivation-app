@@ -35,7 +35,7 @@ class ActiveTaskStore {
   @observable filter = {
     facility_id: '',
     page: 0,
-    limit: 20,
+    limit: 20
   }
   @observable columnFilters = {}
 
@@ -89,7 +89,7 @@ class ActiveTaskStore {
     this.filter = {
       facility_id: filter.facility_id,
       page: filter.page,
-      limit: filter.limit,
+      limit: filter.limit
     }
   }
 
@@ -344,7 +344,7 @@ class TasksDashboardApp extends React.Component {
     activeTaskStore.setFilter({
       facility_id: this.props.currentFacilityId,
       page: state.page,
-      limit: state.pageSize,
+      limit: state.pageSize
     })
   }
 

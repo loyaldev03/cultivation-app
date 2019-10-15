@@ -21,8 +21,8 @@ module Charts
         }},
         {"$match": {
           "$or": [
-            {"batch_status": {"$eq": BATCH_STATUS_SCHEDULED}},
-            {"batch_status": {"$eq": BATCH_STATUS_ACTIVE}},
+            {"batch_status": {"$eq": Constants::BATCH_STATUS_SCHEDULED}},
+            {"batch_status": {"$eq": Constants::BATCH_STATUS_ACTIVE}},
           ],
           assignable: true,
         }},

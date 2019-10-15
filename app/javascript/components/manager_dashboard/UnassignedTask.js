@@ -14,7 +14,7 @@ export default class UnassignedTask extends React.Component {
     return (
       <React.Fragment>
         <h3 className="f5 fw6 dark-grey">Unassigned Task</h3>
-        <div className="overflow-y-scroll" style={{ height: '320px' }}>
+        <div className="overflow-y-scroll" style={{ height: '310px' }}>
           {ChartStore.unassigned_task_loaded ? (
             <table>
               <tbody>
@@ -31,13 +31,17 @@ export default class UnassignedTask extends React.Component {
                 </tr>
                 {ChartStore.data_unassigned_task.map((e, y) => (
                   <tr className="grey mb3" key={y}>
-                    <td className="w-50">
-                      <div className="mb3">{e.name}</div>
+                    <td className="w-60">
+                      <div className="mb3">
+                        <span className="f5 grey">{e.name}</span>
+                        <br />
+                        <span className="f7 mt1 grey b">{e.batch_name}</span>
+                      </div>
                     </td>
-                    <td className="f5">
-                      <div className="mb3">{formatDate(e.start_date)}</div>
+                    <td className="f5 w-20">
+                      <div className="mb3 mr3">{formatDate(e.start_date)}</div>
                     </td>
-                    <td className="f5">
+                    <td className="f5 w-20">
                       <div className="mb3">{formatDate(e.end_date)}</div>
                     </td>
                   </tr>

@@ -5,27 +5,32 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id].split(',')
+      @facility_id = @args[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
     def call
-      json_array = []
-      batch_ids = Cultivation::Batch.in(facility_id: @facility_id).pluck(:id)
-      issues = Issues::Issue.in(cultivation_batch_id: batch_ids)
+      Issues::Issue.collection.aggregate([
+        {"$match": {"is_archived": {"$eq": false}}},
+        {"$match": {"status": {"$eq": 'open'}}},
+        {"$lookup": {
+          from: 'cultivation_batches',
+          localField: 'cultivation_batch_id',
+          foreignField: '_id',
+          as: 'batch',
+        }},
+        {"$unwind": '$batch'},
+        {"$match": {"batch.facility_id": {"$in": @facility_id}}},
+        {"$project": {
+          issue_no: 1,
+          cultivation_batch_id: {"$toString": '$cultivation_batch_id'},
+          severity: 1,
+          c_at: 1,
+          status: 1,
+          title: 1,
+          batch_no: '$batch.batch_no',
+        }},
 
-      issues.each do |issue|
-        json_array << {
-          id: issue.id.to_s,
-          issue_no: issue.issue_no,
-          batch: issue&.cultivation_batch&.batch_no,
-          batch_id: issue&.cultivation_batch_id&.to_s,
-          created_at: issue.c_at.strftime('%-d %B, %-l.%M %P'),
-          status: issue.status,
-          title: issue.title,
-        }
-      end
-
-      json_array
+      ])
     end
   end
 end

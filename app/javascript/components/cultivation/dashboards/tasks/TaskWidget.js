@@ -3,12 +3,7 @@ import { observer } from 'mobx-react'
 import DashboardTaskStore from './DashboardTaskStore'
 import { numberFormatter } from '../../../utils'
 
-const TaskWidgetList = ({
-  title,
-  count,
-  className = '',
-  loaded = false
-}) => {
+const TaskWidgetList = ({ title, count, className = '', loaded = false }) => {
   return (
     <div
       className="flex items-center ba b--light-gray pa3 bg-white br2 mr1"

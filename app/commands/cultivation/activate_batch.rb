@@ -4,7 +4,7 @@ module Cultivation
 
     attr_reader :current_time
 
-    def initialize(current_time, batch_id)
+    def initialize(current_time, batch_id = nil)
       if current_time.is_a?(Time)
         @current_time = current_time
       else

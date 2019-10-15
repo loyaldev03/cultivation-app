@@ -3,6 +3,7 @@ import { TempHomeIssue } from '../utils'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { formatIssueNo } from '../issues/components/FormatHelper'
+import { formatDate, formatTime } from '../utils/DateHelper'
 
 @observer
 export default class UnassignedTask extends React.Component {
@@ -30,14 +31,16 @@ export default class UnassignedTask extends React.Component {
               <div className="mb4">
                 <a
                   className="no-underline"
-                  href={`/cultivation/batches/${e.batch_id}/issues`}
+                  href={`/cultivation/batches/${e.cultivation_batch_id}/issues`}
                 >
                   <span className="f5 grey">
-                    Issue {formatIssueNo(e.issue_no)}, Batch {e.batch}{' '}
+                    Issue {formatIssueNo(e.issue_no)}, Batch {e.batch_no}{' '}
                   </span>
                   <span className="f7 green ttu">{e.status}</span>
                   <br />
-                  <span className="f7 mt1 grey">{e.created_at}</span>
+                  <span className="f7 mt1 grey">
+                    {formatDate(e.c_at)}, {formatTime(e.c_at)}
+                  </span>
                   <br />
                   <span className="dark-grey">{e.title}</span>
                 </a>

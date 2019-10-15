@@ -81,7 +81,7 @@ class ChartStore {
   async unassignedTask(facility_id) {
     this.isLoading = true
     this.unassigned_task_loaded = false
-    const url = `/api/v1/dashboard_charts/unassigned_task?facility_id=${facility_id}&limit=100`
+    const url = `/api/v1/dashboard_charts/unassigned_task?facility_id=${facility_id}&limit=25`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {

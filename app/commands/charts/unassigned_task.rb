@@ -5,7 +5,8 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      @facility_id = @args[:facility_id].split(',').map(&:to_bson_id)
+      @limit = args[:limit]
     end
 
     def call
@@ -26,6 +27,7 @@ module Charts
             ],
           },
         }},
+        set_limit,
         {"$project": {
           name: 1,
           batch_id: 1,
@@ -34,6 +36,14 @@ module Charts
           batch_name: '$batch_name',
         }},
       ])
+    end
+
+    def set_limit
+      if @limit
+        {"$limit": @limit.to_i}
+      else
+        {"$limit": {}}
+      end
     end
   end
 end

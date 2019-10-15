@@ -36,11 +36,13 @@ module Cultivation
     field :location_type, type: String # full ruby class name
 
     field :work_status, type: String, default: Constants::WORK_STATUS_NEW
-    field :package_id, type: BSON::ObjectId   # Used by task related to sales product.
+    field :package_id, type: BSON::ObjectId # Used by task related to sales product.
 
     field :assignable, type: Boolean, default: false
+    field :batch_name, type: String
+    field :batch_status, type: String
 
-    #notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted
+    # notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted
     belongs_to :batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility, class_name: 'Facility'
 
@@ -56,18 +58,18 @@ module Cultivation
 
     orderable scope: :batch, base: 0
 
-    track_history on: [:phase,
-                       :name,
-                       :duration,
-                       :start_date,
-                       :end_date,
-                       :estimated_hours,
-                       :depend_on,
-                       :location_id,
-                       :location_type,
-                       :work_status,
-                       :add_nutrients,
-                       :notes],
+    track_history on: %i[phase
+                         name
+                         duration
+                         start_date
+                         end_date
+                         estimated_hours
+                         depend_on
+                         location_id
+                         location_type
+                         work_status
+                         add_nutrients
+                         notes],
                   modifier_field: :modifier,
                   modifier_field_inverse_of: nil,
                   modifier_field_optional: true,
@@ -144,7 +146,7 @@ module Cultivation
     end
 
     def sum_actual_hours
-      time_logs.map { |a| a.duration_in_hours }.sum
+      time_logs.map(&:duration_in_hours).sum
     end
 
     def actual_cost

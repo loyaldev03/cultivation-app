@@ -20,7 +20,7 @@ module Cultivation
       @original_user_ids = task.user_ids.blank? ? [] : task.user_ids.map(&:to_s)
       batch = task.batch
       if valid_batch? batch
-        batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
+        batch_tasks = Cultivation::QueryTasks.call(batch, %i[modifier users]).result
         task = get_task(batch_tasks, task.id)
         facility_users = QueryUsers.call(batch.facility_id).result
         # Remember original start_date
@@ -118,7 +118,6 @@ module Cultivation
       # NOTE: Background job would activate all scheduled batch
       if batch.start_date <= Time.current
         Cultivation::ActivateBatch.call(Time.current, batch.id)
-        UpdateBatchTasksWorker.perform_async(batch.id.to_s)
       end
 
       update_tray_plans(batch)

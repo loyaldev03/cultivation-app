@@ -26,6 +26,7 @@ module Cultivation
           update_current_growth_stage(batch)
           update_plants_current_growth_stage(batch)
           metrc_daily_trigger(batch)
+          UpdateBatchTasksWorker.perform_async(batch.id.to_s)
         end
       end
     end
@@ -33,33 +34,33 @@ module Cultivation
     private
 
     def batches
-      if @batch_id
-        @batches ||= Cultivation::Batch.
-          includes(:facility).
-          where(
-            id: @batch_id,
-            status: Constants::BATCH_STATUS_SCHEDULED,
-          )
-      else
-        @batches ||= Cultivation::Batch.
-          includes(:facility).
-          where(status: Constants::BATCH_STATUS_SCHEDULED)
-      end
+      @batches ||= if @batch_id
+                     Cultivation::Batch.
+                       includes(:facility).
+                       where(
+                       id: @batch_id,
+                       status: Constants::BATCH_STATUS_SCHEDULED,
+                     )
+                   else
+                     Cultivation::Batch.
+                       includes(:facility).
+                       where(status: Constants::BATCH_STATUS_SCHEDULED)
+                   end
     end
 
     def active_batches
-      if @batch_id
-        @active_batches ||= Cultivation::Batch.
-          includes(:facility).
-          where(
-            id: @batch_id,
-            status: Constants::BATCH_STATUS_ACTIVE,
-          )
-      else
-        @active_batches ||= Cultivation::Batch.
-          includes(:facility).
-          where(status: Constants::BATCH_STATUS_ACTIVE)
-      end
+      @active_batches ||= if @batch_id
+                            Cultivation::Batch.
+                              includes(:facility).
+                              where(
+                              id: @batch_id,
+                              status: Constants::BATCH_STATUS_ACTIVE,
+                            )
+                          else
+                            Cultivation::Batch.
+                              includes(:facility).
+                              where(status: Constants::BATCH_STATUS_ACTIVE)
+                          end
     end
 
     def update_status(batch)

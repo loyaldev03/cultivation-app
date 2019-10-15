@@ -34,6 +34,7 @@ class ChartStore {
   @observable schedule_date_range_loaded = false
   @observable performer_list_loaded = false
   @observable batch_test_result_loaded = false
+  @observable isLoading = false
   @observable filter = ''
 
   @action
@@ -52,6 +53,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -71,6 +73,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -91,6 +94,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -110,6 +114,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -129,6 +134,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -165,6 +171,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -214,6 +221,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -252,6 +260,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -271,6 +280,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -308,6 +318,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 }

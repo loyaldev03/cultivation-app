@@ -41,8 +41,8 @@ class PlantByRoomWidget extends React.Component {
     super(props)
   }
   componentDidMount() {
-    HarvestStore.loadAvgHarvestCost(this.props.facility_id)
-    HarvestStore.loadAvgHarvestYield(this.props.facility_id)
+    HarvestStore.loadAvgHarvestCost('top', this.props.facility_id)
+    HarvestStore.loadAvgHarvestYield('top', this.props.facility_id)
   }
 
   render() {

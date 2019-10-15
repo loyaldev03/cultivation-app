@@ -5,8 +5,9 @@ class UpdateBatchTasksWorker
     @batch_id = batch_id
 
     batch_tasks.each do |task|
+      assignable = !task.have_children?(batch_tasks)
       task.update_attributes(
-        assignable: task.have_children?(batch_tasks),
+        assignable: assignable,
         batch_name: batch.name,
         batch_status: batch.status,
       )

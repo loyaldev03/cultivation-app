@@ -14,7 +14,8 @@ import {
   HeaderFilter,
   ListingTable,
   TempBatchWidgets,
-  toast
+  toast,
+  Loading
 } from '../../utils'
 import PlantByPhaseWidget from '../../inventory/plant_setup/plant_charts/PlantByPhaseWidget'
 
@@ -48,7 +49,7 @@ const Batcheslist = ({
           </div>
         </div>
       ) : (
-        'loading...'
+        <Loading/>
       )}
     </div>
   )

@@ -5,77 +5,91 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = @args[:facility_id].split(',')
+      @facility_id = @args[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
     def call
-      tasks_result = check_range(@args[:range])
-
-      tasks = tasks_result.map do |t|
-        {name: t.name,
-         actual_cost: t.actual_cost.round(2),
-         sum_actual_hours: t.sum_actual_hours.round(2),
-         start_at: t.start_date.to_date,
-         end_at: t.end_date.to_date}
-      end
-      top_five_tasks = tasks.sort_by { |h| [-h[:actual_cost], -h[:sum_actual_hours]] }.first(5)
+      tasks_query = Cultivation::Task.collection.aggregate([
+        {"$match": {"facility_id": {"$in": @facility_id}}},
+        {"$match": {"indent": {"$nin": [0]}}},
+        match_range,
+        {"$match": {
+          "$or": [
+            {"user_ids": {"$ne": 'null'}},
+            {"user_ids": {"$exists": true}},
+          ],
+        }},
+        {"$lookup": {
+          from: 'cultivation_batches',
+          localField: 'batch_id',
+          foreignField: '_id',
+          as: 'batch',
+        }},
+        {"$unwind": '$batch'},
+        {"$match": {"batch.status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
+        {"$lookup": {
+          from: 'cultivation_time_logs',
+          localField: '_id',
+          foreignField: 'task_id',
+          as: 'time_logs',
+        }},
+        {"$addFields": {
+          "sum_actual_hours": {
+            "$sum": {
+              "$map": {
+                "input": '$time_logs',
+                "in": {"$divide": [{"$subtract": ['$$this.end_time', '$$this.start_time']}, 3600000]},
+              },
+            },
+          },
+        }},
+        {"$sort": {"actual_cost": -1, "sum_actual_hours": -1}},
+        {"$limit": 5},
+        {"$project": {
+          name: 1,
+          batch_id: 1,
+          start_date: 1,
+          end_date: 1,
+          actual_cost: {"$ifNull": ['$actual_cost', 0]},
+          # batch_status: '$batch.status',
+          sum_actual_hours: 1,
+        }},
+      ]).to_a
       [{
         range: @args[:range],
-        total_actual_cost: top_five_tasks.map { |h| h[:actual_cost] }.sum.round(2),
-        total_sum_actual_hours: top_five_tasks.map { |h| h[:sum_actual_hours] }.sum.round(2),
-        tasks: top_five_tasks,
+        total_actual_cost: tasks_query.map { |h| h[:actual_cost].nil? ? 0 : h[:actual_cost] }.sum.round(2),
+        total_sum_actual_hours: tasks_query.map { |h| h[:sum_actual_hours] }.sum.round(2),
+        tasks: tasks_query,
       }]
     end
 
-    def check_range(range)
-      if range == 'this_month'
+    def match_range
+      if @args[:range] == 'this_month'
         start_date = Time.current.beginning_of_month
         end_date = Time.current.end_of_month
-      elsif range == 'this_year'
+      elsif @args[:range] == 'this_year'
         start_date = Time.current.beginning_of_year
         end_date = Time.current.end_of_year
-      elsif range == 'this_week'
+      elsif @args[:range] == 'this_week'
         start_date = Time.current.beginning_of_week
         end_date = Time.current.end_of_week
       else
         start_date = 'all'
       end
 
-      tasks = Cultivation::Task.in(facility_id: @facility_id).in(id: low_levelquery_tasks).includes(:time_logs)
       if start_date == 'all'
-        tasks
+        {"$match": {}}
       else
-        range_by_date(start_date, end_date, tasks)
+        {"$match": {
+          "$expr": {
+            "$or": [
+              {"$and": [{"$gte": ['$end_date', start_date]}, {"$lte": ['$start_date', end_date]}]},
+              {"$and": [{"$gte": ['$start_date', start_date]}, {"$lte": ['$start_date', end_date]}]},
+              {"$and": [{"$lte": ['$start_date', start_date]}, {"$gte": ['$end_date', end_date]}]},
+            ],
+          },
+        }}
       end
-    end
-
-    def range_by_date(start_date, end_date, tasks)
-      cond_a = tasks.and({end_date: {"$gte": start_date}}, start_date: {"$lte": end_date}).selector
-      cond_b = tasks.and({start_date: {"$gte": start_date}}, start_date: {"$lte": end_date}).selector
-      cond_c = tasks.and({start_date: {"$lte": start_date}}, end_date: {"$gte": end_date}).selector
-      tasks_result = tasks.or(cond_a, cond_b, cond_c)
-      tasks_result.to_a
-    end
-
-    def low_levelquery_tasks
-      tasks = []
-      batches = Cultivation::Batch.in(
-        status: [
-          Constants::BATCH_STATUS_SCHEDULED,
-          Constants::BATCH_STATUS_ACTIVE,
-        ],
-      ).includes(:tasks)
-      batches.map do |batch|
-        if batch.tasks.present?
-          query_tasks = Cultivation::QueryTasks.call(batch).result
-          query_tasks.map do |qt|
-            unless qt.have_children?(query_tasks)
-              tasks << qt.id
-            end
-          end
-        end
-      end
-      tasks
     end
   end
 end

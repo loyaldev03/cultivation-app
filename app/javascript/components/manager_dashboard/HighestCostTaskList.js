@@ -3,6 +3,10 @@ import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { TempHomeTaskHighestCost } from '../utils'
+import {
+  decimalFormatter,
+  numberFormatter
+} from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -27,7 +31,7 @@ export default class HighestCostTaskList extends React.Component {
 
   onChangeMonthly = range => {
     this.setState({ selectedMonth: range.split('_').join(' ') })
-    ChartStore.highestCostTask(range)
+    ChartStore.highestCostTask(range, this.props.facility_id)
   }
 
   render() {
@@ -81,42 +85,51 @@ export default class HighestCostTaskList extends React.Component {
             </div>
           </Tippy>
         </div>
-        {ChartStore.highest_cost_task_loaded ? (
-          <table className="w-100">
-            <thead>
-              <tr className="tl mb2 dark-grey">
-                <th className="w-40">Tasks</th>
-                <th className="tc">Average Time (hrs)</th>
+        {ChartStore.unassigned_task_loaded ? (
+          <table>
+            <tbody>
+              <tr className="grey tl">
+                <th>
+                  <div className="mb2">Task Name</div>
+                </th>
+                <th>
+                  <div className="mb2">Average Time (hrs)</div>
+                </th>
                 {cost_permission && cost_permission == true ? (
-                  <th className="tc">Average Cost</th>
+                  <th>
+                    <div className="mb2">End Date</div>
+                  </th>
                 ) : (
                   ''
                 )}
+                
               </tr>
-            </thead>
-            <tbody>
               {ChartStore.data_highest_cost_task.map((e, i) => (
-                <React.Fragment key={e.id + i}>
+                <React.Fragment >
                   {e.tasks.map(u => (
-                    <tr className="pa2 dark-grey">
-                      <td>
-                        <div className="mb2 mt2">{u.name}</div>
+                    <tr className="grey mb3" key={u.id}>
+                      <td className="w-50">
+                        <div className="mb3">{u.name}</div>
                       </td>
-                      <td className="tc">{u.sum_actual_hours}</td>
+                      <td className="f5">
+                        <div className="mb3 tc">{decimalFormatter.format(u.sum_actual_hours)}</div>
+                      </td>
                       {cost_permission && cost_permission == true ? (
-                        <td className="tc">{u.actual_cost}</td>
+                        <td className="f5">
+                          <div className="mb3 tc">{decimalFormatter.format(u.actual_cost)}</div>
+                        </td>
                       ) : (
                         ''
                       )}
                     </tr>
                   ))}
-                  <tr className="pa2 dark-grey">
+                  <tr className="pa2 dark-grey" key={i}>
                     <td>
                       <div className="b mb2 mt2">Total</div>
                     </td>
-                    <td className="tc b">{e.total_sum_actual_hours}</td>
+                    <td className="tc b">{decimalFormatter.format(e.total_sum_actual_hours)}</td>
                     {cost_permission && cost_permission == true ? (
-                      <td className="tc b">{e.total_actual_cost}</td>
+                      <td className="tc b">{decimalFormatter.format(e.total_actual_cost)}</td>
                     ) : (
                       ''
                     )}

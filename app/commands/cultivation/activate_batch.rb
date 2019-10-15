@@ -4,12 +4,13 @@ module Cultivation
 
     attr_reader :current_time
 
-    def initialize(current_time)
+    def initialize(current_time, batch_id)
       if current_time.is_a?(Time)
         @current_time = current_time
       else
         raise "Expected current_time to be of type 'Time'"
       end
+      @batch_id = batch_id
       @company_info = CompanyInfo.last
     end
 
@@ -25,6 +26,7 @@ module Cultivation
           update_current_growth_stage(batch)
           update_plants_current_growth_stage(batch)
           metrc_daily_trigger(batch)
+          UpdateBatchTasksWorker.perform_async(batch.id.to_s)
         end
       end
     end
@@ -32,15 +34,33 @@ module Cultivation
     private
 
     def batches
-      @batches ||= Cultivation::Batch.
-        includes(:facility).
-        where(status: Constants::BATCH_STATUS_SCHEDULED)
+      @batches ||= if @batch_id
+                     Cultivation::Batch.
+                       includes(:facility).
+                       where(
+                       id: @batch_id,
+                       status: Constants::BATCH_STATUS_SCHEDULED,
+                     )
+                   else
+                     Cultivation::Batch.
+                       includes(:facility).
+                       where(status: Constants::BATCH_STATUS_SCHEDULED)
+                   end
     end
 
     def active_batches
-      @active_batches ||= Cultivation::Batch.
-        includes(:facility).
-        where(status: Constants::BATCH_STATUS_ACTIVE)
+      @active_batches ||= if @batch_id
+                            Cultivation::Batch.
+                              includes(:facility).
+                              where(
+                              id: @batch_id,
+                              status: Constants::BATCH_STATUS_ACTIVE,
+                            )
+                          else
+                            Cultivation::Batch.
+                              includes(:facility).
+                              where(status: Constants::BATCH_STATUS_ACTIVE)
+                          end
     end
 
     def update_status(batch)

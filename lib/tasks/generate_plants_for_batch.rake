@@ -36,7 +36,6 @@ task generate_plants_for_batch: :environment do
     # )
     #
     batch.save!
+    Cultivation::ActivateBatch.call(Time.current, batch.id)
   end
-
-  Cultivation::ActivateBatch.call(Time.current)
 end

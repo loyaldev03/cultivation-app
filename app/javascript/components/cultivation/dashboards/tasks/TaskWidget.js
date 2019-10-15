@@ -6,19 +6,17 @@ import { numberFormatter } from '../../../utils'
 const TaskWidgetList = ({
   title,
   count,
-  icon,
   className = '',
   loaded = false
 }) => {
   return (
     <div
-      className="flex items-center ba b--light-gray pa3 bg-white br2 mr1 mb1 "
+      className="flex items-center ba b--light-gray pa3 bg-white br2 mr1"
       style={{ height: 150 + 'px', width: '50%' }}
     >
-      <div className="flex" style={{ flex: ' 1 1 auto' }}>
+      <div className="flex">
         <i
-          className={`material-icons bg-white orange md-48 ${className}`}
-          style={{ borderRadius: '50%' }}
+          className={`material-icons br-100 pa2 bg-white orange md-48 ${className}`}
         >
           assignment
         </i>
@@ -50,7 +48,7 @@ class TaskWidget extends React.Component {
             count={
               DashboardTaskStore.data_task_dashboard.unassigned_tasks_count
             }
-            className="ma3"
+            className="ma2"
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
           <TaskWidgetList
@@ -58,7 +56,7 @@ class TaskWidget extends React.Component {
             count={
               DashboardTaskStore.data_task_dashboard.tasks_with_issues_count
             }
-            className="ma3"
+            className="ma2"
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
           <TaskWidgetList
@@ -66,13 +64,13 @@ class TaskWidget extends React.Component {
             count={
               DashboardTaskStore.data_task_dashboard.unscheduled_tasks_count
             }
-            className="ma3"
+            className="ma2"
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
           <TaskWidgetList
             title="Unscheduled tasks"
             count={DashboardTaskStore.data_task_dashboard.delayed_tasks_count}
-            className="ma3"
+            className="ma2"
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
         </div>

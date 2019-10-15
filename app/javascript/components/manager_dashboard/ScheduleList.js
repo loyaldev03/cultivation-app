@@ -1,12 +1,12 @@
 import React from 'react'
-import { TempHomeSchedule, formatYDM } from '../utils'
+import { formatYDM, Loading } from '../utils'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
 
 @observer
-export default class UnassignedTask extends React.Component {
+export default class ScheduleList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -68,8 +68,8 @@ export default class UnassignedTask extends React.Component {
           <div className="w-40">
             <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
               {ChartStore.schedule_list_loaded ? (
-                ChartStore.schedule_list.map(e => (
-                  <div className="flex pa3">
+                ChartStore.schedule_list.map((e, i) => (
+                  <div className="flex pa3" key={i}>
                     <div className="w-50 f6 fw6 ttc dark-grey">
                       {e.batch_name}
                     </div>
@@ -77,7 +77,7 @@ export default class UnassignedTask extends React.Component {
                   </div>
                 ))
               ) : (
-                <div>Loading ...</div>
+                <Loading />
               )}
             </div>
           </div>

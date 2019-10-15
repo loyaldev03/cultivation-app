@@ -8,8 +8,8 @@ module Charts
       criteria = Cultivation::Task.collection.aggregate([
         {"$match": {
           "$or": [
-            {"batch_status": {"$eq": 'ACTIVE'}},
-            {"batch_status": {"$eq": 'SCHEDULED'}},
+            {"batch_status": {"$eq": Constants::BATCH_STATUS_ACTIVE}},
+            {"batch_status": {"$eq": Constants::BATCH_STATUS_SCHEDULED}},
           ],
           assignable: true,
         }},

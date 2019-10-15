@@ -13,7 +13,7 @@ module Charts
       end_date = Time.current.end_of_month
       Cultivation::Task.collection.aggregate([
         {"$match": {"facility_id": {"$in": @facility_id}}},
-        {"$match": {"batch_status": {"$eq": 'ACTIVE'}}},
+        {"$match": {"batch_status": {"$eq": Constants::BATCH_STATUS_ACTIVE}}},
         {"$match": {"user_ids": {"$eq": nil}}},
         {"$match": {
           "$expr": {

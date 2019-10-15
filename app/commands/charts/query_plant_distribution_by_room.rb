@@ -9,7 +9,6 @@ module Charts
     end
 
     def call
-
       locations = QueryLocations.call(@facility_id)
       plants = Inventory::Plant.collection.aggregate([
         {"$lookup": {
@@ -22,15 +21,15 @@ module Charts
         {"$match": {"facility_strain.facility_id": {"$in": @facility_id}}},
         {"$project": {
           "plant_id": 1,
-          "location_id": 1
-          
-        }}
-      
+          "location_id": 1,
+
+        }},
+
       ])
 
       group_plants = plants.group_by do |a|
-          location = locations.query_trays(a[:location_id])
-          location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
+        location = locations.query_trays(a[:location_id])
+        location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
       end
 
       json_fac = []
@@ -47,21 +46,21 @@ module Charts
       array = json_fac.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
 
       if array.present?
-          array2 = array.map { |x| x[1] }
-  
-          group_count = array2.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
-  
-          grouped_plant_json = group_count.group_by { |x| x[:group] }.map do |f|
-            if f[0].present?
-              {
-                name: f[0],
-                value: f[1].map { |x| x[:count] }.sum,
-              }
-            end
+        array2 = array.map { |x| x[1] }
+
+        group_count = array2.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
+
+        grouped_plant_json = group_count.group_by { |x| x[:group] }.map do |f|
+          if f[0].present?
+            {
+              name: f[0],
+              value: f[1].map { |x| x[:count] }.sum,
+            }
           end
-        else
-          grouped_plant_json = []
         end
+      else
+        grouped_plant_json = []
+      end
 
       return {children: grouped_plant_json.compact}
     end

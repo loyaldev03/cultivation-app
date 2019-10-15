@@ -3,10 +3,7 @@ import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { TempHomeTaskHighestCost } from '../utils'
-import {
-  decimalFormatter,
-  numberFormatter
-} from '../utils'
+import { decimalFormatter, numberFormatter } from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -102,21 +99,24 @@ export default class HighestCostTaskList extends React.Component {
                 ) : (
                   ''
                 )}
-                
               </tr>
               {ChartStore.data_highest_cost_task.map((e, i) => (
-                <React.Fragment >
+                <React.Fragment>
                   {e.tasks.map(u => (
                     <tr className="grey mb3" key={u.id}>
                       <td className="w-50">
                         <div className="mb3">{u.name}</div>
                       </td>
                       <td className="f5">
-                        <div className="mb3 tc">{decimalFormatter.format(u.sum_actual_hours)}</div>
+                        <div className="mb3 tc">
+                          {decimalFormatter.format(u.sum_actual_hours)}
+                        </div>
                       </td>
                       {cost_permission && cost_permission == true ? (
                         <td className="f5">
-                          <div className="mb3 tc">{decimalFormatter.format(u.actual_cost)}</div>
+                          <div className="mb3 tc">
+                            {decimalFormatter.format(u.actual_cost)}
+                          </div>
                         </td>
                       ) : (
                         ''
@@ -127,9 +127,13 @@ export default class HighestCostTaskList extends React.Component {
                     <td>
                       <div className="b mb2 mt2">Total</div>
                     </td>
-                    <td className="tc b">{decimalFormatter.format(e.total_sum_actual_hours)}</td>
+                    <td className="tc b">
+                      {decimalFormatter.format(e.total_sum_actual_hours)}
+                    </td>
                     {cost_permission && cost_permission == true ? (
-                      <td className="tc b">{decimalFormatter.format(e.total_actual_cost)}</td>
+                      <td className="tc b">
+                        {decimalFormatter.format(e.total_actual_cost)}
+                      </td>
                     ) : (
                       ''
                     )}

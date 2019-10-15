@@ -180,7 +180,10 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <HighestCostTaskList cost_permission={cost_permission} facility_id={this.props.facilityId} />
+              <HighestCostTaskList
+                cost_permission={cost_permission}
+                facility_id={this.props.facilityId}
+              />
             </div>
           </div>
           <div className="w-50">

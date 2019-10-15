@@ -62,7 +62,11 @@ module Charts
         grouped_plant_json = []
       end
 
-      return {children: grouped_plant_json.compact}
+      if grouped_plant_json.compact.any?
+        return {children: grouped_plant_json.compact}
+      else
+        return {}
+      end
     end
 
     private

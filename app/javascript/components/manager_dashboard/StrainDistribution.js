@@ -1,13 +1,13 @@
 import React from 'react'
 import * as d3 from 'd3'
-import { Loading, NoData } from '../utils';
+import { Loading, NoData } from '../utils'
 
 export default class StrainDistribution extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
-      nullData: false,
+      nullData: false
     }
   }
 
@@ -51,7 +51,7 @@ export default class StrainDistribution extends React.Component {
       })
       //console.log(`${Object.keys(data)}`)
       if (Object.keys(data).length == 0) {
-        t.setState({nullData: true})
+        t.setState({ nullData: true })
         // const el = document.getElementById('treemapStrain')
         // el.classList.add('grey')
         // el.textContent += 'No data available'
@@ -155,8 +155,8 @@ export default class StrainDistribution extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.state.loading && <Loading/>}
-        {this.state.nullData && <NoData text="No data available"/>}
+        {this.state.loading && <Loading />}
+        {this.state.nullData && <NoData text="No data available" />}
         <div id="treemapStrain" />
       </React.Fragment>
     )

@@ -49,7 +49,7 @@ const Batcheslist = ({
           </div>
         </div>
       ) : (
-        <Loading/>
+        <Loading />
       )}
     </div>
   )

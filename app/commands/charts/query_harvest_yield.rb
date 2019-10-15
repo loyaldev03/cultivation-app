@@ -9,36 +9,68 @@ module Charts
     end
 
     def call
-      harvest_json = []
       facilities = Facility.in(id: @facility_id)
-      sum_yield = 0
-      size = 0
-      facilities.each do |f|
-        batches = Cultivation::Batch.where(facility_id: f.id)
-        harvest_batches = Inventory::HarvestBatch.in(cultivation_batch_id: batches.map { |a| a.id.to_s }).includes(:cultivation_batch)
-        size += harvest_batches.size
-        harvest_batches.each do |a|
-          yield_amount = a.total_wet_weight / f.square_foot rescue 0.0
-          sum_yield += yield_amount
-          harvest_json << {
-            id: a.id.to_s,
-            harvest_batch: a.harvest_name,
-            yield: yield_amount.round(2),
-          }
-        end
+      batch_ids = Cultivation::Batch.in(facility_id: facilities.pluck(:id)).pluck(:id)
+
+      if @args[:order].present? && @args[:order] == 'top'
+        order = -1
+      else
+        order = 1
       end
 
-      if @args[:order].present?
-        if @args[:order] == 'top'
-          harvest_json = harvest_json.sort_by { |a| -a[:yield] }
-        else
-          harvest_json = harvest_json.sort_by { |a| a[:yield] }
-        end
-      end
+      result = Inventory::HarvestBatch.collection.aggregate([
+        {"$match": {"cultivation_batch_id": {"$in": batch_ids}}},
+        {"$lookup": {
+          from: 'cultivation_batches',
+          localField: 'cultivation_batch_id',
+          foreignField: '_id',
+          as: 'batch',
+        }},
+        {"$unwind": {path: '$batch', preserveNullAndEmptyArrays: true}},
+        {"$lookup": {
+          from: 'facilities',
+          localField: 'batch.facility_id',
+          foreignField: '_id',
+          as: 'facility',
+        }},
+        {"$unwind": {path: '$facility', preserveNullAndEmptyArrays: true}},
+        {"$project": {
+          "id": {"$toString": '$_id'},
+          "harvest_batch": '$harvest_name',
+          "total_wet_weight": '$total_wet_weight',
+          "square_foot": '$facility.square_foot',
+          "facility_name": '$facility.name',
+          "yield": {"$toDouble": {"$divide": [{"$toDecimal": '$total_wet_weight'}, '$facility.square_foot']}},
+        }},
+        {"$sort": {"yield": order}},
+      ]).to_a
+
+      average = Inventory::HarvestBatch.collection.aggregate([
+        {"$match": {"cultivation_batch_id": {"$in": batch_ids}}},
+        {"$lookup": {
+          from: 'cultivation_batches',
+          localField: 'cultivation_batch_id',
+          foreignField: '_id',
+          as: 'batch',
+        }},
+        {"$unwind": {path: '$batch', preserveNullAndEmptyArrays: true}},
+        {"$lookup": {
+          from: 'facilities',
+          localField: 'batch.facility_id',
+          foreignField: '_id',
+          as: 'facility',
+        }},
+        {"$unwind": {path: '$facility', preserveNullAndEmptyArrays: true}},
+        {"$addFields": {"yield": {"$toDouble": {"$divide": [{"$toDecimal": '$total_wet_weight'}, '$facility.square_foot']}}}},
+        {"$group": {
+          "_id": 'null',
+          "average": {"$avg": '$yield'},
+        }},
+      ]).to_a
 
       {
-        average_harvest_yield: (sum_yield.to_f / size.to_f).round(2),
-        harvest_yield: harvest_json,
+        average_harvest_yield: average[0].present? ? average[0]['average'].round(2) : 0.0,
+        harvest_yield: result,
       }
     end
   end

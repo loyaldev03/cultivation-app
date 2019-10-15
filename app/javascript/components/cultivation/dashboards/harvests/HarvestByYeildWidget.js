@@ -95,7 +95,7 @@ export default class HarvestByYeildWidget extends React.Component {
                     barColor={this.getProgressBarColor(e.yield)}
                   />
                   <h1 className="f6 fw6 w-20 dark-grey">
-                    <span>{e.yield} lbs</span>
+                    <span>{e.yield.toFixed(2)} lbs</span>
                   </h1>
                 </div>
               ))

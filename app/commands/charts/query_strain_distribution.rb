@@ -32,7 +32,11 @@ module Charts
 
       ]).to_a
 
-      return {children: result}
+      if result.any?
+        return {children: result}
+      else
+        return {}
+      end
     end
 
     def resource_shared?

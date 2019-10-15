@@ -33,13 +33,9 @@ export default class UnassignedTask extends React.Component {
                   <tr className="grey mb3" key={y}>
                     <td className="w-60">
                       <div className="mb3">
-                        <span className="f5 grey">
-                          {e.name}
-                        </span>
+                        <span className="f5 grey">{e.name}</span>
                         <br />
-                        <span className="f7 mt1 grey b">
-                          {e.batch_name}
-                        </span>
+                        <span className="f7 mt1 grey b">{e.batch_name}</span>
                       </div>
                     </td>
                     <td className="f5 w-20">

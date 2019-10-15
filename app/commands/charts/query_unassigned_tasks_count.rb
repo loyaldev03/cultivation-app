@@ -8,7 +8,7 @@ module Charts
       criteria = Cultivation::Task.collection.aggregate([
         {"$match": {
           "$or": [
-            {"user_ids": {"$eq": null}},
+            {"user_ids": {"$eq": nil}},
             {"user_ids": {"$exists": false}},
           ],
           "$or": [

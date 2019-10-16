@@ -15,7 +15,8 @@ export default class UnassignedTask extends React.Component {
       <React.Fragment>
         <h3 className="f5 fw6 dark-grey">Unassigned Task</h3>
         <div className="overflow-y-scroll" style={{ height: '310px' }}>
-          {ChartStore.unassigned_task_loaded && !isEmpty(ChartStore.data_unassigned_task) ? (
+          {ChartStore.unassigned_task_loaded &&
+          !isEmpty(ChartStore.data_unassigned_task) ? (
             <table>
               <tbody>
                 <tr className="grey tl">

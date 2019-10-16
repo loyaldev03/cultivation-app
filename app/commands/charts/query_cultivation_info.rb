@@ -6,14 +6,14 @@ module Charts
       @user = current_user
       @args = args
       @period = args[:period]
+      @facility_id = @args[:facility_id].split(',').map { |x| x.to_bson_id }
     end
 
     def call
-      facilities = @args[:facility_id].split(',').map { |x| x.to_bson_id }
-      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: facilities, period: @period}).result
-      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: facilities, period: @period}).result
-      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: facilities, period: @period}).result
-      projected_yield = Charts::QueryProjectedYield.call(@user, {facility_id: facilities, period: @period}).result
+      total_plants = Charts::QueryTotalActivePlant.call(@user, {facility_id: @facility_id, period: @period}).result
+      total_yield = Charts::QueryTotalYield.call(@user, {facility_id: @facility_id, period: @period}).result
+      active_batches_cost = Charts::QueryActiveBatchesCost.call(@user, {facility_id: @facility_id, period: @period}).result
+      projected_yield = Charts::QueryProjectedYield.call(@user, {facility_id: @facility_id, period: @period}).result
 
       result = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
       total_used = 0

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TempBatchWidgets } from '../../../utils'
+import { TempBatchWidgets, Loading } from '../../../utils'
 import { Bar } from 'react-chartjs-2'
 import BatchStore from './DashboardBatchStore'
 import { observer } from 'mobx-react'
@@ -66,7 +66,7 @@ export default class BatchPhases extends React.Component {
             <Bar data={PlantStore.plantDistribution} options={options} />
           </div>
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

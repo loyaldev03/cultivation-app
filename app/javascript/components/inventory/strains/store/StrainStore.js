@@ -1,5 +1,5 @@
 import { observable, action, toJS } from 'mobx'
-import { httpGetOptions } from '../../../utils';
+import { httpGetOptions } from '../../../utils'
 
 class StrainStore {
   strains = observable([])

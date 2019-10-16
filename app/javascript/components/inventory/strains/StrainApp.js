@@ -43,7 +43,7 @@ const Strainlist = ({
           </div>
         </div>
       ) : (
-        <Loading/>
+        <Loading />
       )}
     </div>
   )
@@ -60,20 +60,29 @@ class StrainApp extends React.Component {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     loadStrains(this.props.facility_id)
-    strainStore.loadStrainInfo(this.props.facility_id).then(()=> {
-      if (strainStore.info_loaded){
-        const strain_sativa = strainStore.strains_info.find(x =>  x.name == "indica") || {total_strain: 0}
-        const strain_indica = strainStore.strains_info.find(x =>  x.name == "sativa") || {total_strain: 0}
-        const strain_hybrid = strainStore.strains_info.find(x =>  x.name == "hybrid") || {total_strain: 0}
+    strainStore.loadStrainInfo(this.props.facility_id).then(() => {
+      if (strainStore.info_loaded) {
+        const strain_sativa = strainStore.strains_info.find(
+          x => x.name == 'indica'
+        ) || { total_strain: 0 }
+        const strain_indica = strainStore.strains_info.find(
+          x => x.name == 'sativa'
+        ) || { total_strain: 0 }
+        const strain_hybrid = strainStore.strains_info.find(
+          x => x.name == 'hybrid'
+        ) || { total_strain: 0 }
         let sum = 0
         const total = strainStore.strains_info.map(d => {
           sum += d.total_strain
         })
 
-        this.setState({sativa: strain_sativa.total_strain, hybrid: strain_hybrid.total_strain, indica: strain_indica.total_strain, total: sum})
+        this.setState({
+          sativa: strain_sativa.total_strain,
+          hybrid: strain_hybrid.total_strain,
+          indica: strain_indica.total_strain,
+          total: sum
+        })
       }
-      
-      
     })
   }
 

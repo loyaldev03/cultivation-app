@@ -101,7 +101,7 @@ export default class HarvestByYeildWidget extends React.Component {
                 </div>
               ))
             ) : (
-              <NoData/>
+              <NoData />
             )}
           </div>
         ) : (

@@ -101,7 +101,7 @@ export default class HarvestCostByGramWidget extends React.Component {
                 </div>
               ))
             ) : (
-              <NoData/>
+              <NoData />
             )}
           </div>
         ) : (

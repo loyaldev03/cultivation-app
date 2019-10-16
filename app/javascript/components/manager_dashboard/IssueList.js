@@ -34,7 +34,9 @@ export default class UnassignedTask extends React.Component {
                 <div className="mb4">
                   <a
                     className="no-underline"
-                    href={`/cultivation/batches/${e.cultivation_batch_id}/issues`}
+                    href={`/cultivation/batches/${
+                      e.cultivation_batch_id
+                    }/issues`}
                   >
                     <span className="f5 grey">
                       Issue {formatIssueNo(e.issue_no)}, Batch {e.batch_no}{' '}
@@ -52,9 +54,7 @@ export default class UnassignedTask extends React.Component {
             </React.Fragment>
           ) : (
             <section className="mw5 mw7-ns center ph5-ns">
-              <p className="lh-copy measure tc grey f4">
-                No issues available
-              </p>
+              <p className="lh-copy measure tc grey f4">No issues available</p>
             </section>
           )}
         </div>

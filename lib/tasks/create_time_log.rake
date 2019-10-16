@@ -20,6 +20,7 @@ tasks.each do |task|
       time_log = u.time_logs.new(
         start_time: start_time_log,
         end_time: end_time_log,
+        task_id: task.id,
         user: u
       )      
       time_log.save

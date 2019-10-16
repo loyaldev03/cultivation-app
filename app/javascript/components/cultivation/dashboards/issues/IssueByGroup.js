@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2'
 import DashboardIssueStore from './DashboardIssueStore'
 import { observer } from 'mobx-react'
 import isEmpty from 'lodash.isempty'
-import { Loading, NoData } from '../../../utils';
+import { Loading, NoData } from '../../../utils'
 @observer
 export default class IssueByGroup extends React.Component {
   constructor(props) {
@@ -50,10 +50,10 @@ export default class IssueByGroup extends React.Component {
               <Line data={DashboardIssueStore.IssueByGroup} options={options} />
             </div>
           ) : (
-            <NoData/>
+            <NoData />
           )
         ) : (
-          <Loading/>
+          <Loading />
         )}
       </React.Fragment>
     )

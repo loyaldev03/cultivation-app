@@ -2,7 +2,7 @@ import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import DashboardIssueStore from './DashboardIssueStore'
 import { observer } from 'mobx-react'
-import { NoData, Loading } from '../../../utils';
+import { NoData, Loading } from '../../../utils'
 
 @observer
 export default class IssueByPriority extends React.Component {
@@ -70,10 +70,10 @@ export default class IssueByPriority extends React.Component {
               />
             </div>
           ) : (
-            <NoData/>
+            <NoData />
           )
         ) : (
-          <Loading/>
+          <Loading />
         )}
       </React.Fragment>
     )

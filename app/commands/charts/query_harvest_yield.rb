@@ -35,7 +35,7 @@ module Charts
         }},
         {"$unwind": {path: '$facility', preserveNullAndEmptyArrays: true}},
         {"$project": {
-          "id": {"$toString": '$_id'},
+          "id": '$harvest_name',
           "harvest_batch": '$harvest_name',
           "total_wet_weight": '$total_wet_weight',
           "square_foot": '$facility.square_foot',

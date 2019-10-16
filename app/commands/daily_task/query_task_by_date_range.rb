@@ -21,23 +21,18 @@ module DailyTask
         tasks = Cultivation::Task.all
       end
 
-      cond_a = tasks.and({end_date: {"$gte": @start_date}},
-                         start_date: {"$lte": @end_date}).selector
-      cond_b = tasks.and({start_date: {"$gte": @start_date}},
-                         start_date: {"$lte": @end_date}).selector
-      cond_c = tasks.and({start_date: {"$lte": @start_date}},
-                         end_date: {"$gte": @end_date}).selector
-
-      batch_ids = Cultivation::Batch.in(
-        status: [
-          Constants::BATCH_STATUS_SCHEDULED,
-          Constants::BATCH_STATUS_ACTIVE,
-        ],
-      ).pluck(:_id)
-
-      tasks_result = tasks.or(cond_a, cond_b, cond_c)
-      tasks_result = tasks_result.in(batch_id: batch_ids)
-      tasks_result = tasks_result.to_a
+      tasks_result = tasks.collection.aggregate([
+        {"$match": {
+          "$or": [
+            {"batch_status": {"$eq": Constants::BATCH_STATUS_SCHEDULED}},
+            {"batch_status": {"$eq": Constants::BATCH_STATUS_ACTIVE}},
+          ],
+        }},
+        {"$project": {
+          start_date: 1,
+          end_date: 1,
+        }},
+      ]).to_a
 
       start_date = Date.parse(@start_date)
       end_date = Date.parse(@end_date)

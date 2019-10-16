@@ -1,6 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer, action } from 'mobx-react'
 import HarvestStore from './HarvestStore'
+import { Loading } from '../../../utils';
 
 const AverageWidget = ({
   title,
@@ -11,7 +12,7 @@ const AverageWidget = ({
 }) => {
   return (
     <div
-      className={`ba b--light-gray pa3 bg-white br2 mr3 ${className}`}
+      className={`ba b--light-gray pa3 bg-white br2 mr3 tc ${className}`}
       style={{ height: 150 + 'px' }}
     >
       <div className="flex" style={{ flex: ' 1 1 auto' }}>
@@ -23,7 +24,7 @@ const AverageWidget = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          <b className="f2 fw6 dark-grey">{loaded ? 'Loading..' : count}</b>
+          {loaded ? <Loading/> : <b className="f2 fw6 dark-grey">{count}</b>}
         </div>
       </div>
       {/* {loaded ? (

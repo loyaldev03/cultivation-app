@@ -108,7 +108,7 @@ export default class OverallInfo extends React.Component {
                   icon="amp_stories"
                   title="Projected yield"
                   value={decimalFormatter.format(
-                    ChartStore.cultivation_info.facility_capacity
+                    ChartStore.cultivation_info.projected_yield
                   )}
                 />
                 {cost_permission && cost_permission == true ? (

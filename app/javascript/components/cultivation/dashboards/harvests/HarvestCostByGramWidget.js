@@ -1,8 +1,9 @@
 import React from 'react'
-import { ProgressBar, Loading, NoRecordFound } from '../../../utils'
+import { ProgressBar, Loading, NoRecordFound, NoData } from '../../../utils'
 import Tippy from '@tippy.js/react'
 import HarvestStore from './HarvestStore'
 import { observer } from 'mobx-react'
+import isEmpty from 'lodash.isempty'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -100,7 +101,7 @@ export default class HarvestCostByGramWidget extends React.Component {
                 </div>
               ))
             ) : (
-              <NoRecordFound />
+              <NoData />
             )}
           </div>
         ) : (

@@ -7,7 +7,7 @@ const AverageWidget = ({
   count,
   icon,
   className = '',
-  loaded = HarvestStore.isLoading
+  loaded = false
 }) => {
   return (
     <div
@@ -55,6 +55,7 @@ class PlantByRoomWidget extends React.Component {
               ? HarvestStore.average_harvest_cost
               : 0
           }`}
+          loaded={HarvestStore.avg_cost_load}
           icon="attach_money"
           className="mb3"
         />
@@ -65,6 +66,7 @@ class PlantByRoomWidget extends React.Component {
               ? HarvestStore.average_harvest_yield
               : 0
           } lbs`}
+          loaded={HarvestStore.avg_yield_load}
           icon="attach_money"
           className="mt3"
         />

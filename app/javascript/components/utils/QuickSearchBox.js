@@ -124,7 +124,7 @@ export default class QuickSearchBox extends React.Component {
   }
 
   loadOptions = async inputValue => {
-    return await storePlant.queryPlants(this.props.facility_id, inputValue)
+    return await storePlant.queryPlants(this.props.facility_id, inputValue)  
   }
 
   handleInputChange = newValue => {
@@ -150,7 +150,7 @@ export default class QuickSearchBox extends React.Component {
             placeholder="Search Plant ID ..."
             styles={searchBoxSelect}
             value={this.state.selected}
-            defaultOptions={true}
+            defaultOptions={false}
             cacheOptions={false}
             loadOptions={this.loadOptions}
             onChange={this.onChange}

@@ -4,6 +4,7 @@ import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { TempHomeTaskHighestCost } from '../utils'
 import { decimalFormatter, numberFormatter } from '../utils'
+import isEmpty from 'lodash.isempty'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -82,7 +83,8 @@ export default class HighestCostTaskList extends React.Component {
             </div>
           </Tippy>
         </div>
-        {ChartStore.unassigned_task_loaded ? (
+        {ChartStore.unassigned_task_loaded &&
+        !isEmpty(ChartStore.data_highest_cost_task.tasks) ? (
           <table>
             <tbody>
               <tr className="grey tl">
@@ -147,7 +149,9 @@ export default class HighestCostTaskList extends React.Component {
             </tbody>
           </table>
         ) : (
-          'loading...'
+          <section className="mw5 mw7-ns center ph5-ns">
+            <p className="lh-copy measure tc grey f4">No data available</p>
+          </section>
         )}
       </React.Fragment>
     )

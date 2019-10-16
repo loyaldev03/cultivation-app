@@ -37,12 +37,12 @@ module Charts
           actual_hours: 1,
         }},
       ]).to_a
-      [{
+      {
         range: @args[:range],
         total_actual_cost: tasks_query.map { |h| h[:actual_labor_cost] }.sum,
         total_sum_actual_hours: tasks_query.map { |h| h[:actual_hours] }.sum,
         tasks: tasks_query,
-      }]
+      }
     end
 
     def match_range

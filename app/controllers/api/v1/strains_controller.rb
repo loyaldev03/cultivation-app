@@ -16,6 +16,11 @@ class Api::V1::StrainsController < Api::V1::BaseApiController
     render json: data
   end
 
+  def strains_info
+    result = Charts::QueryStrainsInfo.call(params[:facility_id]).result
+    render json: result
+  end
+
   # Suggest strains from pre-populated suggestion list
   def suggest
     strains = if params[:filter]

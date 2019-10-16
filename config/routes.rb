@@ -370,6 +370,7 @@ Rails.application.routes.draw do
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
+        get 'strains_info', on: :collection
       end
 
       resources :metrc, only: [:index] do

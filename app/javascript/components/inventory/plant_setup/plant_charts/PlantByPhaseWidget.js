@@ -3,6 +3,7 @@ import { Bar } from 'react-chartjs-2'
 import Tippy from '@tippy.js/react'
 import PlantStore from './PlantStore'
 import { observer } from 'mobx-react'
+import { Loading } from '../../../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -21,16 +22,14 @@ export default class PlantByPhaseWidget extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      order: 'Grow Phase'
+      selectedMonth: 'All'
     }
-    PlantStore.loadPlantDistribution('Grow Phase', this.props.facility_id)
+    PlantStore.loadPlantDistribution('all', this.props.facility_id)
   }
 
   onChangeOrder = order => {
     PlantStore.loadPlantDistribution(order, this.props.facility_id)
-    this.setState({
-      order: order
-    })
+    this.setState({ selectedMonth: order.split('_').join(' ') })
   }
 
   render() {
@@ -90,16 +89,33 @@ export default class PlantByPhaseWidget extends React.Component {
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
                     <MenuButton
-                      text={'Grow Phase'}
+                      text="All"
                       className=""
-                      onClick={() => this.onChangeOrder('Grow Phase')}
+                      onClick={() => this.onChangeOrder('all')}
+                    />
+                    <MenuButton
+                      text={'This Week'}
+                      className=""
+                      onClick={() => this.onChangeOrder('this_week')}
+                    />
+                    <MenuButton
+                      text={'This Month'}
+                      className=""
+                      onClick={() => this.onChangeOrder('this_month')}
+                    />
+                    <MenuButton
+                      text={'This Year'}
+                      className=""
+                      onClick={() => this.onChangeOrder('this_year')}
                     />
                   </div>
                 </div>
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey ttc">{this.state.order}</h1>
+                <h1 className="f6 fw6 ml2 grey ttc">
+                  {this.state.selectedMonth}
+                </h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
                 </i>
@@ -117,7 +133,7 @@ export default class PlantByPhaseWidget extends React.Component {
             <Bar data={PlantStore.plantDistribution} options={options} />
           </div>
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

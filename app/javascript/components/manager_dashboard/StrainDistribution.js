@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 import { Loading, NoData } from '../utils'
+import isEmpty from 'lodash.isempty'
 
 export default class StrainDistribution extends React.Component {
   constructor(props) {
@@ -50,11 +51,8 @@ export default class StrainDistribution extends React.Component {
         return d.value
       })
       //console.log(`${Object.keys(data)}`)
-      if (Object.keys(data).length == 0) {
+      if (isEmpty(Object.keys(data))) {
         t.setState({ nullData: true })
-        // const el = document.getElementById('treemapStrain')
-        // el.classList.add('grey')
-        // el.textContent += 'No data available'
       } else {
         const treeMap = d3
           .treemap()

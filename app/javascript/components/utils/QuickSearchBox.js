@@ -124,7 +124,7 @@ export default class QuickSearchBox extends React.Component {
   }
 
   loadOptions = async inputValue => {
-    return await storePlant.queryPlants(this.props.facility_id, inputValue)  
+    return await storePlant.queryPlants(this.props.facility_id, inputValue)
   }
 
   handleInputChange = newValue => {

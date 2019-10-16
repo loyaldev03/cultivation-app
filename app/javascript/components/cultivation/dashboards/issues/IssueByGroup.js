@@ -2,7 +2,8 @@ import React from 'react'
 import { Line } from 'react-chartjs-2'
 import DashboardIssueStore from './DashboardIssueStore'
 import { observer } from 'mobx-react'
-
+import isEmpty from 'lodash.isempty'
+import { Loading, NoData } from '../../../utils';
 @observer
 export default class IssueByGroup extends React.Component {
   constructor(props) {
@@ -44,15 +45,15 @@ export default class IssueByGroup extends React.Component {
           </div>
         </div>
         {DashboardIssueStore.issue_by_group_loaded ? (
-          DashboardIssueStore.data_issue_by_group.length > 0 ? (
+          !isEmpty(DashboardIssueStore.data_issue_by_group) ? (
             <div style={{ overflow: 'auto', height: '320px' }}>
               <Line data={DashboardIssueStore.IssueByGroup} options={options} />
             </div>
           ) : (
-            'Graph is not available'
+            <NoData/>
           )
         ) : (
-          'loading...'
+          <Loading/>
         )}
       </React.Fragment>
     )

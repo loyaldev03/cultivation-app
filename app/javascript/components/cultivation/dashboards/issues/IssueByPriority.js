@@ -2,6 +2,7 @@ import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import DashboardIssueStore from './DashboardIssueStore'
 import { observer } from 'mobx-react'
+import { NoData, Loading } from '../../../utils';
 
 @observer
 export default class IssueByPriority extends React.Component {
@@ -69,10 +70,10 @@ export default class IssueByPriority extends React.Component {
               />
             </div>
           ) : (
-            'Graph is not available'
+            <NoData/>
           )
         ) : (
-          'loading...'
+          <Loading/>
         )}
       </React.Fragment>
     )

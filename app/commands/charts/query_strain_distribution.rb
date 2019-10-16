@@ -10,12 +10,12 @@ module Charts
 
     def call
       if resource_shared?
-        facility_strains = Inventory::FacilityStrain.in(facility_id: active_facility_ids).includes(:plants)
+        facility_strains = Inventory::FacilityStrain.in(facility_id: active_facility_ids)
       else
-        facility_strains = Inventory::FacilityStrain.in(facility_id: @facility_id).includes(:plants)
+        facility_strains = Inventory::FacilityStrain.in(facility_id: @facility_id)
       end
 
-      result = Inventory::Plant.collection.aggregate([
+      result = Cultivation::Batch.collection.aggregate([
         {"$match": {"facility_strain_id": {"$in": facility_strains.pluck(:id)}}},
         {"$lookup": {
           from: 'inventory_facility_strains',
@@ -27,9 +27,8 @@ module Charts
         {"$group": {
           "_id": '$facility_strain_id',
           "name": {"$first": '$facility_strain.strain_name'},
-          "value": {"$sum": 1},
+          "value": {"$sum": '$quantity'},
         }},
-
       ]).to_a
 
       if result.any?

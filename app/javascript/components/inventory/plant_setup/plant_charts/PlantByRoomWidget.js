@@ -1,13 +1,16 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import * as d3 from 'd3'
+import { Loading, NoData } from '../../../utils'
+import isEmpty from 'lodash.isempty'
 
 @observer
 class PlantByRoomWidget extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true
+      loading: true,
+      nullData: false
     }
   }
 
@@ -53,10 +56,8 @@ class PlantByRoomWidget extends React.Component {
       const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })
-      if (Object.keys(data).length == 0) {
-        const el = document.getElementById('treemap')
-        el.classList.add('grey')
-        el.textContent += 'No data available'
+      if (isEmpty(Object.keys(data))) {
+        t.setState({ nullData: true })
       } else {
         const treeMap = d3
           .treemap()
@@ -160,7 +161,8 @@ class PlantByRoomWidget extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.state.loading && <div>loading ... </div>}
+        {this.state.loading && <Loading />}
+        {this.state.nullData && <NoData text="No data available" />}
         <div id="treemap" />
       </React.Fragment>
     )

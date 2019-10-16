@@ -3,7 +3,7 @@ import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { formatDate } from '../utils/DateHelper'
 import isEmpty from 'lodash.isempty'
-import {Loading, NoData} from '../utils'
+import { Loading, NoData } from '../utils'
 
 @observer
 export default class UnassignedTask extends React.Component {
@@ -41,7 +41,9 @@ export default class UnassignedTask extends React.Component {
                         </div>
                       </td>
                       <td className="f5 w-20">
-                        <div className="mb3 mr3">{formatDate(e.start_date)}</div>
+                        <div className="mb3 mr3">
+                          {formatDate(e.start_date)}
+                        </div>
                       </td>
                       <td className="f5 w-20">
                         <div className="mb3">{formatDate(e.end_date)}</div>

@@ -5,7 +5,7 @@ import { observer } from 'mobx-react'
 import { formatIssueNo } from '../issues/components/FormatHelper'
 import { formatDate, formatTime } from '../utils/DateHelper'
 import isEmpty from 'lodash.isempty'
-import {Loading, NoData} from '../utils'
+import { Loading, NoData } from '../utils'
 
 @observer
 export default class UnassignedTask extends React.Component {

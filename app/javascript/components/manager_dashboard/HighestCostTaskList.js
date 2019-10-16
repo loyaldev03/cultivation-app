@@ -3,7 +3,7 @@ import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { TempHomeTaskHighestCost } from '../utils'
-import { decimalFormatter, Loading, NoData} from '../utils'
+import { decimalFormatter, Loading, NoData } from '../utils'
 import isEmpty from 'lodash.isempty'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -130,13 +130,18 @@ export default class HighestCostTaskList extends React.Component {
                     </td>
                     <td className="b">
                       <div className="mb3 tc mr3">
-                        {decimalFormatter.format(ChartStore.data_highest_cost_task.total_sum_actual_hours)}
+                        {decimalFormatter.format(
+                          ChartStore.data_highest_cost_task
+                            .total_sum_actual_hours
+                        )}
                       </div>
                     </td>
                     {cost_permission && cost_permission == true ? (
                       <td className="b">
                         <div className="mb3 tc ml4">
-                          {decimalFormatter.format(ChartStore.data_highest_cost_task.total_actual_cost)}
+                          {decimalFormatter.format(
+                            ChartStore.data_highest_cost_task.total_actual_cost
+                          )}
                         </div>
                       </td>
                     ) : (

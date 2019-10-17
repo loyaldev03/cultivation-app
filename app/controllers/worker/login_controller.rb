@@ -2,6 +2,7 @@ class Worker::LoginController < ApplicationController
   layout 'worker_login'
   skip_before_action :authenticate_user!
   before_action :check_ip_whitelist
+  before_action :check_if_logged_in
 
   def index
     if @ip_included
@@ -47,6 +48,10 @@ class Worker::LoginController < ApplicationController
   end
 
   private
+
+  def check_if_logged_in
+    redirect_to root_path, notice: 'You have logged in' if user_signed_in?
+  end
 
   def check_ip_whitelist
     @ip_included = current_ip_facility.present?

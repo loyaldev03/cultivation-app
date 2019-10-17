@@ -73,12 +73,7 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   end
 
   def plant_distribution_room
-    if resource_shared?
-      facility_ids = active_facility_ids
-    else
-      facility_ids = params[:facility_id].split(',').map { |x| x&.to_bson_id }
-    end
-    result = Charts::QueryPlantDistributionByRoom.call(current_user, {facility_id: facility_ids}).result
+    result = Charts::QueryPlantDistributionByRoom.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
 

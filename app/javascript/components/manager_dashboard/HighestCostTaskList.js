@@ -18,13 +18,21 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
   )
 }
 
-const DataList = ({idx, name, actual_hours, actual_labor_cost, cost_permission}) => {
+const DataList = ({
+  idx,
+  name,
+  actual_hours,
+  actual_labor_cost,
+  cost_permission
+}) => {
   return (
     <div className="flex grey tl f5 mb3" key={idx}>
       <div className="fl w-50">{name}</div>
       <div className="fl tc w-25">{decimalFormatter.format(actual_hours)}</div>
       {cost_permission && cost_permission == true ? (
-        <div className="fl tc w-25">{decimalFormatter.format(actual_labor_cost)}</div>
+        <div className="fl tc w-25">
+          {decimalFormatter.format(actual_labor_cost)}
+        </div>
       ) : (
         ''
       )}
@@ -64,25 +72,25 @@ export default class HighestCostTaskList extends React.Component {
               <div className="bg-white f6 flex">
                 <div className="db shadow-4">
                   <MenuButton
-                    key='highestcostAll'
+                    key="highestcostAll"
                     text="All"
                     className=""
                     onClick={() => this.onChangeMonthly('all')}
                   />
                   <MenuButton
-                    key='highestcostYear'
+                    key="highestcostYear"
                     text="This year"
                     className=""
                     onClick={() => this.onChangeMonthly('this_year')}
                   />
                   <MenuButton
-                    key='highestcostMonth'
+                    key="highestcostMonth"
                     text="This month"
                     className=""
                     onClick={() => this.onChangeMonthly('this_month')}
                   />
                   <MenuButton
-                    key='highestcostWeek'
+                    key="highestcostWeek"
                     text="This week"
                     className=""
                     onClick={() => this.onChangeMonthly('this_week')}
@@ -127,15 +135,13 @@ export default class HighestCostTaskList extends React.Component {
                 <div className="fl w-50 ">total</div>
                 <div className="fl w-25 tc">
                   {decimalFormatter.format(
-                    ChartStore.data_highest_cost_task
-                      .total_sum_actual_hours
+                    ChartStore.data_highest_cost_task.total_sum_actual_hours
                   )}
                 </div>
                 {cost_permission && cost_permission == true ? (
                   <div className="fl w-25 tc">
                     {decimalFormatter.format(
-                      ChartStore.data_highest_cost_task
-                        .total_actual_cost
+                      ChartStore.data_highest_cost_task.total_actual_cost
                     )}
                   </div>
                 ) : (

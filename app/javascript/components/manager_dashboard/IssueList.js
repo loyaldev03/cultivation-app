@@ -31,7 +31,7 @@ export default class IssueList extends React.Component {
           {ChartStore.issue_list_loaded ? (
             !isEmpty(ChartStore.filterIssueList) ? (
               <React.Fragment>
-                {ChartStore.filterIssueList.map((e,y) => (
+                {ChartStore.filterIssueList.map((e, y) => (
                   <div className="mb4" key={y}>
                     <a
                       className="no-underline"

@@ -5,7 +5,7 @@ import { formatDate } from '../utils/DateHelper'
 import isEmpty from 'lodash.isempty'
 import { Loading, NoData } from '../utils'
 
-const DataTaskList = ({idx, name, batch_name, start_date, end_date}) => {
+const DataTaskList = ({ idx, name, batch_name, start_date, end_date }) => {
   return (
     <div className="flex grey tl mb3" key={idx}>
       <div className="fl w-60">

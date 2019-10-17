@@ -11,7 +11,8 @@ module Charts
       bar_colors = ['red', 'blue', 'orange', 'purple', 'yellowgreen', 'mediumvioletred', 'cadetblue', 'dodgerblue', 'sienna', 'palevioletred', 'cornflowerblue']
       json = []
       facility_by_rooms = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
-      facility_by_rooms.group_by { |d| d[:purpose] }.each_with_index do |(k, v), i|
+      active_phases = Common::GrowPhase.active.pluck(:name).map(&:downcase)
+      facility_by_rooms.select { |v| active_phases.include?(v[:purpose].downcase) }.group_by { |d| d[:purpose] }.each_with_index do |(k, v), i|
         if Constants::ROOM_ONLY_SETUP.include?(k.downcase)
           total_capacity = 'ROOM_ONLY_SETUP'
           available_spots = 'ROOM_ONLY_SETUP'

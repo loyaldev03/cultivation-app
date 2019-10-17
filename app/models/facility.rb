@@ -14,7 +14,6 @@ class Facility
   field :square_foot, type: Float
 
   field :whitelist_ips, type: Array, default: []
-  field :shared_facility_ids, type: Array, default: []
 
   embeds_one :address, as: :addressable, class_name: 'Address'
   embeds_many :rooms, class_name: 'Room'

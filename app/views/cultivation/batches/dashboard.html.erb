@@ -49,7 +49,7 @@
 <%cost_permission = RoleCheck.call(@current_user, Constants::APP_MOD_COST).result[:read] == true %>
   <%Rails.logger.debug("COST PERMISSION#{cost_permission}")%>
   <%- if params[:facility_id] == "All" || params[:facility_id].blank? %>
-    <%= react_component 'manager_dashboard/ManagerDashboardApp', {cost_permission: cost_permission, batches: @batches, facilityId: current_shared_facility_ids.map{|x| x.to_s}} %>
+    <%= react_component 'manager_dashboard/ManagerDashboardApp', {cost_permission: cost_permission, batches: @batches, facilityId: current_user_facilities_ids.map{|x| x.to_s}} %>
   <%-else%>
     <%= react_component 'manager_dashboard/ManagerDashboardApp', {cost_permission: cost_permission, batches: @batches, facilityId: current_facility&.id.to_s} %>
   <%end%>

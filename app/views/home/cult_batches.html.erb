@@ -5,7 +5,7 @@
 <% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result[:read] == true %>
   <%= react_component 'cultivation/dashboards/BatchesDashboardApp',
     {
-      currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s),
+      currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s),
       currentTime: Time.current,
       batchesPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_BATCHES).result
     }

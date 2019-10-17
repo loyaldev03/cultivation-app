@@ -4,7 +4,7 @@
 <%= react_component 'facility_dashboard/FacilityDashboardApp',
   {
     defaultFacilityId: current_default_facility&.id.to_s,
-    currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s),
+    currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s),
     currentTime: Time.current,
   }
 %>

@@ -20,9 +20,13 @@ module Charts
             {"estimated_hours": {"$lte": 0}},
           ],
         }},
-        {"$count": 'unscheduled_tasks'},
+        {"$count": 'count'},
       ])
-      result = criteria.to_a[0]['unscheduled_tasks']
+      if criteria.to_a.any?
+        criteria.to_a[0]['count']
+      else
+        0
+      end
     end
   end
 end

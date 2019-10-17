@@ -86,6 +86,10 @@ Cannected
 ## Create new Cluster on MongoDB Atlas
 1. Select us-west-1 for California
 1. Select M10 for dedicated instance with 3 replica set nodes
+1. Create a new MongoDB User under Security > Database Access
+    - Create new Custom Role
+    - Follow existing role
+1. Click "CONNECT" button to get connection string
 
 ## Create AWS S3 bucket for client
 1. Create bucket - *e.g. mountain1.cannected.com*

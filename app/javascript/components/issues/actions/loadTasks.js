@@ -1,4 +1,5 @@
 import { httpGetOptions } from '../../utils/FetchHelper'
+import isEmpty from 'lodash.isempty'
 
 const loadTasks = (batchId, facilityId = '') => {
   let url = `/api/v1/batches/${batchId}/tasks`
@@ -14,7 +15,7 @@ const loadTasks = (batchId, facilityId = '') => {
       }))
     })
     .then(({ status, data }) => {
-      if (status >= 400 && !data && !data.data) {
+      if (status >= 400 || isEmpty(data) || isEmpty(data.data)) {
         return []
       } else {
         const options = data.data.map(x => {

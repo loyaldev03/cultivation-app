@@ -1,5 +1,5 @@
 import React from 'react'
-import { TempHomePerformer, ProgressBar } from '../utils'
+import { TempHomePerformer, ProgressBar, Loading } from '../utils'
 import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
@@ -139,7 +139,7 @@ export default class UnassignedTask extends React.Component {
             ))}
           </div>
         ) : (
-          <div>Loading ... </div>
+          <Loading />
         )}
       </React.Fragment>
     )

@@ -83,6 +83,10 @@ Cannected
 
 # New Client Setup
 
+## Create new Cluster on MongoDB Atlas
+1. Select us-west-1 for California
+1. Select M10 for dedicated instance with 3 replica set nodes
+
 ## Create AWS S3 bucket for client
 1. Create bucket - *e.g. mountain1.cannected.com*
 1. Add CORS configuration to the bucket

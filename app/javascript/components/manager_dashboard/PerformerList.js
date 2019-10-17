@@ -119,7 +119,7 @@ export default class UnassignedTask extends React.Component {
         </div>
         {ChartStore.performer_list_loaded ? (
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-            {ChartStore.performer_list.length > 0 ? 
+            {ChartStore.performer_list.length > 0 ? (
               <React.Fragment>
                 {ChartStore.performer_list.map(e => (
                   <div className="flex items-center">
@@ -140,9 +140,9 @@ export default class UnassignedTask extends React.Component {
                   </div>
                 ))}
               </React.Fragment>
-            :
+            ) : (
               <p class="lh-copy measure tc grey f4 i">No record found</p>
-            }
+            )}
           </div>
         ) : (
           <Loading />

@@ -72,6 +72,7 @@ class QueryLocations
         row_name: '$rooms.rows.name',
         row_code: '$rooms.rows.code',
         row_full_code: '$rooms.rows.full_code',
+        row_full_name: {"$concat": ['$rooms.name', '>', '$rooms.rows.name']},
         row_has_shelves: '$rooms.rows.has_shelves',
         row_has_trays: '$rooms.rows.has_trays',
         section_id: '$section.section_id',
@@ -114,6 +115,46 @@ class QueryLocations
 
     res = result.detect { |x| x[:tray_id] == location_id }
     return res[:tray_full_code] if res.present?
+  end
+
+  def get_location_name(location_id)
+    if !result || !location_id
+      return '--'
+    else
+      location_id = location_id.to_bson_id
+    end
+
+    res = result.detect { |x| x[:room_id] == location_id }
+    return get_full_name(res) if res.present?
+
+    res = result.detect { |x| x[:section_id] == location_id }
+    return get_full_name(res) if res.present?
+
+    res = result.detect { |x| x[:row_id] == location_id }
+    return get_full_name(res) if res.present?
+
+    res = result.detect { |x| x[:shelf_id] == location_id }
+    return get_full_name(res) if res.present?
+
+    res = result.detect { |x| x[:tray_id] == location_id }
+    return get_full_name(res) if res.present?
+  end
+
+  def get_full_name(res)
+    full_name = []
+    full_name << res[:room_name]
+    full_name << res[:row_name]
+    if res[:room_has_sections] == true
+      full_name << res[:section_code]
+    end
+    if res[:row_has_shelves] == true
+      full_name << res[:shelf_code]
+    end
+    if res[:row_has_trays] == true
+      full_name << res[:tray_code]
+    end
+
+    return full_name.join(' > ')
   end
 
   def query_trays(location_id)

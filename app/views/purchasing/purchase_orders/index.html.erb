@@ -38,31 +38,34 @@
               Vendor Invoices
             </a>
             <div class="mt0 ba b--light-grey pa3">
-              <%= render 'layouts/right_sidebar' %>
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
-                <thead>
-                  <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purchase Order No</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Purchase Order Date</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Status</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Completed Date</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @records.try(:each_with_index) do |f, i| %>
-                    <tr data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="dim pointer">
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.purchase_order_no) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.purchase_order_date.try(:strftime, '%d-%m-%Y')) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.status) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.completed_date.try(:strftime, '%d-%m-%Y')) %></td>
-                      <td class="bb b--black-20 pv3 tc"></td>
+              <div class="bg-white">
+                <table class="std-table pv2 ph3 mt1 w-100">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Purchase Order No</th>
+                      <th>Purchase Order Date</th>
+                      <th>Status</th>
+                      <th>Completed Date</th>
+                      <%# <th></th> %>
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody class="lh-copy">
+                    <% @records.try(:each_with_index) do |f, i| %>
+                      <tr class="pointer">
+                        <td data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="tl pv2 ph3 gray"><%= i+1 %></td>
+                        <td data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.purchase_order_no) %></td>
+                        <td data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.purchase_order_date.try(:strftime, '%d-%m-%Y')) %></td>
+                        <td data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.status) %></td>
+                        <td data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.completed_date.try(:strftime, '%d-%m-%Y')) %></td>
+                        <%# <td class="tr pv2 ph3"> %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ module Charts
         {"$match": {"facility_strain_id": {"$in": strains}}},
         {"$group": {
           "_id": '$location_purpose',
-          "name": {"$first": {"$ifNull": ['$location_purpose', 'No Group']}},
+          "name": {"$first": {"$ifNull": ['$location_purpose', 'No Room']}},
           "value": {"$sum": 1},
         }},
       ])

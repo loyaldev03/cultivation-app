@@ -72,7 +72,6 @@ class QueryLocations
         row_name: '$rooms.rows.name',
         row_code: '$rooms.rows.code',
         row_full_code: '$rooms.rows.full_code',
-        row_full_name: {"$concat": ['$rooms.name', '>', '$rooms.rows.name']},
         row_has_shelves: '$rooms.rows.has_shelves',
         row_has_trays: '$rooms.rows.has_trays',
         section_id: '$section.section_id',

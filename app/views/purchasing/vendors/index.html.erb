@@ -39,40 +39,41 @@
               Vendor Invoices
             </a>
             <div class="mt0 ba b--light-grey pa3">
-              <%= render 'layouts/right_sidebar' %>
-              <div class="tr mb3">
-
-                <a href="#0" data-toggle-right="<%= new_purchasing_vendor_path %>" class="btn btn--primary">
+              <div class="w-100 tr mb3">
+                <a href="#0" data-toggle-right="<%= new_purchasing_vendor_path %>" class='btn btn--primary'>
                   + Add New
                 </a>
               </div>
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
-                <thead>
-                  <tr class="bg-light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">#</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Name</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">State License Num</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">State License Expiration Date</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Location License Expiration Date</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc">Location License Num</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey ttu tc"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @records.try(:each_with_index) do |f, i| %>
-                    <tr data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="dim pointer">
-                      <td class="bb b--black-20 pv3 tc gray"><%= i+1 %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.name) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.state_license_num) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.state_license_expiration_date.try(:strftime, '%d-%m-%Y')) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.location_license_expiration_date.try(:strftime, '%d-%m-%Y')) %></td>
-                      <td class="bb b--black-20 pv3 tc"><%= blank(f.location_license_num) %></td>
-                      <td class="bb b--black-20 pv3 tc">
-                      </td>
+              <div class="bg-white">
+                <table class="std-table pv2 ph3 mt1 w-100">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>State License Num</th>
+                      <th>State License Expiration Date</th>
+                      <th>Location License Expiration Date</th>
+                      <th>Location License Num</th>
+                      <%# <th></th> %>
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody class="lh-copy">
+                    <% @records.try(:each_with_index) do |f, i| %>
+                      <tr class="pointer">
+                        <td data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="tl pv2 ph3 gray"><%= i+1 %></td>
+                        <td data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.name) %></td>
+                        <td data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.state_license_num) %></td>
+                        <td data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.state_license_expiration_date.try(:strftime, '%d-%m-%Y')) %></td>
+                        <td data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.location_license_expiration_date.try(:strftime, '%d-%m-%Y')) %></td>
+                        <td data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="tl pv2 ph3"><%= blank(f.location_license_num) %></td>
+                        <%# <td class="tr pv2 ph3"> %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

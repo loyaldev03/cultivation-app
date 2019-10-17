@@ -14,7 +14,11 @@ module Charts
         }},
         {"$count": 'count'},
       ])
-      criteria.to_a[0]['count']
+      if criteria.to_a.any?
+        criteria.to_a[0]['count']
+      else
+        0
+      end
     end
   end
 end

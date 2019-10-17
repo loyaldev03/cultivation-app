@@ -45,7 +45,7 @@ class WorkerDashboardApp extends React.Component {
       <React.Fragment>
         <OverallInfo />
         <StatusTile date={date} />
-        <DashboardPaymentDetail />
+        {/* <DashboardPaymentDetail /> */}
         {this.renderSlidePanel()}
       </React.Fragment>
     )

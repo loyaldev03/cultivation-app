@@ -3,6 +3,7 @@ import { HorizontalBar } from 'react-chartjs-2'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
+import { Loading } from '../utils';
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -199,7 +200,7 @@ export default class TestResultList extends React.Component {
             />
           </div>
         ) : (
-          <span>Loading ...</span>
+          <Loading/>
         )}
       </div>
     )

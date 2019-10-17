@@ -1,9 +1,10 @@
 import React from 'react'
-import { TempHomeUnassignTask } from '../utils'
+import { TempHomeUnassignTask, Loading } from '../utils'
 import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import WorkerCapacityChart from './WorkerCapacityChart'
+import { NoData } from '../utils/NoRecordFound';
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -71,7 +72,7 @@ export default class StaffCapacity extends React.Component {
           <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
         ) : (
           <div>
-            {this.props.batches.length > 0 ? 'loading...' : 'No active batches'}
+            {this.props.batches.length > 0 ? <Loading/> : <NoData/>}
           </div>
         )}
       </React.Fragment>

@@ -3,6 +3,7 @@ import Tippy from '@tippy.js/react'
 import { Bar } from 'react-chartjs-2'
 import PlantStore from '../inventory/plant_setup/plant_charts/PlantStore'
 import { observer } from 'mobx-react'
+import { Loading } from '../utils';
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -121,7 +122,7 @@ export default class BatchDistribution extends React.Component {
             <Bar data={PlantStore.plantDistribution} options={options} />
           </div>
         ) : (
-          'loading...'
+          <Loading/>
         )}
       </React.Fragment>
     )

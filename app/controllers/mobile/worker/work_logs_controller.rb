@@ -13,8 +13,10 @@ class Mobile::Worker::WorkLogsController < ApplicationController
 
   def clock_out # sign out for the day
     work_log = current_user.work_logs.last
-    work_log.update(end_time: Time.current)
-    cmd = Common::RemoveOnesignalNotification.call(current_user, one_signal_id: work_log.one_signal_id) if work_log.one_signal_id
+    if work_log
+      work_log.update(end_time: Time.current)
+      cmd = Common::RemoveOnesignalNotification.call(current_user, one_signal_id: work_log.one_signal_id) if work_log.one_signal_id
+    end
     current_user.update(work_log_status: 'stopped')
     sign_out(@user)
     redirect_to mobile_path

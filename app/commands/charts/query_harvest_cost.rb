@@ -29,7 +29,7 @@ module Charts
         {"$unwind": {path: '$batch', preserveNullAndEmptyArrays: true}},
         {"$addFields": {"cost": {"$cond": [{"$gt": [{"$toDecimal": '$total_wet_weight'}, 0]}, {"$divide": [{"$add": ['$batch.actual_labor_cost', '$batch.actual_material_cost']}, {"$toDecimal": '$total_wet_weight'}]}, 0.0]}}},
         {"$project": {
-          "id": {"$toString": '$_id'},
+          "id": '$_id',
           "harvest_batch": '$harvest_name',
           "cost": {"$toDouble": '$cost'},
         }},

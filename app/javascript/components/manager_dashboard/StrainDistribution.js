@@ -154,7 +154,7 @@ export default class StrainDistribution extends React.Component {
     return (
       <React.Fragment>
         {this.state.loading && <Loading />}
-        {this.state.nullData && <NoData text="No data available" />}
+        {this.state.nullData && <NoData />}
         <div id="treemapStrain" />
       </React.Fragment>
     )

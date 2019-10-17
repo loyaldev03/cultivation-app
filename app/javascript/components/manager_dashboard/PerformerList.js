@@ -17,7 +17,7 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 }
 
 @observer
-export default class UnassignedTask extends React.Component {
+export default class PerformerList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -121,8 +121,8 @@ export default class UnassignedTask extends React.Component {
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
             {ChartStore.performer_list.length > 0 ? (
               <React.Fragment>
-                {ChartStore.performer_list.map(e => (
-                  <div className="flex items-center">
+                {ChartStore.performer_list.map((e, y) => (
+                  <div className="flex items-center" key={y}>
                     <h1 className="f6 fw6 w-20 dark-grey">{e.batch_name}</h1>
                     <ProgressBar
                       percent={e.percentage}

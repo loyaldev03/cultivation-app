@@ -17,6 +17,28 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
     </a>
   )
 }
+
+const DataList = ({
+  idx,
+  name,
+  actual_hours,
+  actual_labor_cost,
+  cost_permission
+}) => {
+  return (
+    <div className="flex grey tl f5 mb3" key={idx}>
+      <div className="fl w-50">{name}</div>
+      <div className="fl tc w-25">{decimalFormatter.format(actual_hours)}</div>
+      {cost_permission && cost_permission == true ? (
+        <div className="fl tc w-25">
+          {decimalFormatter.format(actual_labor_cost)}
+        </div>
+      ) : (
+        ''
+      )}
+    </div>
+  )
+}
 @observer
 export default class HighestCostTaskList extends React.Component {
   constructor(props) {
@@ -50,21 +72,25 @@ export default class HighestCostTaskList extends React.Component {
               <div className="bg-white f6 flex">
                 <div className="db shadow-4">
                   <MenuButton
+                    key="highestcostAll"
                     text="All"
                     className=""
                     onClick={() => this.onChangeMonthly('all')}
                   />
                   <MenuButton
+                    key="highestcostYear"
                     text="This year"
                     className=""
                     onClick={() => this.onChangeMonthly('this_year')}
                   />
                   <MenuButton
+                    key="highestcostMonth"
                     text="This month"
                     className=""
                     onClick={() => this.onChangeMonthly('this_month')}
                   />
                   <MenuButton
+                    key="highestcostWeek"
                     text="This week"
                     className=""
                     onClick={() => this.onChangeMonthly('this_week')}
@@ -85,72 +111,44 @@ export default class HighestCostTaskList extends React.Component {
         </div>
         {ChartStore.unassigned_task_loaded ? (
           !isEmpty(ChartStore.data_highest_cost_task.tasks) ? (
-            <table>
-              <tbody>
-                <tr className="grey tl">
-                  <th>
-                    <div className="mb2">Task Name</div>
-                  </th>
-                  <th>
-                    <div className="mb2">Average Time (hrs)</div>
-                  </th>
-                  {cost_permission && cost_permission == true ? (
-                    <th>
-                      <div className="mb2 ml4">End Date</div>
-                    </th>
-                  ) : (
-                    ''
+            <React.Fragment>
+              <div className="flex grey b tl mb2">
+                <div className="fl w-50">Task Name</div>
+                <div className="fl w-25 tc">Average Time (hrs)</div>
+                {cost_permission && cost_permission == true ? (
+                  <div className="fl w-25 tc">Average Time ($)</div>
+                ) : (
+                  ''
+                )}
+              </div>
+              {ChartStore.data_highest_cost_task.tasks.map((e, y) => (
+                <DataList
+                  key={y}
+                  idx={y}
+                  name={e.name}
+                  actual_hours={e.actual_hours}
+                  actual_labor_cost={e.actual_labor_cost}
+                  cost_permission={cost_permission}
+                />
+              ))}
+              <div className="flex b dark-grey mt4 mb3">
+                <div className="fl w-50 ">total</div>
+                <div className="fl w-25 tc">
+                  {decimalFormatter.format(
+                    ChartStore.data_highest_cost_task.total_sum_actual_hours
                   )}
-                </tr>
-                <React.Fragment>
-                  {ChartStore.data_highest_cost_task.tasks.map(u => (
-                    <tr className="grey mb3" key={u.id}>
-                      <td className="w-50">
-                        <div className="mb3">{u.name}</div>
-                      </td>
-                      <td className="f5">
-                        <div className="mb3 tc mr3">
-                          {decimalFormatter.format(u.actual_hours)}
-                        </div>
-                      </td>
-                      {cost_permission && cost_permission == true ? (
-                        <td className="f5">
-                          <div className="mb3 tc ml4">
-                            {decimalFormatter.format(u.actual_labor_cost)}
-                          </div>
-                        </td>
-                      ) : (
-                        ''
-                      )}
-                    </tr>
-                  ))}
-                  <tr className="pa2 dark-grey">
-                    <td>
-                      <div className="b mb2 mt2">Total</div>
-                    </td>
-                    <td className="b">
-                      <div className="mb3 tc mr3">
-                        {decimalFormatter.format(
-                          ChartStore.data_highest_cost_task
-                            .total_sum_actual_hours
-                        )}
-                      </div>
-                    </td>
-                    {cost_permission && cost_permission == true ? (
-                      <td className="b">
-                        <div className="mb3 tc ml4">
-                          {decimalFormatter.format(
-                            ChartStore.data_highest_cost_task.total_actual_cost
-                          )}
-                        </div>
-                      </td>
-                    ) : (
-                      ''
+                </div>
+                {cost_permission && cost_permission == true ? (
+                  <div className="fl w-25 tc">
+                    {decimalFormatter.format(
+                      ChartStore.data_highest_cost_task.total_actual_cost
                     )}
-                  </tr>
-                </React.Fragment>
-              </tbody>
-            </table>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+            </React.Fragment>
           ) : (
             <NoData />
           )

@@ -8,7 +8,7 @@ import isEmpty from 'lodash.isempty'
 import { Loading, NoData } from '../utils'
 
 @observer
-export default class UnassignedTask extends React.Component {
+export default class IssueList extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -31,8 +31,8 @@ export default class UnassignedTask extends React.Component {
           {ChartStore.issue_list_loaded ? (
             !isEmpty(ChartStore.filterIssueList) ? (
               <React.Fragment>
-                {ChartStore.filterIssueList.map(e => (
-                  <div className="mb4">
+                {ChartStore.filterIssueList.map((e, y) => (
+                  <div className="mb4" key={y}>
                     <a
                       className="no-underline"
                       href={`/cultivation/batches/${

@@ -21,12 +21,6 @@ class ApplicationController < ActionController::Base
     Rack::MiniProfiler.authorize_request if Rails.env.development?
   end
 
-  def verify_facility_setup
-    unless params[:controller] == 'home' && params[:action] == 'index'
-      redirect_to first_setup_path if !has_default_facility?
-    end
-  end
-
   def configure_permitted_parameters
     # Permit the `first_name` & `last_name` parameter along with the other sign up parameters.
     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :timezone])

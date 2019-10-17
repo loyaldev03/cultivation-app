@@ -33,26 +33,29 @@ module Charts
           {"$sort": {"max_dry_weight": -1}},
 
         ]).to_a
+        if max_result.present?
+          batches_json = Cultivation::Batch.collection.aggregate([
+            {"$lookup": {
+              from: 'inventory_harvest_batches',
+              localField: '_id',
+              foreignField: 'cultivation_batch_id',
+              as: 'harvest_batch',
+            }},
+            {"$unwind": {path: '$harvest_batch'}},
+            {"$project": {
+              "batch_id": '$_id',
+              "batch_name": '$name',
+              "total_dry_weight": {"$sum": '$harvest_batch.total_dry_weight'},
+              "harvest_name": '$harvest_batch.harvest_name',
+              "max_dry_weight": {"$max": {"$sum": '$harvest_batch.total_dry_weight'}},
+              "percentage": {"$multiply": [{"$divide": [{"$sum": '$harvest_batch.total_dry_weight'}, max_result[0]['max_dry_weight']]}, 100]},
+            }},
+            {"$sort": {"total_dry_weight": order}},
 
-        batches_json = Cultivation::Batch.collection.aggregate([
-          {"$lookup": {
-            from: 'inventory_harvest_batches',
-            localField: '_id',
-            foreignField: 'cultivation_batch_id',
-            as: 'harvest_batch',
-          }},
-          {"$unwind": {path: '$harvest_batch'}},
-          {"$project": {
-            "batch_id": '$_id',
-            "batch_name": '$name',
-            "total_dry_weight": {"$sum": '$harvest_batch.total_dry_weight'},
-            "harvest_name": '$harvest_batch.harvest_name',
-            "max_dry_weight": {"$max": {"$sum": '$harvest_batch.total_dry_weight'}},
-            "percentage": {"$multiply": [{"$divide": [{"$sum": '$harvest_batch.total_dry_weight'}, max_result[0]['max_dry_weight']]}, 100]},
-          }},
-          {"$sort": {"total_dry_weight": order}},
-
-        ]).to_a
+          ]).to_a
+        else
+          batches_json = []
+        end
       else
         batches_json = Cultivation::Batch.collection.aggregate([
           {"$project": {

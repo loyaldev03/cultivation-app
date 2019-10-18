@@ -38,7 +38,7 @@ module Cultivation
         update_root_siblings(task, batch_tasks, days_diff)
         # Save if no errors
         detect_cascade_changes(task, batch_tasks)
-        task.assignable = task.have_children(batch_tasks)
+        task.assignable = task.have_children?(batch_tasks)
         task.modifier = current_user
         task.facility = batch.facility
         task.save! if errors.empty?

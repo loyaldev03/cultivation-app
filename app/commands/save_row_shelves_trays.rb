@@ -46,8 +46,10 @@ class SaveRowShelvesTrays
     s_count ||= 1 # Default to 1 Shelf if undefined
     t_count = row.wz_trays_count
     t_count ||= 1 # Default to single Tray if undefined
+    is_use_trays = row.has_trays && row.wz_trays_count&.positive?
     row.shelves = Array.new(s_count) do |i|
       shelf = row.shelves.build
+      shelf.is_use_trays = is_use_trays
       shelf.code = NextFacilityCode.call(:shelf, nil, i + 1).result
       shelf.full_code = Constants.generate_full_code(facility, room, row, shelf)
       generate_trays(facility, room, row, shelf, t_count)

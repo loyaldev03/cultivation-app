@@ -196,15 +196,9 @@ export default class QuickSearchBox extends React.Component {
                         </span>
                       </div>
                       <div className="flex items-center f6 mt3">
-                        <span className="w-40 dark-grey">Location Type </span>
-                        <span className="ml0 pl3 w-60">
-                          {plantShow.location_type || '-'}
-                        </span>
-                      </div>
-                      <div className="flex items-center f6 mt3">
                         <span className="w-40 dark-grey">Location Origin </span>
                         <span className="ml0 pl3 w-60">
-                          {plantShow.location_name || '-'}
+                          {plantShow.location_full_path || '-'}
                         </span>
                       </div>
                       <div className="flex items-center f6 mt3">

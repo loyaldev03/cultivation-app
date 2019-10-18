@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { PeopleUserListWidget, Loading, DefaultAvatar } from '../utils'
+import { PeopleUserListWidget, Loading, DefaultAvatar, NoData } from '../utils'
 import LetterAvatar from '../utils/LetterAvatar'
 import PeopleDashboardStore from './PeopleDashboardStore'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -226,7 +226,7 @@ class CompletingTaskWidget extends React.Component {
               </div>
             ))
           ) : (
-            'No Record Found'
+            <NoData />
           )
         ) : (
           <Loading />

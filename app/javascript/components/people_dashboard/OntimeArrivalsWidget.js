@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { PeopleUserListWidget } from '../utils'
+import { PeopleUserListWidget, Loading, NoData, DefaultAvatar } from '../utils'
 import LetterAvatar from '../utils/LetterAvatar'
 import PeopleDashboardStore from './PeopleDashboardStore'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -126,7 +126,7 @@ class OntimeArrivalsWidget extends React.Component {
                             onClick={() => this.onChangeRoles(d)}
                           />
                         ))
-                      : 'loading...'}
+                      : <Loading/>}
                   </div>
                 </div>
               }
@@ -175,12 +175,12 @@ class OntimeArrivalsWidget extends React.Component {
                   2
                 )} %`
               : 'Average: 0 %'
-            : 'Loading..'}
+            : ''}
         </div>
         {PeopleDashboardStore.ontime_arrival_loaded
           ? PeopleDashboardStore.data_ontime_arrival.data.length != 0
             ? PeopleDashboardStore.data_ontime_arrival.data.map((e, i) => (
-                <div className="flex justify-between mb3 pt2" key={e.user.id}>
+                <div className="flex justify-between mb3 pt2" key={`section_user_${i}`}>
                   <div className="flex items-center w-40">
                     {e.user.photo_url ? (
                       <div>
@@ -210,21 +210,20 @@ class OntimeArrivalsWidget extends React.Component {
                       <div className="f6 fw6 grey">{e.roles}</div>
                     </span>
                   </div>
-                  <div className="flex items-center w-60">
+                  <div className="flex items-center w-60" key={i}>
                     <ProgressBar
-                      key={i}
                       percent={e.percentage}
                       height={10}
                       barColor={this.getProgressBarColor(e.percentage)}
                     />
                     <span className="f6 fw6 dark-grey ml2 w-20">
-                      {e.percentage} %
+                      {e.percentage.toFixed(2)} %
                     </span>
                   </div>
                 </div>
               ))
-            : 'No Record Found'
-          : 'Loading...'}
+            : <NoData/>
+          : <Loading/>}
       </React.Fragment>
     )
   }

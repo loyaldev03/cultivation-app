@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { PeopleUserListWidget } from '../utils'
+import { PeopleUserListWidget, Loading, DefaultAvatar } from '../utils'
 import LetterAvatar from '../utils/LetterAvatar'
 import PeopleDashboardStore from './PeopleDashboardStore'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -126,7 +126,7 @@ class CompletingTaskWidget extends React.Component {
                             onClick={() => this.onChangeRoles(d)}
                           />
                         ))
-                      : 'loading...'}
+                      : <Loading/>}
                   </div>
                 </div>
               }
@@ -173,7 +173,7 @@ class CompletingTaskWidget extends React.Component {
             ? `Average: ${PeopleDashboardStore.data_completing_task.average.toFixed(
                 2
               )} %`
-            : 'Loading..'}
+            : <Loading/>}
         </div>
         {PeopleDashboardStore.completing_task_loaded
           ? PeopleDashboardStore.data_completing_task.data.length != 0
@@ -222,7 +222,7 @@ class CompletingTaskWidget extends React.Component {
                 </div>
               ))
             : 'No Record Found'
-          : 'Loading...'}
+          : <Loading/>}
       </React.Fragment>
     )
   }

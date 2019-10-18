@@ -5,6 +5,7 @@ import Tippy from '@tippy.js/react'
 import PeopleDashboardStore from './PeopleDashboardStore'
 import 'chartjs-plugin-labels'
 import 'chartjs-plugin-doughnutlabel'
+import { Loading } from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -145,7 +146,7 @@ export default class HeadCountWidget extends React.Component {
             }}
           />
         ) : (
-          'loading...'
+          <Loading/>
         )}
       </React.Fragment>
     )

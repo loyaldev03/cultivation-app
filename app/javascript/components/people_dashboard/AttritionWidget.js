@@ -5,6 +5,7 @@ import PeopleDashboardStore from './PeopleDashboardStore'
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
 import 'chartjs-plugin-labels'
+import { Loading } from '../utils'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -193,7 +194,7 @@ export default class AttritionWidget extends React.Component {
         {PeopleDashboardStore.attrition_loaded ? (
           <Bar data={PeopleDashboardStore.attritionCount} options={options} />
         ) : (
-          'loading...'
+          <Loading/>
         )}
       </React.Fragment>
     )

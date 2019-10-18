@@ -120,6 +120,7 @@ class PeopleDashboardApp extends React.Component {
         <div className="flex justify-between mb3">
           <div className="w-50">
             <div
+              id="skill_chart"
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: '400px' }}
             >

@@ -1,6 +1,6 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { PeopleReminderWidget } from '../utils'
+import { PeopleReminderWidget, Loading } from '../utils'
 import PeopleDashboardStore from './PeopleDashboardStore'
 
 @observer
@@ -41,7 +41,7 @@ class ReminderWidget extends React.Component {
             </div>
           </div>
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

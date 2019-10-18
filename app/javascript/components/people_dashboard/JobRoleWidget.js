@@ -1,6 +1,6 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { PeopleJobRoleWidget } from '../utils'
+import { PeopleJobRoleWidget, Loading } from '../utils'
 import PoepleDashboardStore from './PeopleDashboardStore'
 import { toJS } from 'mobx'
 import 'chartjs-plugin-labels'
@@ -147,7 +147,7 @@ class JobRoleWidget extends React.Component {
             ))}
           </div>
         ) : (
-          'Loading..'
+          <Loading/>
         )}
       </React.Fragment>
     )

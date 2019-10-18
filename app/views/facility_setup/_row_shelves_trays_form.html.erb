@@ -45,19 +45,7 @@
       </div>
     </div>
 
-    <% if !trays.blank? && trays.size == 1 %>
-      <% trays.each_with_index do |tray,i| %>
-        <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
-        <%= hidden_field_tag "shelf_trays_info[trays][][code]", tray.code, id: nil %>
-        <label class="subtitle-2 grey db mb1">Capacity</label>
-        <%= number_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1" %>
-        <label class="subtitle-2 grey db mt3 mb1">Container Type</label>
-        <%= select_tag "shelf_trays_info[trays][][capacity_type]",
-          options_for_select(Constants::TRAY_CAPACITY_TYPES.collect {|p| [ p[:name], p[:code]]}, tray.capacity_type),
-          class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1 w-60"
-        %> 
-      <% end %>
-    <% else %>
+    <% if !trays.blank? && is_use_trays %>
       <div class="mt4 w-100">
         <h3 class="subtitle-2 grey db mt0 mb3">Tables Details</h3>
         <table class="w-100">
@@ -115,7 +103,19 @@
         </table>
       </div>
     <% end %>
-    
+    <% if !trays.blank? && !is_use_trays %>
+      <% trays.each_with_index do |tray,i| %>
+        <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
+        <%= hidden_field_tag "shelf_trays_info[trays][][code]", tray.code, id: nil %>
+        <label class="subtitle-2 grey db mb1">Capacity</label>
+        <%= number_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1" %>
+        <label class="subtitle-2 grey db mt3 mb1">Container Type</label>
+        <%= select_tag "shelf_trays_info[trays][][capacity_type]",
+          options_for_select(Constants::TRAY_CAPACITY_TYPES.collect {|p| [ p[:name], p[:code]]}, tray.capacity_type),
+          class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1 w-60"
+        %>
+      <% end %>
+    <% end %>
     <%= link_to generate_tray_path(
         facility_id: facility_id,
         room_id: room_id,
@@ -130,7 +130,7 @@
       %>
       <div class="flex flex-row items-center">
         <i class="material-icons orange md-18">add_circle_outline</i>
-        <span class="ml2 orange subtitle-2">Add a New Table</span>
+        <span class="ml2 orange subtitle-2">Add table to shelf</span>
       </div>
     <% end %>
 

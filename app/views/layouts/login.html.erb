@@ -2,9 +2,9 @@
 <html>
   <%= render "layouts/head", include_turbolink: true %>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>You need to enable JavaScript to run this app. 420</noscript>
+    <%= render 'toast' %>
     <div class="w-100 min-vh-100 bg-white flex flex-column justify-center items-center">
-      <%= flash_messages %>
       <%= yield %>
     </div>
     <%= render "layouts/before_body_end" %>

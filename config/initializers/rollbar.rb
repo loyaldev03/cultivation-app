@@ -17,7 +17,7 @@ Rollbar.configure do |config|
   end
 
   # Disable Rollbar in other environments
-  if ENV["ROLLBAR_ENV"] != "staging" || ENV["ROLLBAR_ENV"] != "legionofbloom"
+  if ENV["ROLLBAR_ENV"] != "staging" && ENV["ROLLBAR_ENV"] != "legionofbloom"
     config.enabled = false
   end
 

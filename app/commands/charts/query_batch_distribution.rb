@@ -6,60 +6,98 @@ module Charts
       @user = current_user
       @args = args
       @facility_id = @args[:facility_id].split(',')
+      date = Time.current
+
+      @range = args[:range].humanize.downcase
+
+      if @range == 'this week'
+        @date_st = date.beginning_of_week
+        @date_nd = date.end_of_week
+      elsif @range == 'this month'
+        @date_st = date.beginning_of_month
+        @date_nd = date.end_of_month
+      elsif @range == 'this year'
+        @date_st = date.beginning_of_year
+        @date_nd = date.end_of_year
+      end
     end
 
     def call
-      date = Time.current
-      range = @args[:range].humanize.downcase
-
-      if resource_shared?
-        batches_with_facility = Cultivation::Batch.in(facility_id: active_facility_ids).includes(:plants)
-      else
-        batches_with_facility = Cultivation::Batch.in(facility_id: @facility_id).includes(:plants)
+      get_phases = Common::GrowPhase.where(is_active: true).pluck(:name) - ['mother', 'storage', 'vault']
+      ordered_phases = []
+      Constants::FACILITY_ROOMS_ORDER.each do |phase|
+        ordered_phases << get_phases.detect { |w| w == phase }
       end
 
-      phases = Constants::FACILITY_ROOMS_ORDER - ['mother', 'storage', 'vault']
-      if (range == 'this week')
-        batches = batches_with_facility.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)
-      elsif (range == 'this year')
-        batches = batches_with_facility.where(:created_at.gt => date.beginning_of_year, :created_at.lt => date.end_of_year)
-      elsif (range == 'this month')
-        batches = batches_with_facility.where(:created_at.gt => date.beginning_of_month, :created_at.lt => date.end_of_month)
-      else
-        batches = batches_with_facility.all
-      end
-      total_batches = batches_with_facility.in(
-        status: [
-          Constants::BATCH_STATUS_SCHEDULED,
-          Constants::BATCH_STATUS_ACTIVE,
-        ],
-      )
+      batch_plants = Cultivation::Batch.collection.aggregate([
+                                                               match_facility,
+                                                               {"$match": {"status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
+                                                               {"$match": {"current_growth_stage": {"$in": get_phases}}},
+                                                               match_date,
+                                                               {"$group": {_id: '$current_growth_stage', phase: {"$first": '$current_growth_stage'}, plant_count: {"$sum": '$quantity'}, batch_count: {"$sum": 1}}},
+                                                               {"$project": {
+                                                                 "_id": 0,
+                                                                 "phase": 1,
+                                                                 "plant_count": 1,
+                                                                 "batch_count": 1,
+                                                               }},
+                                                             ])
+
       json_array = []
-      total_batches = 0
-      total_plant = 0
-      phases.each do |phase|
-        batch_phase = batches.select { |a| a.current_growth_stage == phase }
-        count = 0
-        total_batches += batch_phase.count
-        batch_phase.each do |batch|
-          count += batch.plants.count
+      ordered_phases.compact.each do |phase|
+        phase_exist = batch_plants.detect { |x| x[:phase] == phase }
+        if phase_exist.present?
+          json_array << batch_plants.detect { |x| x[:phase] == phase }
+        else
+          json_array << {
+            phase: phase,
+            plant_count: 0,
+            batch_count: 0,
+          }
         end
-        total_plant += count
-        json_array << {
-          phase: phase.capitalize,
-          batch_count: batch_phase.count,
-          plant_count: count,
-        }
       end
-      {
-        total_plant: total_plant,
-        total_batches: total_batches,
-        query_batches: json_array,
+
+      all_counts = {
+        total_plant: batch_plants.map { |x| x[:plant_count] }.sum,
+        total_batches: batch_plants.map { |x| x[:batch_count] }.sum,
+        query_batches: json_array.compact,
       }
+
+      all_counts
+      #ordered_phases.compact
+
+    end
+
+    def match_facility
+      if resource_shared?
+        {"$match": {"facility_id": {"$in": active_facility_ids}}}
+      else
+        {"$match": {"facility_id": {"$in": @facility_id.map(&:to_bson_id)}}}
+      end
+    end
+
+    def match_date
+      if @date_st.present? && @date_nd.present?
+        {'$match': {'$and': [
+          {'c_at': {'$gte': @date_st}},
+          {'c_at': {'$lt': @date_nd}},
+        ]}}
+      else
+        {'$match': {}}
+      end
     end
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
+    end
+
+    def active_phase?(phase)
+      ph = Common::GrowPhase.find_by(name: phase)
+      if ph.present?
+        return ph&.is_active
+      else
+        return false
+      end
     end
 
     def active_facility_ids

@@ -34,13 +34,14 @@ class ChartStore {
   @observable schedule_date_range_loaded = false
   @observable performer_list_loaded = false
   @observable batch_test_result_loaded = false
+  @observable isLoading = false
   @observable filter = ''
 
   @action
   async cultivationInfo(facilityId, period) {
     this.isLoading = true
     this.cultivation_info_loaded = false
-    const url = `/api/v1/dashboard_charts/cultivation_info?facility_id=${facilityId}&period="${period}`
+    const url = `/api/v1/dashboard_charts/cultivation_info?facility_id=${facilityId}&period=${period}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -52,6 +53,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -71,26 +73,28 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
   @action
   async unassignedTask(facility_id) {
     this.isLoading = true
-    this.unassigned_task = false
-    const url = `/api/v1/dashboard_charts/unassigned_task?facility_id=${facility_id}`
+    this.unassigned_task_loaded = false
+    const url = `/api/v1/dashboard_charts/unassigned_task?facility_id=${facility_id}&limit=25`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
         this.data_unassigned_task = response
-        this.unassigned_task = true
+        this.unassigned_task_loaded = true
       } else {
         this.data_unassigned_task = []
-        this.unassigned_task = false
+        this.unassigned_task_loaded = false
       }
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -110,6 +114,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -129,6 +134,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -165,6 +171,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -214,6 +221,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -252,6 +260,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -271,6 +280,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -308,6 +318,7 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 }

@@ -6,7 +6,6 @@ class FacilitySetupController < ApplicationController
 
   # GET new facility - basic info form page - step 1
   def new
-    toast
     onboarding_check_status
     @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     render 'facility_setup/step1'
@@ -392,27 +391,19 @@ class FacilitySetupController < ApplicationController
   end
 
   def whitelist_ip
-    session[:toast] = true
     @facility = Facility.find(params[:facility_id])
     public_ip = request.remote_ip
     if @facility.whitelist_ips.include? (public_ip) #if current ip doesnt exist in array
-      session[:message] = 'Public Ip address existed in whitelist record'
+      flash[:error] = 'Public Ip address existed in whitelist record'
     else
       @facility.whitelist_ips << public_ip
       @facility.save
-      session[:message] = 'Public Ip Address added into whitelist record'
+      flash[:notice] = 'Public Ip Address added into whitelist record'
     end
     redirect_to facility_setup_new_path(facility_id: params[:facility_id])
   end
 
   private
-
-  def toast
-    @message = session[:message]
-    @toast = session[:toast]
-    session[:message] = nil
-    session[:toast] = false
-  end
 
   def set_home_status
     @home = HomeSetupStatus.call(current_facility).result

@@ -10,7 +10,7 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def mothers
-    facilities = params[:facility_id] == 'All' ? current_shared_facility_ids.map { |x| x.to_s } : current_facility&.id.to_s
+    facilities = params[:facility_id] == 'All' ? current_user_facilities_ids.map { |x| x.to_s } : current_facility&.id.to_s
     @facility_strains = Inventory::QueryFacilityStrains.call(facilities).result
     if params[:onboarding_type].present?
       current_facility.update_onboarding('ONBOARDING_ACTIVE_PLANTS')
@@ -52,7 +52,7 @@ class Inventory::PlantsController < ApplicationController
 
   def load_batches
     if resource_shared?
-      facilities = params[:facility_id] == 'All' ? current_shared_facility_ids.map { |x| x.to_s } : current_facility&.id.to_s
+      facilities = params[:facility_id] == 'All' ? current_user_facilities_ids.map { |x| x.to_s } : current_facility&.id.to_s
       cultivation_batches = Cultivation::Batch.in(facility_id: facilities).includes(:facility_strain, :tasks)
     else
       facility_id = current_facility&.id.to_s

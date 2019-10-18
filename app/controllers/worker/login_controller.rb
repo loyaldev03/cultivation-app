@@ -2,6 +2,7 @@ class Worker::LoginController < ApplicationController
   layout 'worker_login'
   skip_before_action :authenticate_user!
   before_action :check_ip_whitelist
+  before_action :check_if_logged_in
 
   def index
     if @ip_included
@@ -15,7 +16,7 @@ class Worker::LoginController < ApplicationController
         end
         @users = @users.order_by(last_sign_in_at: :asc) if params[:filter] == 'last_login'
         @users = @users.order_by(first_name: :asc) if params[:filter] == 'alpha'
-        @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" == params[:search] } if params[:search].present?
+        @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" =~ /#{params[:search]}/i } if params[:search].present?
         @user = @users.detect { |a| a[:id].to_s == params[:selected] } if params[:selected].present?
       end
     else
@@ -28,7 +29,7 @@ class Worker::LoginController < ApplicationController
     @user = User.find(params[:selected])
     cmd = Common::GenerateCodeLogin.call(@user)
     if cmd.success?
-      flash[:notice] == 'Code sent to your number'
+      flash[:notice] == 'Your login OTP has been sent to your number'
       redirect_to worker_login_index_path(request.params.except(:controller, :_method, :action, :authenticity_token).merge(requested: true))
     else
     end
@@ -47,6 +48,10 @@ class Worker::LoginController < ApplicationController
   end
 
   private
+
+  def check_if_logged_in
+    redirect_to root_path, notice: 'You have logged in' if user_signed_in?
+  end
 
   def check_ip_whitelist
     @ip_included = current_ip_facility.present?

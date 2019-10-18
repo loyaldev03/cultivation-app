@@ -18,8 +18,6 @@ class SeedFacilityDataJob < ApplicationJob
     seed_uom
     seed_raw_materials
     seed_preferences
-  rescue StandardError => error
-    Rollbar.error(error)
   end
 
   private
@@ -33,10 +31,10 @@ class SeedFacilityDataJob < ApplicationJob
   end
 
   def seed_preferences
-    Common::SeedOnBoardingPreference.call(@facility_id)
+    Common::SeedOnboardingPreference.call(@facility_id)
   end
 
   def seed_uom
-    Common::SeedUnitOfMeasure.call
+    MetrcUpdateUomWorker.perform_async
   end
 end

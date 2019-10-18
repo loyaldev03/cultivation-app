@@ -1,6 +1,6 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import PlantByPhaseWidget from './PlantByPhaseWidget'
+import PlantByPhaseWidget from '../../../inventory/plant_setup/plant_charts/PlantByPhaseWidget'
 import PlantByRoomWidget from '../../../inventory/plant_setup/plant_charts/PlantByRoomWidget'
 import StrainDistribution from '../../../manager_dashboard/StrainDistribution'
 
@@ -18,7 +18,7 @@ class PlantWidgetApp extends React.Component {
             className="ba b--light-gray pa3 bg-white br2 mr3"
             style={{ height: 400 + 'px' }}
           >
-            <PlantByPhaseWidget />
+            <PlantByPhaseWidget facility_id={this.props.facility_id} />
           </div>
         </div>
         <div className="w-50">

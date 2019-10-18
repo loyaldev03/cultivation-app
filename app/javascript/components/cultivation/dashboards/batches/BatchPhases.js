@@ -1,13 +1,15 @@
 import React from 'react'
-import { TempBatchWidgets } from '../../../utils'
+import { TempBatchWidgets, Loading } from '../../../utils'
 import { Bar } from 'react-chartjs-2'
-import DahboardBatchStore from './DahboardBatchStore'
+import BatchStore from './DashboardBatchStore'
 import { observer } from 'mobx-react'
+import PlantStore from '../../../inventory/plant_setup/plant_charts/PlantStore'
 
 @observer
 export default class BatchPhases extends React.Component {
   constructor(props) {
     super(props)
+    PlantStore.loadPlantDistribution('all', this.props.facility_id)
   }
 
   render() {
@@ -28,9 +30,9 @@ export default class BatchPhases extends React.Component {
         callbacks: {
           label: function(t) {
             if (t.datasetIndex === 0) {
-              return 'Batch: ' + t.yLabel.toString()
-            } else if (t.datasetIndex === 1) {
               return 'Plant: ' + t.yLabel.toString()
+            } else if (t.datasetIndex === 1) {
+              return 'Batch: ' + t.yLabel.toString()
             }
           }
         }
@@ -59,15 +61,12 @@ export default class BatchPhases extends React.Component {
         <div className="flex justify-between mb4">
           <h1 className="f5 fw6 dark-grey">Batch In Phases</h1>
         </div>
-        {DahboardBatchStore.batch_distribution_loaded ? (
+        {PlantStore.plant_distribution_loaded ? (
           <div style={{ overflow: 'auto', height: '320px' }}>
-            <Bar
-              data={DahboardBatchStore.batchDistribution}
-              options={options}
-            />
+            <Bar data={PlantStore.plantDistribution} options={options} />
           </div>
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

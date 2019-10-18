@@ -1,17 +1,18 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer, action } from 'mobx-react'
 import HarvestStore from './HarvestStore'
+import { Loading } from '../../../utils'
 
 const AverageWidget = ({
   title,
   count,
   icon,
   className = '',
-  loaded = HarvestStore.isLoading
+  loaded = false
 }) => {
   return (
     <div
-      className={`ba b--light-gray pa3 bg-white br2 mr3 ${className}`}
+      className={`ba b--light-gray pa3 bg-white br2 mr3 tc ${className}`}
       style={{ height: 150 + 'px' }}
     >
       <div className="flex" style={{ flex: ' 1 1 auto' }}>
@@ -23,7 +24,7 @@ const AverageWidget = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          <b className="f2 fw6 dark-grey">{loaded ? 'Loading..' : count}</b>
+          {loaded ? <Loading /> : <b className="f2 fw6 dark-grey">{count}</b>}
         </div>
       </div>
       {/* {loaded ? (
@@ -41,30 +42,32 @@ class PlantByRoomWidget extends React.Component {
     super(props)
   }
   componentDidMount() {
-    HarvestStore.loadAvgHarvestCost(this.props.facility_id)
-    HarvestStore.loadAvgHarvestYield(this.props.facility_id)
+    HarvestStore.loadAvgHarvestCost('top', this.props.facility_id)
+    HarvestStore.loadAvgHarvestYield('top', this.props.facility_id)
   }
 
   render() {
     return (
       <React.Fragment>
         <AverageWidget
-          title="Average Cost per gram"
+          title="Average cost / gram"
           count={`$ ${
             HarvestStore.average_harvest_cost
               ? HarvestStore.average_harvest_cost
               : 0
           }`}
+          loaded={HarvestStore.avg_cost_load}
           icon="attach_money"
           className="mb3"
         />
         <AverageWidget
-          title="Average yeild / square feet"
+          title="Average yield / sq. ft"
           count={` ${
             HarvestStore.average_harvest_yield
               ? HarvestStore.average_harvest_yield
               : 0
           } lbs`}
+          loaded={HarvestStore.avg_yield_load}
           icon="attach_money"
           className="mt3"
         />

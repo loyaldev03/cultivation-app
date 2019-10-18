@@ -1,7 +1,23 @@
 import React from 'react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
-import { TempHomeUnassignTask } from '../utils'
+import { formatDate } from '../utils/DateHelper'
+import isEmpty from 'lodash.isempty'
+import { Loading, NoData } from '../utils'
+
+const DataTaskList = ({ idx, name, batch_name, start_date, end_date }) => {
+  return (
+    <div className="flex grey tl mb3" key={idx}>
+      <div className="fl w-60">
+        <span className="f5">{name}</span>
+        <br />
+        <span className="f7 mt1 b">{batch_name}</span>
+      </div>
+      <div className="fl f5 w-20">{formatDate(start_date)}</div>
+      <div className="fl f5 w-20">{formatDate(end_date)}</div>
+    </div>
+  )
+}
 
 @observer
 export default class UnassignedTask extends React.Component {
@@ -13,66 +29,32 @@ export default class UnassignedTask extends React.Component {
     return (
       <React.Fragment>
         <h3 className="f5 fw6 dark-grey">Unassigned Task</h3>
-        <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
-          <table className="w-100">
-            <thead className="grey">
-              <tr className="tl mb2">
-                <th className="w-40">Tasks</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                {/* <th className="tc">Worker</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {ChartStore.unassigned_task ? (
-                ChartStore.data_unassigned_task.map((e, y) => (
-                  <React.Fragment>
-                    <tr key={y}>
-                      <td className="f4 b">
-                        <div className="mb3 mt2 dark-grey" key={`ut_${y}`}>
-                          Batch {e.batch}
-                        </div>
-                      </td>
-                    </tr>
-                    {e.tasks.map((u, i) => (
-                      <tr className="grey" key={i}>
-                        <td className="w-50 ">
-                          <div className="fw6 mb3 dark-grey" key={i}>
-                            {u.name}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="fw6 mb3" key={i}>
-                            {u.start_date}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="fw6 mb3" key={i}>
-                            {u.end_date}
-                          </div>
-                        </td>
-                        {/* <td className="tc">
-                          <a
-                            href={`/cultivation/batches/${
-                              u.batch_id
-                            }?openTaskid=${u.id}`}
-                          >
-                            <span className="material-icons mb2 mt2 dark-grey">
-                              person_add
-                            </span>
-                          </a>
-                        </td> */}
-                      </tr>
-                    ))}
-                  </React.Fragment>
-                ))
-              ) : (
-                <tr className="grey pt2">
-                  <td>No data found</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="overflow-y-scroll" style={{ height: '310px' }}>
+          {ChartStore.unassigned_task_loaded ? (
+            !isEmpty(ChartStore.data_unassigned_task) ? (
+              <React.Fragment>
+                <div className="flex mb2 grey b tl">
+                  <div className="fl w-60">Task Name</div>
+                  <div className="fl w-20">Start Date</div>
+                  <div className="fl w-20">End Date</div>
+                </div>
+                {ChartStore.data_unassigned_task.map((e, y) => (
+                  <DataTaskList
+                    key={`${y}-${e.name}`}
+                    idx={y}
+                    name={e.name}
+                    batch_name={e.batch_name}
+                    start_date={e.start_date}
+                    end_date={e.end_date}
+                  />
+                ))}
+              </React.Fragment>
+            ) : (
+              <NoData />
+            )
+          ) : (
+            <Loading />
+          )}
         </div>
       </React.Fragment>
     )

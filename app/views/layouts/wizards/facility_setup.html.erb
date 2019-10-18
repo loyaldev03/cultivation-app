@@ -8,85 +8,21 @@
     disable_react: true
   %>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>You need to enable JavaScript to run this app. 430</noscript>
     <div id="root">
+      <%= render 'toast' %>
       <div id="main" class="main flex flex-column flex-auto">
-          <%= flash_messages %>
-          <div id="toast" class="toast animated" data-toast=<%=@toast %> data-message=<%=@message.nil? ? false : true %>>
-          </div>
-          <% if @home.have_company %>
-            <%= render 'layouts/sidebar2' %>
-            <main class="min-vh-100" style="padding-left: 230px;">
-          <% else %>
-            <main class="min-vh-100">
-          <% end %>
-            <div 
-              style="height: 50px; position: sticky; top: 0; z-index : 1; box-shadow: 11px 3px 10px 0 #0000000f;"
-              class="ph4 f6 w-100 bg-white flex flex-row items-center justify-between"
-            >
-              <% if content_for? :breadcrumb %>
-                <div class="flex items-center">
-                  <%= yield :breadcrumb %>
-                </div>
-
-                <div class="flex flex-row items-center">
-                  <%= react_component 'notification/NotificationApp' %>
-                  <div class="ph2">
-                    <%= react_component 'utils/Avatar', {
-                      firstName: current_user&.first_name,
-                      lastName: current_user&.last_name,
-                      photoUrl: current_user&.photo_url,
-                    }, {
-                      tag: 'span'
-                    }%> 
-                  </div>
-
-                  <% if !current_user.first_name %>
-                    <span class="grey subtitle-2"> <%= current_user.email %> </span>
-                  <% else %>
-                    <span class="ttc grey subtitle-2"> 
-                      <%= current_user.first_name %> <%= current_user.last_name %>
-                    </span>
-                  <% end %>
-
-                  <i onclick="toggleDropdown()"
-                     id="toggle-dropdown"
-                     class="material-icons dim grey ml2 pointer">keyboard_arrow_down</i>
-
-                  <div class="dropdown">
-                    <div id="myDropdown" class="dropdown-content box--shadow-header">
-                      <%= link_to 'Edit profile', edit_user_registration_path,
-                           class: 'ttc grey subtitle-2 pv3 tc dim' %>
-                      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
-                          class: 'grey subtitle-2 pv3 tc dim' %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-            <%= yield %>
-          </main>
-        </div>
+        <% if @home.have_company %>
+          <%= render 'layouts/sidebar2' %>
+          <main class="min-vh-100" style="padding-left: 230px;">
+        <% else %>
+          <main class="min-vh-100">
+        <% end %>
+          <%= render "top_nav" %>
+          <%= yield %>
+        </main>
+      </div>
     </div>
-    <% content_for :before_body_end do %>
-      <script>
-        if($_('#toast').dataset.toast == 'true'){
-          toast($_('#toast').dataset.message == "true" ? '<%=@message%>' : '')
-        }
-        function fadeToast() {
-          elm = $_('#toast')
-          elm.classList.replace('fadeIn', 'fadeOut');
-          setTimeout(function(){ $_('#toast').classList.remove('fadeOut', 'db'); }, 1000);
-        }
-        function toast(message, type) {
-          elm = $_('#toast')
-          elm.innerHTML = message;
-          elm.classList.add('fadeIn', 'toast--'+ type, 'db');
-          setTimeout(function(){ fadeToast(); }, 3000);
-        }
-      </script>
-    <% end %>
     <%= render "layouts/before_body_end" %>
   </body>
 </html>
-

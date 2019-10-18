@@ -2,6 +2,8 @@ import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import DashboardIssueStore from './DashboardIssueStore'
 import { observer } from 'mobx-react'
+import { NoData, Loading } from '../../../utils'
+import isEmpty from 'lodash.isempty'
 
 @observer
 export default class IssueByPriority extends React.Component {
@@ -61,7 +63,7 @@ export default class IssueByPriority extends React.Component {
           </div>
         </div>
         {DashboardIssueStore.issue_by_priority_loaded ? (
-          DashboardIssueStore.data_issue_by_priority.length > 0 ? (
+          !isEmpty(DashboardIssueStore.data_issue_by_priority) ? (
             <div style={{ overflow: 'auto', height: '320px' }}>
               <Bar
                 data={DashboardIssueStore.IssueByPriority}
@@ -69,10 +71,10 @@ export default class IssueByPriority extends React.Component {
               />
             </div>
           ) : (
-            'Graph is not available'
+            <NoData />
           )
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

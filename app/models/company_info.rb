@@ -10,6 +10,7 @@ class CompanyInfo
   field :tax_id, type: String
   field :timezone, type: String, default: 'Pacific Time (US & Canada)'
   field :metrc_user_key, type: String
+  field :metrc_ready, type: Boolean, default: -> { false }
   # Enable METRC integration
   field :enable_metrc_integration, type: Boolean, default: -> { false }
   # Enable sharing of resouces between facilities in the company

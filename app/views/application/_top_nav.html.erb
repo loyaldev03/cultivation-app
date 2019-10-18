@@ -1,0 +1,49 @@
+<div class="flex bg-white h-nav sticky top-0 items-center justify-between ph3 z-1 shadow--bottom">
+  <% if company_info&.is_active %>
+    <span class="f5 fw4 grey flex items-center">
+      <i class="material-icons mr2 black-20 md-18">business</i>
+      <%= select_tag :facility_id,
+          options_for_select(['All'] + current_user_facilities.pluck(:name, :id),
+          selected: params[:facility_id]),
+          :onchange => "changeDefaultFacility()"
+      %>
+    </span>
+    <div class="flex items-center">
+      <%= react_component 'utils/SearchBox', {facility_id: current_facility&.id.to_s} %>
+      <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>
+        <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
+      <% end %>
+      <%= switch_user_select if Rails.env.development? %>
+      <%= react_component 'notification/NotificationApp' %>
+      <%= react_component 'utils/Avatar', {
+        firstName: current_user&.first_name,
+        lastName: current_user&.last_name,
+        photoUrl: current_user&.photo_url
+      }, {
+        tag: 'span'
+      } %>
+      <span class="ph2">
+        <% if !current_user.first_name %>
+          <span class="grey subtitle-2"> <%= current_user.email %> </span>
+        <% else %>
+          <span class="ttc grey subtitle-2"> 
+            <%= current_user.first_name %> <%= current_user.last_name %>
+          </span>
+        <% end %>
+      </span>
+      <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
+      <div class="dropdown">
+        <div id="myDropdown" class="dropdown-content shadow-3">
+          <%= link_to 'My Task', daily_tasks_path,
+          class: 'ttc grey subtitle-2 pv3 tc dim' %>  
+          <%= link_to 'Edit profile', edit_user_registration_path,
+               class: 'ttc grey subtitle-2 pv3 tc dim' %>
+          <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
+              class: 'grey subtitle-2 pv3 tc dim' %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <span>Company Not Active</span>
+  <% end %>
+</div>

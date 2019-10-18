@@ -87,6 +87,14 @@ module Inventory
       end
     end
 
+    attribute :location_full_path do |object, params|
+      if params[:locations] && object.location_id
+        params[:locations].get_location_name(object.location_id)
+      else
+        ''
+      end
+    end
+
     attribute :vendor_invoice,
       if: Proc.new { |record, params|
         params && params[:include]&.include?(:vendor_invoice) && record.ref_id.present?

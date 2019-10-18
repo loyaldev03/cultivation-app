@@ -4,12 +4,14 @@ module Cultivation
 
     attr_reader :current_time
 
-    def initialize(current_time)
+    def initialize(current_time, batch_id = nil)
       if current_time.is_a?(Time)
         @current_time = current_time
       else
         raise "Expected current_time to be of type 'Time'"
       end
+      @batch_id = batch_id
+      @company_info = CompanyInfo.last
     end
 
     def call
@@ -24,6 +26,7 @@ module Cultivation
           update_current_growth_stage(batch)
           update_plants_current_growth_stage(batch)
           metrc_daily_trigger(batch)
+          UpdateBatchTasksWorker.perform_async(batch.id.to_s)
         end
       end
     end
@@ -31,15 +34,33 @@ module Cultivation
     private
 
     def batches
-      @batches ||= Cultivation::Batch.
-        includes(:facility).
-        where(status: Constants::BATCH_STATUS_SCHEDULED)
+      @batches ||= if @batch_id
+                     Cultivation::Batch.
+                       includes(:facility).
+                       where(
+                       id: @batch_id,
+                       status: Constants::BATCH_STATUS_SCHEDULED,
+                     )
+                   else
+                     Cultivation::Batch.
+                       includes(:facility).
+                       where(status: Constants::BATCH_STATUS_SCHEDULED)
+                   end
     end
 
     def active_batches
-      @active_batches ||= Cultivation::Batch.
-        includes(:facility).
-        where(status: Constants::BATCH_STATUS_ACTIVE)
+      @active_batches ||= if @batch_id
+                            Cultivation::Batch.
+                              includes(:facility).
+                              where(
+                              id: @batch_id,
+                              status: Constants::BATCH_STATUS_ACTIVE,
+                            )
+                          else
+                            Cultivation::Batch.
+                              includes(:facility).
+                              where(status: Constants::BATCH_STATUS_ACTIVE)
+                          end
     end
 
     def update_status(batch)
@@ -56,7 +77,9 @@ module Cultivation
         # Activate batch by changing it's status to active
         batch.update(status: Constants::BATCH_STATUS_ACTIVE)
         # Schedule job to update plant batches to Metrc
-        MetrcUpdatePlantBatches.perform_async(batch.id.to_s)
+        if @company_info.enable_metrc_integration && @company_info.metrc_ready
+          MetrcUpdatePlantBatches.perform_async(batch.id.to_s)
+        end
       else
         # Revert back to schedule state
         batch.update(status: Constants::BATCH_STATUS_SCHEDULED)

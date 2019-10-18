@@ -31,11 +31,11 @@ class ActiveTaskStore {
   @observable isDataLoaded = false
   @observable metadata = {}
   @observable searchTerm = ''
+  @observable isShowAll = false
   @observable filter = {
     facility_id: '',
     page: 0,
-    limit: 20,
-    isShowDirectReport: true
+    limit: 20
   }
   @observable columnFilters = {}
 
@@ -46,19 +46,22 @@ class ActiveTaskStore {
           if (this.searchTerm === null) {
             this.searchTerm = ''
           }
-          this.loadActiveTasks(this.filter.isShowDirectReport)
+          if (this.isShowAll === null) {
+            this.isShowAll = false
+          }
+          this.loadActiveTasks()
         }
       },
-      { delay: 700 }
+      { delay: 350 }
     )
   }
 
   @action
-  async loadActiveTasks(isShowDirectReport) {
+  async loadActiveTasks() {
     this.isLoading = true
     let url = `/api/v1/batches/active_tasks_agg?facility_id=${
       this.filter.facility_id
-    }&isShowDirectReport=${isShowDirectReport}`
+    }&isShowDirectReport=${!this.isShowAll}`
     url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm
     }`
@@ -86,8 +89,7 @@ class ActiveTaskStore {
     this.filter = {
       facility_id: filter.facility_id,
       page: filter.page,
-      limit: filter.limit,
-      isShowDirectReport: filter.isShowDirectReport
+      limit: filter.limit
     }
   }
 
@@ -165,7 +167,6 @@ class TasksDashboardApp extends React.Component {
     DashboardTaskStore.loadTasks_dashboard(this.props.currentFacilityId)
   }
   state = {
-    isShowDirectReport: true,
     showNewTaskPanel: false,
     columns: [
       {
@@ -343,10 +344,8 @@ class TasksDashboardApp extends React.Component {
     activeTaskStore.setFilter({
       facility_id: this.props.currentFacilityId,
       page: state.page,
-      limit: state.pageSize,
-      isShowDirectReport: this.state.isShowDirectReport
+      limit: state.pageSize
     })
-    activeTaskStore.loadActiveTasks(this.state.isShowDirectReport)
   }
 
   onToggleColumns = (header, value) => {
@@ -366,14 +365,12 @@ class TasksDashboardApp extends React.Component {
   }
 
   onShowAllTasks = () => {
-    let toggle = !this.state.isShowDirectReport
-    this.setState({ isShowDirectReport: toggle })
-    activeTaskStore.loadActiveTasks(toggle)
+    activeTaskStore.isShowAll = !activeTaskStore.isShowAll
   }
 
   render() {
     const { currentFacilityId, taskPermission } = this.props
-    const { columns, showNewTaskPanel, isShowDirectReport } = this.state
+    const { columns, showNewTaskPanel } = this.state
     return (
       <React.Fragment>
         <SlidePanel
@@ -427,9 +424,10 @@ class TasksDashboardApp extends React.Component {
                 className="toggle toggle-default"
                 id="show_all_tasks"
                 type="checkbox"
-                value={isShowDirectReport}
-                checked={isShowDirectReport}
-                onChange={this.onShowAllTasks}
+                checked={!activeTaskStore.isShowAll}
+                onChange={e => {
+                  activeTaskStore.isShowAll = !e.target.checked
+                }}
               />
               <label className=" mr2 toggle-button" htmlFor="show_all_tasks" />
               <CheckboxSelect

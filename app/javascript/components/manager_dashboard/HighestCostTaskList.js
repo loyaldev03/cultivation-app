@@ -3,6 +3,8 @@ import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { TempHomeTaskHighestCost } from '../utils'
+import { decimalFormatter, Loading, NoData } from '../utils'
+import isEmpty from 'lodash.isempty'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -13,6 +15,28 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
       <i className="material-icons md-17 pr2">{icon}</i>
       <span className="pr2">{text}</span>
     </a>
+  )
+}
+
+const DataList = ({
+  idx,
+  name,
+  actual_hours,
+  actual_labor_cost,
+  cost_permission
+}) => {
+  return (
+    <div className="flex grey tl f5 mb3" key={idx}>
+      <div className="fl w-50">{name}</div>
+      <div className="fl tc w-25">{decimalFormatter.format(actual_hours)}</div>
+      {cost_permission && cost_permission == true ? (
+        <div className="fl tc w-25">
+          {decimalFormatter.format(actual_labor_cost)}
+        </div>
+      ) : (
+        ''
+      )}
+    </div>
   )
 }
 @observer
@@ -27,7 +51,7 @@ export default class HighestCostTaskList extends React.Component {
 
   onChangeMonthly = range => {
     this.setState({ selectedMonth: range.split('_').join(' ') })
-    ChartStore.highestCostTask(range)
+    ChartStore.highestCostTask(range, this.props.facility_id)
   }
 
   render() {
@@ -48,21 +72,25 @@ export default class HighestCostTaskList extends React.Component {
               <div className="bg-white f6 flex">
                 <div className="db shadow-4">
                   <MenuButton
+                    key="highestcostAll"
                     text="All"
                     className=""
                     onClick={() => this.onChangeMonthly('all')}
                   />
                   <MenuButton
+                    key="highestcostYear"
                     text="This year"
                     className=""
                     onClick={() => this.onChangeMonthly('this_year')}
                   />
                   <MenuButton
+                    key="highestcostMonth"
                     text="This month"
                     className=""
                     onClick={() => this.onChangeMonthly('this_month')}
                   />
                   <MenuButton
+                    key="highestcostWeek"
                     text="This week"
                     className=""
                     onClick={() => this.onChangeMonthly('this_week')}
@@ -81,52 +109,51 @@ export default class HighestCostTaskList extends React.Component {
             </div>
           </Tippy>
         </div>
-        {ChartStore.highest_cost_task_loaded ? (
-          <table className="w-100">
-            <thead>
-              <tr className="tl mb2 dark-grey">
-                <th className="w-40">Tasks</th>
-                <th className="tc">Average Time (hrs)</th>
+        {ChartStore.unassigned_task_loaded ? (
+          !isEmpty(ChartStore.data_highest_cost_task.tasks) ? (
+            <React.Fragment>
+              <div className="flex grey b tl mb2">
+                <div className="fl w-50">Task Name</div>
+                <div className="fl w-25 tc">Average Time (hrs)</div>
                 {cost_permission && cost_permission == true ? (
-                  <th className="tc">Average Cost</th>
+                  <div className="fl w-25 tc">Average Time ($)</div>
                 ) : (
                   ''
                 )}
-              </tr>
-            </thead>
-            <tbody>
-              {ChartStore.data_highest_cost_task.map((e, i) => (
-                <React.Fragment key={e.id + i}>
-                  {e.tasks.map(u => (
-                    <tr className="pa2 dark-grey">
-                      <td>
-                        <div className="mb2 mt2">{u.name}</div>
-                      </td>
-                      <td className="tc">{u.sum_actual_hours}</td>
-                      {cost_permission && cost_permission == true ? (
-                        <td className="tc">{u.actual_cost}</td>
-                      ) : (
-                        ''
-                      )}
-                    </tr>
-                  ))}
-                  <tr className="pa2 dark-grey">
-                    <td>
-                      <div className="b mb2 mt2">Total</div>
-                    </td>
-                    <td className="tc b">{e.total_sum_actual_hours}</td>
-                    {cost_permission && cost_permission == true ? (
-                      <td className="tc b">{e.total_actual_cost}</td>
-                    ) : (
-                      ''
-                    )}
-                  </tr>
-                </React.Fragment>
+              </div>
+              {ChartStore.data_highest_cost_task.tasks.map((e, y) => (
+                <DataList
+                  key={y}
+                  idx={y}
+                  name={e.name}
+                  actual_hours={e.actual_hours}
+                  actual_labor_cost={e.actual_labor_cost}
+                  cost_permission={cost_permission}
+                />
               ))}
-            </tbody>
-          </table>
+              <div className="flex b dark-grey mt4 mb3">
+                <div className="fl w-50 ">total</div>
+                <div className="fl w-25 tc">
+                  {decimalFormatter.format(
+                    ChartStore.data_highest_cost_task.total_sum_actual_hours
+                  )}
+                </div>
+                {cost_permission && cost_permission == true ? (
+                  <div className="fl w-25 tc">
+                    {decimalFormatter.format(
+                      ChartStore.data_highest_cost_task.total_actual_cost
+                    )}
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+            </React.Fragment>
+          ) : (
+            <NoData />
+          )
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

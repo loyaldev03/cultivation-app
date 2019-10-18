@@ -147,7 +147,7 @@ class TaskRow extends React.Component {
                 { orange: this.props.work_status !== 'done' },
                 { grey: this.props.work_status === 'done' }
               )}
-              style={{ fontSize: '20px' }}
+              style={{ fontSize: '50px' }}
               onClick={this.onToggleStart}
             >
               {this.props.work_status === 'started' ? 'pause' : 'play_arrow'}

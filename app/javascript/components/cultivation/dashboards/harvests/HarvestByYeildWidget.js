@@ -1,8 +1,9 @@
 import React from 'react'
-import { ProgressBar } from '../../../utils'
+import { ProgressBar, Loading, NoRecordFound, NoData } from '../../../utils'
 import Tippy from '@tippy.js/react'
 import HarvestStore from './HarvestStore'
 import { observer } from 'mobx-react'
+import isEmpty from 'lodash.isempty'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -23,11 +24,11 @@ export default class HarvestByYeildWidget extends React.Component {
     this.state = {
       order: 'top'
     }
-    HarvestStore.loadHarvestYield('top', this.props.facility_id)
+    // HarvestStore.loadHarvestYield('top', this.props.facility_id)
   }
 
   onChangeOrder = order => {
-    HarvestStore.loadHarvestYield(order, this.props.facility_id)
+    HarvestStore.loadAvgHarvestYield(order, this.props.facility_id)
     this.setState({
       order: order
     })
@@ -50,7 +51,7 @@ export default class HarvestByYeildWidget extends React.Component {
       <React.Fragment>
         {/* <img src={TempHomePerformer} height={350} /> */}
         <div className="flex justify-between mb2">
-          <h1 className="f5 fw6 dark-grey">Yield/Sqft</h1>
+          <h1 className="f5 fw6 grey">Yield / sq. ft</h1>
           <div className="flex">
             <Tippy
               placement="bottom-end"
@@ -83,26 +84,28 @@ export default class HarvestByYeildWidget extends React.Component {
           </div>
         </div>
         {HarvestStore.harvest_yield_list_loaded ? (
-          <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-            {HarvestStore.harvest_yield_list.length > 0
-              ? HarvestStore.harvest_yield_list.map((e, i) => (
-                  <div className="flex items-center" key={i}>
-                    <h1 className="f6 fw6 w-20 dark-grey">{e.harvest_batch}</h1>
-                    <ProgressBar
-                      percent={e.yield}
-                      height={10}
-                      className="w-60 mr2"
-                      barColor={this.getProgressBarColor(e.yield)}
-                    />
-                    <h1 className="f6 fw6 w-20 dark-grey">
-                      <span>{e.yield} lbs</span>
-                    </h1>
-                  </div>
-                ))
-              : 'No Result Found'}
+          <div className="overflow-y-scroll" style={{ height: 220 + 'px' }}>
+            {HarvestStore.harvest_yield_list.length > 0 ? (
+              HarvestStore.harvest_yield_list.map((e, i) => (
+                <div className="flex items-center" key={i}>
+                  <h1 className="f6 fw6 w-20 dark-grey">{e.harvest_batch}</h1>
+                  <ProgressBar
+                    percent={e.yield}
+                    height={10}
+                    className="w-60 mr2"
+                    barColor={this.getProgressBarColor(e.yield)}
+                  />
+                  <h1 className="f6 fw6 w-20 dark-grey">
+                    <span>{e.yield.toFixed(2)} lbs</span>
+                  </h1>
+                </div>
+              ))
+            ) : (
+              <NoData />
+            )}
           </div>
         ) : (
-          <div>Loading ... </div>
+          <Loading />
         )}
       </React.Fragment>
     )

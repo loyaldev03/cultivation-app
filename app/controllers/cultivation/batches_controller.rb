@@ -1,6 +1,5 @@
 class Cultivation::BatchesController < ApplicationController
   authorize_resource class: false
-  before_action :verify_facility_setup
   before_action :find_batch_info, only: [:show,
                                          :gantt,
                                          :locations,
@@ -60,7 +59,7 @@ class Cultivation::BatchesController < ApplicationController
     end
     @grow_methods = Common::GrowMethod.active.all.map do |a|
       {
-        value: a[:code],
+        value: a[:code].nil? ? a[:name].parameterize.underscore : a[:code],
         label: a[:name],
       }
     end

@@ -3,9 +3,12 @@ import { TempHomeIssue } from '../utils'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { formatIssueNo } from '../issues/components/FormatHelper'
+import { formatDate, formatTime } from '../utils/DateHelper'
+import isEmpty from 'lodash.isempty'
+import { Loading, NoData } from '../utils'
 
 @observer
-export default class UnassignedTask extends React.Component {
+export default class IssueList extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -25,25 +28,37 @@ export default class UnassignedTask extends React.Component {
         </div>
 
         <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
-          {ChartStore.filterIssueList.map(e => (
-            <React.Fragment>
-              <div className="mb4">
-                <a
-                  className="no-underline"
-                  href={`/cultivation/batches/${e.batch_id}/issues`}
-                >
-                  <span className="f5 grey">
-                    Issue {formatIssueNo(e.issue_no)}, Batch {e.batch}{' '}
-                  </span>
-                  <span className="f7 green ttu">{e.status}</span>
-                  <br />
-                  <span className="f7 mt1 grey">{e.created_at}</span>
-                  <br />
-                  <span className="dark-grey">{e.title}</span>
-                </a>
-              </div>
-            </React.Fragment>
-          ))}
+          {ChartStore.issue_list_loaded ? (
+            !isEmpty(ChartStore.filterIssueList) ? (
+              <React.Fragment>
+                {ChartStore.filterIssueList.map((e, y) => (
+                  <div className="mb4" key={y}>
+                    <a
+                      className="no-underline"
+                      href={`/cultivation/batches/${
+                        e.cultivation_batch_id
+                      }/issues`}
+                    >
+                      <span className="f5 grey">
+                        Issue {formatIssueNo(e.issue_no)}, Batch {e.batch_no}{' '}
+                      </span>
+                      <span className="f7 green ttu">{e.status}</span>
+                      <br />
+                      <span className="f7 mt1 grey">
+                        {formatDate(e.c_at)}, {formatTime(e.c_at)}
+                      </span>
+                      <br />
+                      <span className="dark-grey">{e.title}</span>
+                    </a>
+                  </div>
+                ))}
+              </React.Fragment>
+            ) : (
+              <NoData />
+            )
+          ) : (
+            <Loading />
+          )}
         </div>
       </React.Fragment>
     )

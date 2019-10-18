@@ -150,7 +150,9 @@ module Inventory
             ],
           }},
 
-        ])
+        ], {
+          "allowDiskUse": true,
+        })
         result = plants.to_a[0]
         @metadata = result['metadata'][0]
         json_data = []

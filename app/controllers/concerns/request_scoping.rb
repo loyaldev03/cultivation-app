@@ -8,12 +8,13 @@ module RequestScoping
 
     helper_method :current_default_facility
     helper_method :current_facility
-    helper_method :current_shared_facility_ids
+    helper_method :current_user_facilities_ids
     helper_method :current_ip_facility
     helper_method :company_info
     helper_method :active_facility_ids
     helper_method :resource_shared?
     helper_method :has_default_facility?
+    helper_method :current_user_facilities
   end
 
   protected
@@ -91,17 +92,12 @@ module RequestScoping
     end
   end
 
-  def current_shared_facility_ids
-    if current_user.nil? && current_facility.blank?
-      return []
-    end
-    if current_facility.blank?
-      f_ids = Facility.where(id: {'$in': current_default_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
-      ids = f_ids.push(current_default_facility.id)
-    else
-      f_ids = Facility.where(id: {'$in': current_facility.shared_facility_ids}, is_enabled: true).pluck(:id)
-      ids = f_ids.push(current_facility.id)
-    end
+  def current_user_facilities
+    @current_user_facilities ||= QueryUserFacilities.call(current_user).result
+  end
+
+  def current_user_facilities_ids
+    @current_user_facilities_ids ||= current_user_facilities.pluck(:id)
   end
 
   def active_facility_ids

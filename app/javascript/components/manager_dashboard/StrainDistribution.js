@@ -1,7 +1,17 @@
 import React from 'react'
 import * as d3 from 'd3'
+import { Loading, NoData } from '../utils'
+import isEmpty from 'lodash.isempty'
 
 export default class StrainDistribution extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+      nullData: false
+    }
+  }
+
   componentDidMount() {
     const element = document.getElementById('strain_chart')
     const margin = { top: 10, right: 10, bottom: 10, left: 10 }
@@ -32,16 +42,17 @@ export default class StrainDistribution extends React.Component {
       .style('color', 'white')
 
     const color = d3.scaleOrdinal(d3.schemeSet1)
-
+    let t = this
     d3.json(this.props.url).then(function(data) {
+      t.setState({
+        loading: false
+      })
       const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })
       //console.log(`${Object.keys(data)}`)
-      if (Object.keys(data).length == 0) {
-        const el = document.getElementById('treemapStrain')
-        el.classList.add('grey')
-        el.textContent += 'No data available'
+      if (isEmpty(Object.keys(data))) {
+        t.setState({ nullData: true })
       } else {
         const treeMap = d3
           .treemap()
@@ -140,6 +151,12 @@ export default class StrainDistribution extends React.Component {
   }
 
   render() {
-    return <div id="treemapStrain" />
+    return (
+      <React.Fragment>
+        {this.state.loading && <Loading />}
+        {this.state.nullData && <NoData />}
+        <div id="treemapStrain" />
+      </React.Fragment>
+    )
   }
 }

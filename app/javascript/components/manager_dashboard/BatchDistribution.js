@@ -1,8 +1,9 @@
 import React from 'react'
 import Tippy from '@tippy.js/react'
 import { Bar } from 'react-chartjs-2'
-import ChartStore from './ChartStore'
+import PlantStore from '../inventory/plant_setup/plant_charts/PlantStore'
 import { observer } from 'mobx-react'
+import { Loading } from '../utils'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -22,12 +23,16 @@ export default class BatchDistribution extends React.Component {
       selectedMonth: this.props.arr_months[0],
       arr_months: this.props.arr_months
     }
+    PlantStore.loadPlantDistribution(
+      this.props.arr_months[0],
+      this.props.facility_id
+    )
   }
 
   onChangeBatchDistribution = selectedMonth => {
     this.setState({ selectedMonth: selectedMonth })
     console.log(selectedMonth)
-    ChartStore.loadBatchDistribution(
+    PlantStore.loadPlantDistribution(
       selectedMonth.label,
       this.props.facility_id
     )
@@ -112,12 +117,12 @@ export default class BatchDistribution extends React.Component {
             </div>
           </Tippy>
         </div>
-        {ChartStore.batch_distribution_loaded ? (
+        {PlantStore.plant_distribution_loaded ? (
           <div style={{ overflow: 'auto', height: '320px' }}>
-            <Bar data={ChartStore.batchDistribution} options={options} />
+            <Bar data={PlantStore.plantDistribution} options={options} />
           </div>
         ) : (
-          'loading...'
+          <Loading />
         )}
       </React.Fragment>
     )

@@ -149,11 +149,9 @@
         <li class="pv2">
           <%= link_to 'Timesheets', timesheets_path, class: "link gray f6 #{active_link(timesheets_path)}" %>
         </li>
-        <!-- 
         <li class="pv2">
-          <%= link_to 'OT Requests', requests_path, class: 'link gray f6' %>
+          <%= link_to 'OT & PTO', requests_path, class: "link gray f6 #{active_link(requests_path)}" %>
         </li>
-        -->
       </ul>
     </li>
 
@@ -240,10 +238,17 @@
       </li -->
     <%# end %>
 
+    <%= link_to worker_login_index_path, class: 'link' do %>
+      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(worker_login_index_path)%>">
+        <i class="material-icons md-16 mr3 ml1">track_changes</i>
+        <span class="link f7">Worker Dashboard Login</span>
+      </li>
+    <% end %>
+
     <%= link_to mobile_path, class: 'link' do %>
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(mobile_path)%>">
         <i class="material-icons md-16 mr3 ml1">track_changes</i>
-        <span class="link f7">Worker Login</span>
+        <span class="link f7">Clock In / Out (Mobile)</span>
       </li>
     <% end %>
   </ul>

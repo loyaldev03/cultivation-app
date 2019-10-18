@@ -4,31 +4,51 @@ module Charts
 
     def initialize(current_user, args = {})
       @user = current_user
-      @args = args
+      @facility_id = args[:facility_id]
+      @period = args[:period]
     end
 
     def call
-      batches = Cultivation::Batch.where(facility_id: {"$in": @args[:facility_id]}).in(
-        status: [
-          Constants::BATCH_STATUS_SCHEDULED,
-          Constants::BATCH_STATUS_ACTIVE,
-        ],
-      )
+      Cultivation::Batch.collection.aggregate([
+        {"$match": {"facility_id": {"$in": @facility_id}}},
+        {"$match": {"status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
+        match_period,
+        {"$project": {
+          "actual_cost": {"$ifNull": ['$actual_cost', 0]},
+        }},
+      ]).map { |x| x[:actual_cost] }.sum
+    end
+
+    private
+
+    def match_period
       date = Time.zone.now
-      sum_cost = 0
-      if (@args[:period] == 'This Week')
-        batches = batches.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)
-      elsif (@args[:period] == 'This Year')
-        batches = batches.where(:created_at.gt => date.beginning_of_year, :created_at.lt => date.end_of_year)
-      elsif (@args[:period] == 'This Month')
-        batches = batches.where(:created_at.gt => date.beginning_of_month, :created_at.lt => date.end_of_month)
+      if @period == 'this_month'
+        start_date = date.beginning_of_month
+        end_date = date.end_of_month
+      elsif @period == 'this_year'
+        start_date = date.beginning_of_year
+        end_date = date.end_of_year
+      elsif @period == 'this_week'
+        start_date = date.beginning_of_week
+        end_date = date.end_of_week
       else
-        batches = batches.all
+        start_date = 'all'
       end
-      batches.each do |batch|
-        sum_cost += batch.actual_cost
+
+      if start_date == 'all'
+        {"$match": {}}
+      else
+        {"$match": {
+          "$expr": {
+            "$or": [
+              {"$and": [{"$gte": ['$c_at', start_date]}, {"$lte": ['$c_at', end_date]}]},
+              {"$and": [{"$gte": ['$c_at', start_date]}, {"$lte": ['$c_at', end_date]}]},
+              {"$and": [{"$lte": ['$c_at', start_date]}, {"$gte": ['$c_at', end_date]}]},
+            ],
+          },
+        }}
       end
-      sum_cost
     end
   end
 end

@@ -11,8 +11,12 @@
         <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa2 mb2 w-10 tc f4">
         <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa2 mb2 w-10 tc f4">
       </div>
-      <div class="flex w-100 justify-center mt3">
-        <%= f.button :submit, 'START WORKING', class: 'btn btn--primary', style: 'width: 190px'%>
+      <div class="flex flex-column items-center mt3">
+        <%= f.button :submit, 'START WORKING', class: 'btn btn--primary mw5'%>
+        <%= link_to 'Resend PIN',
+          generate_code_mobile_worker_logins_path(user_id: @user.id.to_s),
+          method: :post,
+          class: 'btn btn--link grey mw5 mt2'%>
       </div>
       <% end %>
     <% else %>

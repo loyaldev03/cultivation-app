@@ -100,14 +100,14 @@ class HarvestDashboard extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Cost per Gram',
+        Header: 'Cost / gram',
         accessor: 'a',
         minWidth: 88,
         Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Yield/Sq Pt',
+        Header: 'Yield / sq. ft',
         accessor: 'a',
         minWidth: 88,
         Cell: props => <span>{props.value}</span>

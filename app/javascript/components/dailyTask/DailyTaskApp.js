@@ -22,7 +22,7 @@ import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
 import IssueSidebar from '../issues/IssueSidebar2'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
-
+import isEmpty from 'lodash.isempty'
 import {
   formatDate3,
   SlidePanel,
@@ -34,6 +34,7 @@ import {
 class DailyTaskApp extends React.Component {
   constructor(props) {
     super(props)
+
     MaterialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
     SidebarStore.facilityId = this.props.facility_id
     loadAllDailyTasks()
@@ -315,15 +316,26 @@ class DailyTaskApp extends React.Component {
           />
           <label className="toggle-button" htmlFor="show_all_tasks" />
         </div>
-        {DailyTasksStore.batches.map(batch => (
-          <BatchedDailyTasks
-            key={batch.id}
-            batchId={batch.id}
-            batchNo={batch.batch_no}
-            batchName={batch.name}
-            tasks={batch.tasks}
-          />
-        ))}
+        {isEmpty(DailyTasksStore.batches) && !DailyTasksStore.isShowAllTasks ? (
+          <div className="ba b--black-20 br2 flex-auto bg-white pa3">
+            <span className="gray fw6 f5 tc ml3 i">
+              No task assigned to you.
+            </span>
+          </div>
+        ) : (
+          <React.Fragment>
+            {DailyTasksStore.batches.map(batch => (
+              <BatchedDailyTasks
+                key={batch.id}
+                batchId={batch.id}
+                batchNo={batch.batch_no}
+                batchName={batch.name}
+                tasks={batch.tasks}
+              />
+            ))}
+          </React.Fragment>
+        )}
+
         {Object.keys(otherTasks).length > 0 && (
           <BatchedDailyTasks
             type="others"

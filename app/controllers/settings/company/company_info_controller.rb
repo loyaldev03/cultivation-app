@@ -112,8 +112,14 @@ class Settings::Company::CompanyInfoController < ApplicationController
     if @company_info.save
       flash[:notice] = 'Company info saved'
       if params[:onboarding_type].present?
-        @facility = Facility.find(params[:facility_id])
-        @facility.update_onboarding('ONBOARDING_COMP_INFO')
+        Facility.all.each do |f|
+          if f.preferences.blank?
+            Common::SeedOnboardingPreference.call(f.id)
+          end
+        end
+        Facility.all.each do |f|
+          f.update_onboarding('ONBOARDING_COMP_INFO')
+        end
       end
       redirect_to edit_settings_company_company_info_path(
         type: params[:type],

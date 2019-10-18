@@ -12,8 +12,8 @@ module People
       result = months.map do |m|
         {
           month: m,
-          new_employee_count: new_employee.map { |x| x[:value] if x[:month] == m }.sum,
-          leaving_employee_count: leaving_employee.map { |x| x[:value] if x[:month] == m }.sum,
+          new_employee_count: new_employee.map { |x| x[:value] if x[:month] == m }.compact.sum,
+          leaving_employee_count: leaving_employee.map { |x| x[:value] if x[:month] == m }.compact.sum,
         }
       end
     end

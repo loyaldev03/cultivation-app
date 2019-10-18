@@ -59,7 +59,7 @@ class ManagerDashboardApp extends React.Component {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
-    ChartStore.loadBatchDistribution('This Year', this.props.facilityId)
+    //ChartStore.loadBatchDistribution('This Year', this.props.facilityId)
     ChartStore.unassignedTask(this.props.facilityId)
     ChartStore.highestCostTask('all', this.props.facilityId)
     ChartStore.cultivationInfo(this.props.facilityId, 'all')
@@ -180,7 +180,10 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <HighestCostTaskList cost_permission={cost_permission} />
+              <HighestCostTaskList
+                cost_permission={cost_permission}
+                facility_id={this.props.facilityId}
+              />
             </div>
           </div>
           <div className="w-50">

@@ -29,7 +29,8 @@ module People
         roles&.map do |role|
           data << {
             role_name: role,
-            user: "#{user[:first_name]} #{user[:last_name]}",
+            first_name: user[:first_name],
+            last_name: user[:last_name],
             photo_url: nil,
             ontime_arrival_data: ontime_arrival_data,
             task_on_time_data: task_on_time_data,
@@ -184,7 +185,7 @@ module People
     def capacity_hours(actual, work_schedules)
       capacity = 0
       percentage = 0
-      work_schedules&.map { |ws| capacity += ((ws[:end_time] - ws[:start_time]) / 1.hour) }
+      work_schedules&.map { |ws| capacity += ((ws[:end_time] - ws[:start_time]) / 1.hour) if !ws[:end_time].nil? }
       percentage = ((capacity - actual) / capacity * 100).ceil unless actual == 0 or capacity == 0
       if percentage > 100
         percentage = 100

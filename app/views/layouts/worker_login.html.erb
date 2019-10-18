@@ -2,8 +2,8 @@
 <html>
   <%= render "layouts/head", include_turbolink: true %>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <%= flash_messages %>
+    <noscript>You need to enable JavaScript to run this app. 500</noscript>
+    <%= render 'toast' %>
     <%= yield %>
     <%= render "layouts/before_body_end" %>
   </body>

@@ -14,19 +14,17 @@ class FacilityDashboardApp extends React.Component {
   }
   render() {
     return (
-      <React.Fragment>
-        <div className="pa4">
-          <FacilityOverview facility_id={this.props.currentFacilityId} />
+      <div className="pa4">
+        <FacilityOverview facility_id={this.props.currentFacilityId} />
 
-          <div className="pv4">
-            <div className="ba b--light-gray pa3 bg-white br2">
-              <DashboardRoomsCapacity
-                facility_id={this.props.currentFacilityId}
-              />
-            </div>
+        <div className="pv4">
+          <div className="ba b--light-gray pa3 bg-white br2">
+            <DashboardRoomsCapacity
+              facility_id={this.props.currentFacilityId}
+            />
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

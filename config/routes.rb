@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     mount Shrine.presign_endpoint(:cache) => "/s3/params"
   end
 
-  devise_for :users, controllers: { registrations: 'registrations' }
+  devise_for :users, controllers: { registrations: 'registrations', sessions: 'sessions'  }
 
   root to: "home#dashboard"
 
@@ -202,7 +202,7 @@ Rails.application.routes.draw do
     end
 
     namespace 'facilities', as: :facility do
-      resources :facilities, only: [:edit, :update, :index] do
+      resources :facilities, only: [:edit, :update, :index, :destroy] do
         get 'all', on: :collection
       end
       resources :rooms,     only: [:index, :edit, :update, :new, :create]
@@ -370,6 +370,7 @@ Rails.application.routes.draw do
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
+        get 'strains_info', on: :collection
       end
 
       resources :metrc, only: [:index] do

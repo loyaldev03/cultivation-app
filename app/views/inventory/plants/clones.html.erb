@@ -10,14 +10,14 @@
 
 <div class="pa4">
   <% if RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result[:read] == true %>
-    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id])%>
+    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s)%>
     <%= render partial: 'setupNavigation', locals: { selected: 'clone' } %>
     <div class="flex flex-column">
       <%= react_component('inventory/plant_setup/CloneSetupApp', {
           currentTime: Time.current,
           cultivation_batches: @cultivation_batches,
           scanditLicense: @scanditLicense,
-          facility_id: params[:facility_id] == "All" ? current_shared_facility_ids.map{|x| x.to_s} : current_facility&.id.to_s,
+          facility_id: params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s,
           current_growth_stage: 'clone',
           plantPermission: RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result
         }) %>

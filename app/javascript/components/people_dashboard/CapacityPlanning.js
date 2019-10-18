@@ -28,7 +28,7 @@ const PlanningCapacity = ({
 }) => {
   return (
     <div
-      className="mr2 grow dib"
+      className="mr4 grow dib"
       onClick={onClick}
       style={{ cursor: 'pointer', width: '70px' }}
     >
@@ -129,7 +129,7 @@ export default class OverallInfo extends React.Component {
             </Tippy>
           </div>
           {PeopleDashboardStore.capacity_planning_loaded ? (
-            <div className="flex justify-between mb3">
+            <div className="flex mb3">
               {PeopleDashboardStore.data_capacity_planning.map((e, i) => (
                 <PlanningCapacity
                   key={i}

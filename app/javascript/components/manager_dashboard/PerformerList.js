@@ -1,5 +1,5 @@
 import React from 'react'
-import { TempHomePerformer, ProgressBar } from '../utils'
+import { TempHomePerformer, ProgressBar, Loading } from '../utils'
 import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
@@ -17,7 +17,7 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 }
 
 @observer
-export default class UnassignedTask extends React.Component {
+export default class PerformerList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -119,27 +119,33 @@ export default class UnassignedTask extends React.Component {
         </div>
         {ChartStore.performer_list_loaded ? (
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-            {ChartStore.performer_list.map(e => (
-              <div className="flex items-center">
-                <h1 className="f6 fw6 w-20 dark-grey">{e.batch_name}</h1>
-                <ProgressBar
-                  percent={e.percentage}
-                  height={10}
-                  className="w-60 mr2"
-                  barColor={this.getProgressBarColor(e.total_dry_weight)}
-                />
-                <h1 className="f6 fw6 w-20 dark-grey">
-                  {this.state.type === 'yield' ? (
-                    <span>{e.total_dry_weight}lb</span>
-                  ) : (
-                    <span>${e.revenue}</span>
-                  )}
-                </h1>
-              </div>
-            ))}
+            {ChartStore.performer_list.length > 0 ? (
+              <React.Fragment>
+                {ChartStore.performer_list.map((e, y) => (
+                  <div className="flex items-center" key={y}>
+                    <h1 className="f6 fw6 w-20 dark-grey">{e.batch_name}</h1>
+                    <ProgressBar
+                      percent={e.percentage}
+                      height={10}
+                      className="w-60 mr2"
+                      barColor={this.getProgressBarColor(e.total_dry_weight)}
+                    />
+                    <h1 className="f6 fw6 w-20 dark-grey">
+                      {this.state.type === 'yield' ? (
+                        <span>{e.total_dry_weight}lb</span>
+                      ) : (
+                        <span>${e.revenue}</span>
+                      )}
+                    </h1>
+                  </div>
+                ))}
+              </React.Fragment>
+            ) : (
+              <p class="lh-copy measure tc grey f4 i">No record found</p>
+            )}
           </div>
         ) : (
-          <div>Loading ... </div>
+          <Loading />
         )}
       </React.Fragment>
     )

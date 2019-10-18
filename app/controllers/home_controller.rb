@@ -1,6 +1,5 @@
 class HomeController < ApplicationController
   include WorkersDashboard
-  before_action :verify_facility_setup, except: [:index]
 
   def index
     authorize! :index, HomeController
@@ -79,7 +78,7 @@ class HomeController < ApplicationController
     harvest_batches = Inventory::HarvestBatch.in(facility_strain: strains)
     options = {params: {include: [:facility]}}
     @harvest_batches = Inventory::HarvestBatchSerializer.new(harvest_batches, options).serializable_hash[:data]
-    current_facility_id = params[:facility_id] == 'All' ? current_shared_facility_ids : current_facility.id
+    current_facility_id = params[:facility_id] == 'All' ? current_user_facilities_ids : current_facility.id
     @users = User.in(facilities: current_facility_id).map do |u|
       {
         id: u.id.to_s,
@@ -148,7 +147,7 @@ class HomeController < ApplicationController
     CompanyInfo.destroy_all
 
     Common::UnitOfMeasure.delete_all
-    Common::SeedUnitOfMeasure.call
+    MetrcUpdateUomWorker.perform_async
     Inventory::SeedCatalogue.call
 
     User.update_all(facilities: [], default_facility_id: nil)

@@ -3,6 +3,7 @@ import AsyncSelect from 'react-select/lib/Async'
 import Select from 'react-select'
 import { selectStyles, NUTRITION_LIST } from '../../../utils'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
+import isEmpty from 'lodash.isempty'
 import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import {
   SlidePanelHeader,
@@ -358,21 +359,25 @@ export default class MaterialForm extends React.Component {
                         />
                       </td>
                       <td className="tc w3 grey tc">
-                        <select
-                          value={x.uom}
-                          className="input"
-                          onChange={e =>
-                            this.handleChangeUom(x.product_id, e.target.value)
-                          }
-                          style={{ minWidth: 67 + 'px' }}
-                        >
-                          {x.uoms &&
-                            x.uoms.map((y, index) => (
-                              <option key={index} value={y}>
-                                {y}
-                              </option>
-                            ))}
-                        </select>
+                        {isEmpty(x.uoms) ? (
+                          'Not available'
+                        ) : (
+                          <select
+                            value={x.uom}
+                            className="input"
+                            onChange={e =>
+                              this.handleChangeUom(x.product_id, e.target.value)
+                            }
+                            style={{ minWidth: 67 + 'px' }}
+                          >
+                            {x.uoms &&
+                              x.uoms.map((y, index) => (
+                                <option key={index} value={y}>
+                                  {y}
+                                </option>
+                              ))}
+                          </select>
+                        )}
                       </td>
                       <td className="tr w1 pt2">
                         <i

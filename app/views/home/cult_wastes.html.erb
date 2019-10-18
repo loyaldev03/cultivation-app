@@ -7,7 +7,7 @@
     <%= react_component 'cultivation/dashboards/WastesDashboardApp',
       {
         defaultFacilityId: current_default_facility&.id.to_s,
-        currentFacilityId: current_shared_facility_ids.map{|x| x.to_s},
+        currentFacilityId: current_user_facilities_ids.map{|x| x.to_s},
         currentTime: Time.current,
       }
     %>

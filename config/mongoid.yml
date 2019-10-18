@@ -166,6 +166,7 @@ production:
   clients:
     default:
       uri: <%= ENV['MONGODB_URI'] %>
+      slave_ok: true
       options:
         skip_version_check: true
         safe: true

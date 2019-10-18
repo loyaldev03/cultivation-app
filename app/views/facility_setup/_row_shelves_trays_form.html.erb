@@ -117,17 +117,10 @@
       <% end %>
     <% end %>
     <%= link_to generate_tray_path(
-        facility_id: facility_id,
-        room_id: room_id,
-        row_id: row_id,
-        shelf_id: shelf_id),
-      class: "link mt3 flex dim",
-      remote: true,
-      method: :post,
-      data: {
-        confirm: "Add table to shelf?"
-      } do
-      %>
+      facility_id: facility_id,
+      room_id: room_id,
+      row_id: row_id,
+      shelf_id: shelf_id), class: "link mt3 flex dim", remote: true, method: :post do %>
       <div class="flex flex-row items-center">
         <i class="material-icons orange md-18">add_circle_outline</i>
         <span class="ml2 orange subtitle-2">Add table to shelf</span>

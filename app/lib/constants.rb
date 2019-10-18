@@ -314,6 +314,22 @@ module Constants
     'Trim',
   ].freeze
 
+  BUILTIN_PRODUCT_CATEGORIES = [
+    {name: 'Leaf', quantity_type: 'WeightBased', built_in: true, package_units: []},
+    {name: 'Parts', quantity_type: 'WeightBased', built_in: true, package_units: []},
+    {name: 'Pre-roll', quantity_type: 'CountBased', built_in: true,
+     package_units: [
+      {value: 'Pre-roll', is_active: true, quantity: 0},
+      {value: 'Blunt', is_active: true, quantity: 0},
+      {value: 'Joint', is_active: true, quantity: 0},
+      {value: 'Mini Pre-roll', is_active: true, quantity: 0},
+      {value: 'Spliff', is_active: true, quantity: 0},
+    ]},
+    {name: 'Flowers', quantity_type: 'WeightBased', built_in: true, package_units: []},
+    {name: 'Shakes', quantity_type: 'WeightBased', built_in: true, package_units: []},
+    {name: 'Trim', quantity_type: 'WeightBased', built_in: true, package_units: []},
+  ]
+
   BUILTIN_PACKAGE_UNITS = [
     {value: '3pk', label: '3pk'},
     {value: '5pk', label: '5pk'},

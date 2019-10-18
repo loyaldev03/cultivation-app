@@ -21,6 +21,7 @@ task generate_plants_for_batch: :environment do
         plant_id: plant_id + index,
         planting_date: batch.start_date,
         facility_strain_id: batch.facility_strain_id,
+        cultivation_batch_id: batch.id,
       }
     end
     Inventory::Plant.create(plants)

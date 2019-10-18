@@ -141,7 +141,6 @@ class FacilitySetupController < ApplicationController
         room_path = facility_setup_row_shelf_info_path(
           facility_id: form_object.facility_id,
           room_id: form_object.room_id,
-          room_name: form_object.room_name,
         )
         format.js { render js: "Turbolinks.visit('#{room_path}')" }
       end
@@ -176,7 +175,7 @@ class FacilitySetupController < ApplicationController
   # GET show row & shelf setup page
   # User can dynamically changes the number of rows
   def row_shelf_info
-    @rows_form = FacilityWizardForm::RowsForm.new(params[:facility_id], params[:room_id], params[:room_name])
+    @rows_form = FacilityWizardForm::RowsForm.new(params[:facility_id], params[:room_id])
   end
 
   # GET when user changes number of rows

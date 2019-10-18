@@ -14,11 +14,9 @@ module FacilityWizardForm
 
     attr_accessor(*ATTRS)
 
-    def initialize(facility_id, room_id, room_name)
+    def initialize(facility_id, room_id)
       @facility_id = facility_id
-      @facility_name = Facility.find(facility_id).name
       @room_id = room_id
-      @room_name = room_name
       set_record(facility_id, room_id)
     end
 
@@ -111,6 +109,8 @@ module FacilityWizardForm
         @is_complete = room.is_complete
         @has_sections = room.has_sections
         @sections = room.sections
+        @room_name = room.name
+        @facility_name = facility.name
         raise ArgumentError, 'Invalid Room' if room.nil?
         if room.rows.blank?
           @wz_rows_count = 0

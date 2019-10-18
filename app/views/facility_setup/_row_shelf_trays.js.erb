@@ -4,6 +4,7 @@ $_(".slide-panel__body").innerHTML = ("<%= j render 'row_shelves_trays_form',
                                       row_id: @row_shelves_trays_form.id,
                                       shelf_id: @row_shelves_trays_form.shelf_id,
                                       shelf_code: @row_shelves_trays_form.shelf_code,
+                                      is_use_trays: @row_shelves_trays_form.is_use_trays,
                                       shelves: @row_shelves_trays_form.shelves,
                                       trays: @row_shelves_trays_form.trays %>")
 

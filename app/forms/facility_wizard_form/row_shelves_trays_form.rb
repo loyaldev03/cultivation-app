@@ -30,6 +30,7 @@ module FacilityWizardForm
       shelf = next_index >= @shelves.size ? @shelves&.last : @shelves[next_index]
       @shelf_id = shelf.id
       @shelf_code = shelf.code
+      @is_use_trays = shelf.is_use_trays
       @trays = get_trays
     end
 
@@ -63,6 +64,7 @@ module FacilityWizardForm
 
       @shelf_id = first_shelf&.id
       @shelf_code = first_shelf&.code
+      @is_use_trays = first_shelf&.is_use_trays
       @trays = get_trays
     end
 

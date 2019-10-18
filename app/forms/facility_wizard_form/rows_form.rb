@@ -4,6 +4,8 @@ module FacilityWizardForm
 
     ATTRS = [:facility_id,
              :room_id,
+             :room_name,
+             :facility_name,
              :is_complete,
              :has_sections,
              :wz_rows_count,
@@ -12,9 +14,11 @@ module FacilityWizardForm
 
     attr_accessor(*ATTRS)
 
-    def initialize(facility_id, room_id)
+    def initialize(facility_id, room_id, room_name)
       @facility_id = facility_id
+      @facility_name = Facility.find(facility_id).name
       @room_id = room_id
+      @room_name = room_name
       set_record(facility_id, room_id)
     end
 

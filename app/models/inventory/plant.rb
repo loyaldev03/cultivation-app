@@ -18,6 +18,7 @@ module Inventory
     field :plant_tag, type: String # METRC Tag
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String
+    field :location_purpose, type: String
     field :status, type: String
     # mother, clone, veg, veg1, veg2, flower
     field :current_growth_stage, type: String

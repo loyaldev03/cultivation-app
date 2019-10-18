@@ -5,65 +5,27 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
       @args = args
-      @facility_id = args[:facility_id]
+      @facility_id = args[:facility_id].split(',')
     end
 
     def call
-      locations = QueryLocations.call(@facility_id)
+      if resource_shared?
+        strains = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id)
+      else
+        strains = Inventory::FacilityStrain.in(facility_id: @facility_id.map { |x| x.to_bson_id }).pluck(:id)
+      end
       plants = Inventory::Plant.collection.aggregate([
-        {"$lookup": {
-          from: 'inventory_facility_strains',
-          localField: 'facility_strain_id',
-          foreignField: '_id',
-          as: 'facility_strain',
+        {"$match": {"location_purpose": {"$ne": nil}}},
+        {"$match": {"facility_strain_id": {"$in": strains}}},
+        {"$group": {
+          "_id": '$location_purpose',
+          "name": {"$first": {"$ifNull": ['$location_purpose', 'No Room']}},
+          "value": {"$sum": 1},
         }},
-        {"$unwind": {path: '$facility_strain', preserveNullAndEmptyArrays: true}},
-        {"$match": {"facility_strain.facility_id": {"$in": @facility_id}}},
-        {"$project": {
-          "plant_id": 1,
-          "location_id": 1,
-
-        }},
-
       ])
 
-      group_plants = plants.group_by do |a|
-        location = locations.query_trays(a[:location_id])
-        location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
-      end
-
-      json_fac = []
-
-      json_fac << {
-        group_plant: group_plants.map do |n|
-          {
-            group: n[0],
-            count: n[1].count,
-          }
-        end,
-      }
-
-      array = json_fac.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
-
-      if array.present?
-        array2 = array.map { |x| x[1] }
-
-        group_count = array2.inject { |memo, el| memo.merge(el) { |k, old_v, new_v| old_v + new_v } }
-
-        grouped_plant_json = group_count.group_by { |x| x[:group] }.map do |f|
-          if f[0].present?
-            {
-              name: f[0],
-              value: f[1].map { |x| x[:count] }.sum,
-            }
-          end
-        end
-      else
-        grouped_plant_json = []
-      end
-
-      if grouped_plant_json.compact.any?
-        return {children: grouped_plant_json.compact}
+      if plants.any?
+        return {children: plants}
       else
         return {}
       end

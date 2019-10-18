@@ -59,6 +59,7 @@ module Inventory
       @lot_number = args[:lot_number]
 
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
+      @locations = QueryLocations.call(@batch.facility_id)
       @catalogue = Inventory::Catalogue.plant
     end
 
@@ -125,12 +126,16 @@ module Inventory
       plant = Inventory::Plant.find(id)
       old_invoice_item_id = plant.ref_id
 
+      location = @locations.query_trays(location_id.to_bson_id)
+      location_purpose = location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
+
       plant.update!(
         plant_id: plant_ids[0],
         facility_strain_id: facility_strain_id,
         cultivation_batch_id: cultivation_batch_id,
         current_growth_stage: growth_stage,
         location_id: location_id,
+        location_purpose: location_purpose,
         status: is_draft ? 'draft' : 'available',
         planting_date: planting_date,
         mother_id: mother_id,
@@ -151,9 +156,10 @@ module Inventory
     end
 
     def create_plants(invoice_item)
+      location = @locations.query_trays(location_id.to_bson_id)
+      location_purpose = location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
       facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
-      Rails.logger.debug("MANIFEST====>#{manifest_no}")
       plants = plant_ids.map do |plant_id|
         Inventory::Plant.create!(
           plant_id: plant_id,
@@ -163,6 +169,7 @@ module Inventory
           modifier: user,
           location_id: location_id,
           location_type: 'tray',
+          location_purpose: location_purpose,
           status: is_draft ? 'draft' : 'available',
           planting_date: planting_date,
           mother_id: mother_id,

@@ -435,26 +435,22 @@ class AddEditProductCategoryForm extends React.Component {
                 {selectedQuantityType &&
                   selectedQuantityType.value === 'CountBased' && (
                     <React.Fragment>
-                    {packageUnits.length > 0 && (
-                      <React.Fragment>
-                        {packageUnits.map(x => {
-                          return (
-                            <div className="pa2 flex items-center grey mt4">
-                              <div className="w-20 mr3">
-                                {x.value}
+                      {packageUnits.length > 0 && (
+                        <React.Fragment>
+                          {packageUnits.map(x => {
+                            return (
+                              <div className="pa2 flex items-center grey mt4">
+                                <div className="w-20 mr3">{x.value}</div>
+                                <div className="w-20 mr3" />
+                                <div className="w-20 mr3" />
+                                <i class="material-icons icon--btn red">
+                                  delete
+                                </i>
                               </div>
-                              <div className="w-20 mr3">
-
-                              </div>
-                              <div className="w-20 mr3">
-
-                              </div>
-                              <i class="material-icons icon--btn red">delete</i>
-                            </div>
-                          )
-                        })}
-                      </React.Fragment>
-                    )}                      
+                            )
+                          })}
+                        </React.Fragment>
+                      )}
                     </React.Fragment>
                   )}
               </React.Fragment>

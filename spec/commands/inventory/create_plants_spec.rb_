@@ -15,7 +15,6 @@ RSpec.describe Inventory::CreatePlants, type: :command do
       #   strain_name: strain.name,
       #   location_id: room.id.to_s,
       #   location_type: 'room',
-      #   status: 'available',
       #   planted_on: planted_on,
       #   plant_status: 'mother'
       # )
@@ -38,7 +37,6 @@ RSpec.describe Inventory::CreatePlants, type: :command do
       #   strain: strain,
       #   serial_no: 'a1',
       #   location_id: room.id,
-      #   status: 'available',
       #   plant_status: 'mother',
       #   planted_on: planted_on
       # )
@@ -49,7 +47,6 @@ RSpec.describe Inventory::CreatePlants, type: :command do
       #   strain: strain,
       #   serial_no: 'a2',
       #   location_id: room.id,
-      #   status: 'available',
       #   plant_status: 'mother',
       #   planted_on: planted_on
       # )
@@ -60,7 +57,6 @@ RSpec.describe Inventory::CreatePlants, type: :command do
       #   strain: strain,
       #   serial_no: 'a3',
       #   location_id: room.id,
-      #   status: 'available',
       #   plant_status: 'mother',
       #   planted_on: planted_on
       # )
@@ -71,7 +67,6 @@ RSpec.describe Inventory::CreatePlants, type: :command do
       #   strain: strain,
       #   serial_no: 'a4',
       #   location_id: room.id,
-      #   status: 'available',
       #   plant_status: 'mother',
       #   planted_on: planted_on
       # )

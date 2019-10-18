@@ -156,7 +156,12 @@ module Cultivation
     end
 
     def update_plants_current_growth_stage(batch)
-      MovePlantsToNextPhaseJob.perform_later(batch.id.to_s)
+      if Constants::REQUIRED_BOOKING_PHASES.include?(batch.current_growth_stage)
+        UpdatePlantsGrowthStage.perform_async(
+          batch.id.to_s,
+          batch.current_growth_stage,
+        )
+      end
     end
   end
 end

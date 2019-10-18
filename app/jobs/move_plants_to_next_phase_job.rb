@@ -59,7 +59,7 @@ class MovePlantsToNextPhaseJob < ApplicationJob
   private
 
   def batch
-    @batch ||= Cultivation::Batch.includes.find(batch_id)
+    @batch ||= Cultivation::Batch.find(batch_id)
   end
 
   def existing_plants
@@ -93,6 +93,7 @@ class MovePlantsToNextPhaseJob < ApplicationJob
       cultivation_batch_id: batch.id,
       plant_id: plant_id,
       plant_tag: plant_id,
+      current_growth_stage: batch.current_stage_location,
       planting_date: Time.current,
       mother_id: mother_id,
       facility_strain_id: batch.facility_strain_id,

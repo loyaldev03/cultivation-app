@@ -56,13 +56,16 @@ class SaveFacility
             if row.shelves.any?
               row.shelves.each do |shelf|
                 shelf.full_code = Constants.generate_full_code(record, room, row, shelf)
-                trays = Tray.where(shelf_id: shelf.id)
-                if trays.any?
-                  trays.each do |tray|
-                    tray.full_code = Constants.generate_full_code(record, room, row, shelf, tray)
-                    tray.save
-                  end
-                end
+                # FIXME: Temporary disable updating trays
+                # trays = get_shelf_trays(shelf.id)
+                # if trays.any?
+                #   trays.each do |tray|
+                #     full_code = Constants.generate_full_code(record, room, row, shelf, tray)
+                #     if tray.full_code != full_code
+                #       tray.update_attributes(full_code: tray.full_code)
+                #     end
+                #   end
+                # end
               end
             end
           end
@@ -81,5 +84,13 @@ class SaveFacility
     address.fax_number = form_object.address_fax_number
 
     record.address = address
+  end
+
+  def all_trays
+    @all_trays ||= Tray.all.to_a
+  end
+
+  def get_shelf_trays(shelf_id)
+    all_trays.select { |x| x.shelf_id = shelf_id }
   end
 end

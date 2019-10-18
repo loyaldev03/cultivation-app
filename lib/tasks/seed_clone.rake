@@ -26,7 +26,6 @@ task seed_purchased_clones: :environment  do
     p.plant_tag = "T.#{p.plant_id}"
     p.location_id = nil
     p.location_type = "room"
-    p.status = "available"
     p.current_growth_stage = "clone"
     p.mother_date = nil
     p.planting_date = 15.days.ago

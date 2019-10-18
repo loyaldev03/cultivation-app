@@ -19,7 +19,6 @@ module Inventory
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String
     field :location_purpose, type: String
-    field :status, type: String
     # mother, clone, veg, veg1, veg2, flower
     field :current_growth_stage, type: String
     field :mother_date, type: Time
@@ -73,7 +72,6 @@ module Inventory
     track_history on: [:plant_tag,
                        :location_id,
                        :location_type,
-                       :status,
                        :current_growth_stage,
                        :planting_date,
                        :estimated_harvest_date,

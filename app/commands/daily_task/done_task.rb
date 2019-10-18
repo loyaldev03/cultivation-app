@@ -15,13 +15,13 @@ module DailyTask
         stop_time_logs
         task.update(work_status: Constants::WORK_STATUS_DONE)
         CalculateTotalActualCostJob.perform_later(task.id.to_s)
+        CalculateTotalActualCostBatchJob.perform_later(task.batch_id.to_s)
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
-        CalculateTotalActualCostBatchJob.perform_later(@task.batch_id.to_s)
 
         # When clone are moved into trays. Generate PlantBatch
         # for Metrc synchronization.
         if task.indelible == Constants::INDELIBLE_CLIP_POT_TAG ||
-           task.indelible == Constants::INDELIBLE_MOVING_TO_TRAY
+            task.indelible == Constants::INDELIBLE_MOVING_TO_TRAY
           GenerateBatchLots.perform_async(task.batch_id.to_s)
         end
 

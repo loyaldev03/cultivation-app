@@ -6,7 +6,8 @@ task seed_product_category: :environment  do
       name: category[:name],
       quantity_type: category[:quantity_type],
       built_in: category[:built_in],
-      is_active: category[:is_active]
+      is_active: category[:is_active],
+      metrc_item_category: category[:name]
     )
     if category[:package_units].count > 0
       category[:package_units].each do |package|

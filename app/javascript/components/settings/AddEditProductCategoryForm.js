@@ -102,10 +102,10 @@ class AddEditProductCategoryForm extends React.Component {
     }
     if (editCategory && editCategory !== prevProps.editCategory) {
       const category = ProductCategoryStore.getCategoryByName(editCategory)
-      console.log(toJS(category))
       const metrcItem = category.metrc_item_category || ''
       this.setState({
         name: editCategory,
+        built_in: category.built_in,
         metrc_item_category: metrcItem,
         packageUnits: category.package_units
       })
@@ -122,9 +122,12 @@ class AddEditProductCategoryForm extends React.Component {
             selectedQuantityType: quantityType
           })
         } else {
+          const quantityType = QUANTITY_TYPES.find(
+            x => x.value === category.quantity_type
+          )
           this.setState({
             metrc_item_category: '',
-            selectedQuantityType: {}
+            selectedQuantityType: quantityType
           })
         }
       }
@@ -189,6 +192,7 @@ class AddEditProductCategoryForm extends React.Component {
     const {
       name,
       metrc_item_category,
+      built_in,
       selectedQuantityType,
       packageUnits
     } = this.state
@@ -218,10 +222,10 @@ class AddEditProductCategoryForm extends React.Component {
                 </a>
               </React.Fragment>
             ) : (
-              <div class="ph4 bb b--light-grey">
-                <div class="mt3 flex content-stretch">
+              <div className="ph4 bb b--light-grey">
+                <div className="mt3 flex content-stretch">
                   <div
-                    class={`ph4 pointer dim grey ${
+                    className={`ph4 pointer dim grey ${
                       this.state.tab && this.state.tab === 'general'
                         ? 'active'
                         : ''
@@ -231,7 +235,7 @@ class AddEditProductCategoryForm extends React.Component {
                     General
                   </div>
                   <div
-                    class={`pl3 ph4 pointer dim grey ${
+                    className={`pl3 ph4 pointer dim grey ${
                       this.state.tab && this.state.tab === 'metrc'
                         ? 'active'
                         : ''
@@ -281,8 +285,8 @@ class AddEditProductCategoryForm extends React.Component {
                       styles={reactSelectStyle}
                       options={QUANTITY_TYPES}
                       value={selectedQuantityType}
+                      isDisabled={built_in}
                       onChange={selected => {
-                        console.log(selected)
                         this.setState({
                           selectedQuantityType: selected
                         })
@@ -431,7 +435,26 @@ class AddEditProductCategoryForm extends React.Component {
                 {selectedQuantityType &&
                   selectedQuantityType.value === 'CountBased' && (
                     <React.Fragment>
-                      <h1>CountBased</h1>
+                    {packageUnits.length > 0 && (
+                      <React.Fragment>
+                        {packageUnits.map(x => {
+                          return (
+                            <div className="pa2 flex items-center grey mt4">
+                              <div className="w-20 mr3">
+                                {x.value}
+                              </div>
+                              <div className="w-20 mr3">
+
+                              </div>
+                              <div className="w-20 mr3">
+
+                              </div>
+                              <i class="material-icons icon--btn red">delete</i>
+                            </div>
+                          )
+                        })}
+                      </React.Fragment>
+                    )}                      
                     </React.Fragment>
                   )}
               </React.Fragment>

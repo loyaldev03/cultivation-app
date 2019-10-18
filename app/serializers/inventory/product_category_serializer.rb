@@ -2,7 +2,7 @@ module Inventory
   class ProductCategorySerializer
     include FastJsonapi::ObjectSerializer
 
-    attributes :name, :quantity_type, :is_used, :is_active, :metrc_item_category, :deleted
+    attributes :name, :quantity_type, :is_used, :is_active, :metrc_item_category, :deleted, :built_in
 
     attribute :id do |object|
       object.id.to_s

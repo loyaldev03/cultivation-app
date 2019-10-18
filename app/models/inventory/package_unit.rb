@@ -6,6 +6,7 @@ module Inventory
     field :label, type: String
     field :uom, type: String
     field :quantity_in_uom, type: Float, default: -> { 0 } # can be +/-
+    field :is_active, type: Boolean, default: false
 
     validates :value, presence: true
 

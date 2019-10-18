@@ -20,6 +20,8 @@ module Inventory
     # true and filter from api.
     field :deleted, type: Boolean, default: -> { false }
 
+    #built_in product category cant change its quantity_type
+    field :built_in, type: Boolean, default: -> { false }
     # Which facilities uses this product category
     field :facilities, type: Array, default: [] # Array of BSON::ObjectId
 

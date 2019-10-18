@@ -29,7 +29,7 @@ const ProgressBar = React.memo(
 )
 
 @observer
-class OntimeArrivalsWidget extends React.Component {
+class WorkerList extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -130,4 +130,4 @@ class OntimeArrivalsWidget extends React.Component {
   }
 }
 
-export default OntimeArrivalsWidget
+export default WorkerList

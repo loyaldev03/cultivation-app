@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
 import PeopleDashboardStore from './PeopleDashboardStore'
-import { PeopleCapacityPlanningWidget } from '../utils'
+import { PeopleCapacityPlanningWidget, Loading } from '../utils'
 import WorkerList from './WorkerList'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -144,7 +144,7 @@ export default class OverallInfo extends React.Component {
               ))}
             </div>
           ) : (
-            'loading...'
+            <Loading />
           )}
           <div>
             {PeopleDashboardStore.current_workers_length > 0 ? (

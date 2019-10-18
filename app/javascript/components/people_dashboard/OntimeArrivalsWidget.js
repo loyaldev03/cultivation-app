@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { PeopleUserListWidget } from '../utils'
+import { PeopleUserListWidget, Loading, NoData, DefaultAvatar } from '../utils'
 import LetterAvatar from '../utils/LetterAvatar'
 import PeopleDashboardStore from './PeopleDashboardStore'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -117,16 +117,18 @@ class OntimeArrivalsWidget extends React.Component {
                       className=""
                       onClick={() => this.onChangeRoles(roleInit)}
                     />
-                    {PeopleDashboardStore.roles_loaded
-                      ? PeopleDashboardStore.data_roles.map(d => (
-                          <MenuButton
-                            key={d.role_id}
-                            text={d.role_name}
-                            className=""
-                            onClick={() => this.onChangeRoles(d)}
-                          />
-                        ))
-                      : 'loading...'}
+                    {PeopleDashboardStore.roles_loaded ? (
+                      PeopleDashboardStore.data_roles.map(d => (
+                        <MenuButton
+                          key={d.role_id}
+                          text={d.role_name}
+                          className=""
+                          onClick={() => this.onChangeRoles(d)}
+                        />
+                      ))
+                    ) : (
+                      <Loading />
+                    )}
                   </div>
                 </div>
               }
@@ -175,56 +177,62 @@ class OntimeArrivalsWidget extends React.Component {
                   2
                 )} %`
               : 'Average: 0 %'
-            : 'Loading..'}
+            : ''}
         </div>
-        {PeopleDashboardStore.ontime_arrival_loaded
-          ? PeopleDashboardStore.data_ontime_arrival.data.length != 0
-            ? PeopleDashboardStore.data_ontime_arrival.data.map((e, i) => (
-                <div className="flex justify-between mb3 pt2" key={e.user.id}>
-                  <div className="flex items-center w-40">
-                    {e.user.photo_url ? (
-                      <div>
-                        <img
-                          src={e.user.photo_url}
-                          style={{
-                            width: '36px',
-                            height: '36px',
-                            borderRadius: '18px'
-                          }}
-                          onError={x => {
-                            x.target.onerror = null
-                            x.target.src = DefaultAvatar
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <LetterAvatar
-                        firstName={e.user.first_name}
-                        lastName={e.user.last_name}
-                        size={36}
-                        radius={18}
+        {PeopleDashboardStore.ontime_arrival_loaded ? (
+          PeopleDashboardStore.data_ontime_arrival.data.length != 0 ? (
+            PeopleDashboardStore.data_ontime_arrival.data.map((e, i) => (
+              <div
+                className="flex justify-between mb3 pt2"
+                key={`section_user_${i}`}
+              >
+                <div className="flex items-center w-40">
+                  {e.user.photo_url ? (
+                    <div>
+                      <img
+                        src={e.user.photo_url}
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '18px'
+                        }}
+                        onError={x => {
+                          x.target.onerror = null
+                          x.target.src = DefaultAvatar
+                        }}
                       />
-                    )}
-                    <span className="f6 fw6 dark-grey ml2">
-                      {e.user.first_name} {e.user.last_name}
-                      <div className="f6 fw6 grey">{e.roles}</div>
-                    </span>
-                  </div>
-                  <div className="flex items-center w-60">
-                    <ProgressBar
-                      key={i}
-                      percent={e.percentage}
-                      height={10}
-                      barColor={this.getProgressBarColor(e.percentage)}
+                    </div>
+                  ) : (
+                    <LetterAvatar
+                      firstName={e.user.first_name}
+                      lastName={e.user.last_name}
+                      size={36}
+                      radius={18}
                     />
-                    <span className="f6 fw6 dark-grey ml2 w-20">
-                      {e.percentage} %
-                    </span>
-                  </div>
+                  )}
+                  <span className="f6 fw6 dark-grey ml2">
+                    {e.user.first_name} {e.user.last_name}
+                    <div className="f6 fw6 grey">{e.roles}</div>
+                  </span>
                 </div>
-              ))
-            : 'No Record Found'
-          : 'Loading...'}
+                <div className="flex items-center w-60" key={i}>
+                  <ProgressBar
+                    percent={e.percentage}
+                    height={10}
+                    barColor={this.getProgressBarColor(e.percentage)}
+                  />
+                  <span className="f6 fw6 dark-grey ml2 w-20">
+                    {e.percentage.toFixed(2)} %
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <NoData />
+          )
+        ) : (
+          <Loading />
+        )}
       </React.Fragment>
     )
   }

@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-import { PeopleUserListWidget } from '../utils'
+import { PeopleUserListWidget, Loading, DefaultAvatar, NoData } from '../utils'
 import LetterAvatar from '../utils/LetterAvatar'
 import PeopleDashboardStore from './PeopleDashboardStore'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -117,16 +117,18 @@ class CompletingTaskWidget extends React.Component {
                       className=""
                       onClick={() => this.onChangeRoles(roleInit)}
                     />
-                    {PeopleDashboardStore.roles_loaded
-                      ? PeopleDashboardStore.data_roles.map(d => (
-                          <MenuButton
-                            key={d.role_id}
-                            text={d.role_name}
-                            className=""
-                            onClick={() => this.onChangeRoles(d)}
-                          />
-                        ))
-                      : 'loading...'}
+                    {PeopleDashboardStore.roles_loaded ? (
+                      PeopleDashboardStore.data_roles.map(d => (
+                        <MenuButton
+                          key={d.role_id}
+                          text={d.role_name}
+                          className=""
+                          onClick={() => this.onChangeRoles(d)}
+                        />
+                      ))
+                    ) : (
+                      <Loading />
+                    )}
                   </div>
                 </div>
               }
@@ -169,60 +171,66 @@ class CompletingTaskWidget extends React.Component {
           </div>
         </div>
         <div className="flex pb3">
-          {PeopleDashboardStore.completing_task_loaded
-            ? `Average: ${PeopleDashboardStore.data_completing_task.average.toFixed(
-                2
-              )} %`
-            : 'Loading..'}
+          {PeopleDashboardStore.completing_task_loaded ? (
+            `Average: ${PeopleDashboardStore.data_completing_task.average.toFixed(
+              2
+            )} %`
+          ) : (
+            ''
+          )}
         </div>
-        {PeopleDashboardStore.completing_task_loaded
-          ? PeopleDashboardStore.data_completing_task.data.length != 0
-            ? PeopleDashboardStore.data_completing_task.data.map((e, i) => (
-                <div className="flex justify-between mb3 pt2" key={i}>
-                  <div className="flex items-center w-50">
-                    {e.photo_url ? (
-                      <div>
-                        <img
-                          src={e.photo_url}
-                          style={{
-                            width: '36px',
-                            height: '36px',
-                            borderRadius: '18px'
-                          }}
-                          onError={x => {
-                            x.target.onerror = null
-                            x.target.src = DefaultAvatar
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <LetterAvatar
-                        firstName={e.first_name}
-                        lastName={e.last_name}
-                        size={36}
-                        radius={18}
+        {PeopleDashboardStore.completing_task_loaded ? (
+          PeopleDashboardStore.data_completing_task.data.length != 0 ? (
+            PeopleDashboardStore.data_completing_task.data.map((e, i) => (
+              <div className="flex justify-between mb3 pt2" key={i}>
+                <div className="flex items-center w-50">
+                  {e.photo_url ? (
+                    <div>
+                      <img
+                        src={e.photo_url}
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '18px'
+                        }}
+                        onError={x => {
+                          x.target.onerror = null
+                          x.target.src = DefaultAvatar
+                        }}
                       />
-                    )}
-                    <span className="f6 fw6 dark-grey ml2">
-                      {e.first_name} {e.last_name}
-                      <div className="f6 fw6 grey">{e.roles}</div>
-                    </span>
-                  </div>
-                  <div className="flex items-center w-50">
-                    <ProgressBar
-                      key={i}
-                      percent={e.percentage}
-                      height={10}
-                      barColor={this.getProgressBarColor(e.percentage)}
+                    </div>
+                  ) : (
+                    <LetterAvatar
+                      firstName={e.first_name}
+                      lastName={e.last_name}
+                      size={36}
+                      radius={18}
                     />
-                    <span className="f6 fw6 dark-grey ml2 w-20">
-                      {e.percentage} %
-                    </span>
-                  </div>
+                  )}
+                  <span className="f6 fw6 dark-grey ml2">
+                    {e.first_name} {e.last_name}
+                    <div className="f6 fw6 grey">{e.roles}</div>
+                  </span>
                 </div>
-              ))
-            : 'No Record Found'
-          : 'Loading...'}
+                <div className="flex items-center w-50">
+                  <ProgressBar
+                    key={i}
+                    percent={e.percentage}
+                    height={10}
+                    barColor={this.getProgressBarColor(e.percentage)}
+                  />
+                  <span className="f6 fw6 dark-grey ml2 w-20">
+                    {e.percentage} %
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <NoData />
+          )
+        ) : (
+          <Loading />
+        )}
       </React.Fragment>
     )
   }

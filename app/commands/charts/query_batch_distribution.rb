@@ -23,44 +23,49 @@ module Charts
     end
 
     def call
-      active_phases = Constants::FACILITY_ROOMS_ORDER.select { |x| x if Common::GrowPhase.find_by(name: x)&.is_active? } - ['mother', 'storage', 'vault']
-      json_array = []
+      get_phases = Common::GrowPhase.where(is_active: true).pluck(:name) - ['mother', 'storage', 'vault']
+      ordered_phases = []
+      Constants::FACILITY_ROOMS_ORDER.each do |phase|
+        ordered_phases << get_phases.detect { |w| w == phase }
+      end
 
       batch_plants = Cultivation::Batch.collection.aggregate([
-                                                               {"$match": {"current_growth_stage": {"$in": active_phases}}},
                                                                match_facility,
+                                                               {"$match": {"status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
+                                                               {"$match": {"current_growth_stage": {"$in": get_phases}}},
                                                                match_date,
-                                                               {"$lookup": {from: 'inventory_plants',
-                                                                            localField: '_id',
-                                                                            foreignField: 'cultivation_batch_id',
-                                                                            as: 'plants'}},
-                                                               {"$group": {_id: '$current_growth_stage', plant_count: {"$sum": {"$size": '$plants'}}, batch_count: {"$sum": 1}}},
-                                                       
+                                                               {"$group": {_id: '$current_growth_stage', phase: {"$first": '$current_growth_stage'}, plant_count: {"$sum": '$quantity'}, batch_count: {"$sum": 1}}},
+                                                               {"$project": {
+                                                                 "_id": 0,
+                                                                 "phase": 1,
+                                                                 "plant_count": 1,
+                                                                 "batch_count": 1,
+                                                               }},
                                                              ])
-      batch_plants.each do |plant|
-        json_array << {
-          phase: plant[:_id],
-          batch_count: plant[:batch_count],
-          plant_count: plant[:plant_count],
-        }
-      end
-      plants_by_phases = []
-      active_phases.each do |phase|
-        data = json_array.select { |x| x if x[:phase] == phase }.first
-        plants_by_phases << {
-          phase: phase,
-          batch_count: data.present? ? data[:batch_count] : 0,
-          plant_count: data.present? ? data[:plant_count] : 0,
-        }
+
+      json_array = []
+      ordered_phases.compact.each do |phase|
+        phase_exist = batch_plants.detect { |x| x[:phase] == phase }
+        if phase_exist.present?
+          json_array << batch_plants.detect { |x| x[:phase] == phase }
+        else
+          json_array << {
+            phase: phase,
+            plant_count: 0,
+            batch_count: 0,
+          }
+        end
       end
 
       all_counts = {
-        total_plant: plants_by_phases.map { |x| x[:plant_count] }.sum,
-        total_batches: plants_by_phases.map { |x| x[:batch_count] }.sum,
-        query_batches: plants_by_phases,
+        total_plant: batch_plants.map { |x| x[:plant_count] }.sum,
+        total_batches: batch_plants.map { |x| x[:batch_count] }.sum,
+        query_batches: json_array.compact,
       }
 
       all_counts
+      #ordered_phases.compact
+
     end
 
     def match_facility

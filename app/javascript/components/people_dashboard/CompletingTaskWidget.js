@@ -176,7 +176,7 @@ class CompletingTaskWidget extends React.Component {
               2
             )} %`
           ) : (
-            <Loading />
+            ''
           )}
         </div>
         {PeopleDashboardStore.completing_task_loaded ? (

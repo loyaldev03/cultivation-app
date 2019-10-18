@@ -73,7 +73,6 @@ RSpec.describe Inventory::SetupMother, type: :command do
         facility_strain: facility_strain,
         plant_id: single_plant_id,
         location_id: mother_location.id,
-        status: 'available',
         current_growth_stage: 'mother',
         planting_date: planted_on
       )
@@ -119,7 +118,6 @@ RSpec.describe Inventory::SetupMother, type: :command do
         plant_id: plant_ids.split(',').last.strip,
         facility_strain: facility_strain,
         location_id: mother_location.id,
-        status: 'available',
         current_growth_stage: 'mother',
         planting_date: planted_on
       )

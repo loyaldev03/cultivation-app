@@ -26,7 +26,6 @@ task seed_mother: :environment  do
     p.plant_tag = "T.#{p.plant_id}"
     p.location_id = nil
     p.location_type = "room"
-    p.status = "available"
     p.current_growth_stage = "mother"
     p.mother_date = 100.days.ago
     p.planting_date = nil

@@ -223,7 +223,6 @@ module Inventory
         facility_strain_id: facility_strain_id,
         cultivation_batch_id: nil,
         location_id: location_id,
-        status: is_draft ? 'draft' : 'available',
         planting_date: planted_on,
         ref_id: invoice_item ? invoice_item.id : nil,
         ref_type: invoice_item ? invoice_item.class.name : nil,

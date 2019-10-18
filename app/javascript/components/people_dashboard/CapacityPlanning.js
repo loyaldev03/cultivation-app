@@ -144,7 +144,7 @@ export default class OverallInfo extends React.Component {
               ))}
             </div>
           ) : (
-            <Loading/>
+            <Loading />
           )}
           <div>
             {PeopleDashboardStore.current_workers_length > 0 ? (

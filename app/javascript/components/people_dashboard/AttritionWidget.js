@@ -194,7 +194,7 @@ export default class AttritionWidget extends React.Component {
         {PeopleDashboardStore.attrition_loaded ? (
           <Bar data={PeopleDashboardStore.attritionCount} options={options} />
         ) : (
-          <Loading/>
+          <Loading />
         )}
       </React.Fragment>
     )

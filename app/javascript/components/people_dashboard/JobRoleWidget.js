@@ -147,7 +147,7 @@ class JobRoleWidget extends React.Component {
             ))}
           </div>
         ) : (
-          <Loading/>
+          <Loading />
         )}
       </React.Fragment>
     )

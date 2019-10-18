@@ -2,7 +2,7 @@ import React from 'react'
 import * as d3 from 'd3'
 import PeopleDashboardStore from './PeopleDashboardStore'
 import isEmpty from 'lodash.isempty'
-import {Loading, NoData} from '../utils'
+import { Loading, NoData } from '../utils'
 export default class SkillDistributionWidget extends React.Component {
   constructor(props) {
     super(props)
@@ -48,11 +48,10 @@ export default class SkillDistributionWidget extends React.Component {
       const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })
-      
+
       if (isEmpty(Object.keys(data))) {
         t.setState({ nullData: true })
-      }
-      else{
+      } else {
         const treeMap = d3
           .treemap()
           .size([w, h])
@@ -147,8 +146,6 @@ export default class SkillDistributionWidget extends React.Component {
           .text(d => d)
       }
       //console.log('KX' + kx + 'KY' + ky)
-
-      
     })
   }
 

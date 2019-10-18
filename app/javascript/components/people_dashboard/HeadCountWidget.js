@@ -146,7 +146,7 @@ export default class HeadCountWidget extends React.Component {
             }}
           />
         ) : (
-          <Loading/>
+          <Loading />
         )}
       </React.Fragment>
     )

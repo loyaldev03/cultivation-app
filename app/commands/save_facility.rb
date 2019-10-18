@@ -56,15 +56,16 @@ class SaveFacility
             if row.shelves.any?
               row.shelves.each do |shelf|
                 shelf.full_code = Constants.generate_full_code(record, room, row, shelf)
-                trays = get_shelf_trays(shelf.id)
-                if trays.any?
-                  trays.each do |tray|
-                    full_code = Constants.generate_full_code(record, room, row, shelf, tray)
-                    if tray.full_code != full_code
-                      tray.update_attributes(full_code: tray.full_code)
-                    end
-                  end
-                end
+                # FIXME: Temporary disable updating trays
+                # trays = get_shelf_trays(shelf.id)
+                # if trays.any?
+                #   trays.each do |tray|
+                #     full_code = Constants.generate_full_code(record, room, row, shelf, tray)
+                #     if tray.full_code != full_code
+                #       tray.update_attributes(full_code: tray.full_code)
+                #     end
+                #   end
+                # end
               end
             end
           end

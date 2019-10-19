@@ -165,6 +165,7 @@ module Inventory
       plants = plant_ids.map do |plant_id|
         Inventory::Plant.create!(
           plant_id: plant_id,
+          facility_strain_id: facility_strain_id,
           facility_id: facility_id,
           cultivation_batch_id: cultivation_batch_id,
           current_growth_stage: growth_stage,

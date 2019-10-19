@@ -25,9 +25,7 @@ export default class WorkingHourApp extends React.Component {
       selectedRange: this.props.arr_ranges[0],
       arr_ranges: this.props.arr_ranges
     }
-    workerDashboardStore.loadworkerWorkingHours(
-      this.props.arr_ranges[0].val
-    )
+    workerDashboardStore.loadworkerWorkingHours(this.props.arr_ranges[0].val)
   }
 
   onChangeRange = selectedRange => {
@@ -63,13 +61,17 @@ export default class WorkingHourApp extends React.Component {
         },
         callbacks: {
           title: function(tooltipItem, data) {
-            return 
+            return
           },
           label: function(t) {
             if (t.datasetIndex === 0) {
-              return t.xLabel.toString() + " . " + t.yLabel.toString() + " hr"
+              return t.xLabel.toString() + ' . ' + t.yLabel.toString() + ' hr'
             } else if (t.datasetIndex === 1) {
-              return (workerDashboardStore.data_working_hour.hourly_rate * t.yLabel).toString() + " $"
+              return (
+                (
+                  workerDashboardStore.data_working_hour.hourly_rate * t.yLabel
+                ).toString() + ' $'
+              )
             }
           }
         }
@@ -91,10 +93,10 @@ export default class WorkingHourApp extends React.Component {
             },
             ticks: {
               callback: function(label, index, labels) {
-                return label + ' hr';
+                return label + ' hr'
               },
-              beginAtZero: true,
-            },
+              beginAtZero: true
+            }
           }
         ]
       }
@@ -134,15 +136,16 @@ export default class WorkingHourApp extends React.Component {
           </Tippy>
         </div>
         {workerDashboardStore.working_hour_loaded ? (
-          isEmpty(workerDashboardStore.data_working_hour.data) ?
-            <NoData text="Graph is not available"/>
-          :
-          <div >
-            <h1 className="f5 fw6 grey">
-              Rate: {workerDashboardStore.data_working_hour.hourly_rate} $/hr
-            </h1>
-            <Bar data={workerDashboardStore.workingHours} options={options} />
-          </div>
+          isEmpty(workerDashboardStore.data_working_hour.data) ? (
+            <NoData text="Graph is not available" />
+          ) : (
+            <div>
+              <h1 className="f5 fw6 grey">
+                Rate: {workerDashboardStore.data_working_hour.hourly_rate} $/hr
+              </h1>
+              <Bar data={workerDashboardStore.workingHours} options={options} />
+            </div>
+          )
         ) : (
           <Loading />
         )}

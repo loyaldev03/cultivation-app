@@ -37,16 +37,12 @@ class WorkerDashboardStore {
         datasets: [
           {
             label: 'Hour',
-            data: this.data_working_hour.data.map(
-              d => d.total_hours
-            ),
+            data: this.data_working_hour.data.map(d => d.total_hours),
             backgroundColor: 'rgba(241, 90, 34, 1)'
           },
           {
             label: 'Total Rate',
-            data: this.data_working_hour.data.map(
-              d => d.total_hours
-            ),
+            data: this.data_working_hour.data.map(d => d.total_hours),
             type: 'line',
             pointRadius: 0,
             hoverRadius: 0
@@ -54,7 +50,6 @@ class WorkerDashboardStore {
         ]
       }
       return final_result
-    
     } else {
       return {}
     }

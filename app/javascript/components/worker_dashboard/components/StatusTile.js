@@ -21,7 +21,6 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 }
 
 export default class StatusTile extends React.Component {
-  
   constructor(props) {
     super(props)
     this.state = {
@@ -41,7 +40,6 @@ export default class StatusTile extends React.Component {
     )
     let issue = await workerDashboardStore.getIssue('open')
     this.setState({ task, issue })
-    
   }
 
   onChangeStatus = async range => {
@@ -71,8 +69,11 @@ export default class StatusTile extends React.Component {
     return (
       <div className="flex mt4">
         <div className="w-60">
-          <div className="ba b--light-gray pa3 bg-white mt3" style={{ minHeight: 330 + 'px' }}>
-            <WorkingHourApp arr_ranges={arr_ranges}/>
+          <div
+            className="ba b--light-gray pa3 bg-white mt3"
+            style={{ minHeight: 330 + 'px' }}
+          >
+            <WorkingHourApp arr_ranges={arr_ranges} />
           </div>
           <div className="ba b--light-gray pa3 bg-white mt3">
             <div className="flex justify-between">
@@ -121,7 +122,7 @@ export default class StatusTile extends React.Component {
                 onDelete={this.onToggleAddIssue}
               />
 
-              {issue && !isEmpty(issue)  ? (
+              {issue && !isEmpty(issue) ? (
                 <div className="flex justify-center mv3">
                   <a className="fw6 orange dim pointer" href="/daily_tasks">
                     Show More
@@ -170,7 +171,7 @@ export default class StatusTile extends React.Component {
                 </a>
               </div>
             ) : (
-              <NoData text="No tasks for today"/>
+              <NoData text="No tasks for today" />
             )}
           </div>
           <div

@@ -121,6 +121,7 @@ module Inventory
     def update_plant(invoice_item)
       Rails.logger.debug("MANIFEST====>#{manifest_no}")
       facility_strain_id = batch.facility_strain_id
+      facility_id = batch.facility_id
       growth_stage = batch.current_growth_stage
 
       plant = Inventory::Plant.find(id)
@@ -132,6 +133,7 @@ module Inventory
       plant.update!(
         plant_id: plant_ids[0],
         facility_strain_id: facility_strain_id,
+        facility_id: facility_id,
         cultivation_batch_id: cultivation_batch_id,
         current_growth_stage: growth_stage,
         location_id: location_id,
@@ -158,11 +160,12 @@ module Inventory
       location = @locations.query_trays(location_id.to_bson_id)
       location_purpose = location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
       facility_strain_id = batch.facility_strain_id
+      facility_id = batch.facility_id
       growth_stage = batch.current_growth_stage
       plants = plant_ids.map do |plant_id|
         Inventory::Plant.create!(
           plant_id: plant_id,
-          facility_strain_id: facility_strain_id,
+          facility_id: facility_id,
           cultivation_batch_id: cultivation_batch_id,
           current_growth_stage: growth_stage,
           modifier: user,

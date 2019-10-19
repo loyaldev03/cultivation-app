@@ -7,7 +7,8 @@
     <%= react_component 'cultivation/dashboards/DestroyedPlantDashboardApp',
       {
         defaultFacilityId: current_default_facility&.id.to_s,
-        currentFacilityId: current_user_facilities_ids.map{|x| x.to_s},
+        facility_id: current_user_facilities_ids.map{|x| x.to_s},
+        destroyed_plant: true,
         currentTime: Time.current,
       }
     %>
@@ -15,7 +16,8 @@
     <%= react_component 'cultivation/dashboards/DestroyedPlantDashboardApp',
       {
         defaultFacilityId: current_default_facility&.id.to_s,
-        currentFacilityId: current_facility&.id.to_s,
+        facility_id: current_facility&.id.to_s,
+        destroyed_plant: true,
         currentTime: Time.current,
       }
     %>

@@ -32,7 +32,8 @@ module Inventory
                            :c_at,
                            :location_id,
                            :location_type,
-                           :location_name)
+                           :location_name,
+                           :location_full_path)
     attr_reader :args, :metadata
 
     def initialize(args = {})
@@ -51,6 +52,7 @@ module Inventory
       @locations = args[:locations]
       @excludes = args[:excludes]
       @search = args[:search]
+      @destroy_plant = args[:destroyed_plant] if args[:destroyed_plant].present?
 
       @facility_strain_ids = args[:facility_strain_ids]
       @facility_strain_id = args[:facility_strain_id]
@@ -62,30 +64,11 @@ module Inventory
       if valid_params?
         plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch).collection.aggregate([
           {"$sort": {"c_at": -1}},
+          get_destroy_plants,
           match_search,
           match_grow_phase,
           match_excludes,
           match_facility_strain_ids,
-          {"$lookup": {from: 'rooms',
-                       localField: 'location_id',
-                       foreignField: '_id',
-                       as: 'room'}},
-
-          {"$unwind": {
-            "path": '$room',
-            "preserveNullAndEmptyArrays": true,
-          }},
-
-          {"$lookup": {from: 'trays',
-                       localField: 'location_id',
-                       foreignField: '_id',
-                       as: 'tray'}},
-
-          {"$unwind": {
-            "path": '$tray',
-            "preserveNullAndEmptyArrays": true,
-          }},
-
           {"$lookup": {from: 'cultivation_batches',
                        localField: 'cultivation_batch_id',
                        foreignField: '_id',
@@ -159,8 +142,10 @@ module Inventory
         result['data'].each do |x|
           if x[:location_id].present?
             location_name = @locations.get_location_code(x[:location_id])
+            location_full_path = @locations.get_location_name(x[:location_id])
           else
             location_name = nil
+            location_full_path = nil
           end
 
           if x[:batch_no].present? && x[:batch_no].present?
@@ -201,7 +186,8 @@ module Inventory
             x[:c_at],
             x[:location_id]&.to_s,
             x[:location_type],
-            location_name
+            location_name,
+            location_full_path
           )
 
           json_data << {
@@ -224,6 +210,14 @@ module Inventory
 
     def skip
       @skip ||= (@page * @limit)
+    end
+
+    def get_destroy_plants
+      if @destroy_plant.present? && @destroy_plant == 'true'
+        {"$match": {"destroyed_date": {"$ne": nil}}}
+      else
+        {"$match": {}}
+      end
     end
 
     def match_grow_phase

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import LetterAvatar from './LetterAvatar'
+import { DefaultAvatar } from './Icons'
 
 const Avatar = React.memo(
   ({
@@ -22,6 +23,7 @@ const Avatar = React.memo(
           style={{
             width: size,
             height: size,
+            background: `url(${DefaultAvatar}) no-repeat center center`,
             backgroundSize: 'cover',
             borderRadius: '50%'
           }}

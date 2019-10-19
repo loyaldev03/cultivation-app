@@ -263,6 +263,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :worker_dashboard , only: [:index] do
+        collection do
+          get 'working_hours_chart'
+        end
+      end
+
       resources :customers, only: [:index, :show, :create]
 
       resources :system, only: [], as: :system do

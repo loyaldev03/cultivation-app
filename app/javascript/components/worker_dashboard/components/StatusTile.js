@@ -1,12 +1,13 @@
 import React from 'react'
 import DashboardCalendarApp from '../dashboardCalendar/DashboardCalendarApp'
-import { WorkerDashboardGraph, longDate } from '../../utils'
+import { WorkerDashboardGraph, longDate, NoData } from '../../utils'
 import workerDashboardStore from '../stores/WorkerDashboardStore'
 import { formatIssueNo } from '../../issues/components/FormatHelper'
 import IssueList from '../../../components/dailyTask/components/IssueList'
 import SidebarStore from '../../../components/dailyTask/stores/SidebarStore'
 import Tippy from '@tippy.js/react'
-
+import WorkingHourApp from './WorkingHourApp'
+import isEmpty from 'lodash.isempty'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -20,10 +21,18 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 }
 
 export default class StatusTile extends React.Component {
-  state = {
-    task: [],
-    issue: [],
-    selectedStatus: 'open'
+  
+  constructor(props) {
+    super(props)
+    this.state = {
+      task: [],
+      issue: [],
+      selectedStatus: 'open',
+      arr_ranges: [
+        { val: 'daily', label: 'Daily' },
+        { val: 'weekly', label: 'Weekly' }
+      ]
+    }
   }
   componentDidMount = async () => {
     let date = new Date()
@@ -32,6 +41,7 @@ export default class StatusTile extends React.Component {
     )
     let issue = await workerDashboardStore.getIssue('open')
     this.setState({ task, issue })
+    
   }
 
   onChangeStatus = async range => {
@@ -56,24 +66,13 @@ export default class StatusTile extends React.Component {
 
   render() {
     const { date } = this.props
-    let { task, issue } = this.state
+    let { task, issue, arr_ranges } = this.state
     // issue = issue.map(x => x.tasks.map(i => i.attributes.issues))
     return (
       <div className="flex mt4">
         <div className="w-60">
-          <div className="ba b--light-gray pa3 bg-white">
-            <div className="flex justify-between">
-              <div>
-                <h1 className="f5 fw6 ml3">Working hours</h1>
-              </div>
-              <div className="flex">
-                <h1 className="f5 fw6">Daily</h1>
-                <i className="material-icons grey mr2 dim md-21 pointer mt2">
-                  keyboard_arrow_down
-                </i>
-              </div>
-            </div>
-            <img src={WorkerDashboardGraph} />
+          <div className="ba b--light-gray pa3 bg-white mt3" style={{ minHeight: 330 + 'px' }}>
+            <WorkingHourApp arr_ranges={arr_ranges}/>
           </div>
           <div className="ba b--light-gray pa3 bg-white mt3">
             <div className="flex justify-between">
@@ -122,16 +121,14 @@ export default class StatusTile extends React.Component {
                 onDelete={this.onToggleAddIssue}
               />
 
-              {issue && issue.length > 0 ? (
+              {issue && !isEmpty(issue)  ? (
                 <div className="flex justify-center mv3">
                   <a className="fw6 orange dim pointer" href="/daily_tasks">
                     Show More
                   </a>
                 </div>
               ) : (
-                <div className="flex justify-center mv5">
-                  <span className="fw6 gray dim">No isssues found</span>
-                </div>
+                <NoData text="No issues found" />
               )}
             </div>
           </div>
@@ -173,9 +170,7 @@ export default class StatusTile extends React.Component {
                 </a>
               </div>
             ) : (
-              <div className="flex justify-center mt5">
-                <span className="fw6 gray dim">No task for today</span>
-              </div>
+              <NoData text="No tasks for today"/>
             )}
           </div>
           <div

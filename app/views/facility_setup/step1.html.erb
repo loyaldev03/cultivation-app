@@ -155,20 +155,18 @@
                   </div>
 
                   <div class="w-40">
-                    <%= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
-                    <%= f.text_field :address_fax_number,
+                    <%#= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
+                    <%#= f.text_field :address_fax_number,
                       placeholder: "011 1234567",
                       value: @wizard_form.address_fax_number,
                       class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
-                  </div>
-                </div>
 
-                <div class="w-40 mt3">
-                  <%= f.label :email, class: "grey subtitle-2 ttc db mb1" %>
+                    <%= f.label :email, class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :address_email,
                       placeholder: "user@email.com",
                       value: @wizard_form.address_email,
                       class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
                 </div>
               </div>
             </div>

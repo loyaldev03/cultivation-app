@@ -193,11 +193,12 @@ class ProductCategoryStore {
   @computed
   get categoryOptions() {
     const res = this.categories
-      .filter(c => c.is_active && !c.deleted)
+      .filter(c => c.is_active && !c.deleted && c.has_children)
       .map(c => {
         return {
           value: c.id,
-          label: c.name
+          label: c.name,
+          package_units: c.package_units,
         }
       })
     return res

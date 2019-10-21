@@ -27,6 +27,7 @@ module Inventory
             label: x[:label],
             uom: get_uom(x),
             quantity_in_uom: get_quantity_in_uom(x),
+            category_name: x[:category_name],
           )
         end
       end

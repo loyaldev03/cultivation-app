@@ -181,7 +181,11 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     category.metrc_item_category = params[:metrc_item_category]
     if category.metrc_item_category
       found = Inventory::ItemCategory.find_by(name: category.metrc_item_category)
-      category.quantity_type = found&.quantity_type
+      if found.present?
+        category.quantity_type = found&.quantity_type
+      else
+        category.quantity_type = params[:quantity_type]
+      end
     end
 
     category.package_units = []
@@ -193,6 +197,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
           label: x[:label],
           uom: get_uom(x),
           quantity_in_uom: get_quantity_in_uom(x),
+          is_active: x[:is_active],
         )
       end
     end

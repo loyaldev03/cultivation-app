@@ -7,6 +7,7 @@ import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
 import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
 import MetrcItemCategoryStore from './MetrcItemCategoryStore'
 import ItemCategorySelector from '../cultivation/tasks_setup/components/ItemCategorySelector'
+import classNames from 'classnames'
 
 const QUANTITY_TYPES = [
   {
@@ -437,20 +438,154 @@ class AddEditProductCategoryForm extends React.Component {
                     <React.Fragment>
                       {packageUnits.length > 0 && (
                         <React.Fragment>
+                        <div className="pa2 fl w-100 flex items-center grey mt2">
+                          <div className="w-30 mr3">
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Packaging Units
+                            </label>
+                          </div>
+                          <div className="w-20 mr3">
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              UOM
+                            </label>
+                          </div>
+                          <div className="w-20 mr3">
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Quantity
+                            </label>
+                          </div>
+                          <div className="w-20 mr3">
+                            <label className="f6 fw6 db mb1 gray ttc">
+                            </label>
+                          </div>
+                        </div>
                           {packageUnits.map(x => {
                             return (
-                              <div className="pa2 flex items-center grey mt4">
-                                <div className="w-20 mr3">{x.value}</div>
-                                <div className="w-20 mr3" />
-                                <div className="w-20 mr3" />
-                                <i class="material-icons icon--btn red">
-                                  delete
-                                </i>
+                              <div className="pa2 fl w-100 flex items-center grey mt2">
+                                <div className="w-30 mr3">
+                                  <label className=''
+                                    className={classNames('', {
+                                      'flex justify-between items-center': !built_in
+                                    })}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      value={x.is_active}
+                                      onChange={e => {
+                                        this.setState({
+                                          packageUnits: this.state.packageUnits.map(
+                                            y =>
+                                              y === x
+                                                ? { ...y, is_active: e.target.checked }
+                                                : y
+                                          )
+                                        })
+                                      }}                                      
+                                      checked={x.is_active}
+                                    />
+                                    {built_in ? 
+                                      <span className="ph1 f6 fw6 gray ttc">{x.value}</span>
+                                      :
+                                      <input
+                                        type="text"
+                                        className="db w-70 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                                        onChange={e => {
+                                          this.setState({
+                                            packageUnits: this.state.packageUnits.map(
+                                              y =>
+                                                y === x
+                                                  ? { ...y, value: e.target.value }
+                                                  : y
+                                            )
+                                          })
+                                        }}  
+                                        value={x.value}
+                                      />
+
+                                    }
+                                  </label>
+                                </div>
+                                <div className="w-20 mr3">
+                                  <Select
+                                    styles={reactSelectStyle}
+                                    options={[
+                                      { label: 'Ounce', value: 'ounce' },
+                                      { label: 'Gram', value: 'gram' }
+                                    ]}
+                                    value={x.uom}
+                                    onChange={e => {
+                                      this.setState({
+                                        packageUnits: this.state.packageUnits.map(
+                                          y =>
+                                            y === x
+                                              ? { ...y, uom: e }
+                                              : y
+                                        )
+                                      })
+                                    }}
+                                  />
+                                </div>
+                                <div className="w-20 mr3">
+                                  <input
+                                    type="text"
+                                    className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                                    name={x.value}
+                                    value={x.quantity}
+                                    onChange={e => {
+                                      this.setState({
+                                        packageUnits: this.state.packageUnits.map(
+                                          y =>
+                                            y === x
+                                              ? {
+                                                ...y,
+                                                quantity: e.target.value
+                                              }
+                                              : y
+                                        )
+                                      })
+                                    }}
+                                  />
+                                </div>
+                                <div className="w-20 mr3">
+                                  <i
+                                    className="material-icons icon--btn red"
+                                    onClick={e => {
+                                      if (confirm('Confirm delete?')) {
+                                        this.setState({
+                                          packageUnits: this.state.packageUnits.filter(y => y !== x)
+                                        })
+                                      }
+                                    }}
+                                  >
+                                    delete
+                                  </i>
+                                </div>
                               </div>
                             )
                           })}
                         </React.Fragment>
                       )}
+                    {!built_in &&
+                      <a
+                        href="#0"
+                        className="link pa2 dib f6"
+                        onClick={() => {
+                          this.setState({
+                            packageUnits: [
+                              ...packageUnits,
+                              {
+                                value: '',
+                                is_active: false,
+                                uom: '',
+                                quantity_type: ''
+                              }
+                            ]
+                          })
+                        }}
+                      >
+                        Add new package units
+                      </a>
+                    }
                     </React.Fragment>
                   )}
               </React.Fragment>

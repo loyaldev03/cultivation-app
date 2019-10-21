@@ -5,44 +5,8 @@ import { SlidePanelHeader, toast, SlidePanelFooter } from '../utils'
 import reactSelectStyle from '../utils/reactSelectStyle'
 import ProductCategoryStore from '../inventory/stores/ProductCategoryStore'
 
-const PkgUnitCheckbox = React.memo(
-  ({ value, label, checked, onChange, className }) => {
-    return (
-      <label className={className}>
-        <input
-          type="checkbox"
-          name={label}
-          value={value}
-          onChange={onChange}
-          checked={checked}
-        />
-        <span className="ph1">{label}</span>
-      </label>
-    )
-  }
-)
 
-const CUSTOM_PKG_PREFIX = 'custom_'
-
-const BUILTIN_PK_UNITS = [
-  { value: '3pk', label: '3pk' },
-  { value: '5pk', label: '5pk' },
-  { value: '12pk', label: '12pk' },
-  { value: '24pk', label: '24pk' }
-]
-
-const BUILTIN_WEIGHT_UNITS = [
-  { value: 'half_g', label: '1/2 gram' },
-  { value: 'half_kg', label: '1/2 kg' },
-  { value: 'quarter_lb', label: '1/4 lb' },
-  { value: 'quarter_oz', label: '1/4 ounce' },
-  { value: 'eighth', label: 'Eighth' },
-  { value: 'g', label: 'Gram' },
-  { value: 'half_oz', label: 'Half ounce' },
-  { value: 'kg', label: 'Kg' },
-  { value: 'lb', label: 'Lb' },
-  { value: 'oz', label: 'Ounce' }
-]
+const UOM_TYPES = [{value: 'pk', label: 'pk'}]
 
 @observer
 class AddEditProductSubCategoryForm extends React.Component {
@@ -86,6 +50,7 @@ class AddEditProductSubCategoryForm extends React.Component {
       this.setState({
         id: editSubCategory.id || '',
         name: editSubCategory.name || '',
+        categoryPackageUnits: selectedProductCategory.package_units,
         productCategoryId,
         selectedProductCategory,
         packageUnits
@@ -118,7 +83,8 @@ class AddEditProductSubCategoryForm extends React.Component {
   onChangeProductCategory = selected => {
     this.setState({
       selectedProductCategory: selected,
-      productCategoryId: selected.value
+      productCategoryId: selected.value,
+      categoryPackageUnits: selected.package_units,
     })
   }
 
@@ -150,7 +116,19 @@ class AddEditProductSubCategoryForm extends React.Component {
 
   render() {
     const { onClose, onSave, mode = 'add' } = this.props
-    const { name, selectedProductCategory, packageUnits } = this.state
+    const { name, selectedProductCategory, packageUnits, categoryPackageUnits } = this.state
+    let groupCategoryPackageUnits = []
+    if(categoryPackageUnits){
+      groupCategoryPackageUnits = categoryPackageUnits.filter(e => e.is_active).map(c => {
+        return {
+          value: c.value,
+          label: c.label,
+          package_units: packageUnits.filter(e => e.category_name === c.value)
+        }
+      })
+    }else{
+      groupCategoryPackageUnits = []
+    }
 
     if (!mode) {
       return null
@@ -199,140 +177,107 @@ class AddEditProductSubCategoryForm extends React.Component {
                 <label className="f6 fw6 db mb1 gray ttc">
                   Packaging Unit Types
                 </label>
-              </div>
-              <div className="grey f6">
-                <span className="fw6 mt2 dib">Package:</span>
-                <div className="pa2">
-                  {BUILTIN_PK_UNITS.map(pkgUnit => {
+                {groupCategoryPackageUnits && groupCategoryPackageUnits
+                  .map(x => {
                     return (
-                      <PkgUnitCheckbox
-                        className="pv1 pr3 dib"
-                        key={pkgUnit.value}
-                        label={pkgUnit.label}
-                        value={pkgUnit.value}
-                        onChange={this.onChangeCb}
-                        checked={this.isChecked(pkgUnit.value)}
-                      />
-                    )
-                  })}
-                </div>
-              </div>
-              <div className="grey f6">
-                <span className="fw6 mt2 dib">Weight:</span>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr'
-                  }}
-                >
-                  {BUILTIN_WEIGHT_UNITS.map(pkgUnit => (
-                    <PkgUnitCheckbox
-                      className="pa2"
-                      key={pkgUnit.value}
-                      label={pkgUnit.label}
-                      value={pkgUnit.value}
-                      onChange={this.onChangeCb}
-                      checked={this.isChecked(pkgUnit.value)}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="grey f6">
-                <span className="fw6 mt2 dib">Custom Units:</span>
-                <div>
-                  {packageUnits
-                    .filter(u => u.value.includes(CUSTOM_PKG_PREFIX))
-                    .map(x => {
-                      return (
-                        <div key={x.value} className="pa2 flex items-center">
-                          <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              Label
-                            </label>
-                            <input
-                              type="text"
-                              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
-                              name={x.value}
-                              value={x.label}
-                              onChange={e => {
-                                this.setState({
-                                  packageUnits: this.state.packageUnits.map(y =>
-                                    y.value === e.target.name
-                                      ? { ...y, label: e.target.value }
-                                      : y
-                                  )
-                                })
-                              }}
-                            />
-                          </div>
-                          <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              Uom
-                            </label>
-                            <Select
-                              styles={reactSelectStyle}
-                              options={[
-                                { label: 'Ounce', value: 'ounce' },
-                                { label: 'Gram', value: 'gram' }
-                              ]}
-                              value={x.uom}
-                              onChange={e => {
-                                this.setState({
-                                  packageUnits: this.state.packageUnits.map(y =>
-                                    y.value === x.value ? { ...y, uom: e } : y
-                                  )
-                                })
-                              }}
-                            />
-                          </div>
-                          <div className="w-20 mr2">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              Quantity
-                            </label>
-                            <input
-                              type="text"
-                              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
-                              name={x.value}
-                              value={x.quantity}
-                              onChange={e => {
-                                this.setState({
-                                  packageUnits: this.state.packageUnits.map(y =>
-                                    y.value === e.target.name
-                                      ? { ...y, quantity: e.target.value }
-                                      : y
-                                  )
-                                })
-                              }}
-                            />
-                          </div>
-                          <i
-                            className="material-icons icon--btn red"
-                            onClick={this.onDelete(x.value)}
-                          >
-                            delete
-                          </i>
+                      <React.Fragment>
+                        <div className="f6 gray">
+                          {x.label}
                         </div>
-                      )
-                    })}
-                  <a
-                    href="#0"
-                    className="link pa2 dib"
-                    onClick={() => {
-                      const customIdx = new Date().getTime()
-                      this.setState({
-                        packageUnits: [
-                          ...packageUnits,
-                          {
-                            value: `${CUSTOM_PKG_PREFIX}${customIdx}`,
-                            label: ''
-                          }
-                        ]
-                      })
-                    }}
-                  >
-                    Add
-                  </a>
-                </div>
+                        {x.package_units && x.package_units.map(y => {return(
+                          <div
+                            key={y.value}
+                            className="pa2 flex items-center"
+                          >
+                            <div className="w-20 mr3">
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                Quantity
+                                    </label>
+                              <input
+                                type="text"
+                                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
+                                name={y.value}
+                                value={y.label}
+                                onChange={e => {
+                                  console.log(e)
+                                  this.setState({
+                                    packageUnits: this.state.packageUnits.map(
+                                      z =>
+                                        z === y
+                                          ? {
+                                            ...z,
+                                            label: e.target.value
+                                          }
+                                          : z
+                                    )
+                                  })
+                                }}
+                              />
+                            </div>
+                            <div className="w-20 mr3">
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                Uom
+                              </label>
+                              <Select
+                                styles={reactSelectStyle}
+                                options={UOM_TYPES}
+                                value={y.uom}
+                                // isDisabled={built_in}
+                                onChange={selected => {
+                                this.setState({
+                                  packageUnits: this.state.packageUnits.map(
+                                    z =>
+                                      z === y
+                                        ? {
+                                          ...z,
+                                          uom: selected
+                                        }
+                                        : z
+                                  )
+                                })
+
+                                }}
+                              />
+                            </div>
+                            <div className="w-20 mr3">
+                              <i
+                                className="material-icons icon--btn red"
+                                onClick={e => {
+                                  if (confirm('Confirm delete?')) {
+                                    this.setState({
+                                      packageUnits: this.state.packageUnits.filter(z => z !== y)
+                                    })
+                                  }
+                                }}
+                              >
+                                delete
+                              </i>
+                            </div>
+                          </div>
+                        )})}
+                        <a
+                          href="#0"
+                          className="link pa2 dib f6"
+                        onClick={() => {
+                          this.setState({
+                            packageUnits: [
+                              ...packageUnits,
+                              {
+                                value: x.label,
+                                label: '',
+                                category_name: x.label,
+                                uom: UOM_TYPES[0]
+                              }
+                            ]
+                          })
+                        }}
+                        >
+                          Add
+                </a>
+                      </React.Fragment>
+                    )})                
+                }
+
               </div>
             </div>
           </div>

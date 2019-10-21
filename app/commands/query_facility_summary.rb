@@ -5,18 +5,19 @@ class QueryFacilitySummary
 
   def initialize(current_user, args = {})
     @user = current_user
-    @args = args
-    #raise ArgumentError, 'facility_id' if args[:facility_id].nil?
 
-    # args = {
-    #   facility_id: nil,
-    # }.merge(args)
+    raise ArgumentError, 'facility_ids' if args[:facility_ids].blank?
+    raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
+
+    @facility_ids = args[:facility_ids]
 
     # @facility_id = args[:facility_id].to_bson_id
+    pp ">>> Inside QueryFacilitySummary"
+    pp @facility_ids
   end
 
   def call
-    trays = QueryAvailableTrays.call(facility_id: @args[:facility_id],
+    trays = QueryAvailableTrays.call(facility_ids: @facility_ids,
                                      start_date: Time.current.beginning_of_day,
                                      end_date: Time.current.end_of_day).result
 

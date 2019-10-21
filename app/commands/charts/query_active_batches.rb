@@ -4,7 +4,10 @@ module Charts
 
     def initialize(args = {})
       @period = args[:period]
-      # NOTE: facility_ids should not be empty when calling this command
+      # facility_ids should not be empty when calling this command
+      raise ArgumentError, 'facility_ids' if args[:facility_ids].blank?
+      # facility_ids must be an array of facility ids
+      raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
       @facility_ids = args[:facility_ids]&.map(&:to_bson_id)
     end
 
@@ -26,11 +29,7 @@ module Charts
     private
 
     def match_facilities
-      if @facility_ids && (@facility_ids.is_a? Array) && @facility_ids.any?
-        {"$match": {facility_id: {"$in": @facility_ids}}}
-      else
-        {"$match": {}}
-      end
+      {"$match": {facility_id: {"$in": @facility_ids}}}
     end
 
     def match_active_period

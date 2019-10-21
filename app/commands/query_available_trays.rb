@@ -14,7 +14,9 @@ class QueryAvailableTrays
     raise ArgumentError, 'end_date' if args[:end_date].nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if args[:end_date] < args[:start_date]
 
-    @facility_id = args[:facility_id]
+    @facility_ids = args[:facility_ids]&.map(&:to_bson_id)
+    pp ">>> Inside QueryAvailableTrays >>>"
+    pp @facility_ids
     @exclude_batch_id = args[:exclude_batch_id]&.to_bson_id
     @purpose = args[:purpose]
     @start_date = args[:start_date]
@@ -27,10 +29,9 @@ class QueryAvailableTrays
 
   private
 
-  def match_facility
-    if @facility_id.present?
-      f_ids = @facility_id.to_s.split(',').map { |x| x.to_bson_id }
-      {"$match": {_id: {"$in": f_ids}}}
+  def match_facilities
+    if @facility_ids && (@facility_ids.is_a? Array) && @facility_ids.any?
+      {"$match": {facility_id: {"$in": @facility_ids}}}
     else
       {"$match": {}}
     end
@@ -46,7 +47,7 @@ class QueryAvailableTrays
 
   def query_records
     criteria = Facility.collection.aggregate [
-      match_facility,
+      match_facilities,
       {"$project": {_id: 0, facility_id: '$_id', facility_code: '$code', facility_name: '$name', rooms: 1}},
       {"$unwind": {path: '$rooms', preserveNullAndEmptyArrays: true}},
       {"$unwind": {path: '$rooms.rows', preserveNullAndEmptyArrays: true}},

@@ -1,8 +1,6 @@
 class QueryFacilitySummary
   prepend SimpleCommand
 
-  #attr_reader :facility_id
-
   def initialize(current_user, args = {})
     @user = current_user
 

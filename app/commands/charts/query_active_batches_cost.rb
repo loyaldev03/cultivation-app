@@ -4,51 +4,36 @@ module Charts
 
     def initialize(current_user, args = {})
       @user = current_user
-      @facility_id = args[:facility_id]
+
+      raise ArgumentError, 'period' if args[:period].blank?
+      raise ArgumentError, 'facility_ids' if args[:facility_ids].blank?
+      raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
+
       @period = args[:period]
+      @facility_ids = args[:facility_ids]
     end
 
     def call
-      Cultivation::Batch.collection.aggregate([
-        {"$match": {"facility_id": {"$in": @facility_id}}},
-        {"$match": {"status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
-        match_period,
-        {"$project": {
-          "actual_cost": {"$ifNull": ['$actual_cost', 0]},
+      criteria = Cultivation::Batch.collection.aggregate([
+        {"$match": {"_id": {"$in": scopped_batch_ids}}},
+        {"$addFields": {
+          "actual_cost": { "$add": [ "$actual_labor_cost", "$actual_material_cost" ] }
         }},
-      ]).map { |x| x[:actual_cost] }.sum
+        {"$group": {
+          "_id": "result",
+          "actual_cost": { "$sum": "$actual_cost" }
+        }},
+      ])
+      criteria.to_a[0]["actual_cost"]
     end
 
     private
 
-    def match_period
-      date = Time.zone.now
-      if @period == 'this_month'
-        start_date = date.beginning_of_month
-        end_date = date.end_of_month
-      elsif @period == 'this_year'
-        start_date = date.beginning_of_year
-        end_date = date.end_of_year
-      elsif @period == 'this_week'
-        start_date = date.beginning_of_week
-        end_date = date.end_of_week
-      else
-        start_date = 'all'
-      end
-
-      if start_date == 'all'
-        {"$match": {}}
-      else
-        {"$match": {
-          "$expr": {
-            "$or": [
-              {"$and": [{"$gte": ['$c_at', start_date]}, {"$lte": ['$c_at', end_date]}]},
-              {"$and": [{"$gte": ['$c_at', start_date]}, {"$lte": ['$c_at', end_date]}]},
-              {"$and": [{"$lte": ['$c_at', start_date]}, {"$gte": ['$c_at', end_date]}]},
-            ],
-          },
-        }}
-      end
+    def scopped_batch_ids
+      @scopped_batch_ids ||= Charts::QueryActiveBatches.call(
+        period: @period,
+        facility_ids: @facility_ids,
+      ).result
     end
   end
 end

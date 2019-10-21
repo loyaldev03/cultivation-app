@@ -64,7 +64,7 @@ module FacilityWizardForm
         self.address_country = record.address.country
         self.address_email = record.address.email
         self.address_main_number = record.address.main_number
-        self.address_fax_number = record.address.fax_number
+        # self.address_fax_number = record.address.fax_number
       end
     end
 

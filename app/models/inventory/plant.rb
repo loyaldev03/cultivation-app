@@ -7,6 +7,7 @@ module Inventory
     # Seed data for prepurchased clone
 
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
+    belongs_to :facility, class_name: 'Facility', optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
     belongs_to :vendor_invoice, class_name: 'Inventory::VendorInvoice', optional: true

@@ -55,6 +55,7 @@ class MetrcDownloadPlantsFlower
       plant_tag: metrc_plant['Label'],
     )
     plant.plant_id ||= metrc_plant['Label']
+    plant.facility_id = facility.id
     plant.facility_strain = get_facility_strain(facility.id,
                                                 metrc_plant['StrainId'])
     plant.metrc_id = metrc_plant['Id']

@@ -119,7 +119,6 @@ module Inventory
     end
 
     def update_plant(invoice_item)
-      Rails.logger.debug("MANIFEST====>#{manifest_no}")
       facility_strain_id = batch.facility_strain_id
       facility_id = batch.facility_id
       growth_stage = batch.current_growth_stage

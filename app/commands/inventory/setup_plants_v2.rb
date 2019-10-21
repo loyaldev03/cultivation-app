@@ -179,6 +179,7 @@ module Inventory
       plant = Inventory::Plant.find(id)
       plant.plant_id = plant_id
       plant.facility_strain = facility_strain
+      plant.facility_id = facility_strain.facility_id
       plant.cultivation_batch_id = cultivation_batch_id
       plant.current_growth_stage = batch.current_growth_stage
       plant.location_id = location_id
@@ -198,6 +199,7 @@ module Inventory
       plant = Inventory::Plant.create!(
         plant_id: plant_id,
         facility_strain_id: facility_strain.id,
+        facility_id: facility_strain.facility_id,
         cultivation_batch_id: cultivation_batch_id,
         current_growth_stage: growth_stage,
         modifier: user,

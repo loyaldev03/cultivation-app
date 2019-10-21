@@ -49,7 +49,6 @@ module Inventory
       @invoice_no = args[:invoice_no]
       @purchase_order_no = args[:purchase_order_no]
       @purchase_date = args[:purchase_date]
-      facility_strain = Inventory::FacilityStrain.find(@facility_strain_id)
       @catalogue = Inventory::Catalogue.plant
     end
 
@@ -66,6 +65,10 @@ module Inventory
     end
 
     private
+
+    def facility_strain
+      @facility_strain ||= Inventory::FacilityStrain.find(@facility_strain_id)
+    end
 
     def generate_or_extract_plant_ids(ids)
       ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
@@ -145,7 +148,6 @@ module Inventory
     end
 
     def save_purchase_order(vendor)
-      facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
       purchase_order = Inventory::PurchaseOrder.find_or_create_by!(purchase_order_no: purchase_order_no, vendor: vendor) do |po|
         po.purchase_order_date = purchase_date
         po.facility = facility_strain.facility
@@ -198,6 +200,7 @@ module Inventory
           facility_strain_id: facility_strain_id,
         ) do |t|
           t.current_growth_stage = 'mother'
+          t.facility_id = facility_strain&.facility_id
           t.modifier = user
           t.location_id = location_id
           t.location_type = 'room'

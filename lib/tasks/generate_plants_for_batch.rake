@@ -25,7 +25,7 @@ task generate_plants_for_batch: :environment do
         current_growth_stage: "clone",
         planting_date: batch.start_date,
         facility_strain_id: batch.facility_strain_id,
-        # facility_id: batch.facility_id,
+        facility_id: batch.facility_id,
       }
     end
     Inventory::Plant.create(plants)

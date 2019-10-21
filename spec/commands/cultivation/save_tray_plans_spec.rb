@@ -212,7 +212,7 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
       cmd = Cultivation::SaveTrayPlans.call(batch.id, plans, 10)
       query = QueryAvailableTrays.call(start_date: t11.start_date,
                                        end_date: t11.end_date,
-                                       facility_id: facility.id,
+                                       facility_ids: [facility.id],
                                        purpose: ["clone"])
 
       expect(cmd.success?).to be true

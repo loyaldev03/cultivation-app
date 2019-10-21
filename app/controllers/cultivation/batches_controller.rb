@@ -146,7 +146,7 @@ class Cultivation::BatchesController < ApplicationController
       args = {
         start_date: start_date,
         end_date: batch.estimated_harvest_date,
-        facility_id: batch.facility_id,
+        facility_ids: [batch.facility_id],
         purpose: cultivation_phases,
         exclude_batch_id: batch.id,
       }

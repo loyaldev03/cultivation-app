@@ -20,7 +20,7 @@ class QueryReadyTrays
     cmd = QueryAvailableTrays.call(
       start_date: Date.new(1900, 1, 1),
       end_date: Date.new(1900, 1, 1),
-      facility_id: @facility_id,
+      facility_ids: [@facility_id],
       purpose: purposes,
       exclude_batch_id: @exclude_batch_id,
     )

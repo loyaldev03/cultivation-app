@@ -18,7 +18,7 @@ module Cultivation
       available_trays = QueryAvailableTrays.call(
         start_date: Time.new(1901, 1, 1),
         end_date: Time.new(1901, 1, 1),
-        facility_id: cultivation_batch.facility_strain.facility_id,
+        facility_ids: [cultivation_batch.facility_strain.facility_id],
         purpose: task.phase,
       ).call.result
 

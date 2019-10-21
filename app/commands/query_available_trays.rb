@@ -3,7 +3,7 @@ class QueryAvailableTrays
 
   def initialize(args = {})
     args = {
-      facility_id: nil,
+      facility_ids: nil,
       exclude_batch_id: nil,
       purpose: nil,
       start_date: nil,
@@ -15,8 +15,6 @@ class QueryAvailableTrays
     raise ArgumentError, 'start_date should be ealier than end_date' if args[:end_date] < args[:start_date]
 
     @facility_ids = args[:facility_ids]&.map(&:to_bson_id)
-    pp ">>> Inside QueryAvailableTrays >>>"
-    pp @facility_ids
     @exclude_batch_id = args[:exclude_batch_id]&.to_bson_id
     @purpose = args[:purpose]
     @start_date = args[:start_date]

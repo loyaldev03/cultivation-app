@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe QueryAvailableTrays, type: :command do
   context "facility with only flower phase" do
-    let(:facility) do
+    let!(:facility) do
       facility = create(:facility, :flower_only)
       facility.rooms.each do |room|
         room.rows.each do |row|
@@ -19,7 +19,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
     let(:last_tray) { last_shelf.trays.last }
     let(:start_date) { Time.strptime("2018/08/01", DATE_FORMAT) }
     let(:end_date) { Time.strptime("2018/08/17", DATE_FORMAT) }
-    let(:batch) do
+    let!(:batch) do
       create(:batch, :active,
              facility_id: facility.id,
              start_date: start_date,
@@ -32,17 +32,18 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: [Constants::CONST_FLOWER],
       )
 
+      # Validate
       expect(query_cmd.result.length).to eq 8
       target = query_cmd.result.detect { |p| p.tray_id == last_tray.id.to_s }
       expect(target.planned_capacity).to eq 0
       expect(target.remaining_capacity).to eq 10
     end
 
-    it "Condition A", focus: true do
+    it "Condition A" do
       # Prepare - Create a booking that overlaps with the start date
       p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/01", DATE_FORMAT)
@@ -63,7 +64,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: [Constants::CONST_FLOWER],
       )
 
@@ -75,7 +76,6 @@ RSpec.describe QueryAvailableTrays, type: :command do
       expect(target.planned_capacity).to eq p1_capacity
       expect(target.remaining_capacity).to eq (10 - p1_capacity)
     end
-
   end
 
   context "facility with complete growth phases" do
@@ -133,7 +133,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: [Constants::CONST_CLONE],
       )
 
@@ -166,7 +166,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         phase: Constants::CONST_CLONE,
       )
 
@@ -196,7 +196,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -226,7 +226,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -256,7 +256,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: ['clone'],
       )
 
@@ -286,7 +286,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -316,7 +316,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -346,7 +346,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -376,7 +376,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -405,7 +405,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -435,7 +435,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -480,7 +480,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         purpose: 'clone',
       )
 
@@ -508,7 +508,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   end_date: p1_end_date)
 
       query_cmd = QueryAvailableTrays.call(
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         start_date: start_date,
         end_date: end_date,
       )
@@ -537,7 +537,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   end_date: p1_end_date)
 
       query_cmd = QueryAvailableTrays.call(
-        facility_id: facility.id,
+        facility_ids: [facility.id],
         start_date: start_date,
         end_date: end_date,
       )

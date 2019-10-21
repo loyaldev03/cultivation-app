@@ -11,7 +11,7 @@ class QueryFacilitySummary
   end
 
   def call
-    trays = QueryAvailableTrays.call(facility_ids: @facility_ids,
+    trays = QueryAvailableTrays.call(facility_ids: [@facility_ids],
                                      start_date: Time.current.beginning_of_day,
                                      end_date: Time.current.end_of_day).result
 

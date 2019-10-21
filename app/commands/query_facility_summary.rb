@@ -10,10 +10,6 @@ class QueryFacilitySummary
     raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
 
     @facility_ids = args[:facility_ids]
-
-    # @facility_id = args[:facility_id].to_bson_id
-    pp ">>> Inside QueryFacilitySummary"
-    pp @facility_ids
   end
 
   def call

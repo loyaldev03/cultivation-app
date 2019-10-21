@@ -20,7 +20,12 @@ module Charts
         period: @period,
       ).result
 
-      total_yield = 0 # Charts::QueryTotalYield.call(@user, {facility_id: @facility_ids, period: @period}).result
+      total_yield = Charts::QueryTotalYield.call(
+        @user,
+        facility_ids: @facility_ids,
+        period: @period
+      ).result
+
       active_batches_cost = 0 # Charts::QueryActiveBatchesCost.call(@user, {facility_id: @facility_ids, period: @period}).result
       projected_yield = 0 # Charts::QueryProjectedYield.call(@user, {facility_id: @facility_ids, period: @period}).result
 

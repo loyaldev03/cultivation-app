@@ -5,6 +5,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
     excludes = *params[:excludes] || []
+    destroyed_plant = params[:destroyed_plant]
 
     if params[:facility_strain_id].present?
       facility_strain_id = params[:facility_strain_id]
@@ -16,6 +17,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
                                             locations: QueryLocations.call(facility),
                                             growth_stages: growth_stages,
                                             excludes: excludes,
+                                            destroyed_plant: destroyed_plant,
                                             page: params[:page],
                                             limit: params[:limit],
                                             search: params[:search]}).result
@@ -92,11 +94,6 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     else
       render json: request_with_errors(command.errors)
     end
-  end
-
-  def all_destroyed_plant
-    destroyed_plants = Inventory::Plant.not.where(destroyed_date: nil)
-    render json: Inventory::PlantSerializer.new(destroyed_plants, include_options).serialized_json
   end
 
   def destroyed_plants

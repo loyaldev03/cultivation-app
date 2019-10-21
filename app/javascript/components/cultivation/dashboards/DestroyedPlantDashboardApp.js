@@ -10,21 +10,21 @@ import {
 } from '../../utils'
 import classNames from 'classnames'
 import uniq from 'lodash.uniq'
-import loadDestroyedPlants from '../../inventory/plant_setup/actions/loadDestroyedPlants'
-import plantStore from '../../inventory/plant_setup/store/PlantStore'
+import PlantStore from '../../inventory/plant_setup/store/PlantStore'
+//import loadDestroyedPlants from '../../inventory/plant_setup/actions/loadDestroyedPlants'
 
 @observer
 class DestroyedPlantDashboardApp extends React.Component {
   state = {
     columns: [
-      { accessor: 'plant_id', show: false },
+      { accessor: 'plant_tag', show: false },
       {
         headerClassName: 'pl3 tl',
         Header: 'Plant ID',
-        accessor: 'plant_tag',
+        accessor: 'plant_id',
         className: 'dark-grey pl3 fw6',
         minWidth: 150,
-        Cell: props => <span>{props.value || props.row.plant_id}</span>
+        Cell: props => <span>{props.value || props.row.plant_tag}</span>
       },
       {
         headerClassName: 'tl',
@@ -32,13 +32,12 @@ class DestroyedPlantDashboardApp extends React.Component {
           <HeaderFilter
             title="Batch ID"
             accessor="cultivation_batch"
-            getOptions={plantStore.getUniqPropValues}
-            onUpdate={plantStore.updateFilterOptions}
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
           />
         ),
         accessor: 'cultivation_batch',
-        className: 'justify-center',
-        minWidth: 120
+        Cell: props => <span>{props.value || '--'}</span>
       },
       {
         headerClassName: '',
@@ -46,13 +45,13 @@ class DestroyedPlantDashboardApp extends React.Component {
           <HeaderFilter
             title="Strain"
             accessor="strain_name"
-            getOptions={plantStore.getUniqPropValues}
-            onUpdate={plantStore.updateFilterOptions}
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
           />
         ),
         accessor: 'strain_name',
         className: ' pr3 justify-center',
-        width: 110
+        width: 120
       },
       {
         headerClassName: '',
@@ -67,28 +66,28 @@ class DestroyedPlantDashboardApp extends React.Component {
           <HeaderFilter
             title="Location Origin"
             accessor="location_name"
-            getOptions={plantStore.getUniqPropValues}
-            onUpdate={plantStore.updateFilterOptions}
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
           />
         ),
         accessor: 'location_name',
         className: ' pr3 justify-center',
         width: 110
       },
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
-            title="Location"
-            accessor="location_type"
-            getOptions={plantStore.getUniqPropValues}
-            onUpdate={plantStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'location_type',
-        className: ' pr3 justify-center',
-        width: 110
-      },
+      // {
+      //   headerClassName: '',
+      //   Header: (
+      //     <HeaderFilter
+      //       title="Location"
+      //       accessor="location_type"
+      //       getOptions={PlantStore.getUniqPropValues}
+      //       onUpdate={PlantStore.updateFilterOptions}
+      //     />
+      //   ),
+      //   accessor: 'location_type',
+      //   className: ' pr3 justify-center',
+      //   width: 110
+      // },
       {
         headerClassName: '',
         Header: 'Planted Date',
@@ -125,8 +124,8 @@ class DestroyedPlantDashboardApp extends React.Component {
           <HeaderFilter
             title="Reason"
             accessor="destroyed_reason"
-            getOptions={plantStore.getUniqPropValues}
-            onUpdate={plantStore.updateFilterOptions}
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
           />
         ),
         accessor: 'destroyed_reason',
@@ -140,8 +139,8 @@ class DestroyedPlantDashboardApp extends React.Component {
             title="Assigned To"
             toLeft={true}
             accessor="worker_name"
-            getOptions={plantStore.getUniqPropValues}
-            onUpdate={plantStore.updateFilterOptions}
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
           />
         ),
         accessor: 'worker_name',
@@ -149,9 +148,6 @@ class DestroyedPlantDashboardApp extends React.Component {
         width: 110
       }
     ]
-  }
-  componentDidMount() {
-    loadDestroyedPlants(this.props.facility_id)
   }
 
   onToggleColumns = (header, value) => {
@@ -166,6 +162,15 @@ class DestroyedPlantDashboardApp extends React.Component {
     }
   }
 
+  onFetchData = (state, instance) => {
+    PlantStore.setFilter({
+      facility_id: this.props.facility_id,
+      destroyed_plant: this.props.destroyed_plant,
+      page: state.page,
+      limit: state.pageSize
+    })
+  }
+
   render() {
     // const { defaultFacilityId } = this.props
     const { columns } = this.state
@@ -178,16 +183,19 @@ class DestroyedPlantDashboardApp extends React.Component {
               className="input w5"
               placeholder="Search Plant"
               onChange={e => {
-                plantStore.filter = e.target.value
+                PlantStore.searchTerm = e.target.value
               }}
             />
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
           </div>
           <div className="pv3">
             <ListingTable
-              data={plantStore.filteredList}
+              ajax={true}
+              onFetchData={this.onFetchData}
+              data={PlantStore.filteredList}
+              pages={PlantStore.metadata.pages}
               columns={columns}
-              isLoading={plantStore.isLoading}
+              isLoading={PlantStore.isLoading}
             />
           </div>
         </div>

@@ -12,6 +12,7 @@ class PlantStore {
   @observable filter = {
     facility_strain_id: '',
     current_growth_stage: '',
+    destroyed_plant: false,
     facility_id: '',
     excludes: [],
     page: 0,
@@ -62,6 +63,10 @@ class PlantStore {
       if (this.filter.facility_id && this.filter.facility_id.length > 0) {
         apiUrl = apiUrl + '?facility_id=' + this.filter.facility_id
       }
+    }
+
+    if (this.filter.destroyed_plant && this.filter.destroyed_plant == true) {
+      apiUrl = apiUrl + `&destroyed_plant=${this.filter.destroyed_plant}`
     }
 
     if (!isEmpty(this.filter.excludes)) {
@@ -142,6 +147,7 @@ class PlantStore {
       facility_id: filter.facility_id,
       excludes: filter.excludes,
       current_growth_stage: filter.current_growth_stage,
+      destroyed_plant: filter.destroyed_plant,
       page: filter.page,
       limit: filter.limit
     }

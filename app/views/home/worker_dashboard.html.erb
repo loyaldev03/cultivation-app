@@ -5,14 +5,15 @@
   <div class="flex justify-between mb5">
     <div class="flex">
       <div class="flex items-center">
-        <% if current_user&.photo_url.present? %>
-          <img
-            src="<%= current_user&.photo_url%>"
-            class="br-100 ba h3 w3 dib pointer" 
-            alt="avatar"
-            id='image'
-            for='imgupload'
-          >
+        <% if current_user&.photo_url.present? %> 
+         <%= react_component 'utils/Avatar', {
+          firstName: current_user&.first_name,
+          lastName: current_user&.last_name,
+          photoUrl: current_user&.photo_url,
+          size: 60
+        }, {
+          tag: 'span'
+        } %>
         <% else %>
           <i class='material-icons pointer md-48 grey' style='' id='image'>
             camera_alt

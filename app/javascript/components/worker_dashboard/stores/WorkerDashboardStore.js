@@ -1,8 +1,59 @@
 import { observable, action, computed } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
-
+//arr_months={this.state.arr_batch_months}
+// let arr_ranges = [
+// { date: 'daily', label: 'Daily' },
+// { date: 'weekly', label: 'Weekly' },
+// { date: 'monthly', label: 'Monthly' }
+// ]
 class WorkerDashboardStore {
   @observable taskData = []
+  @observable data_working_hour = []
+  @observable working_hour_loaded = false
+
+  @action
+  async loadworkerWorkingHours(range) {
+    this.isLoading = true
+    this.working_hour_loaded = false
+    const url = `/api/v1/worker_dashboard/working_hours_chart?range=${range}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_working_hour = response
+        this.working_hour_loaded = true
+      } else {
+        this.data_plant_distribution = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @computed get workingHours() {
+    if (this.working_hour_loaded) {
+      let final_result = {
+        labels: this.data_working_hour.data.map(d => d.label),
+        datasets: [
+          {
+            label: 'Hour',
+            data: this.data_working_hour.data.map(d => d.total_hours),
+            backgroundColor: 'rgba(241, 90, 34, 1)'
+          },
+          {
+            label: 'Total Rate',
+            data: this.data_working_hour.data.map(d => d.total_hours),
+            type: 'line',
+            pointRadius: 0,
+            hoverRadius: 0
+          }
+        ]
+      }
+      return final_result
+    } else {
+      return {}
+    }
+  }
 
   @action
   getTaskByDate = async date => {

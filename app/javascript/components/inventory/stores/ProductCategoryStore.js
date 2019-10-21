@@ -198,7 +198,7 @@ class ProductCategoryStore {
         return {
           value: c.id,
           label: c.name,
-          package_units: c.package_units,
+          package_units: c.package_units
         }
       })
     return res

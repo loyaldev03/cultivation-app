@@ -438,32 +438,32 @@ class AddEditProductCategoryForm extends React.Component {
                     <React.Fragment>
                       {packageUnits.length > 0 && (
                         <React.Fragment>
-                        <div className="pa2 fl w-100 flex items-center grey mt2">
-                          <div className="w-30 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              Packaging Units
-                            </label>
+                          <div className="pa2 fl w-100 flex items-center grey mt2">
+                            <div className="w-30 mr3">
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                Packaging Units
+                              </label>
+                            </div>
+                            <div className="w-20 mr3">
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                UOM
+                              </label>
+                            </div>
+                            <div className="w-20 mr3">
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                Quantity
+                              </label>
+                            </div>
+                            <div className="w-20 mr3">
+                              <label className="f6 fw6 db mb1 gray ttc" />
+                            </div>
                           </div>
-                          <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              UOM
-                            </label>
-                          </div>
-                          <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              Quantity
-                            </label>
-                          </div>
-                          <div className="w-20 mr3">
-                            <label className="f6 fw6 db mb1 gray ttc">
-                            </label>
-                          </div>
-                        </div>
                           {packageUnits.map(x => {
                             return (
                               <div className="pa2 fl w-100 flex items-center grey mt2">
                                 <div className="w-30 mr3">
-                                  <label className=''
+                                  <label
+                                    className=""
                                     className={classNames('', {
                                       'flex justify-between items-center': !built_in
                                     })}
@@ -476,16 +476,21 @@ class AddEditProductCategoryForm extends React.Component {
                                           packageUnits: this.state.packageUnits.map(
                                             y =>
                                               y === x
-                                                ? { ...y, is_active: e.target.checked }
+                                                ? {
+                                                    ...y,
+                                                    is_active: e.target.checked
+                                                  }
                                                 : y
                                           )
                                         })
-                                      }}                                      
+                                      }}
                                       checked={x.is_active}
                                     />
-                                    {built_in ? 
-                                      <span className="ph1 f6 fw6 gray ttc">{x.value}</span>
-                                      :
+                                    {built_in ? (
+                                      <span className="ph1 f6 fw6 gray ttc">
+                                        {x.value}
+                                      </span>
+                                    ) : (
                                       <input
                                         type="text"
                                         className="db w-70 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner "
@@ -494,15 +499,17 @@ class AddEditProductCategoryForm extends React.Component {
                                             packageUnits: this.state.packageUnits.map(
                                               y =>
                                                 y === x
-                                                  ? { ...y, value: e.target.value }
+                                                  ? {
+                                                      ...y,
+                                                      value: e.target.value
+                                                    }
                                                   : y
                                             )
                                           })
-                                        }}  
+                                        }}
                                         value={x.value}
                                       />
-
-                                    }
+                                    )}
                                   </label>
                                 </div>
                                 <div className="w-20 mr3">
@@ -516,10 +523,7 @@ class AddEditProductCategoryForm extends React.Component {
                                     onChange={e => {
                                       this.setState({
                                         packageUnits: this.state.packageUnits.map(
-                                          y =>
-                                            y === x
-                                              ? { ...y, uom: e }
-                                              : y
+                                          y => (y === x ? { ...y, uom: e } : y)
                                         )
                                       })
                                     }}
@@ -537,9 +541,9 @@ class AddEditProductCategoryForm extends React.Component {
                                           y =>
                                             y === x
                                               ? {
-                                                ...y,
-                                                quantity: e.target.value
-                                              }
+                                                  ...y,
+                                                  quantity: e.target.value
+                                                }
                                               : y
                                         )
                                       })
@@ -552,7 +556,9 @@ class AddEditProductCategoryForm extends React.Component {
                                     onClick={e => {
                                       if (confirm('Confirm delete?')) {
                                         this.setState({
-                                          packageUnits: this.state.packageUnits.filter(y => y !== x)
+                                          packageUnits: this.state.packageUnits.filter(
+                                            y => y !== x
+                                          )
                                         })
                                       }
                                     }}
@@ -565,27 +571,27 @@ class AddEditProductCategoryForm extends React.Component {
                           })}
                         </React.Fragment>
                       )}
-                    {!built_in &&
-                      <a
-                        href="#0"
-                        className="link pa2 dib f6"
-                        onClick={() => {
-                          this.setState({
-                            packageUnits: [
-                              ...packageUnits,
-                              {
-                                value: '',
-                                is_active: false,
-                                uom: '',
-                                quantity_type: ''
-                              }
-                            ]
-                          })
-                        }}
-                      >
-                        Add new package units
-                      </a>
-                    }
+                      {!built_in && (
+                        <a
+                          href="#0"
+                          className="link pa2 dib f6"
+                          onClick={() => {
+                            this.setState({
+                              packageUnits: [
+                                ...packageUnits,
+                                {
+                                  value: '',
+                                  is_active: false,
+                                  uom: '',
+                                  quantity_type: ''
+                                }
+                              ]
+                            })
+                          }}
+                        >
+                          Add new package units
+                        </a>
+                      )}
                     </React.Fragment>
                   )}
               </React.Fragment>

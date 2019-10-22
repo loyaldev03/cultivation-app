@@ -5,7 +5,7 @@ task create_dummy_batches: :environment do
 facility = Facility.find_by(name: "DEMO F15")
 strains = facility.strains
 grow_methods = Common::GrowMethod.all
-date = Time.now - 6.months
+date = Time.now - 2.months
 count = 0
 (0..10).each do |b|
   puts "=== Batch Date #{date}"

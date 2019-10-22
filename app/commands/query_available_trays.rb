@@ -3,18 +3,20 @@ class QueryAvailableTrays
 
   def initialize(args = {})
     args = {
-      facility_id: nil,
+      facility_ids: [],
       exclude_batch_id: nil,
       purpose: nil,
-      start_date: nil,
-      end_date: nil,
+      start_date: Date.new(1900, 1, 1),
+      end_date: Date.new(1900, 1, 2),
     }.merge(args)
 
-    raise ArgumentError, 'start_date' if args[:start_date].nil?
-    raise ArgumentError, 'end_date' if args[:end_date].nil?
-    raise ArgumentError, 'start_date should be ealier than end_date' if args[:end_date] < args[:start_date]
+    raise ArgumentError, 'facility_ids facility_ids is required' if args[:facility_ids].blank?
+    raise ArgumentError, 'facility_ids must be an array' unless (args[:facility_ids].is_a? Array)
+    raise ArgumentError, 'start_date is required' if args[:start_date].nil?
+    raise ArgumentError, 'end_date is required' if args[:end_date].nil?
+    raise ArgumentError, 'start_date must be before end_date' if args[:end_date] < args[:start_date]
 
-    @facility_id = args[:facility_id]
+    @facility_ids = args[:facility_ids]&.map(&:to_bson_id)
     @exclude_batch_id = args[:exclude_batch_id]&.to_bson_id
     @purpose = args[:purpose]
     @start_date = args[:start_date]
@@ -27,13 +29,8 @@ class QueryAvailableTrays
 
   private
 
-  def match_facility
-    if @facility_id.present?
-      f_ids = @facility_id.to_s.split(',').map { |x| x.to_bson_id }
-      {"$match": {_id: {"$in": f_ids}}}
-    else
-      {"$match": {}}
-    end
+  def match_facilities
+    {"$match": {_id: {"$in": @facility_ids}}}
   end
 
   def match_purpose
@@ -46,8 +43,14 @@ class QueryAvailableTrays
 
   def query_records
     criteria = Facility.collection.aggregate [
-      match_facility,
-      {"$project": {_id: 0, facility_id: '$_id', facility_code: '$code', facility_name: '$name', rooms: 1}},
+      match_facilities,
+      {"$project": {
+        _id: 0,
+        facility_id: '$_id',
+        facility_code: '$code',
+        facility_name: '$name',
+        rooms: 1,
+      }},
       {"$unwind": {path: '$rooms', preserveNullAndEmptyArrays: true}},
       {"$unwind": {path: '$rooms.rows', preserveNullAndEmptyArrays: true}},
       {"$unwind": {path: '$rooms.rows.shelves', preserveNullAndEmptyArrays: true}},

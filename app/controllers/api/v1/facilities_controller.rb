@@ -18,7 +18,11 @@ class Api::V1::FacilitiesController < Api::V1::BaseApiController
 
   def current_trays_summary
     facility_id = params[:id]
-    summary_cmd = QueryFacilitySummary.call(current_user, {facility_id: params[:id]})
+
+    summary_cmd = QueryFacilitySummary.call(
+      current_user,
+      facility_ids: [facility_id],
+    )
 
     render json: {data: summary_cmd.result.as_json}
   end

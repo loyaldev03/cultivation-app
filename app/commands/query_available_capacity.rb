@@ -28,7 +28,7 @@ class QueryAvailableCapacity
     available_trays = QueryAvailableTrays.call(
       start_date: @start_date,
       end_date: @end_date,
-      facility_id: @facility_id,
+      facility_ids: [@facility_id],
       exclude_batch_id: @exclude_batch_id,
       purpose: purpose,
     ).result

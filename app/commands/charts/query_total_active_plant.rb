@@ -4,53 +4,35 @@ module Charts
 
     def initialize(current_user, args = {})
       @user = current_user
-      @args = args
+
+      raise ArgumentError, 'period is required' if args[:period].blank?
+      raise ArgumentError, 'facility_ids is required' if args[:facility_ids].blank?
+      raise ArgumentError, 'facility_ids must be an array' unless (args[:facility_ids].is_a? Array)
+
       @period = args[:period]
-      @facility_id = @args[:facility_id]
+      @facility_ids = args[:facility_ids]
     end
 
     def call
-      Inventory::Plant.collection.aggregate([
-        match_period,
-        {"$lookup": {
-          from: 'inventory_facility_strains',
-          localField: 'facility_strain_id',
-          foreignField: '_id',
-          as: 'facility_strain',
-        }},
-        {"$unwind": '$facility_strain'},
-        {"$match": {"facility_strain.facility_id": {"$in": @facility_id}}},
-      ]).to_a.count
+      Inventory::Plant.collection.aggregate(
+        [
+          {"$match": {
+            "cultivation_batch_id": {"$in": scopped_batch_ids},
+          }},
+          {"$project": {
+            _id: 1,
+          }},
+        ],
+      ).to_a.count
     end
 
-    def match_period
-      date = Time.zone.now
-      if @period == 'this_month'
-        start_date = date.beginning_of_month
-        end_date = date.end_of_month
-      elsif @period == 'this_year'
-        start_date = date.beginning_of_year
-        end_date = date.end_of_year
-      elsif @period == 'this_week'
-        start_date = date.beginning_of_week
-        end_date = date.end_of_week
-      else
-        start_date = 'all'
-      end
+    private
 
-      if start_date == 'all'
-        {"$match": {}}
-      else
-        {"$match": {
-          "$expr": {
-            "$or": [
-              {"$and": [{"$gte": ['$c_at', start_date]}, {"$lte": ['$c_at', end_date]}]},
-              {"$and": [{"$gte": ['$c_at', start_date]}, {"$lte": ['$c_at', end_date]}]},
-              {"$and": [{"$lte": ['$c_at', start_date]}, {"$gte": ['$c_at', end_date]}]},
-            ],
-          },
-        }}
-      end
+    def scopped_batch_ids
+      @scopped_batch_ids ||= Charts::QueryActiveBatches.call(
+        period: @period,
+        facility_ids: @facility_ids,
+      ).result
     end
   end
 end

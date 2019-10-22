@@ -8,13 +8,20 @@ module Charts
     end
 
     def call
-      f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }
+      f_ids = @args[:facility_id].split(',').map(&:to_bson_id)
       available_spots = 0
       total_used = 0
       facility_capacity_used = 0
       facilities = Facility.find(f_ids)
-      harvest_yeild = Charts::QueryHarvestYield.call(@user, {facility_id: @args[:facility_id], order: ''}).result[:average_harvest_yield]
-      facility_summary = QueryFacilitySummary.call(@user, {facility_id: @args[:facility_id]}).result
+      harvest_yeild = Charts::QueryHarvestYield.call(
+        @user,
+        facility_id: @args[:facility_id],
+        order: '',
+      ).result[:average_harvest_yield]
+      facility_summary = QueryFacilitySummary.call(
+        @user,
+        facility_ids: f_ids,
+      ).result
       facility_summary.map do |x|
         available_spots += x[:total_capacity]
         total_used += (x[:total_capacity] - x[:available_capacity])

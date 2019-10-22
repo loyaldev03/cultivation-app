@@ -15,21 +15,21 @@ module Cultivation
     def call
       # matches tasks exists between dates
       cond_a = Cultivation::Task.and({end_date: {"$gte": @start_date}},
-                                      start_date: {"$lte": @end_date}).selector
+                                     start_date: {"$lte": @end_date}).selector
       # matches tasks exists before end dates
       cond_b = Cultivation::Task.and({start_date: {"$gte": @start_date}},
-                                      start_date: {"$lte": @end_date}).selector
+                                     start_date: {"$lte": @end_date}).selector
       # matches tasks cover over start & end range
       cond_c = Cultivation::Task.and({start_date: {"$lte": @start_date}},
-                                      end_date: {"$gte": @end_date}).selector
+                                     end_date: {"$gte": @end_date}).selector
 
       Cultivation::Task.
         where(assignable: true).
         or(
-          cond_a,
-          cond_b,
-          cond_c,
-        ).to_a
+        cond_a,
+        cond_b,
+        cond_c,
+      ).to_a
     end
   end
 end

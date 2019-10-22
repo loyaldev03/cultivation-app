@@ -17,7 +17,10 @@ class Api::V1::StrainsController < Api::V1::BaseApiController
   end
 
   def strains_info
-    result = Charts::QueryStrainsInfo.call(params[:facility_id]).result
+    result = Charts::QueryStrainsInfo.call(
+      current_user,
+      params[:facility_id]
+    ).result
     render json: result
   end
 

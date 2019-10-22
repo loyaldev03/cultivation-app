@@ -70,7 +70,7 @@ module Charts
 
     def match_facility
       if resource_shared?
-        {"$match": {"facility_id": {"$in": active_facility_ids}}}
+        {"$match": {"facility_id": {"$in": @user.facilities}}}
       else
         {"$match": {"facility_id": {"$in": @facility_id.map(&:to_bson_id)}}}
       end
@@ -98,10 +98,6 @@ module Charts
       else
         return false
       end
-    end
-
-    def active_facility_ids
-      Facility.where(is_enabled: true).pluck(:id)
     end
   end
 end

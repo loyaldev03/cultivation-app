@@ -10,7 +10,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     )
 
     # Insert task to database
-    Cultivation::Task.collection.insert_many(new_tasks)
+    Cultivation::Task.collection.create(new_tasks)
 
     # Set harvest date
     batch.estimated_harvest_date = get_harvest_date(new_tasks)
@@ -42,6 +42,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     template_tasks.each do |task|
       new_task = build_task(task, start_date, end_date, batch)
       new_task[:id] = BSON::ObjectId.new
+      task[:id] = new_task[:id] # Put the id into the template too
       new_task[:batch_id] = batch.id
       new_task[:batch_name] = batch.name
       new_task[:batch_status] = batch.status
@@ -52,10 +53,8 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
       # Set predecessor using wbs
       if task[:predecessor].present?
-        new_task[:depend_on] = get_task_id_by_wbs(
-          template_tasks,
-          task[:predecessor],
-        )
+        new_task[:depend_on] = get_task_id_by_wbs(template_tasks,
+                                                  task[:predecessor])
       end
 
       # Reset start & end date when indent level is 0

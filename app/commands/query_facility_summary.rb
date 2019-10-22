@@ -4,16 +4,14 @@ class QueryFacilitySummary
   def initialize(current_user, args = {})
     @user = current_user
 
-    raise ArgumentError, 'facility_ids' if args[:facility_ids].blank?
-    raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
+    raise ArgumentError, 'facility_ids is required' if args[:facility_ids].blank?
+    raise ArgumentError, 'facility_ids must be an array' unless (args[:facility_ids].is_a? Array)
 
     @facility_ids = args[:facility_ids]
   end
 
   def call
-    trays = QueryAvailableTrays.call(facility_ids: [@facility_ids],
-                                     start_date: Time.current.beginning_of_day,
-                                     end_date: Time.current.end_of_day).result
+    trays = QueryAvailableTrays.call(facility_ids: @facility_ids).result
 
     trays_by_room = trays.group_by(&:room_code)
     results = trays_by_room.keys.map do |room_code|

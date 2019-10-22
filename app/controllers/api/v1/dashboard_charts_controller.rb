@@ -64,6 +64,9 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
 
   def cultivation_info
     facility_ids = params[:facility_id]&.split(",") || current_user_facilities_ids
+    Rails.logger.debug("\033[31m>>>>>>>>>>\033[0m")
+    Rails.logger.debug("\033[31m>>>>> #{facility_ids} >>>>>\033[0m")
+    Rails.logger.debug("\033[31m>>>>>>>>>>\033[0m")
     result = Charts::QueryCultivationInfo.call(
       current_user,
       facility_ids: facility_ids,

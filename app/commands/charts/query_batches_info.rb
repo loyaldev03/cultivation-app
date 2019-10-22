@@ -23,7 +23,10 @@ module Charts
       draft_batches = batches.select { |a| a[:_id] == Constants::BATCH_STATUS_DRAFT }.first
       scheduled_batches = batches.select { |a| a[:_id] == Constants::BATCH_STATUS_SCHEDULED }.first
 
-      active_batches_cost = Charts::QueryActiveBatchesCost.call(@args[:current_user], {facility_id: facilities}).result
+      active_batches_cost = Charts::QueryActiveBatchesCost.call(
+        @args[:current_user],
+        facility_ids: facilities,
+      ).result
       json = {
         active_batches: active_batches.present? ? active_batches[:total_batches] : 0,
         draft_batches: draft_batches.present? ? draft_batches[:total_batches] : 0,

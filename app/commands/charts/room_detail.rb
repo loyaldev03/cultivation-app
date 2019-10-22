@@ -12,13 +12,14 @@ module Charts
     end
 
     def call
-      facility_rooms = QueryFacilitySummary.call(facility_id: @facility_id).result.select { |room| room[:purpose] == @purpose }
+      facility_rooms = QueryFacilitySummary.call(
+        facility_ids: [@facility_id],
+      ).result.select { |room| room[:purpose] == @purpose }
       room = facility_rooms.detect { |r| r[:room_name] == @name and r[:room_code] == @full_code }
       room_record = Facility.find(@facility_id).rooms.find_by(name: @name, code: @full_code)
       active_plant = find_active_plant(room_record)
       batch_info = find_batch_info(active_plant[:plants])
       group_strain = find_group_strain(active_plant[:plants])
-      Rails.logger.debug "Group strain ==> #{active_plant[:count]}"
       if room.present?
         room.store(:active_plants, active_plant[:count])
         room.store(:room_temperature, batch_info[:room_temperature])

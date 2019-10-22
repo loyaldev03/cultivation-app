@@ -5,9 +5,9 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
 
-      raise ArgumentError, 'period' if args[:period].blank?
-      raise ArgumentError, 'facility_ids' if args[:facility_ids].blank?
-      raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
+      raise ArgumentError, 'period is required' if args[:period].blank?
+      raise ArgumentError, 'facility_ids is required' if args[:facility_ids].blank?
+      raise ArgumentError, 'facility_ids must be an array' unless (args[:facility_ids].is_a? Array)
 
       @period = args[:period]
       @facility_ids = args[:facility_ids]
@@ -15,10 +15,9 @@ module Charts
 
     def call
       Inventory::HarvestBatch.collection.aggregate([
-        { "$match": {
-            "cultivation_batch_id": {"$in": scopped_batch_ids}
-          },
-        },
+        {"$match": {
+          "cultivation_batch_id": {"$in": scopped_batch_ids},
+        }},
         {"$addFields": {
           total: {
             "$sum": {

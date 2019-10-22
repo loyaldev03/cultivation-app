@@ -1,10 +1,13 @@
 class Settings::Facilities::RoomsController < ApplicationController
   def index
     if params[:facility_id].present?
-      @rooms = QueryFacilitySummary.call(facility_id: params[:facility_id])
+      @rooms = QueryFacilitySummary.call(
+        facility_ids: [params[:facility_id]],
+      )
     else
-      f_ids = Facility.all.pluck(:id)
-      @rooms = QueryFacilitySummary.call(facility_id: f_ids)
+      @rooms = QueryFacilitySummary.call(
+        facility_ids: current_user_facilities_ids,
+      )
     end
   end
 

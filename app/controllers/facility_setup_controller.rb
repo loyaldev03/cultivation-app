@@ -8,13 +8,13 @@ class FacilitySetupController < ApplicationController
   # GET new facility - basic info form page - step 1
   def new
     onboarding_check_status
-    @wizard_form = FacilityWizardForm::BasicInfoForm.new(selected_facility_id)
+    @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     render 'facility_setup/step1'
   end
 
   def onboarding_check_status
     if params[:onboarding_type].present?
-      @facility = Facility.find(selected_facility_id)
+      @facility = Facility.find(params[:facility_id])
 
       if @facility.is_complete && @facility.is_enabled &&
          @facility.rooms.find_by(purpose: Constants::CONST_MOTHER).is_complete &&
@@ -416,7 +416,7 @@ class FacilitySetupController < ApplicationController
   def selected_facility_id
     if selected_facilities_ids.blank? || selected_facilities_ids.length != 1
       flash[:error] = 'Select a facility to proceed'
-      Rollbar.error("No access to facility")
+      Rollbar.error('No access to facility')
     else
       selected_facilities_ids[0]
     end

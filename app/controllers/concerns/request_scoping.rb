@@ -15,6 +15,7 @@ module RequestScoping
     helper_method :resource_shared?
     helper_method :has_default_facility?
     helper_method :current_user_facilities
+    helper_method :selected_facilities_ids
   end
 
   protected
@@ -75,9 +76,10 @@ module RequestScoping
     @current_default_facility
   end
 
-  # TODO: Change this to always return array.
+  # FIXME: DO NOT USE
   # - Return array with only the selected facility
   # - Return array with all enabled facility when 'All' is selected.
+  # OBSOLETE: DO NOT USE
   def current_facility
     if @current_facility.nil? && params[:facility_id].present?
       if params[:facility_id] == 'All'
@@ -92,6 +94,15 @@ module RequestScoping
     end
   end
 
+  def selected_facilities_ids
+    param_fid = params[:facility_id]
+    @selected_facilities_ids = if param_fid == 'All'
+                                 current_user_facilities_ids
+                               else
+                                 current_user_facilities_ids.select { |x| x.to_s == param_fid }
+                               end
+  end
+
   def current_user_facilities
     @current_user_facilities ||= QueryUserFacilities.call(current_user).result
   end
@@ -100,6 +111,7 @@ module RequestScoping
     @current_user_facilities_ids ||= current_user_facilities.pluck(:id)
   end
 
+  # FIXME: DO NOT USE
   def active_facility_ids
     @active_facility_ids ||= Facility.where(is_enabled: true).pluck(:id)
   end

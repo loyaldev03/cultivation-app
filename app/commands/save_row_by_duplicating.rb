@@ -3,6 +3,11 @@ class SaveRowByDuplicating
   include Mapper
 
   def initialize(facility_id, room_id, source_row_id, target_rows_id)
+    raise ArgumentError, 'facility_id is required' if facility_id.blank?
+    raise ArgumentError, 'room_id is required' if room_id.blank?
+    raise ArgumentError, 'source_row_id is required' if source_row_id.blank?
+    raise ArgumentError, 'target_rows_id is required' if target_rows_id.blank?
+
     @facility_id = facility_id
     @room_id = room_id
     @source_row_id = source_row_id
@@ -32,38 +37,36 @@ class SaveRowByDuplicating
                      :wz_generated]
 
   def duplicate_rows
-    unless @target_rows_id.blank?
-      source_row = room.rows.detect { |o| o.id == @source_row_id.to_bson_id }
+    source_row = room.rows.detect { |o| o.id == @source_row_id.to_bson_id }
 
-      @target_rows_id.each do |target_row_id|
-        target_row = room.rows.detect { |o| o.id == target_row_id.to_bson_id }
-        # copy row fields
-        copy_attrs(COPY_ROWS_ATTRS, source_row, target_row)
+    @target_rows_id.each do |target_row_id|
+      target_row = room.rows.detect { |o| o.id == target_row_id.to_bson_id }
+      # copy row fields
+      copy_attrs(COPY_ROWS_ATTRS, source_row, target_row)
 
-        # copy shelves fields
-        source_row.shelves.each_with_index do |source_shelf, index|
-          if target_row.shelves.blank? || target_row.shelves.size < index + 1
-            # Only build new shelves if there are more shelves in source row
-            target_shelf = target_row.shelves.build
-          else
-            # Reuse existing shelf in target
-            target_shelf = target_row.shelves[index]
-          end
-          copy_attrs(COPY_SHELF_ATTRS, source_shelf, target_shelf)
-          target_shelf.code = NextFacilityCode.call(:shelf, nil, index + 1).result
-          target_shelf.full_code = Constants.generate_full_code(facility, room, target_row, target_shelf)
-          # copy trays fields
-          trays_id = []
-          copy_trays(target_row, source_shelf.trays, target_shelf, trays_id)
-          target_shelf.trays.not_in(:_id => trays_id).delete_all
+      # copy shelves fields
+      source_row.shelves.each_with_index do |source_shelf, index|
+        if target_row.shelves.blank? || target_row.shelves.size < index + 1
+          # Only build new shelves if there are more shelves in source row
+          target_shelf = target_row.shelves.build
+        else
+          # Reuse existing shelf in target
+          target_shelf = target_row.shelves[index]
         end
-        target_row.is_complete = source_row.is_complete
-        target_row.save!
+        copy_attrs(COPY_SHELF_ATTRS, source_shelf, target_shelf)
+        target_shelf.code = NextFacilityCode.call(:shelf, nil, index + 1).result
+        target_shelf.full_code = Constants.generate_full_code(facility, room, target_row, target_shelf)
+        # copy trays fields
+        trays_id = []
+        copy_trays(target_row, source_shelf.trays, target_shelf, trays_id)
+        target_shelf.trays.not_in(:_id => trays_id).delete_all
       end
-      # Update Room is_complete flag
-      SaveRoomIsComplete.call_by_id(@facility_id, @room_id)
-      source_row
+      target_row.is_complete = source_row.is_complete
+      target_row.save!
     end
+    # Update Room is_complete flag
+    SaveRoomIsComplete.call_by_id(@facility_id, @room_id)
+    source_row
   end
 
   def facility

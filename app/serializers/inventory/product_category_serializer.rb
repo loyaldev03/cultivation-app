@@ -2,7 +2,7 @@ module Inventory
   class ProductCategorySerializer
     include FastJsonapi::ObjectSerializer
 
-    attributes :name, :quantity_type, :is_used, :is_active, :metrc_item_category, :deleted
+    attributes :name, :quantity_type, :is_used, :is_active, :metrc_item_category, :deleted, :built_in, :has_children
 
     attribute :id do |object|
       object.id.to_s
@@ -10,13 +10,30 @@ module Inventory
 
     attribute :sub_categories do |object|
       object.sub_categories.map do |sub|
-        package_units = sub.package_units.map { |u| {value: u.value, label: u.label, uom: {label: u.uom&.capitalize, value: u.uom}, quantity: u.quantity_in_uom} }
+        package_units = sub.package_units.map { |u|
+          {value: u.value, label: u.label, uom: {label: u.uom&.capitalize, value: u.uom}, quantity: u.quantity_in_uom, is_active: u.is_active,
+           category_name: u.category_name}
+        }
         {
           id: sub.id.to_s,
           name: sub.name,
           product_category_id: object.id.to_s,
           product_category_name: object.name,
           package_units: package_units,
+        }
+      end
+    end
+
+    attribute :package_units do |object|
+      object.package_units.map do |pu|
+        {
+          id: pu.id.to_s,
+          value: pu.value,
+          label: pu.label,
+          uom: {label: pu.uom, value: pu.uom},
+          quantity: pu.quantity_in_uom,
+          is_active: pu.is_active,
+          category_name: pu.category_name,
         }
       end
     end

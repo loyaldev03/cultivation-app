@@ -62,7 +62,7 @@ class User
   field :work_log_status, type: String, default: 'stopped' # use for work_log_status started, stopped , pause (to detect take a break )
 
   has_many :time_logs, class_name: 'Cultivation::TimeLog' # for daily_task
-  has_many :work_logs, class_name: 'Common::WorkLog'
+  has_many :work_logs, class_name: 'Common::WorkLog' # clock in , clock out , break and stuff
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   belongs_to :reporting_manager, class_name: 'User', foreign_key: 'reporting_manager_id', optional: true
 

@@ -20,6 +20,12 @@ module Inventory
     # true and filter from api.
     field :deleted, type: Boolean, default: -> { false }
 
+    #built_in product category cant change its quantity_type
+    field :built_in, type: Boolean, default: -> { false }
+
+    #used to identify which has_children [edibles, concentrates, pre-roll]
+    field :has_children, type: Boolean, default: -> { false }
+
     # Which facilities uses this product category
     field :facilities, type: Array, default: [] # Array of BSON::ObjectId
 
@@ -32,5 +38,6 @@ module Inventory
 
     # Sub categories that belongs to this category
     embeds_many :sub_categories, class_name: 'Inventory::ProductSubCategory'
+    embeds_many :package_units, class_name: 'Inventory::PackageUnit'
   end
 end

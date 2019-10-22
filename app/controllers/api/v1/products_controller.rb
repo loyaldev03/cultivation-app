@@ -181,8 +181,27 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     category.metrc_item_category = params[:metrc_item_category]
     if category.metrc_item_category
       found = Inventory::ItemCategory.find_by(name: category.metrc_item_category)
-      category.quantity_type = found&.quantity_type
+      if found.present?
+        category.quantity_type = found&.quantity_type
+      else
+        category.quantity_type = params[:quantity_type]
+      end
     end
+
+    category.package_units = []
+
+    if !params[:package_units].blank?
+      params[:package_units].each do |x|
+        category.package_units.build(
+          value: x[:value],
+          label: x[:label],
+          uom: get_uom(x),
+          quantity_in_uom: get_quantity_in_uom(x),
+          is_active: x[:is_active],
+        )
+      end
+    end
+
     category.save!
     render json: Inventory::ProductCategorySerializer.new(category).serialized_json
   end
@@ -236,5 +255,25 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     category.is_active = params[:is_active]
     category.save
     render json: ItemCategorySerializer.new(category).serialized_json
+  end
+
+  private
+
+  def get_uom(unit)
+    if unit[:uom].present?
+      return unit[:uom][:value]
+    else
+      wu = Constants::BUILTIN_WEIGHT_UNITS.find { |a| a[:label] == unit[:label] }
+      return wu[:uom] if wu.present?
+    end
+  end
+
+  def get_quantity_in_uom(unit)
+    if unit[:quantity].present?
+      return unit[:quantity]
+    else
+      wu = Constants::BUILTIN_WEIGHT_UNITS.find { |a| a[:label] == unit[:label] }
+      return wu[:quantity_in_uom] if wu.present?
+    end
   end
 end

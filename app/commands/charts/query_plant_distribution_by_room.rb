@@ -10,7 +10,7 @@ module Charts
 
     def call
       if resource_shared?
-        strains = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id)
+        strains = Inventory::FacilityStrain.in(facility_id: @user.facilities).pluck(:id)
       else
         strains = Inventory::FacilityStrain.in(facility_id: @facility_id.map { |x| x.to_bson_id }).pluck(:id)
       end
@@ -35,10 +35,6 @@ module Charts
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
-    end
-
-    def active_facility_ids
-      Facility.where(is_enabled: true).pluck(:id)
     end
   end
 end

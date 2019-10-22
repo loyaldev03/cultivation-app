@@ -7,7 +7,8 @@ module Inventory
 
     attr_reader :id, :type, :event_types, :facility_id
 
-    def initialize(type:, id:, event_types:, facility_id:)
+    def initialize(current_user, type:, id:, event_types:, facility_id:)
+      @user = current_user
       @type = type
       @id = id&.to_bson_id
       @event_types = event_types
@@ -41,7 +42,7 @@ module Inventory
 
       if resource_shared?
         item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
-          :facility_id.in => active_facility_ids,
+          :facility_id.in => @user.facilities,
           :event_type.in => @event_types,
           :catalogue_id.in => raw_material_ids,
         ).order(c_at: :desc)
@@ -88,10 +89,6 @@ module Inventory
 
     def resource_shared?
       CompanyInfo.last.enable_resouces_sharing
-    end
-
-    def active_facility_ids
-      Facility.where(is_enabled: true).pluck(:id)
     end
   end
 end

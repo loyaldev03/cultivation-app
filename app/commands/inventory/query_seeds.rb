@@ -48,13 +48,6 @@ module Inventory
     end
 
     def call
-
-      # item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
-      # :facility_id.in => active_facility_ids,
-      # :event_type.in => @event_types,
-      # :catalogue_id.in => raw_material_ids,
-      # ).order(c_at: :desc)
-
       seeds = Inventory::ItemTransaction.collection.aggregate([
         {"$sort": {"c_at": -1}},
         match_facility,

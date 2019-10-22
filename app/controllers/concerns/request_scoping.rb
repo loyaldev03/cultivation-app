@@ -11,7 +11,6 @@ module RequestScoping
     helper_method :current_user_facilities_ids
     helper_method :current_ip_facility
     helper_method :company_info
-    helper_method :active_facility_ids
     helper_method :resource_shared?
     helper_method :has_default_facility?
     helper_method :current_user_facilities
@@ -109,11 +108,6 @@ module RequestScoping
 
   def current_user_facilities_ids
     @current_user_facilities_ids ||= current_user_facilities.pluck(:id)
-  end
-
-  # FIXME: DO NOT USE
-  def active_facility_ids
-    @active_facility_ids ||= Facility.where(is_enabled: true).pluck(:id)
   end
 
   def resource_shared?

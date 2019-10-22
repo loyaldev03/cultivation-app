@@ -18,7 +18,7 @@ module DailyTask
       if @current_user.present?
         tasks = @current_user.cultivation_tasks
       else
-        tasks = []
+        tasks = Cultivation::Task.all
       end
 
       tasks_result = tasks.collection.aggregate([
@@ -47,7 +47,7 @@ module DailyTask
         }
       end
 
-      return arr
+      arr
     end
   end
 end

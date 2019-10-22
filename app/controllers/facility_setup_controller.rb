@@ -414,7 +414,12 @@ class FacilitySetupController < ApplicationController
   end
 
   def selected_facility_id
-    selected_facilities_ids[0]
+    if selected_facilities_ids.blank? || selected_facilities_ids.length != 1
+      flash[:error] = 'Select a facility to proceed'
+      Rollbar.error("No access to facility")
+    else
+      selected_facilities_ids[0]
+    end
   end
 
   def set_home_status

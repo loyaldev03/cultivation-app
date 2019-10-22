@@ -134,7 +134,7 @@ class BatchLocationApp extends React.Component {
       .filter(p => p.id !== plantId)
       .reduce((acc, val) => acc.concat(val.trays || []), [])
     const remainingLocations = locations
-      .filter(loc => loc.tray_purpose === phase)
+      .filter(loc => loc.tray_purpose.toLowerCase() === phase.toLowerCase())
       .map(loc => {
         const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
         if (isEmpty(found)) {

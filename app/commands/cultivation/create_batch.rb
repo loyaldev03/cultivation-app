@@ -97,7 +97,7 @@ module Cultivation
         new_task[:batch_id] = batch.id
         new_tasks << new_task
       end
-      Cultivation::Task.collection.create(new_tasks)
+      Cultivation::Task.collection.insert_many(new_tasks)
     end
 
     def generate_nutrient_profile_from_batch_template(batch, batch_template)

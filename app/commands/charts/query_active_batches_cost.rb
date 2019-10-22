@@ -19,15 +19,14 @@ module Charts
           "_id": {"$in": scopped_batch_ids},
         }},
         {"$addFields": {
-          "actual_cost": {"$add":
-                          ["$actual_labor_cost", "$actual_material_cost"]},
+          "actual_cost": {"$add": ['$actual_labor_cost', '$actual_material_cost']},
         }},
         {"$group": {
-          "_id": "result",
-          "actual_cost": {"$sum": "$actual_cost"},
+          "_id": 'result',
+          "actual_cost": {"$sum": '$actual_cost'},
         }},
       ])
-      criteria.to_a[0]["actual_cost"]
+      criteria.to_a[0]['actual_cost']
     end
 
     private

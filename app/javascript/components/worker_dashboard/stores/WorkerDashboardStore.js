@@ -12,7 +12,6 @@ class WorkerDashboardStore {
   @observable working_hour_loaded = false
   @observable data_overall_info = []
   @observable worker_info_loaded = false
-  
 
   @action
   async loadworkerWorkingHours(range) {

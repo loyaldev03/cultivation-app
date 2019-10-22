@@ -102,13 +102,13 @@ export default class OverallInfo extends React.Component {
                     workerDashboardStore.data_overall_info.tasks_done
                   )}
                 />
-                
 
                 <MiniBoxWidget
                   icon="assignment_turned_in"
                   title="Tasks Completed On Time"
                   value={decimalFormatter.format(
-                    workerDashboardStore.data_overall_info.completed_task_on_time
+                    workerDashboardStore.data_overall_info
+                      .completed_task_on_time
                   )}
                 />
               </React.Fragment>

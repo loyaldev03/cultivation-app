@@ -18,8 +18,8 @@ import {
 class WorkerDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { 
-      date: new Date(), 
+    this.state = {
+      date: new Date(),
       arr_ranges: [
         { val: 'weekly', label: 'Weekly' },
         { val: 'monthly', label: 'Monthly' }
@@ -51,7 +51,7 @@ class WorkerDashboardApp extends React.Component {
     let { date } = this.props
     return (
       <React.Fragment>
-        <WorkerOverallInfo arr_ranges={arr_ranges}/>
+        <WorkerOverallInfo arr_ranges={arr_ranges} />
         <StatusTile date={date} />
         {/* <DashboardPaymentDetail /> */}
         {this.renderSlidePanel()}

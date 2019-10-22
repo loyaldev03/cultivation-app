@@ -146,3 +146,12 @@ Cannected
 ## Configure OneSignal
 1. Create new app id from OneSignal site
 1. Copy the app id & api key to the env variables
+
+## Changing Client Domain name
+1. Update GoDaddy > DNS > Add CNAME pointing to Cloud66
+  - dig newsubdomain.cannected.com to check if DNS has resovled to Cloud66
+1. Update Clound66 > Configuration > Environment Variables
+  - Update MAILER_URL_HOST
+  - Under Add-Ins > SSL, add the new domain name to the list 
+1. Update AWS > S3 >  bucket > Permissions > CORS configuration
+1. Run `/health_check/full` to verify health

@@ -15,7 +15,6 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     # Set harvest date
     batch.estimated_harvest_date = get_harvest_date(new_tasks)
     batch.save!
-    UpdateBatchTasksWorker.perform_async(batch.id.to_s)
     batch
   end
 
@@ -36,23 +35,27 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     # Temporary variables
     start_date = batch.start_date.beginning_of_day
     end_date = nil
-    parent = Array.new(10) # Maximum 20 level depth
+    parent = Array.new(10) # Maximum indent depth
     new_tasks = []
 
     # Loop through each task from template
     template_tasks.each do |task|
       new_task = build_task(task, start_date, end_date, batch)
       new_task[:id] = BSON::ObjectId.new
-      task[:id] = new_task[:id] # Put the id into the template too
       new_task[:batch_id] = batch.id
+      new_task[:batch_name] = batch.name
+      new_task[:batch_status] = batch.status
+      new_task[:assignable] = !have_children?(template_tasks, task[:wbs])
 
       # Remember current node for next iteration
       parent[new_task[:indent]] = new_task[:id]
 
       # Set predecessor using wbs
       if task[:predecessor].present?
-        new_task[:depend_on] = get_task_id_by_wbs(template_tasks,
-                                                  task[:predecessor])
+        new_task[:depend_on] = get_task_id_by_wbs(
+          template_tasks,
+          task[:predecessor],
+        )
       end
 
       # Reset start & end date when indent level is 0
@@ -61,16 +64,20 @@ class GenerateTasksFromTemplateJob < ApplicationJob
         end_date = new_task[:end_date]
       end
 
-      # Keep new tasks in an array
+      # Keep new task in array (of Hash)
       new_tasks << new_task
     end
-
     new_tasks
   end
 
   def get_task_id_by_wbs(template_tasks, predecessor_wbs)
     predecessor = template_tasks.detect { |t| t[:wbs] == predecessor_wbs }
     predecessor[:id] if predecessor.present?
+  end
+
+  def have_children?(template_tasks, task_wbs)
+    child_wbs = task_wbs + '.'
+    template_tasks.any? { |t| t[:wbs].starts_with? child_wbs }
   end
 
   def build_task(task, parent_start_date, parent_end_date, batch)

@@ -19,7 +19,6 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 @observer
 export default class WorkingHourApp extends React.Component {
   constructor(props) {
-    console.log(props.arr_ranges)
     super(props)
     this.state = {
       selectedRange: this.props.arr_ranges[0],
@@ -29,7 +28,6 @@ export default class WorkingHourApp extends React.Component {
   }
 
   onChangeRange = selectedRange => {
-    console.log(selectedRange)
     this.setState({ selectedRange: selectedRange })
     workerDashboardStore.loadworkerWorkingHours(selectedRange.val)
   }

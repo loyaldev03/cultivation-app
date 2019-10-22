@@ -266,6 +266,7 @@ Rails.application.routes.draw do
       resources :worker_dashboard , only: [:index] do
         collection do
           get 'working_hours_chart'
+          get 'overall_info'
         end
       end
 

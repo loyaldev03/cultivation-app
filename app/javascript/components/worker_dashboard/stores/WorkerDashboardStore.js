@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, ObservableSet } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 //arr_months={this.state.arr_batch_months}
 // let arr_ranges = [
@@ -10,6 +10,8 @@ class WorkerDashboardStore {
   @observable taskData = []
   @observable data_working_hour = []
   @observable working_hour_loaded = false
+  @observable data_overall_info = []
+  @observable worker_info_loaded = false
 
   @action
   async loadworkerWorkingHours(range) {
@@ -22,11 +24,12 @@ class WorkerDashboardStore {
         this.data_working_hour = response
         this.working_hour_loaded = true
       } else {
-        this.data_plant_distribution = []
+        this.data_working_hour = []
       }
     } catch (error) {
       console.error(error)
     } finally {
+      this.isLoading = false
     }
   }
 
@@ -52,6 +55,25 @@ class WorkerDashboardStore {
       return final_result
     } else {
       return {}
+    }
+  }
+
+  @action
+  async loadWorkerOverallInfo(range) {
+    this.isLoading = true
+    const url = `/api/v1/worker_dashboard/overall_info?range=${range}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.worker_info_loaded = true
+        this.data_overall_info = response
+      } else {
+        this.data_overall_info = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
     }
   }
 

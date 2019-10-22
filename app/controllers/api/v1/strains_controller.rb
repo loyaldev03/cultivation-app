@@ -1,7 +1,7 @@
 class Api::V1::StrainsController < Api::V1::BaseApiController
   def index
     if resource_shared?
-      strains = Inventory::FacilityStrain.in(facility_id: active_facility_ids).includes(:facility).order(c_at: :desc)
+      strains = Inventory::FacilityStrain.in(facility_id: current_user_facilities_ids).includes(:facility).order(c_at: :desc)
     else
       strains = if params[:facility_id]
                   Inventory::FacilityStrain.includes(:facility)

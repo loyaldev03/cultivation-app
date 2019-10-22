@@ -7,7 +7,7 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
   def all_seeds
     catalogue_type = params[:type]
     if resource_shared?
-      facilities = active_facility_ids
+      facilities = current_user_facilities_ids
     else
       facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
     end

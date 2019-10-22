@@ -27,7 +27,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   def all_plants_wstrain
     facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
     if resource_shared?
-      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: current_user_facilities_ids).pluck(:id).map(&:to_s)
     else
       facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
     end
@@ -160,7 +160,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def harvests
     if resource_shared?
-      facilities = active_facility_ids
+      facilities = current_user_facilities_ids
     else
       facilities = params[:facility_id].split(',').map { |x| x.to_bson_id }
     end
@@ -190,7 +190,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     facility = Facility.in(id: params[:facility_id].split(',')).map { |x| x.id.to_s }
 
     if resource_shared?
-      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: active_facility_ids).pluck(:id).map(&:to_s)
+      facility_strain_ids = Inventory::FacilityStrain.in(facility_id: current_user_facilities_ids).pluck(:id).map(&:to_s)
     else
       facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
     end

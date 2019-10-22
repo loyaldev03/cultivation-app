@@ -26,7 +26,7 @@ module Cultivation
           batch.save!
         else
           batch = create_new_batch(args)
-          GenerateTasksFromTemplateJob.perform_later(batch.id.to_s)
+          GenerateTasksFromTemplateJob.perform_now(batch.id.to_s)
         end
         batch
       else
@@ -97,7 +97,7 @@ module Cultivation
         new_task[:batch_id] = batch.id
         new_tasks << new_task
       end
-      Cultivation::Task.create(new_tasks)
+      Cultivation::Task.collection.insert_many(new_tasks)
     end
 
     def generate_nutrient_profile_from_batch_template(batch, batch_template)

@@ -10,7 +10,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     )
 
     # Insert task to database
-    Cultivation::Task.create(new_tasks)
+    Cultivation::Task.collection.insert_many(new_tasks)
 
     # Set harvest date
     batch.estimated_harvest_date = get_harvest_date(new_tasks)

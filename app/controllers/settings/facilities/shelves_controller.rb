@@ -1,8 +1,13 @@
 class Settings::Facilities::ShelvesController < ApplicationController
   def index
+    facility_ids = if selected_facilities_ids.blank?
+                     current_user_facilities_ids
+                   else
+                     selected_facilities_ids
+                   end
     @shelves = []
-    facilities = params[:facility_id].present? ? Facility.find(params[:facility_id]).to_a : Facility.all
 
+    facilities = Facility.find(facility_ids).to_a
     facilities.each do |f|
       f.rooms.each do |r|
         r.rows.each do |row|

@@ -5,9 +5,9 @@ module Charts
     def initialize(current_user, args = {})
       @user = current_user
 
-      raise ArgumentError, 'period' if args[:period].blank?
-      raise ArgumentError, 'facility_ids' if args[:facility_ids].blank?
-      raise ArgumentError, 'facility_ids' unless (args[:facility_ids].is_a? Array)
+      raise ArgumentError, 'period is required' if args[:period].blank?
+      raise ArgumentError, 'facility_ids is required' if args[:facility_ids].blank?
+      raise ArgumentError, 'facility_ids must be an array' unless (args[:facility_ids].is_a? Array)
 
       @period = args[:period]
       @facility_ids = args[:facility_ids]
@@ -23,22 +23,26 @@ module Charts
       total_yield = Charts::QueryTotalYield.call(
         @user,
         facility_ids: @facility_ids,
-        period: @period
+        period: @period,
       ).result
 
       active_batches_cost = Charts::QueryActiveBatchesCost.call(
         @user,
         facility_ids: @facility_ids,
-        period: @period
+        period: @period,
       ).result
 
       projected_yield = Charts::QueryProjectedYield.call(
         @user,
         facility_ids: @facility_ids,
-        period: @period
+        period: @period,
       ).result
 
-      result = QueryFacilitySummary.call(@user, facility_ids: @facility_ids).result
+      result = QueryFacilitySummary.call(
+        @user,
+        facility_ids: @facility_ids,
+      ).result
+
       total_used = 0
       total_capacity = 0
       facility_capacity_used = 0

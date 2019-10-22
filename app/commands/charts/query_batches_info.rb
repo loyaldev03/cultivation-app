@@ -25,6 +25,7 @@ module Charts
 
       active_batches_cost = Charts::QueryActiveBatchesCost.call(
         @args[:current_user],
+        period: 'all',
         facility_ids: facilities,
       ).result
       json = {

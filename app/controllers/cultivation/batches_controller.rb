@@ -84,7 +84,8 @@ class Cultivation::BatchesController < ApplicationController
       start_date = params[:start_date].blank? ? @batch.start_date : params[:start_date]
       # Default start date to tomorrow if not defined
       start_date ||= Time.current.beginning_of_day + 1.days
-      @phases = Common::GrowPhase.where(is_active: true).pluck(:name)
+      # NOTE: this should only return phases that require bookings
+      @phases = Common::QueryAvailableRoomPurpose.call.active_growth_stages
       @batch_info = OpenStruct.new(
         id: @batch.id.to_s,
         batchSource: @batch.batch_source,
@@ -138,8 +139,8 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def get_cultivation_locations(batch, start_date)
-    # Get phases from Facility
-    cultivation_phases = Common::GrowPhase.where(is_active: true).pluck(:name)
+    # NOTE: this should only return phases that require bookings
+    cultivation_phases = Common::QueryAvailableRoomPurpose.call.active_growth_stages
     # Get start_date and end_date from batch
     schedules = Cultivation::QueryBatchPhases.call(batch).booking_schedules
     if schedules.any?

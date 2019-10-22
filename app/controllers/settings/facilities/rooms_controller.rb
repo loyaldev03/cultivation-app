@@ -1,14 +1,12 @@
 class Settings::Facilities::RoomsController < ApplicationController
   def index
-    if params[:facility_id].present?
-      @rooms = QueryFacilitySummary.call(
-        facility_ids: [params[:facility_id]],
-      )
-    else
-      @rooms = QueryFacilitySummary.call(
-        facility_ids: current_user_facilities_ids,
-      )
-    end
+    facility_ids = if selected_facilities_ids.blank?
+                     current_user_facilities_ids
+                   else
+                     selected_facilities_ids
+                   end
+
+    @rooms = QueryFacilitySummary.call(current_user, facility_ids: facility_ids)
   end
 
   def new

@@ -1,8 +1,13 @@
 class Settings::Facilities::SectionsController < ApplicationController
   def index
+    facility_ids = if selected_facilities_ids.blank?
+                     current_user_facilities_ids
+                   else
+                     selected_facilities_ids
+                   end
     @sections = []
-    facilities = params[:facility_id].present? ? Facility.find(params[:facility_id]).to_a : Facility.all
 
+    facilities = Facility.find(facility_ids).to_a
     facilities.each do |f|
       f.rooms.each do |r|
         @sections.concat r.sections.reverse

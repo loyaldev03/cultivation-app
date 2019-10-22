@@ -107,7 +107,7 @@ module RequestScoping
   end
 
   def current_user_facilities_ids
-    @current_user_facilities_ids ||= current_user_facilities.pluck(:id)
+    current_user.facilities.blank? ? [] : current_user.facilities
   end
 
   def resource_shared?

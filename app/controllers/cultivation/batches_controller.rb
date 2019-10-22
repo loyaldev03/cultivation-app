@@ -139,7 +139,7 @@ class Cultivation::BatchesController < ApplicationController
 
   def get_cultivation_locations(batch, start_date)
     # Get phases from Facility
-    cultivation_phases = batch.facility_strain.facility.growth_stages
+    cultivation_phases = Common::GrowPhase.where(is_active: true).pluck(:name)
     # Get start_date and end_date from batch
     schedules = Cultivation::QueryBatchPhases.call(batch).booking_schedules
     if schedules.any?

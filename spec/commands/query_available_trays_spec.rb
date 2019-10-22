@@ -27,11 +27,9 @@ RSpec.describe QueryAvailableTrays, type: :command do
              batch_source: 'purchased_plants')
     end
 
-    it "Before booking", focus: true do
+    it "Before booking" do
       # Execute
       query_cmd = QueryAvailableTrays.call(
-        start_date: start_date,
-        end_date: end_date,
         facility_ids: [facility.id],
         purpose: [Constants::CONST_FLOWER],
       )

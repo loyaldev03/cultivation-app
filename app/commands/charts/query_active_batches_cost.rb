@@ -26,7 +26,7 @@ module Charts
           "actual_cost": {"$sum": '$actual_cost'},
         }},
       ])
-      criteria.to_a[0]['actual_cost']
+      criteria.any? ? criteria.to_a[0]['actual_cost'] : 0
     end
 
     private

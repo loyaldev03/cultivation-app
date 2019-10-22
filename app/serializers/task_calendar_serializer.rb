@@ -18,8 +18,6 @@ class TaskCalendarSerializer
   # end
 
   attribute :batch_name do |object, params|
-    pp ">>>>>"
-    pp params[:batches]
     batch = params[:batches].detect { |a| a.id == object.batch_id }
     batch.name || '--'
   end

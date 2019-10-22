@@ -116,6 +116,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
   end
 
   context ".call" do
+    let!(:company_info) { create(:company_info) }
     it "Activate batch on start date" do
       Time.use_zone(facility.timezone) do
         Timecop.freeze(batch1.start_date) do
@@ -178,6 +179,17 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
   end
 
   context "metrc integration" do
+    let!(:company_info) do
+      create(:company_info,
+             enable_metrc_integration: true,
+             metrc_ready: true)
+    end
+
+    it "enabled and ready"  do
+      expect(company_info.enable_metrc_integration).to be true
+      expect(company_info.metrc_ready).to be true
+    end
+
     it "active batch should enqueue MetrcUpdatePlantBatches worker" do
       Time.use_zone(facility.timezone) do
         Timecop.freeze(batch1.start_date) do

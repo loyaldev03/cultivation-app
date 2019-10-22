@@ -77,7 +77,7 @@ module Cultivation
 
     scope :expected_on, -> (date) {
             where(:batch_id.in => Cultivation::Batch.active.pluck(:id)).
-            and(:start_date.lte => date, :end_date.gte => date)
+              and(:start_date.lte => date, :end_date.gte => date)
           }
 
     def tasks_depend

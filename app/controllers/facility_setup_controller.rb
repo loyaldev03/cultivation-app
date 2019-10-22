@@ -1,6 +1,7 @@
 class FacilitySetupController < ApplicationController
   layout 'wizards/facility_setup'
   authorize_resource class: false
+  before_action :validate_params, only: [:rooms_info, :room_summary, :row_shelf_info]
   before_action :set_home_status
   before_action :set_available_purposes, only: [:room_info, :section_info]
 
@@ -34,7 +35,7 @@ class FacilitySetupController < ApplicationController
   # POST update facility basic info - step 1 / submit
   def update_basic_info
     is_draft = params[:commit] == 'draft'
-    @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
+    @wizard_form = FacilityWizardForm::BasicInfoForm.new(selected_facility_id)
     if @wizard_form.submit(facility_basic_info_params, current_user)
       if params[:company_info].present? and params[:company_info]
         render 'layouts/hide_sidebar', layouts: nil, locals: {message: 'Facility successfully updated'}
@@ -56,13 +57,13 @@ class FacilitySetupController < ApplicationController
 
   # GET show list of rooms in facility - step 2
   def rooms_info
-    @rooms_info_form = FacilityWizardForm::RoomsForm.new(params[:facility_id])
+    @rooms_info_form = FacilityWizardForm::RoomsForm.new(selected_facility_id)
   end
 
   # GET called through ajax when user click on Room
   def room_info
     @room_info_form = FacilityWizardForm::RoomInfoForm.new_by_id(
-      params[:facility_id],
+      selected_facility_id,
       params[:room_id],
       params[:room_name],
       params[:room_code]
@@ -76,7 +77,7 @@ class FacilitySetupController < ApplicationController
   # GET called throught ajax when user click on edit Section
   def section_info
     @section_info_form = FacilityWizardForm::SectionInfoForm.new_by_id(
-      params[:facility_id],
+      selected_facility_id,
       params[:room_id],
       params[:section_id],
       params[:section_name],
@@ -89,7 +90,7 @@ class FacilitySetupController < ApplicationController
 
   # POST called through ajax when user changes room count (generate room record)
   def generate_rooms
-    facility_id = params[:facility_id]
+    facility_id = selected_facility_id
     @mode = params[:mode]
 
     @rooms_info_form = FacilityWizardForm::RoomsForm.new(facility_id)
@@ -149,7 +150,7 @@ class FacilitySetupController < ApplicationController
 
   # POST delete a room
   def destroy_room
-    @facility_id = params[:facility_id]
+    @facility_id = selected_facility_id
     @room_id = params[:room_id]
     SaveFacilityDestroyRoom.call(@facility_id, @room_id)
     respond_to do |format|
@@ -159,7 +160,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def destroy_all_rooms
-    @facility_id = params[:facility_id]
+    @facility_id = selected_facility_id
     SaveFacilityDestroyAllRooms.call(@facility_id)
     respond_to do |format|
       @rooms_info_form = FacilityWizardForm::RoomsForm.new(@facility_id)
@@ -175,12 +176,12 @@ class FacilitySetupController < ApplicationController
   # GET show row & shelf setup page
   # User can dynamically changes the number of rows
   def row_shelf_info
-    @rows_form = FacilityWizardForm::RowsForm.new(params[:facility_id], params[:room_id])
+    @rows_form = FacilityWizardForm::RowsForm.new(selected_facility_id, params[:room_id])
   end
 
   # GET when user changes number of rows
   def generate_rows
-    facility_id = params[:facility_id]
+    facility_id = selected_facility_id
     room_id = params[:room_id]
     section_id = params[:section_id]
     mode = params[:mode]
@@ -210,7 +211,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def add_section
-    facility_id = params[:facility_id]
+    facility_id = selected_facility_id
     room_id = params[:room_id]
 
     SaveFacilityAddSection.call(facility_id, room_id)
@@ -222,7 +223,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def destroy_section
-    facility_id = params[:facility_id]
+    facility_id = selected_facility_id
     room_id = params[:room_id]
     section_id = params[:section_id]
 
@@ -236,7 +237,7 @@ class FacilitySetupController < ApplicationController
   # GET called through ajax when user click on "SET UP ROW"
   def row_info
     @row_info_form = FacilityWizardForm::RowInfoForm.new_by_id(
-      params[:facility_id],
+      selected_facility_id,
       params[:room_id],
       params[:row_id],
       params[:row_name],
@@ -277,7 +278,7 @@ class FacilitySetupController < ApplicationController
 
   # POST delete a row
   def destroy_row
-    @facility_id = params[:facility_id]
+    @facility_id = selected_facility_id
     @room_id = params[:room_id]
     @row_id = params[:row_id]
     SaveFacilityDestroyRow.call(@facility_id, @room_id, @row_id)
@@ -292,7 +293,7 @@ class FacilitySetupController < ApplicationController
   def row_shelf_trays
     respond_to do |format|
       @row_shelves_trays_form = get_row_shelves_trays_form(
-        params[:facility_id],
+        selected_facility_id,
         params[:room_id],
         params[:row_id],
         params[:shelf_id]
@@ -341,7 +342,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def destroy_tray
-    @facility_id = params[:facility_id]
+    @facility_id = selected_facility_id
     @room_id = params[:room_id]
     @row_id = params[:row_id]
     @shelf_id = params[:shelf_id]
@@ -359,7 +360,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def generate_tray
-    @facility_id = params[:facility_id]
+    @facility_id = selected_facility_id
     @room_id = params[:room_id]
     @row_id = params[:row_id]
     @shelf_id = params[:shelf_id]
@@ -376,7 +377,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def duplicate_rows
-    @facility_id = params[:facility_id]
+    @facility_id = selected_facility_id
     @room_id = params[:room_id]
     @row_id = params[:row_id]
     @target_rows = params[:target_rows].split(',')
@@ -391,7 +392,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def whitelist_ip
-    @facility = Facility.find(params[:facility_id])
+    @facility = Facility.find(selected_facility_id)
     public_ip = request.remote_ip
     if @facility.whitelist_ips.include? (public_ip) #if current ip doesnt exist in array
       flash[:error] = 'Public Ip address existed in whitelist record'
@@ -400,10 +401,26 @@ class FacilitySetupController < ApplicationController
       @facility.save
       flash[:notice] = 'Public Ip Address added into whitelist record'
     end
-    redirect_to facility_setup_new_path(facility_id: params[:facility_id])
+    redirect_to facility_setup_new_path(facility_id: selected_facility_id)
   end
 
   private
+
+  def validate_params
+    if selected_facilities_ids.blank? || selected_facilities_ids.length != 1
+      flash[:error] = 'Select a facility to proceed'
+      redirect_to facility_setup_invalid_params_path
+    end
+  end
+
+  def selected_facility_id
+    if selected_facilities_ids.blank? || selected_facilities_ids.length != 1
+      flash[:error] = 'Select a facility to proceed'
+      Rollbar.error('No access to facility')
+    else
+      selected_facilities_ids[0]
+    end
+  end
 
   def set_home_status
     @home = HomeSetupStatus.call(current_facility).result

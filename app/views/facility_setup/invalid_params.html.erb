@@ -1,0 +1,10 @@
+<div class="ma4 pa4 bg-white dark-grey">
+  <p class="ma0">Select a Facility to continue...</p>
+  <p class="pt3">
+  <% current_user_facilities.each do |f| %>
+    <%= link_to f.name,
+      facility_setup_new_path(facility_id: f.id),
+      class: "pv2 ph3 bg-orange white link dim pointer br2" %>
+  <% end %>
+  </p>
+</div>

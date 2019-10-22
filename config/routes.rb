@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   get "qr_code" => "home#qr"
 
   get "facility_setup/new" => "facility_setup#new"
+  get "facility_setup/invalid_params" => "facility_setup#invalid_params"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
   get "facility_setup/row_info" => "facility_setup#row_info", as: 'fetch_row_info'

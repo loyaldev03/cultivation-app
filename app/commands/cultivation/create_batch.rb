@@ -26,7 +26,7 @@ module Cultivation
           batch.save!
         else
           batch = create_new_batch(args)
-          GenerateTasksFromTemplateJob.perform_now(batch.id.to_s)
+          GenerateTasksFromTemplateJob.perform_later(batch.id.to_s)
         end
         batch
       else

@@ -23,7 +23,7 @@ module Charts
           },
         ],
       )
-      criteria.to_a&.map { |x| x["_id"] }
+      criteria.to_a&.map { |x| x['_id'] }
     end
 
     private
@@ -35,7 +35,7 @@ module Charts
     def match_active_period
       if @period == 'all'
         {"$match": {
-          "$or": [{"status": "ACTIVE"}, {"status": "COMPLETED"}],
+          "$or": [{"status": 'ACTIVE'}, {"status": 'COMPLETED'}],
         }}
       else
         date = Time.current
@@ -47,7 +47,7 @@ module Charts
                        date.beginning_of_week
                      end
         {"$match": {
-          "$or": [{"status": "ACTIVE"}, {"status": "COMPLETED"}],
+          "$or": [{"status": 'ACTIVE'}, {"status": 'COMPLETED'}],
           "start_date": {"$gte": start_date},
         }}
       end

@@ -20,7 +20,7 @@ class PermissionRow extends React.PureComponent {
       this.setState({
         value: 0
       })
-    }else{
+    } else {
       this.setState({
         value: nextProps.value
       })

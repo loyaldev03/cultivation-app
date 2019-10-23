@@ -9,7 +9,7 @@ import { toJS, autorun } from 'mobx'
 import Tippy from '@tippy.js/react'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import {InputBarcode} from '../utils'
+import { InputBarcode } from '../utils'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import reactSelectStyle from '../utils/reactSelectStyle'
 
@@ -51,11 +51,10 @@ const user_modes = [
   { label: 'Worker', value: 'worker' }
 ]
 
-
 class UserDetailsEditor extends React.Component {
   constructor(props) {
     super(props)
-   
+
     if (props.user) {
       let facilities = []
       let roles = []
@@ -91,7 +90,9 @@ class UserDetailsEditor extends React.Component {
         user_mode = user_modes.find(y => y.value === props.user.user_mode)
       }
       if (props.user.department) {
-        department = props.departmentsOptions.find(y => y.value === props.user.department)
+        department = props.departmentsOptions.find(
+          y => y.value === props.user.department
+        )
       }
 
       if (props.user.work_schedules) {
@@ -170,7 +171,7 @@ class UserDetailsEditor extends React.Component {
         non_exempt_schedules: non_exempt_schedules || [],
         array_of_weeks: array_of_weeks,
         exempt_schedules: exempt_schedules,
-        defaultDepartments: [],
+        defaultDepartments: []
         // sundaySelected: sundaySelected,
         // copySundaySelected: copySundaySelected
       }
@@ -194,7 +195,7 @@ class UserDetailsEditor extends React.Component {
         facilities: [],
         roles: [],
         default_facility: {},
-        defaultDepartments: [],
+        defaultDepartments: []
       }
     }
   }
@@ -319,8 +320,7 @@ class UserDetailsEditor extends React.Component {
       if (field === 'sundaySelected') {
         this.setState({ non_exempt_schedules: [] })
         this.calculateRangeDate(options.value)
-      }
-      else {
+      } else {
         this.setState({ [field]: options })
       }
     } else {
@@ -643,17 +643,16 @@ class UserDetailsEditor extends React.Component {
                 <div className="w-100 fl pr3">
                   <label className="f6 fw6 db mb1 gray ttc">Badge ID</label>
                   <InputBarcode
-                      className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                      name={'badge_id'}
-                      value={badge_id}
-                      onChange={this.onChangeInput('badge_id')}
+                    className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    name={'badge_id'}
+                    value={badge_id}
+                    onChange={this.onChangeInput('badge_id')}
                   />
                 </div>
-                
               </div>
               <div className="mt2 fl w-100">
                 <div className="w-50 fl pr3">
-                <label className="f6 fw6 db mb1 gray ttc">First Name</label>
+                  <label className="f6 fw6 db mb1 gray ttc">First Name</label>
                   <input
                     className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                     onChange={this.onChangeInput('firstName')}
@@ -779,7 +778,7 @@ class UserDetailsEditor extends React.Component {
                   className="mt1 w-100 f6"
                 />
               </div>
-              {!isEmpty(roles.find(v => v.label == "Manager")) ? 
+              {!isEmpty(roles.find(v => v.label == 'Manager')) ? (
                 <div className="mt2 fl w-100 mb2">
                   <label className="f6 fw6 db mb1 gray ttc">Department</label>
                   <AsyncCreatableSelect
@@ -791,8 +790,10 @@ class UserDetailsEditor extends React.Component {
                     defaultOptions={departmentsOptions}
                   />
                 </div>
-              : ''}
-             
+              ) : (
+                ''
+              )}
+
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">
                   Account Status

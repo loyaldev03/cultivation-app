@@ -11,7 +11,6 @@ import { DefaultAvatar, NoPermissionMessage } from '../utils'
 import GridGroupEmblem from '../utils/GridGroupEmblem'
 import uniq from 'lodash.uniq'
 
-
 const build_facilities_options = facilities =>
   facilities.map(f => ({
     value: f.id,
@@ -30,10 +29,10 @@ const build_roles_options = roles =>
   }))
 
 const build_departments_options = departments =>
-departments.map(f => ({
-  value: f,
-  label: f
-}))
+  departments.map(f => ({
+    value: f,
+    label: f
+  }))
 
 const TabButton = ({ title, onClick, isActive }) => (
   <a
@@ -239,7 +238,9 @@ class TeamSetttingApp extends React.Component {
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
     const rolesOptions = build_roles_options(roles)
-    const departmentsOptions = build_departments_options(uniq(users.map(x => x.department)))
+    const departmentsOptions = build_departments_options(
+      uniq(users.map(x => x.department))
+    )
     const {
       userId,
       setting_role_permissions,
@@ -388,9 +389,7 @@ class TeamSetttingApp extends React.Component {
                                     <FacilityTag key={f} id={f} />
                                   ))}
                                 </td>
-                                <td className="tl pv2 ph3">
-                                  {x.department}
-                                </td>
+                                <td className="tl pv2 ph3">{x.department}</td>
                                 <td className="tl pv2 ph3">
                                   {x.roles.map(r => (
                                     <RoleTag key={r} id={r} />

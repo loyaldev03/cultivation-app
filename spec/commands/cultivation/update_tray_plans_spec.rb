@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::UpdateTrayPlans, type: :command do
+  let!(:company) { create(:company_info) }
   let!(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|

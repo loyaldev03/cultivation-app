@@ -21,6 +21,8 @@ class User
   field :first_name, type: String
   field :last_name, type: String
   field :phone_number, type: String
+  field :badge_id, type: String
+  field :department, type: String
   field :title, type: String
   field :timezone, type: String, default: 'Pacific Time (US & Canada)'
   field :address, type: String

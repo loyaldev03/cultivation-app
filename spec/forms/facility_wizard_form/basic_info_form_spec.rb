@@ -32,7 +32,6 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
         address_zipcode: facility.address.zipcode,
         address_country: facility.address.country,
         address_main_number: facility.address.main_number,
-        address_fax_number: facility.address.fax_number,
       )
     end
   end

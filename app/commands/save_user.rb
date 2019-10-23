@@ -16,6 +16,8 @@ class SaveUser
       user.first_name = args[:first_name]
       user.last_name = args[:last_name]
       user.phone_number = args[:phone_number]
+      user.badge_id = args[:badge_id]
+      user.department = args[:department]
       user.title = args[:title]
       if args[:photo_data].blank?
         user.photo = nil

@@ -31,7 +31,11 @@ RSpec.describe CalculateTotalActualCostBatchJob, type: :job do
           batch_source: Constants::SEEDS_KEY)
   end
 
-  let!(:valid_user) { User.create!(email: 'email@email.com', password: 'password', password_confirmation: 'password', hourly_rate: 5, overtime_hourly_rate: 7) }
+  let!(:valid_user) { User.create!(email: 'email@email.com',
+                                   password: 'password',
+                                   password_confirmation: 'password',
+                                   hourly_rate: 5,
+                                   overtime_hourly_rate: 7) }
 
   context ".perform" do
     after(:each) do
@@ -51,10 +55,17 @@ RSpec.describe CalculateTotalActualCostBatchJob, type: :job do
     it "should return correct sum value for actual_cost and actual_hours" do
       start_time = Time.zone.local(2019, 4, 21, 8,00)
       end_time = Time.zone.local(2019, 4, 21, 18, 00)
-      task = Cultivation::Task.create(batch: batch1)
-      time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
+      task = Cultivation::Task.create(batch: batch1, facility: facility)
 
-      Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
+      # user worked from 8 - 6pm => 10 hours
+      time_log = Cultivation::TimeLog.create(start_time: start_time,
+                                             end_time: end_time,
+                                             user: valid_user,
+                                             task: task)
+
+      Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s,
+                                                              valid_user,
+                                                              true)
       CalculateTotalActualCostJob.perform_now(task.id.to_s)
       perform_enqueued_jobs { job }
 

@@ -458,6 +458,7 @@ Rails.application.routes.draw do
       resource :user_roles, only: [] do
         get     'search'
         post    'update_user'
+        get     'departments'
         post    'update_role'
         delete  'destroy_role'
         get     'schedules_by_date'

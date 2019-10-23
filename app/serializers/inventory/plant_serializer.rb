@@ -9,7 +9,6 @@ module Inventory
     attributes :plant_id,
       :plant_tag,
       :location_type,
-      :status,
       :current_growth_stage,
       :wet_weight,
       :wet_weight_uom,

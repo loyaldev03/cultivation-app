@@ -38,11 +38,12 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     parent = Array.new(10) # Maximum indent depth
     new_tasks = []
 
-    # Loop through each task from template
+    # Loop through each task from template and generate Hash array of all
+    # tasks
     template_tasks.each_with_index do |task, idx|
       new_task = build_task(task, start_date, end_date, batch)
       new_task[:id] = BSON::ObjectId.new
-      task[:id] = new_task[:id] # Put the id into the template too
+      task[:id] = new_task[:id] # Important: needed by get_task_id_by_wbs
       new_task[:batch_id] = batch.id
       new_task[:batch_name] = batch.name
       new_task[:batch_status] = batch.status

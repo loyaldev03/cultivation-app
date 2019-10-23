@@ -19,6 +19,11 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     render json: data
   end
 
+  def departments
+    departments = User.all.where(department: Regexp.new(params[:search], Regexp::IGNORECASE)).pluck(:department).uniq
+    render json: {departments: departments}, status: 200
+  end
+
   def update_user
     save_user_cmd = SaveUser.call(user_params, current_user)
     if save_user_cmd.success?
@@ -111,6 +116,8 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :first_name,
       :last_name,
       :phone_number,
+      :badge_id,
+      :department,
       :title,
       :photo_data,
       :is_active,

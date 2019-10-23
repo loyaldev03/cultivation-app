@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UpdateActiveTrayPlansJob, type: :job do
   include ActiveJob::TestHelper
-
+  let!(:company) { create(:company_info) }
   let(:current_user) { create(:user) }
   let!(:facility) do
     facility = create(:facility, :is_complete)

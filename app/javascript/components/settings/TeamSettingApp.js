@@ -9,6 +9,8 @@ import { toast } from '../utils/toast'
 import classNames from 'classnames'
 import { DefaultAvatar, NoPermissionMessage } from '../utils'
 import GridGroupEmblem from '../utils/GridGroupEmblem'
+import uniq from 'lodash.uniq'
+
 
 const build_facilities_options = facilities =>
   facilities.map(f => ({
@@ -26,6 +28,12 @@ const build_roles_options = roles =>
     value: f.id,
     label: `${f.name}`
   }))
+
+const build_departments_options = departments =>
+departments.map(f => ({
+  value: f,
+  label: f
+}))
 
 const TabButton = ({ title, onClick, isActive }) => (
   <a
@@ -231,6 +239,7 @@ class TeamSetttingApp extends React.Component {
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
     const rolesOptions = build_roles_options(roles)
+    const departmentsOptions = build_departments_options(uniq(users.map(x => x.department)))
     const {
       userId,
       setting_role_permissions,
@@ -323,6 +332,9 @@ class TeamSetttingApp extends React.Component {
                                 Facility
                               </th>
                               <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                                Department
+                              </th>
+                              <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                                 Role
                               </th>
                             </tr>
@@ -375,6 +387,9 @@ class TeamSetttingApp extends React.Component {
                                   {x.facilities.map(f => (
                                     <FacilityTag key={f} id={f} />
                                   ))}
+                                </td>
+                                <td className="tl pv2 ph3">
+                                  {x.department}
                                 </td>
                                 <td className="tl pv2 ph3">
                                   {x.roles.map(r => (
@@ -588,6 +603,7 @@ class TeamSetttingApp extends React.Component {
                 facilitiesOptions={facilitiesOptions}
                 userManagerOptions={userManagerOptions}
                 rolesOptions={rolesOptions}
+                departmentsOptions={departmentsOptions}
                 isSaving={isSaving}
                 userroleAction={userroleAction}
                 companyWorkSchedules={companyWorkSchedules}

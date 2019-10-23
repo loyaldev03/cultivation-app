@@ -77,6 +77,8 @@ module Common
           first_name: user.first_name,
           last_name: user.last_name,
           phone_number: user.phone_number,
+          department: user.department,
+          badge_id: user.badge_id,
           is_active: user.is_active,
           exempt: user.exempt,
           email: user.email,

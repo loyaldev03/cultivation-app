@@ -20,7 +20,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
   end
 
   def departments
-    departments = User.all.pluck(:department).uniq
+    departments = User.all.where(department: Regexp.new(params[:search], Regexp::IGNORECASE)).pluck(:department).uniq
     render json: {departments: departments}, status: 200
   end
 

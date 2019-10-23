@@ -5,10 +5,14 @@ import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { addDays, format, subDays } from 'date-fns'
 import UserRoleStore from './UserRoleStore'
-import { toJS } from 'mobx'
+import { toJS, autorun } from 'mobx'
 import Tippy from '@tippy.js/react'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import { InputBarcode } from '../utils'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import reactSelectStyle from '../utils/reactSelectStyle'
+
 const styles = `
 
 .active{
@@ -50,12 +54,14 @@ const user_modes = [
 class UserDetailsEditor extends React.Component {
   constructor(props) {
     super(props)
+
     if (props.user) {
       let facilities = []
       let roles = []
       let default_facility = {}
       let reporting_manager = {}
       let user_mode = {}
+      let department = {}
       let work_schedules = []
       let non_exempt_schedules = []
       if (props.user.facilities && props.facilitiesOptions) {
@@ -82,6 +88,11 @@ class UserDetailsEditor extends React.Component {
 
       if (props.user.user_mode) {
         user_mode = user_modes.find(y => y.value === props.user.user_mode)
+      }
+      if (props.user.department) {
+        department = props.departmentsOptions.find(
+          y => y.value === props.user.department
+        )
       }
 
       if (props.user.work_schedules) {
@@ -144,6 +155,8 @@ class UserDetailsEditor extends React.Component {
         title: props.user.title || '',
         photoData: props.user.photo_data,
         phone_number: props.user.phone_number,
+        badge_id: props.user.badge_id,
+        department: department,
         photoUrl: props.user.photo_url,
         isActive: props.user.id ? props.user.is_active : true,
         isExempt: props.user.exempt || false,
@@ -157,7 +170,8 @@ class UserDetailsEditor extends React.Component {
         work_schedules: work_schedules,
         non_exempt_schedules: non_exempt_schedules || [],
         array_of_weeks: array_of_weeks,
-        exempt_schedules: exempt_schedules
+        exempt_schedules: exempt_schedules,
+        defaultDepartments: []
         // sundaySelected: sundaySelected,
         // copySundaySelected: copySundaySelected
       }
@@ -170,6 +184,8 @@ class UserDetailsEditor extends React.Component {
         email: '',
         title: '',
         phone_number: '',
+        badge_id: '',
+        department: '',
         photoData: '',
         photoUrl: '',
         isActive: true,
@@ -178,7 +194,8 @@ class UserDetailsEditor extends React.Component {
         overtime_hourly_rate: '',
         facilities: [],
         roles: [],
-        default_facility: {}
+        default_facility: {},
+        defaultDepartments: []
       }
     }
   }
@@ -194,6 +211,8 @@ class UserDetailsEditor extends React.Component {
         title: '',
         photoData: '',
         phone_number: '',
+        badge_id: '',
+        department: '',
         photoUrl: '',
         isActive: true,
         isExempt: false,
@@ -367,6 +386,8 @@ class UserDetailsEditor extends React.Component {
       password,
       title,
       phone_number,
+      badge_id,
+      department,
       facilities,
       default_facility,
       roles,
@@ -387,6 +408,7 @@ class UserDetailsEditor extends React.Component {
     const defaultFacilityId = default_facility ? default_facility.value : null
     const photo_data = photoData ? photoData : null
     const newUserMode = user_mode ? user_mode.value : null
+    const newDepartment = department ? department.value : null
     const reporting_manager_id = reporting_manager
       ? reporting_manager.value
       : null
@@ -403,6 +425,8 @@ class UserDetailsEditor extends React.Component {
         first_name: firstName,
         last_name: lastName,
         phone_number: phone_number,
+        badge_id: badge_id,
+        department: newDepartment,
         title: title,
         photo_data: photo_data,
         hourly_rate: hourly_rate,
@@ -522,6 +546,7 @@ class UserDetailsEditor extends React.Component {
       onClose,
       facilitiesOptions,
       rolesOptions,
+      departmentsOptions,
       isSaving,
       userManagerOptions,
       user,
@@ -537,6 +562,8 @@ class UserDetailsEditor extends React.Component {
       isExempt,
       facilities,
       phone_number,
+      badge_id,
+      department,
       roles,
       default_facility,
       hourly_rate,
@@ -546,7 +573,8 @@ class UserDetailsEditor extends React.Component {
       array_of_weeks,
       exempt_schedules,
       sundaySelected, //used for date selection in non exempt schedule
-      copySundaySelected // used for date selection in copy section
+      copySundaySelected, // used for date selection in copy section
+      defaultDepartments
     } = this.state
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
@@ -612,6 +640,17 @@ class UserDetailsEditor extends React.Component {
                     onUploadSuccess={this.onUploadAvatarSuccess}
                   />
                 </div>
+                <div className="w-100 fl pr3">
+                  <label className="f6 fw6 db mb1 gray ttc">Badge ID</label>
+                  <InputBarcode
+                    className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    name={'badge_id'}
+                    value={badge_id}
+                    onChange={this.onChangeInput('badge_id')}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100">
                 <div className="w-50 fl pr3">
                   <label className="f6 fw6 db mb1 gray ttc">First Name</label>
                   <input
@@ -661,7 +700,6 @@ class UserDetailsEditor extends React.Component {
                     value={phone_number}
                   />
                 </div>
-                <div className="w-50 fr pl3" />
               </div>
               <div className="mt2 fl w-100 mb2">
                 <div className="w-100 fl pr3">
@@ -740,6 +778,21 @@ class UserDetailsEditor extends React.Component {
                   className="mt1 w-100 f6"
                 />
               </div>
+              {!isEmpty(roles.find(v => v.label == 'Manager')) ? (
+                <div className="mt2 fl w-100 mb2">
+                  <label className="f6 fw6 db mb1 gray ttc">Department</label>
+                  <AsyncCreatableSelect
+                    isClearable
+                    placeholder="Search Department..."
+                    onChange={opt => this.onSelectChange('department', opt)}
+                    value={department}
+                    styles={reactSelectStyle}
+                    defaultOptions={departmentsOptions}
+                  />
+                </div>
+              ) : (
+                ''
+              )}
 
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">

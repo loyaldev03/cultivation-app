@@ -9,7 +9,12 @@
     <% end %>
   </div>
   <div class="flex mt2">
-    <input id="name" class="input-reset ba b--black-20 pa2 db w-100 br4 tc center f6 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
+    <div class="pa2 db w-100 br4 tc center f6 grey fw5">
+      <form action="<%= mobile_path %>" method="get">
+        <%= hidden_field_tag :role, (params[:role] || 'all') %>
+        <%= text_field_tag :search, params[:search], class: 'input-reset ba b--black-20 pa2 db w-100 br4 tc center f6 grey fw5', placeholder: 'Search by name' %>
+      </form>
+    </div>
   </div>
   <div class="mt2 f6 tc flex justify-center bb bt b--light-gray " style="height: 3.0rem">
     <%= link_to mobile_path(filter: 'alpha', role: params[:role]), class: "pa3 mr2 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}", style: 'box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.05);' do %>

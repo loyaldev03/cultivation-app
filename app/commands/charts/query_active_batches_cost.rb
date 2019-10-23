@@ -28,7 +28,7 @@ module Charts
       ])
       # calling to_a can be empty array when no data
       res = criteria.to_a
-      res.any? ? res.dig(0, "actual_cost") : 0.0
+      res.any? ? res.dig(0, 'actual_cost') : 0.0
     end
 
     private

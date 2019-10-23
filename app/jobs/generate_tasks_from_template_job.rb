@@ -10,7 +10,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     )
 
     # Insert task to database
-    Cultivation::Task.create(new_tasks)
+    Cultivation::Task.collection.insert_many(new_tasks)
 
     # Set harvest date
     batch.estimated_harvest_date = get_harvest_date(new_tasks)
@@ -39,7 +39,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     new_tasks = []
 
     # Loop through each task from template
-    template_tasks.each do |task|
+    template_tasks.each_with_index do |task, idx|
       new_task = build_task(task, start_date, end_date, batch)
       new_task[:id] = BSON::ObjectId.new
       task[:id] = new_task[:id] # Put the id into the template too
@@ -47,7 +47,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
       new_task[:batch_name] = batch.name
       new_task[:batch_status] = batch.status
       new_task[:assignable] = !have_children?(template_tasks, task[:wbs])
-
+      new_task[:position] = idx
       # Remember current node for next iteration
       parent[new_task[:indent]] = new_task[:id]
 

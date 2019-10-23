@@ -24,7 +24,7 @@ const AverageWidget = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          {loaded ? <Loading /> : <b className="f2 fw6 dark-grey">{count}</b>}
+          {loaded ? <b className="f2 fw6 dark-grey">{count}</b> : <Loading />}
         </div>
       </div>
       {/* {loaded ? (

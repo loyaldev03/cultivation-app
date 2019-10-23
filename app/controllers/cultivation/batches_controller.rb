@@ -64,7 +64,7 @@ class Cultivation::BatchesController < ApplicationController
       }
     end
     @templates = Cultivation::Batch.where(is_template: true).map do |a|
-      grow_method = @grow_methods.find { |b| b[:label] === a.grow_method }
+      # grow_method = @grow_methods.find { |b| b[:value] === a.grow_method.to_s }
       facility_strain = @strains.find { |b| b[:label] === a.facility_strain.strain_name }
       batch_source = @plant_sources.find { |b| b[:value].to_s === a.batch_source }
       {
@@ -73,7 +73,7 @@ class Cultivation::BatchesController < ApplicationController
         template_name: a.template_name,
         batch_source: batch_source.present? ? batch_source[:value] : nil,
         batch_strain: facility_strain.present? ? facility_strain[:value] : nil,
-        batch_grow_method: grow_method.present? ? grow_method[:value] : nil,
+        batch_grow_method: a.grow_method.to_s,
       }
     end
   end

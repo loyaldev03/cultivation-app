@@ -729,7 +729,9 @@ class TaskList extends React.Component {
     const batchId = this.props.batch.id
     if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
       return <div>Loading...</div>
-    } else { this.mountEvents() }
+    } else {
+      this.mountEvents()
+    }
 
     return (
       <React.Fragment>

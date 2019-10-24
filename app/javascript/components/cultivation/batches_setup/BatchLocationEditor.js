@@ -544,7 +544,7 @@ class BatchLocationEditor extends React.PureComponent {
                       {/* SELECT TRAYS */}
 
                       <LabelWithChangeEvent
-                        label={'Select Tray:'}
+                        label={'Select Table:'}
                         isSelecting={showTrayList}
                         value={joinBy(
                           selectedTrays.filter(

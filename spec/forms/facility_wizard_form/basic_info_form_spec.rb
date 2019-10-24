@@ -24,6 +24,8 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
         code: facility.code,
         site_license: facility.site_license,
         timezone: facility.timezone,
+        square_foot: facility.square_foot,
+        canopy_square_foot: facility.canopy_square_foot,
         is_complete: facility.is_complete,
         is_enabled: facility.is_enabled,
         address_address: facility.address.address,

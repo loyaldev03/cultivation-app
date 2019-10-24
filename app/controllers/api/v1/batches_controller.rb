@@ -60,6 +60,10 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     batch_id = params[:batch_id]
     plans = params[:plans]
     quantity = params[:quantity]
+    start_date = params[:start_date]
+    if start_date.present?
+      cmd = Cultivation::UpdateBatchInfo.call(current_user, batch_id, {start_date: start_date})
+    end
     save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans, quantity)
     if save_cmd.success?
       render json: {data: 'Ok'}

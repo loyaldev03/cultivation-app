@@ -535,7 +535,9 @@ class PlantEditor extends React.Component {
             }
           }).then(scanner => (this.scanner = scanner))
         } else {
-          this.scanner.destroy()
+          if (this.scanner) {
+            this.scanner.destroy()
+          }
         }
       }
     )

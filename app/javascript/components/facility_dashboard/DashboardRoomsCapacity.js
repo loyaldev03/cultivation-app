@@ -80,7 +80,7 @@ class DashboardRoomsCapacity extends React.Component {
           ))}
         </div>
         <div className="flex mb4">
-          <div className="">
+          <div className="min-w300 w-30">
             {FacilityDashboardStore.current_room_purpose && (
               <DashboardDonutChart facility_id={this.props.facility_id} />
             )}

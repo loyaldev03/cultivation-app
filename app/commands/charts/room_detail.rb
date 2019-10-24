@@ -3,16 +3,20 @@ module Charts
     prepend SimpleCommand
 
     def initialize(current_user, args = {})
-      @user = current_user
-      @args = args
-      @facility_id = @args[:facility_id]
-      @purpose = @args[:purpose]
-      @name = @args[:name]
-      @full_code = @args[:full_code]
+      raise ArgumentError.new("current_user is required") if current_user.blank?
+      raise ArgumentError.new("facility_id is required") if args[:facility_id].blank?
+
+      @current_user = current_user
+      @facility_id = args[:facility_id].to_bson_id
+
+      @purpose = args[:purpose]
+      @name = args[:name]
+      @full_code = args[:full_code]
     end
 
     def call
       facility_rooms = QueryFacilitySummary.call(
+        @current_user,
         facility_ids: [@facility_id],
       ).result.select { |room| room[:purpose] == @purpose }
       room = facility_rooms.detect { |r| r[:room_name] == @name and r[:room_code] == @full_code }

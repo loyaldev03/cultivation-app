@@ -21,6 +21,15 @@ module Cultivation
           end
           @batch.selected_plants = selected_plants
         end
+        if @args[:start_date].present? #update start_date of batch, update first task
+          @batch.start_date = @args[:start_date]
+          task = @batch.tasks.first
+          task_args = {
+            id: task.id,
+            start_date: @args[:start_date],
+          }
+          UpdateTask.call(@current_user, task_args, false)
+        end
         if @args[:selected_location].present?
           @batch.selected_location = @args[:selected_location].to_bson_id
         end

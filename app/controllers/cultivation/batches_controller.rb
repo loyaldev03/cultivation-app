@@ -88,6 +88,7 @@ class Cultivation::BatchesController < ApplicationController
       @phases = Common::QueryAvailableRoomPurpose.call.active_growth_stages
       @batch_info = OpenStruct.new(
         id: @batch.id.to_s,
+        batch_name: @batch.name,
         batchSource: @batch.batch_source,
         cloneSelectionType: get_plants_selection_type(@batch.batch_source),
         quantity: quantity,

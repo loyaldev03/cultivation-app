@@ -1,3 +1,4 @@
+
 <p class="ph3 f5 grey pt3 pb3 ma0">
   <span>Company Timezone: <%= company_info.timezone %></span><br>
 </p>
@@ -13,102 +14,111 @@
   </div>
   <% if @company_info.first_day_of_week == 'Saturday'%>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Saturday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][start_time]" type="time" value="<%= @saturday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Saturday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][start_time]" type="time" value="<%= params[:start_time] || @saturday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][end_time]" type="time" value="<%= @saturday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][end_time]" type="time" value="<%= params[:end_time] || @saturday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"><a class="link orange pointer dim" onclick="getStartDay('saturday')">Apply to all days</a></div>
   </div>
   <% end %>
   <% if @company_info.first_day_of_week != 'Monday'%>
     <div class="pt3 flex justify-between">
-      <label class="f6 fw6 db mb1 gray ttc">Sunday</label>
+      <label class="f6 fw6 db mb1 gray ttc w-40">Sunday</label>
       <input type="hidden" name="type" value="<%= params[:type] %>" />
-      <div class="flex w-60 justify-between">
-        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= @sunday[:start_time]%>">
+      <div class="flex w-40 justify-between">
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= params[:start_time] || @sunday[:start_time]%>">
         <div class="flex items-center">
           <label class="f4 db mb1 ttc">-</label>
         </div>
-        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= @sunday[:end_time]%>">
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= params[:end_time] || @sunday[:end_time]%>">
       </div>
+      <div class="w-20 pa2 pl3 justify-between"><%if @company_info.first_day_of_week == 'Sunday' %><a class="link orange pointer dim" onclick="getStartDay('sunday')">Apply to all days</a> <%end%></div>
     </div>
   <% end %>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Monday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][monday][start_time]" type="time" value="<%= @monday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Monday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][monday][start_time]" type="time" value="<%= params[:start_time] || @monday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][monday][end_time]" type="time" value="<%= @monday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][monday][end_time]" type="time" value="<%= params[:end_time] || @monday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"><%if @company_info.first_day_of_week == 'Monday' %><a class="link orange pointer dim" onclick="getStartDay('monday')">Apply to all days</a><%end%></div>
   </div>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Tuesday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][tuesday][start_time]" type="time" value="<%= @tuesday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Tuesday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][tuesday][start_time]" type="time" value="<%= params[:start_time] || @tuesday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][tuesday][end_time]" type="time" value="<%= @tuesday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][tuesday][end_time]" type="time" value="<%= params[:end_time] || @tuesday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"></div>
   </div>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Wednesday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][wednesday][start_time]" type="time" value="<%= @wednesday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Wednesday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][wednesday][start_time]" type="time" value="<%= params[:start_time] || @wednesday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][wednesday][end_time]" type="time" value="<%= @wednesday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][wednesday][end_time]" type="time" value="<%= params[:end_time] || @wednesday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"></div>
   </div>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Thursday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][thursday][start_time]" type="time" value="<%= @thursday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Thursday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][thursday][start_time]" type="time" value="<%= params[:start_time] || @thursday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][thursday][end_time]" type="time" value="<%= @thursday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][thursday][end_time]" type="time" value="<%= params[:end_time] || @thursday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"></div>
   </div>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Friday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][friday][start_time]" type="time" value="<%= @friday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Friday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][friday][start_time]" type="time" value="<%= params[:start_time] || @friday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][friday][end_time]" type="time" value="<%= @friday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][friday][end_time]" type="time" value="<%= params[:end_time] || @friday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"></div>
   </div>
   <% if @company_info.first_day_of_week != 'Saturday'%>
   <div class="flex justify-between mt3">
-    <label class="f6 fw6 db mb1 gray ttc">Saturday</label>
-    <div class="flex w-60 justify-between">
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][start_time]" type="time" value="<%= @saturday[:start_time]%>">
+    <label class="f6 fw6 db mb1 gray ttc w-40">Saturday</label>
+    <div class="flex w-40 justify-between">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][start_time]" type="time" value="<%= params[:start_time] || @saturday[:start_time]%>">
       <div class="flex items-center">
         <label class="f4 db mb1 ttc">-</label>
       </div>
-      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][end_time]" type="time" value="<%= @saturday[:end_time]%>">
+      <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][saturday][end_time]" type="time" value="<%= params[:end_time] || @saturday[:end_time]%>">
     </div>
+    <div class="w-20 pa2 pl3 justify-between"></div>
   </div>
   <% end %>
   <% if @company_info.first_day_of_week == 'Monday'%>
     <div class="pt3 flex justify-between">
-      <label class="f6 fw6 db mb1 gray ttc">Sunday</label>
+      <label class="f6 fw6 db mb1 gray ttc w-40">Sunday</label>
       <input type="hidden" name="type" value="<%= params[:type] %>" />
-      <div class="flex w-60 justify-between">
-        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= @sunday[:start_time]%>">
+      <div class="flex w-40 justify-between">
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][start_time]" type="time" value="<%= params[:start_time] || @sunday[:start_time]%>">
         <div class="flex items-center">
           <label class="f4 db mb1 ttc">-</label>
         </div>
-        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= @sunday[:end_time]%>">
+        <input class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc" name="company_info[work_schedules][][sunday][end_time]" type="time" value="<%= params[:end_time] || @sunday[:end_time]%>">
       </div>
+      <div class="w-20 pa2 pl3 justify-between"></div>
     </div>
   <% end %>
 
@@ -118,3 +128,24 @@
   <span>User Timezone: <%= current_user.timezone %></span><br>
   <span>Request Timezone: <%= Time.zone %></span>
 </p>
+
+<script type="text/javascript">
+  function applyToDays(time_start, time_end){
+      ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(x => {
+        document.getElementsByName(`company_info[work_schedules][][${x}][start_time]`)[0].value = time_start
+        document.getElementsByName(`company_info[work_schedules][][${x}][end_time]`)[0].value = time_end
+      })
+  }
+  function getStartDay(start_day){
+      var time_start = document.getElementsByName(`company_info[work_schedules][][${start_day}][start_time]`)
+      var time_end = document.getElementsByName(`company_info[work_schedules][][${start_day}][end_time]`)
+      if(time_start[0].value == ""){
+          alert("Please insert time first")
+      }else{
+        time_start = document.getElementsByName(`company_info[work_schedules][][${start_day}][start_time]`)
+        time_end = document.getElementsByName(`company_info[work_schedules][][${start_day}][end_time]`)
+        applyToDays(time_start[0].value, time_end[0].value)
+       
+      }
+  }
+</script>

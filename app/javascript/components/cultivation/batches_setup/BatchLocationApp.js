@@ -185,12 +185,15 @@ class BatchLocationApp extends React.Component {
   onSubmit = async () => {
     this.setState({ isLoading: true })
     const { id } = this.props.batchInfo
+    const start_date = this.props.batchInfo.startDate
     try {
       const res = await fetch(
         `/api/v1/batches/${id}/update_locations`,
         httpPostOptions({
           plans: this.state.selectedPlants,
-          quantity: this.state.quantity
+          quantity: this.state.quantity,
+          start_date: start_date,
+          batch_name: this.props.batchInfo.batch_name
         })
       )
       if (res) {

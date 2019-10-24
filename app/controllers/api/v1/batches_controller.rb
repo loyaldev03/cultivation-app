@@ -60,6 +60,11 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     batch_id = params[:batch_id]
     plans = params[:plans]
     quantity = params[:quantity]
+    start_date = params[:start_date]
+    batch_name = params[:batch_name]
+    if start_date.present?
+      cmd = Cultivation::UpdateBatchInfo.call(current_user, batch_id, {start_date: start_date, name: batch_name})
+    end
     save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans, quantity)
     if save_cmd.success?
       render json: {data: 'Ok'}
@@ -312,7 +317,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def save_as_template
     batch = Cultivation::Batch.find(params[:batch_id])
-    batch.update(is_template: true)
+    batch.update(template_name: batch.name, is_template: true)
     render json: {data: 'Batch saved as template'}
   end
 

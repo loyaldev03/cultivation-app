@@ -62,8 +62,6 @@ class TaskList extends React.Component {
 
   componentDidMount() {
     UserStore.loadUsers(this.props.batch.facility_id)
-    // need to find after data react-table is loaded callback
-    setTimeout(() => this.mountEvents(), 1500)
   }
 
   closeSidebar = () => {
@@ -731,6 +729,8 @@ class TaskList extends React.Component {
     const batchId = this.props.batch.id
     if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
       return <div>Loading...</div>
+    } else {
+      this.mountEvents()
     }
 
     return (
@@ -898,12 +898,8 @@ class TaskList extends React.Component {
             }}
           />
         </Suspense>
-        <div
-          className={classNames('mt3 tr', {
-            'flex justify-between': this.props.batch.status !== 'DRAFT'
-          })}
-        >
-          {this.props.batch.status !== 'DRAFT' && this.props.canCreateTemplate && (
+        <div className={classNames('mt3 tr flex justify-between')}>
+          {this.props.canCreateTemplate && (
             <input
               type="button"
               className={classNames('btn btn--large', {

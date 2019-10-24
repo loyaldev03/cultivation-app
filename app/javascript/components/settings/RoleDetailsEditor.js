@@ -1,16 +1,36 @@
 import React from 'react'
 import PermissionRow from './PermissionRow'
+import isEmpty from 'lodash.isempty'
 
 class RoleDetailsEditor extends React.Component {
   constructor(props) {
     super(props)
     if (props.userroleAction === 'edit') {
+      let permissions = props.role.permissions || []
+      let selectAll = []
+      if (!props.role.builtIn) {
+        let children = []
+        let count = []
+        props.modules.map(mod => {
+          children = mod.features.map(x => x.code)
+          if (!isEmpty(permissions)) {
+            count = permissions.filter(
+              p0 => children.includes(p0.code) && p0.value === 15
+            ).length
+            if (count === children.length) {
+              selectAll.push(mod.code)
+            }
+          }
+        })
+      }
+
       this.state = {
         roleId: props.role.id,
         name: props.role.name || '',
         desc: props.role.desc || '',
-        permissions: props.role.permissions || [],
-        builtIn: props.role.built_in || false
+        permissions: permissions,
+        builtIn: props.role.built_in || false,
+        selectAll: selectAll
       }
     } else {
       this.state = {
@@ -18,19 +38,38 @@ class RoleDetailsEditor extends React.Component {
         name: '',
         desc: '',
         permissions: [],
-        builtIn: false
+        builtIn: false,
+        selectAll: []
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.userroleAction === 'edit') {
+      let selectAll = []
+      if (!nextProps.role.builtIn) {
+        let children = []
+        let count = []
+        nextProps.modules.map(mod => {
+          children = mod.features.map(x => x.code)
+          if (!isEmpty(nextProps.role.permissions)) {
+            count = nextProps.role.permissions.filter(
+              p0 => children.includes(p0.code) && p0.value === 15
+            ).length
+            if (count === children.length) {
+              selectAll.push(mod.code)
+            }
+          }
+        })
+      }
+
       this.setState({
-        roleId: this.props.role.id,
-        name: this.props.role.name,
-        desc: this.props.role.desc,
-        permissions: this.props.role.permissions,
-        builtIn: this.props.role.built_in
+        roleId: nextProps.role.id,
+        name: nextProps.role.name,
+        desc: nextProps.role.desc,
+        permissions: nextProps.role.permissions,
+        builtIn: nextProps.role.built_in,
+        selectAll: selectAll
       })
     } else {
       this.setState({
@@ -38,7 +77,8 @@ class RoleDetailsEditor extends React.Component {
         name: '',
         desc: '',
         permissions: [],
-        builtIn: false
+        builtIn: false,
+        selectAll: []
       })
     }
   }
@@ -80,12 +120,39 @@ class RoleDetailsEditor extends React.Component {
     this.props.onSave(roleDetails)
   }
 
-  // onDelete = e => {
-  //   const result = confirm('Confirm delete this role?')
-  //   if (result) {
-  //     this.props.onDelete(this.state.roleId)
-  //   }
-  // }
+  selectAllPermission = (children, parent) => {
+    let selectAll = this.state.selectAll
+    if (isEmpty(selectAll)) {
+      selectAll = [parent]
+      this.setAllPermission(children, 15)
+    } else {
+      if (selectAll.includes(parent)) {
+        let index = selectAll.indexOf(parent)
+        if (index !== -1) {
+          selectAll.splice(index, 1)
+        }
+        this.setAllPermission(children, 0)
+      } else {
+        selectAll.push(parent)
+        this.setAllPermission(children, 15)
+      }
+    }
+    this.setState({ selectAll })
+  }
+
+  setAllPermission = (codes, value) => {
+    let permissions = this.state.permissions
+    codes.map(code => {
+      let found = permissions.findIndex(p0 => p0.code === code)
+      let p1 = { code, value }
+      if (found > -1) {
+        permissions = permissions.map(p0 => (p0.code === code ? p1 : p0))
+      } else {
+        permissions = [...permissions, p1]
+      }
+    })
+    this.setState({ permissions })
+  }
 
   render() {
     const {
@@ -96,7 +163,7 @@ class RoleDetailsEditor extends React.Component {
       canDelete,
       userroleAction
     } = this.props
-    const { name, desc, builtIn } = this.state
+    const { name, desc, builtIn, selectAll } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
       <div className="h-100 flex flex-auto flex-column">
@@ -140,17 +207,61 @@ class RoleDetailsEditor extends React.Component {
               <table className="w-100 f6">
                 <tbody>
                   <tr className="pv2">
-                    <th className="bb b--light-grey dark-gray">Permission</th>
-                    <th className="bb b--light-grey dark-gray">View</th>
-                    <th className="bb b--light-grey dark-gray">Edit</th>
-                    <th className="bb b--light-grey dark-gray">Create</th>
-                    <th className="bb b--light-grey dark-gray">Delete</th>
+                    <th
+                      className="bb b--light-grey bg-white dark-gray"
+                      style={{ position: 'sticky', top: 0 }}
+                    >
+                      Permission
+                    </th>
+                    <th
+                      className="bb b--light-grey bg-white dark-gray"
+                      style={{ position: 'sticky', top: 0 }}
+                    >
+                      View
+                    </th>
+                    <th
+                      className="bb b--light-grey bg-white dark-gray"
+                      style={{ position: 'sticky', top: 0 }}
+                    >
+                      Edit
+                    </th>
+                    <th
+                      className="bb b--light-grey bg-white dark-gray"
+                      style={{ position: 'sticky', top: 0 }}
+                    >
+                      Create
+                    </th>
+                    <th
+                      className="bb b--light-grey bg-white dark-gray"
+                      style={{ position: 'sticky', top: 0 }}
+                    >
+                      Delete
+                    </th>
                   </tr>
                   {modules.map(mod => (
                     <React.Fragment key={mod.code}>
                       <tr>
-                        <td colSpan="5" className="pt2">
+                        <td colSpan="2" className="pt2">
                           <span className="underline b">{mod.name}</span>
+                        </td>
+                        <td colSpan="3" className="pt2">
+                          {!builtIn ? (
+                            <a
+                              className={`pa2 flex link dim pointer items-center red`}
+                              onClick={() => {
+                                this.selectAllPermission(
+                                  mod.features.map(x => x.code),
+                                  mod.code
+                                )
+                              }}
+                            >
+                              {selectAll.includes(mod.code)
+                                ? 'Unselect All'
+                                : 'Select All'}
+                            </a>
+                          ) : (
+                            ''
+                          )}
                         </td>
                       </tr>
                       {mod.features.map(feat => (

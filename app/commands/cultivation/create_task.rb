@@ -34,10 +34,10 @@ module Cultivation
         tasks = Cultivation::QueryTasks.call(task_related.batch).result
         task_related = tasks.detect { |t| t.id == task_related.id }
         if task_related.have_children?(tasks)
-          last_sibling = task_related.children(tasks).last
+          first_sibling = task_related.children(tasks).first
           new_task.indent = task_related.indent + 1
           new_task.indelible = task_related.indelible
-          new_task.move_to! last_sibling.position + 1
+          new_task.move_to! first_sibling.position
         else
           new_task.move_to! task_related.position + 1
         end

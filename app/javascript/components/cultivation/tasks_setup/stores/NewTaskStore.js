@@ -120,6 +120,7 @@ class TaskStore {
       if (response.data) {
         this.loadTasks(batchId)
       } else {
+        toast(response.errors.error[0], 'success')
         console.error(response.errors)
       }
     } catch (error) {

@@ -12,7 +12,6 @@ module RequestScoping
     helper_method :current_ip_facility
     helper_method :company_info
     helper_method :resource_shared?
-    helper_method :has_default_facility?
     helper_method :current_user_facilities
     helper_method :selected_facilities_ids
   end
@@ -116,10 +115,5 @@ module RequestScoping
 
   def company_info
     @company_info ||= CompanyInfo.where({}).first
-  end
-
-  def has_default_facility?
-    @has_default_facility ||= company_info&.is_active &&
-                              current_default_facility.present?
   end
 end

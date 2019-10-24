@@ -150,7 +150,7 @@ module Cultivation
       if cmd.success?
         cmd.result || '--'
       else
-        Rollbar.log('error', cmd.errors)
+        # Should send notification to facility manager
         cmd.errors[:error][0]
       end
     end

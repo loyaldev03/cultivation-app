@@ -899,11 +899,10 @@ class TaskList extends React.Component {
           />
         </Suspense>
         <div
-          className={classNames('mt3 tr', {
-            'flex justify-between': this.props.batch.status !== 'DRAFT'
+          className={classNames('mt3 tr flex justify-between', {
           })}
         >
-          {this.props.batch.status !== 'DRAFT' && this.props.canCreateTemplate && (
+          {this.props.canCreateTemplate && (
             <input
               type="button"
               className={classNames('btn btn--large', {

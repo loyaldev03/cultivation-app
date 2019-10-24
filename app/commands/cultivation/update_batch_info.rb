@@ -11,7 +11,7 @@ module Cultivation
     def call
       @batch = Cultivation::Batch.find(@batch_id)
       if @batch.present? && validate?
-        @batch.name = @args[:name] if @args[:name]
+        @batch.name = @args[:name]
         if @args[:selected_plants].present?
           selected_plants = @args[:selected_plants].map do |p|
             {

@@ -192,7 +192,8 @@ class BatchLocationApp extends React.Component {
         httpPostOptions({
           plans: this.state.selectedPlants,
           quantity: this.state.quantity,
-          start_date: start_date
+          start_date: start_date,
+          batch_name: this.props.batchInfo.batch_name
         })
       )
       if (res) {

@@ -359,12 +359,6 @@ module Cultivation
     end
 
     def valid_batch?(batch)
-      if batch.facility_id.nil?
-        errors.add(:error, 'Missing facility_id in Batch')
-      end
-      if batch.quantity.nil?
-        errors.add(:error, 'Missing quantity in Batch. Did you skipped quanity location selection?')
-      end
       errors.empty? # No Errors => Valid
     end
 

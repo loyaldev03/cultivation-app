@@ -317,7 +317,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def save_as_template
     batch = Cultivation::Batch.find(params[:batch_id])
-    batch.update(is_template: true)
+    batch.update(template_name: batch.name, is_template: true)
     render json: {data: 'Batch saved as template'}
   end
 

@@ -44,14 +44,10 @@ class Cultivation::BatchesController < ApplicationController
         map { |a| {value: a[:code], label: a[:name]} }
     end
 
-    facility_strains = Inventory::QueryFacilityStrains.call(@facility_id).result
-    @strains = facility_strains.map do |a|
-      {
-        value: a[:value],
-        label: a[:strain_name],
-      }
-    end
-    @facilities = QueryUserFacilities.call(current_user).result.map do |a|
+    @strains = Inventory::QueryFacilityStrains.call(
+      current_user_facilities_ids,
+    ).result
+    @facilities = current_user_facilities.map do |a|
       {
         value: a.id.to_s,
         label: "#{a.name} (#{a.code})",

@@ -61,7 +61,7 @@ module RequestScoping
   end
 
   def select_single_facility
-    if selected_facilities_ids.any? && selected_facilities_ids.size > 1
+    if selected_facilities_ids.any? && params[:facility_id] == 'All'
       return_url = url_for(params.except(:facility_id).to_unsafe_h)
       redirect_to select_facility_path(return_url: return_url)
     end

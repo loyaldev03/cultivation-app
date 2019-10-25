@@ -8,7 +8,7 @@
     <div class="flex flex-column">
       <%= react_component('inventory/metrc/MetrcInventoryApp',
       {
-        facility_id: @facility_id,
+        facility_id: current_facility.id&.to_s,
         metrc_permission: RoleCheck.call(current_user, Constants::APP_MOD_METRC_TAG).result
       })
       %>

@@ -1,0 +1,19 @@
+<div class="ma4 pa4 bg-white dark-grey">
+  <div class="">
+    <span class="f4 db grey mb4">Please select a facility to continue</span>
+
+    <% current_user_facilities.each do |f| %>
+      <div class="db mt4">
+        <% if @return_url && @return_url.include?("?") %>
+          <%= link_to f.name,
+            "#{@return_url}&facility_id=#{f.id.to_s}",
+            class: "pv2 ph3 bg-orange white link dim pointer br2" %>
+        <% else %>
+          <%= link_to f.name,
+            "#{@return_url}?facility_id=#{f.id.to_s}",
+            class: "pv2 ph3 bg-orange white link dim pointer br2" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -25,6 +25,10 @@ class HomeController < ApplicationController
     end
   end
 
+  def select_facility
+    @return_url = params[:return_url]
+  end
+
   def employees
     authorize! :employees, HomeController
   end

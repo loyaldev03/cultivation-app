@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 
   root to: "home#dashboard"
 
+  get "select_facility" => "home#select_facility"
+
   # These set is for dummy only
   get "first_setup" => "home#index"
   get "employees-dashboard" => "home#employees_dashboard"

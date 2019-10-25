@@ -14,6 +14,9 @@ module RequestScoping
     helper_method :resource_shared?
     helper_method :current_user_facilities
     helper_method :selected_facilities_ids
+    helper_method :select_single_facility
+    helper_method :params_facility
+    helper_method :params_facility_id
   end
 
   protected
@@ -55,6 +58,13 @@ module RequestScoping
 
   def set_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
+  end
+
+  def select_single_facility
+    if selected_facilities_ids.any? && selected_facilities_ids.size > 1
+      return_url = url_for(params.except(:facility_id).to_unsafe_h)
+      redirect_to select_facility_path(return_url: return_url)
+    end
   end
 
   def current_ip_facility
@@ -99,6 +109,14 @@ module RequestScoping
                                else
                                  current_user_facilities_ids.select { |x| x.to_s == param_fid }
                                end
+  end
+
+  def params_facility
+    @params_facility ||= current_user_facilities.detect { |f| f.id.to_s == params[:facility_id] }
+  end
+
+  def params_facility_id
+    @params_facility_id ||= params[:facility_id]
   end
 
   def current_user_facilities

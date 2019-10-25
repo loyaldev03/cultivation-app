@@ -23,7 +23,9 @@ class Cultivation::BatchesController < ApplicationController
 
   def new
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('ONBOARDING_SETUP_BATCH')
+      current_user_facilities.each do |f|
+        f.update_onboarding('ONBOARDING_SETUP_BATCH')
+      end
     end
     @facility_id = current_facility&.id.to_s
     # Cultivation Phases during batch setup depends on the
@@ -45,7 +47,7 @@ class Cultivation::BatchesController < ApplicationController
     end
 
     @strains = Inventory::QueryFacilityStrains.call(
-      current_user_facilities_ids,
+      selected_facilities_ids,
     ).result
     @facilities = current_user_facilities.map do |a|
       {
@@ -60,9 +62,8 @@ class Cultivation::BatchesController < ApplicationController
       }
     end
     @templates = Cultivation::Batch.where(is_template: true).map do |a|
-      # grow_method = @grow_methods.find { |b| b[:value] === a.grow_method.to_s }
-      facility_strain = @strains.find { |b| b[:label] === a.facility_strain.strain_name }
-      batch_source = @plant_sources.find { |b| b[:value].to_s === a.batch_source }
+      facility_strain = @strains.detect { |b| b[:label] == a.facility_strain.strain_name }
+      batch_source = @plant_sources.detect { |b| b[:value].to_s == a.batch_source }
       {
         value: a.id.to_s,
         label: a.template_name,

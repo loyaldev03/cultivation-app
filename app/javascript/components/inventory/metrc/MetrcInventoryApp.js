@@ -139,7 +139,7 @@ const activeTaskStore = new ActiveTaskStore()
 class MetrcInventoryApp extends React.Component {
   constructor(props) {
     super(props)
-    DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
+    //DashboardMetrcStore.loadMetrcs_info(this.props.facility_id)
   }
   state = {
     data: [],

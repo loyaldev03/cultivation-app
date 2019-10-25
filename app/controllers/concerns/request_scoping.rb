@@ -15,6 +15,8 @@ module RequestScoping
     helper_method :current_user_facilities
     helper_method :selected_facilities_ids
     helper_method :select_single_facility
+    helper_method :params_facility
+    helper_method :params_facility_id
   end
 
   protected
@@ -107,6 +109,14 @@ module RequestScoping
                                else
                                  current_user_facilities_ids.select { |x| x.to_s == param_fid }
                                end
+  end
+
+  def params_facility
+    @params_facility ||= current_user_facilities.detect { |f| f.id.to_s == params[:facility_id] }
+  end
+
+  def params_facility_id
+    @params_facility_id ||= params[:facility_id]
   end
 
   def current_user_facilities

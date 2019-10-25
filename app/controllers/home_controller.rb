@@ -25,6 +25,10 @@ class HomeController < ApplicationController
     end
   end
 
+  def select_facility
+    @return_url = params[:return_url]
+  end
+
   def employees
     authorize! :employees, HomeController
   end
@@ -70,7 +74,9 @@ class HomeController < ApplicationController
   end
 
   def prod_unsold
-    @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
+    @facility_strains = Inventory::QueryFacilityStrains.call(
+      selected_facilities_ids,
+    ).result
     @sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result
     @drawdown_uoms = Common::UnitOfMeasure.where(dimension: 'weight').map &:unit
 

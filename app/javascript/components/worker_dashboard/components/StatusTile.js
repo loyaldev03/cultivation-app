@@ -149,7 +149,7 @@ export default class StatusTile extends React.Component {
               </div>
             </div>
             <div className="mt2">
-              {task.slice(0, 2).map(x => {
+              {!isEmpty(task) && task.slice(0, 2).map(x => {
                 return (
                   <div className="flex justify-between mb2" key={x.id}>
                     <div className="grey">
@@ -164,7 +164,7 @@ export default class StatusTile extends React.Component {
                 )
               })}
             </div>
-            {task.length > 0 ? (
+            {!isEmpty(task) && task.length > 0 ? (
               <div className="flex justify-center mv3">
                 <a className="fw6 orange dim pointer" href="/daily_tasks">
                   Show More

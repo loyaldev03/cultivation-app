@@ -61,7 +61,6 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def harvest_packages
-    #need to filter add status new for unsold
     if resource_shared?
       items = Inventory::ItemTransaction.in(facility_id: current_user_facilities_ids).includes(:product, :catalogue, :harvest_batch, :facility_strain).
         in(catalogue: sales_catalogue_ids('raw_sales_product'), facility_id: current_user_facilities_ids).

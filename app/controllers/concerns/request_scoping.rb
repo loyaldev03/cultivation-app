@@ -12,9 +12,11 @@ module RequestScoping
     helper_method :current_ip_facility
     helper_method :company_info
     helper_method :resource_shared?
-    helper_method :has_default_facility?
     helper_method :current_user_facilities
     helper_method :selected_facilities_ids
+    helper_method :select_single_facility
+    helper_method :params_facility
+    helper_method :params_facility_id
   end
 
   protected
@@ -56,6 +58,13 @@ module RequestScoping
 
   def set_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
+  end
+
+  def select_single_facility
+    if selected_facilities_ids.any? && selected_facilities_ids.size > 1
+      return_url = url_for(params.except(:facility_id).to_unsafe_h)
+      redirect_to select_facility_path(return_url: return_url)
+    end
   end
 
   def current_ip_facility
@@ -102,6 +111,14 @@ module RequestScoping
                                end
   end
 
+  def params_facility
+    @params_facility ||= current_user_facilities.detect { |f| f.id.to_s == params[:facility_id] }
+  end
+
+  def params_facility_id
+    @params_facility_id ||= params[:facility_id]
+  end
+
   def current_user_facilities
     @current_user_facilities ||= QueryUserFacilities.call(current_user).result
   end
@@ -116,10 +133,5 @@ module RequestScoping
 
   def company_info
     @company_info ||= CompanyInfo.where({}).first
-  end
-
-  def has_default_facility?
-    @has_default_facility ||= company_info&.is_active &&
-                              current_default_facility.present?
   end
 end

@@ -3,6 +3,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   before_action :set_company
 
   def metrc_setup
+    select_single_facility
   end
 
   def show

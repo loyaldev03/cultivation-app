@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import FacilityDashboardStore from './FacilityDashboardStore'
-import { numberFormatter } from '../utils'
+import { numberFormatter, Loading } from '../utils'
 
 const FacilityWidget = ({
   title,
@@ -24,7 +24,7 @@ const FacilityWidget = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          {loaded ? <b className="f2 fw6 dark-grey">{count}</b> : 'loading...'}
+          {loaded ? <b className="f2 fw6 dark-grey">{count}</b> : <Loading/>}
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 desc "Create dummy plants for batches"
 
+# Call this using
+# heroku run rake 'generate_plants_for_batch[C18]' -a cannected-beta
 task :generate_plants_for_batch, [:batch_no] => :environment  do |t, args|
   args.with_defaults(:batch_no => "B01")
   pp "Generate plants for #{args.batch_no}"

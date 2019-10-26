@@ -5,7 +5,7 @@ module Inventory
     attr_accessor :strains
 
     def initialize(facility_ids)
-      raise ArgumentError.new("facility_ids is required") if facility_ids.blank?
+      raise ArgumentError.new('facility_ids is required') if facility_ids.blank?
 
       @facility_ids = facility_ids
     end

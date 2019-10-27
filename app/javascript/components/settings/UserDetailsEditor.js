@@ -778,7 +778,7 @@ class UserDetailsEditor extends React.Component {
                   className="mt1 w-100 f6"
                 />
               </div>
-              {!isEmpty(roles.find(v => v.label == 'Manager')) ? (
+              {roles && !isEmpty(roles.find(v => v.label == 'Manager')) ? (
                 <div className="mt2 fl w-100 mb2">
                   <label className="f6 fw6 db mb1 gray ttc">Department</label>
                   <AsyncCreatableSelect

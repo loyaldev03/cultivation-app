@@ -3,7 +3,12 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { LocationPicker, PurchaseInfo, InputBarcode, toast } from '../../../utils'
+import {
+  LocationPicker,
+  PurchaseInfo,
+  InputBarcode,
+  toast
+} from '../../../utils'
 import { setupSeed } from '../actions/setupSeed'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'

@@ -154,6 +154,12 @@ class FlowerSetupApp extends React.Component {
     })
   }
 
+  onSave = payload => {
+    if (payload) {
+      PlantStore.loadPlants()
+    }
+  }
+
   render() {
     const { plantPermission } = this.props
     const { columns } = this.state
@@ -204,6 +210,7 @@ class FlowerSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}
+          onSave={this.onSave}
           canUpdate={plantPermission.update}
           canCreate={plantPermission.create}
         />

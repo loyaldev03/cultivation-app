@@ -80,6 +80,7 @@ module Inventory
           "path": '$strain',
           "preserveNullAndEmptyArrays": true,
         }},
+        {"$sort": {"c_at": -1}},
         {"$project": {
           "batch_no": 1,
           "name": 1,

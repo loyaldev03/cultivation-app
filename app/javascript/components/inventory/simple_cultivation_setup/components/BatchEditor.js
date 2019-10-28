@@ -5,6 +5,7 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import saveCultivationBatch from '../actions/saveCultivationBatch'
+import { toast } from '../../../utils'
 
 function getBatch(id, includeFields = '') {
   let apiUrl = '/api/v1/batches/' + id
@@ -187,6 +188,7 @@ class BatchEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          toast('Batch added.', 'success')
           window.editorSidebar.close()
           this.props.onSave(payload)
         }

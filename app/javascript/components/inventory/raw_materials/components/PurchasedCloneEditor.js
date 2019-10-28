@@ -120,6 +120,7 @@ class PurchasedCloneEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          toast('Purchase clone added.', 'success')
           window.editorSidebar.close()
           this.props.onSave(payload)
         }

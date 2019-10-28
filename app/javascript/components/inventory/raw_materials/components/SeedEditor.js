@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { LocationPicker, PurchaseInfo, InputBarcode } from '../../../utils'
+import { LocationPicker, PurchaseInfo, InputBarcode, toast } from '../../../utils'
 import { setupSeed } from '../actions/setupSeed'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -148,6 +148,7 @@ class SeedEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          toast('Seed added.', 'success')
           window.editorSidebar.close()
           this.props.onSave(payload)
         }

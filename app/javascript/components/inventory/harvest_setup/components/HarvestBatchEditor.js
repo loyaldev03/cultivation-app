@@ -4,6 +4,7 @@ import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
+import { toast } from '../../../utils'
 import { LocationPicker, PurchaseInfo, formatDate } from '../../../utils'
 import setupHarvestBatch from '../actions/setupHarvestBatch'
 import getHarvestBatch from '../actions/getHarvestBatch'
@@ -188,6 +189,7 @@ export default class HarvestBatchEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          toast('Harvest Batch added.', 'success')
           window.editorSidebar.close()
           this.props.onSave(payload)
         }

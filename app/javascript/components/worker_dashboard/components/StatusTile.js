@@ -149,20 +149,21 @@ export default class StatusTile extends React.Component {
               </div>
             </div>
             <div className="mt2">
-              {!isEmpty(task) && task.slice(0, 2).map(x => {
-                return (
-                  <div className="flex justify-between mb2" key={x.id}>
-                    <div className="grey">
-                      <h1 className="f5 fw6">{x.attributes.name}</h1>
-                      <b className="f6 fw4">
-                        {x.attributes.location_name == ''
-                          ? 'No Location'
-                          : x.attributes.location_name}
-                      </b>
+              {!isEmpty(task) &&
+                task.slice(0, 2).map(x => {
+                  return (
+                    <div className="flex justify-between mb2" key={x.id}>
+                      <div className="grey">
+                        <h1 className="f5 fw6">{x.attributes.name}</h1>
+                        <b className="f6 fw4">
+                          {x.attributes.location_name == ''
+                            ? 'No Location'
+                            : x.attributes.location_name}
+                        </b>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
             </div>
             {!isEmpty(task) && task.length > 0 ? (
               <div className="flex justify-center mv3">

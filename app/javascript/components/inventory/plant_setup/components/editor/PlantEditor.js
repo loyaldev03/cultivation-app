@@ -6,6 +6,7 @@ import {
   FieldError,
   CalendarPicker
 } from '../../../../utils/FormHelpers'
+import { toast } from '../../../../utils'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -306,6 +307,7 @@ class PlantEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          toast('Plant added.', 'success')
           window.editorSidebar.close()
           this.props.onSave(payload)
         }

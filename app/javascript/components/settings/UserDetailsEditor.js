@@ -4,14 +4,18 @@ import isEmpty from 'lodash.isempty'
 import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { addDays, format, subDays } from 'date-fns'
+import { isEmptyString } from '../utils/StringHelper'
 import UserRoleStore from './UserRoleStore'
 import { toJS, autorun } from 'mobx'
 import Tippy from '@tippy.js/react'
-import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
-import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import { InputBarcode } from '../utils'
+// import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
+// import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import { InputBarcode, CheckboxSelect } from '../utils'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import reactSelectStyle from '../utils/reactSelectStyle'
+import {
+  FieldError,
+} from '../utils/FormHelpers'
 
 const styles = `
 
@@ -54,7 +58,10 @@ const user_modes = [
 class UserDetailsEditor extends React.Component {
   constructor(props) {
     super(props)
-
+    const temp_date = this.stateTempDate()
+    let array_of_weeks = this.stateArrayOfWeeks(temp_date)
+    let exempt_schedules = this.stateExemptSchedules(temp_date)
+    
     if (props.user) {
       let facilities = []
       let roles = []
@@ -104,48 +111,9 @@ class UserDetailsEditor extends React.Component {
       if (props.user.id) {
         UserRoleStore.getWeekWorkSchedule(props.user.id)
       }
-
-      non_exempt_schedules = []
       let sundaySelected = { label: '', value: '' }
       let copySundaySelected = { label: '', value: '' }
-      let exempt_schedules = []
-      const weekday = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday'
-      ]
-      let array_of_weeks = []
-      let first_day = weekday.findIndex(
-        obj => obj === this.props.firstDayOfWeek
-      )
-      let curr_date = new Date()
-      let temp_date = addDays(
-        curr_date,
-        (0 + first_day - curr_date.getDay()) % 7
-      )
-      for (let i = 0; i <= 6; i++) {
-        let args = {
-          day: weekday[addDays(temp_date, i).getDay()].toLowerCase()
-        }
-        exempt_schedules.push(args)
-      }
-      for (let i = 0; i < 50; i++) {
-        let next_seven_days = addDays(temp_date, 6)
-        let args = {
-          label: `${format(temp_date, 'MM/DD/YYYY')} - ${format(
-            next_seven_days,
-            'MM/DD/YYYY'
-          )}`,
-          value: temp_date
-        }
-        array_of_weeks.push(args)
-        temp_date = addDays(temp_date, 7)
-      }
-
+      
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -168,10 +136,11 @@ class UserDetailsEditor extends React.Component {
         roles,
         default_facility,
         work_schedules: work_schedules,
-        non_exempt_schedules: non_exempt_schedules || [],
+        non_exempt_schedules: non_exempt_schedules,
         array_of_weeks: array_of_weeks,
         exempt_schedules: exempt_schedules,
-        defaultDepartments: []
+        defaultDepartments: [],
+        errors: {},
         // sundaySelected: sundaySelected,
         // copySundaySelected: copySundaySelected
       }
@@ -195,12 +164,21 @@ class UserDetailsEditor extends React.Component {
         facilities: [],
         roles: [],
         default_facility: {},
-        defaultDepartments: []
+        work_schedules: props.companyWorkSchedules,
+        non_exempt_schedules: [],
+        array_of_weeks: array_of_weeks,
+        exempt_schedules: exempt_schedules,
+        defaultDepartments: [],
+        errors: {},
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const temp_date = this.stateTempDate()
+    let array_of_weeks = this.stateArrayOfWeeks(temp_date)
+    let exempt_schedules = this.stateExemptSchedules(temp_date)
+    
     if (nextProps.userroleAction === 'new') {
       this.setState({
         tabs: 'General',
@@ -222,13 +200,75 @@ class UserDetailsEditor extends React.Component {
         reporting_manager: null,
         facilities: [],
         roles: [],
-        default_facility: null,
-        work_schedules: [],
+        default_facility: {},
+        work_schedules: nextProps.companyWorkSchedules,
         non_exempt_schedules: [],
-        array_of_weeks: [],
-        exempt_schedules: []
+        array_of_weeks: array_of_weeks,
+        exempt_schedules: exempt_schedules,
+        defaultDepartments: [],
+        errors: {},
       })
     }
+  }
+
+  stateTempDate = e => {
+    const weekday = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ]
+
+    let first_day = weekday.findIndex(
+      obj => obj === this.props.firstDayOfWeek
+    )
+    let curr_date = new Date()
+    let temp_date = addDays(
+      curr_date,
+      (0 + first_day - curr_date.getDay()) % 7
+    )
+    return temp_date
+  }
+
+  stateArrayOfWeeks = temp_date => {
+    let array_of_weeks = []
+    for (let i = 0; i < 50; i++) {
+      let next_seven_days = addDays(temp_date, 6)
+      let args = {
+        label: `${format(temp_date, 'MM/DD/YYYY')} - ${format(
+          next_seven_days,
+          'MM/DD/YYYY'
+        )}`,
+        value: temp_date
+      }
+      array_of_weeks.push(args)
+      temp_date = addDays(temp_date, 7)
+    }
+    return array_of_weeks
+  }
+
+  stateExemptSchedules = temp_date => {
+    let exempt_schedules = []
+    const weekday = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ]
+
+    for (let i = 0; i <= 6; i++) {
+      let args = {
+        day: weekday[addDays(temp_date, i).getDay()].toLowerCase()
+      }
+      exempt_schedules.push(args)
+    }
+    return exempt_schedules
   }
 
   renderNonExemptSchedules = (i, data) => {
@@ -329,8 +369,7 @@ class UserDetailsEditor extends React.Component {
   }
 
   calculateRangeDate = async date => {
-    await UserRoleStore.getSchedulesByDate(this.state.userId, date)
-    const schedules = toJS(UserRoleStore.nonExemptSchedules)
+    let schedules = []
     const weekday = [
       'Sunday',
       'Monday',
@@ -340,31 +379,47 @@ class UserDetailsEditor extends React.Component {
       'Friday',
       'Saturday'
     ]
-    const updated_schedules = this.state.non_exempt_schedules
-    for (let i = 0; i < schedules.length; i++) {
-      let args = {
-        day_id: i,
-        day: weekday[addDays(date, i).getDay()].toLowerCase(),
-        date: schedules[i].date,
-        start_time: schedules[i].start_time,
-        end_time: schedules[i].end_time
+    // const updated_schedules = this.state.non_exempt_schedules
+    let week_schedule = []
+    if(isEmptyString(this.state.userId)){
+      for (let i = 0; i < 7; i++) {
+        let args = {
+          day_id: i,
+          day: weekday[addDays(date, i).getDay()].toLowerCase(),
+          date: format(addDays(date, i), 'MM/DD/YYYY'),
+          start_time: "",
+          end_time: ""
+        }
+        week_schedule.push(args)
       }
-      updated_schedules.push(args)
-      // updated_schedules.map(t => {
-      //   let updated = updated_schedules.find(e => e.day_id === i)
-      //   updated.date = schedules[i].date
-      //   updated.start_time = schedules[i].start_time
-      //   updated.end_time = schedules[i].end_time
-      //   return t.day_id === i ? updated : t
-      // })
+    }else{
+      await UserRoleStore.getSchedulesByDate(this.state.userId, date)
+      schedules = toJS(UserRoleStore.nonExemptSchedules)
+      for (let i = 0; i < schedules.length; i++) {
+        let args = {
+          day_id: i,
+          day: weekday[addDays(date, i).getDay()].toLowerCase(),
+          date: schedules[i].date,
+          start_time: schedules[i].start_time,
+          end_time: schedules[i].end_time
+        }
+        week_schedule.push(args)
+        // updated_schedules.map(t => {
+        //   let updated = updated_schedules.find(e => e.day_id === i)
+        //   updated.date = schedules[i].date
+        //   updated.start_time = schedules[i].start_time
+        //   updated.end_time = schedules[i].end_time
+        //   return t.day_id === i ? updated : t
+        // })
+      }
     }
     let sundaySelected = {
       value: date,
-      label: `${updated_schedules[0].date} - ${updated_schedules[6].date}`
+      label: `${week_schedule[0].date} - ${week_schedule[6].date}`
     }
     this.setState({
       sundaySelected: sundaySelected,
-      non_exempt_schedules: updated_schedules
+      non_exempt_schedules: week_schedule
     })
   }
 
@@ -376,13 +431,50 @@ class UserDetailsEditor extends React.Component {
     this.setState({ photoUrl: preview })
   }
 
+  validateAndGetValues() {
+    const { lastName, firstName, email } = this.state
+    let errors = {}
+
+    if (firstName.length === 0) {
+      errors.firstName = ['First Name is required']
+    }
+
+    if (lastName.length === 0) {
+      errors.lastName = ['Last Name is required']
+    }
+
+    if (email.length === 0) {
+      errors.email = ['Email is required']
+    }
+
+    if (this.props.existingEmail.includes(email) && this.props.userroleAction === 'new') {
+      errors.email = ['Email is already taken']
+    }
+
+    
+
+    const isValid = Object.getOwnPropertyNames(errors).length === 0
+    if (!isValid) {
+      this.setState({ errors })
+    }
+
+    return {
+      isValid,
+      lastName,
+      firstName,
+      email
+    }
+  }
+
   onSubmit = e => {
     e.preventDefault()
+    const { email, firstName, lastName, isValid } = this.validateAndGetValues()
+    if (!isValid) {
+      return
+    }
+
     const {
       userId,
-      firstName,
-      lastName,
-      email,
       password,
       title,
       phone_number,
@@ -449,34 +541,6 @@ class UserDetailsEditor extends React.Component {
     this.setState({ tabs: value })
   }
 
-  // onAddNonExemptSchedule = event => {
-  //   const newSchedule = {
-  //     start_date: '',
-  //     end_date: '',
-  //     start_time: '',
-  //     end_time: ''
-  //   }
-  //   const newNonExemptSchedules = [
-  //     ...this.state.non_exempt_schedules,
-  //     newSchedule
-  //   ]
-  //   this.setState({
-  //     non_exempt_schedules: newNonExemptSchedules
-  //   })
-
-  //   event.preventDefault()
-  // }
-
-  // onRemoveNonExemptSchedule = e => {
-  //   if (confirm('Are you sure?')) {
-  //     this.setState({
-  //       non_exempt_schedules: this.state.non_exempt_schedules.filter(
-  //         a => a !== e
-  //       )
-  //     })
-  //   }
-  // }
-
   find_work_schedules = day => {
     return this.state.work_schedules.find(e => e.day === day)
   }
@@ -533,7 +597,7 @@ class UserDetailsEditor extends React.Component {
   formatOptionLabel = ({ value, label, customAbbreviation }) => (
     <div
       className={classNames('', {
-        'sunday-work': UserRoleStore.getWeekWithWorkSchedule().includes(label)
+        'sunday-work': UserRoleStore.getWeekWithWorkSchedule() && UserRoleStore.getWeekWithWorkSchedule().includes(label)
       })}
       style={{ display: 'flex' }}
     >
@@ -574,7 +638,8 @@ class UserDetailsEditor extends React.Component {
       exempt_schedules,
       sundaySelected, //used for date selection in non exempt schedule
       copySundaySelected, // used for date selection in copy section
-      defaultDepartments
+      defaultDepartments,
+      errors
     } = this.state
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
@@ -657,9 +722,10 @@ class UserDetailsEditor extends React.Component {
                     className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                     onChange={this.onChangeInput('firstName')}
                     value={firstName}
-                    required={true}
+                    // required={true}
                     // disabled={isSameUser}
                   />
+                  <FieldError errors={this.state.errors} field="firstName" />
                 </div>
                 <div className="w-50 fr pl3">
                   <label className="f6 fw6 db mb1 gray ttc">Last Name</label>
@@ -667,9 +733,11 @@ class UserDetailsEditor extends React.Component {
                     className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                     onChange={this.onChangeInput('lastName')}
                     value={lastName}
-                    required={true}
+                    // required={true}
+                    // error={errors['lastName']}
                     // disabled={isSameUser}
                   />
+                  <FieldError errors={this.state.errors} field="lastName" />
                 </div>
               </div>
               <div className="mt2 fl w-100">
@@ -679,8 +747,10 @@ class UserDetailsEditor extends React.Component {
                     className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                     onChange={this.onChangeInput('email')}
                     value={email}
-                    required={true}
+                    // error={errors['email']}
+                    // required={true}
                   />
+                  <FieldError errors={this.state.errors} field="email" />
                 </div>
                 <div className="w-50 fr pl3">
                   <label className="f6 fw6 db mb1 gray ttc">Title</label>
@@ -778,7 +848,7 @@ class UserDetailsEditor extends React.Component {
                   className="mt1 w-100 f6"
                 />
               </div>
-              {!isEmpty(roles.find(v => v.label == 'Manager')) ? (
+              {!isEmpty(roles) && !isEmpty(roles.find(v => v.label == 'Manager')) ? (
                 <div className="mt2 fl w-100 mb2">
                   <label className="f6 fw6 db mb1 gray ttc">Department</label>
                   <AsyncCreatableSelect
@@ -954,27 +1024,37 @@ class UserDetailsEditor extends React.Component {
                           content={
                             <div className="bg-white f6 flex">
                               <div
-                                className="db shadow-4 pa3 flex justify-between"
-                                style={{ width: 20 + 'rem' }}
+                                className="db shadow-4 pa3 overflow-y-scroll"
+                                style={{ width: 13 + 'rem', height: '320px'}}
                               >
-                                <Select
-                                  options={array_of_weeks}
-                                  isClearable={true}
-                                  onChange={opt =>
-                                    this.onSelectChange(
-                                      'copySundaySelected',
-                                      opt
-                                    )
-                                  }
-                                  className="mt1 w-70 f6"
-                                  value={copySundaySelected}
-                                />
-                                <a
-                                  className="btn btn--primary btn--small ml2 w-30 mt2"
-                                  onClick={e => this.copyWeekScedule()}
-                                >
-                                  Copy
-                                </a>
+                                {array_of_weeks.map(e => 
+                                  <label className="dim db pv1 gray ttc">
+                                    <input
+                                      key={e.label}
+                                      type="checkbox"
+                                      options={e}
+                                      onChange={opt =>
+                                        this.onSelectChange(
+                                          'copySundaySelected',
+                                          opt
+                                        )
+                                      }
+                                      className="mr3"
+                                      value={copySundaySelected}
+                                    />
+                                    {e.label}
+                                  </label>
+                                  
+                                )}
+                                <div class="flex center">
+                                  <a
+                                    className="btn btn--primary btn--small ml2 mt2"
+                                    onClick={e => this.copyWeekScedule()}
+                                  >
+                                    Copy
+                                  </a>
+                                </div>
+                                
                               </div>
                             </div>
                           }

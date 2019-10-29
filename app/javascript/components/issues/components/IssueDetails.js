@@ -102,8 +102,8 @@ class IssueDetails extends Component {
 
     const is_archived = currentIssueStore.issue.is_archived
     const followers = currentIssueStore.issue.followers
-    const followerIds = followers.map(x => x.id)
     const noFollowers = followers.length === 0
+    const followerIds = followers.map(x => x.id) || []
     const { dailyTask, canUpdate } = this.props
     return (
       <React.Fragment>

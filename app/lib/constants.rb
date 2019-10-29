@@ -75,10 +75,10 @@ module Constants
     CONST_VEG1,
     CONST_VEG2,
     CONST_FLOWER,
+    CONST_HARVEST,
+    CONST_TRIM,
     CONST_DRY,
     CONST_CURE,
-    CONST_TRIM,
-    CONST_HARVEST,
     CONST_STORAGE,
     CONST_VAULT,
   ].freeze

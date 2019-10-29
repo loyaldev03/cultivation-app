@@ -13,9 +13,7 @@ import Tippy from '@tippy.js/react'
 import { InputBarcode, CheckboxSelect } from '../utils'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import reactSelectStyle from '../utils/reactSelectStyle'
-import {
-  FieldError,
-} from '../utils/FormHelpers'
+import { FieldError } from '../utils/FormHelpers'
 
 const styles = `
 
@@ -61,7 +59,7 @@ class UserDetailsEditor extends React.Component {
     const temp_date = this.stateTempDate()
     let array_of_weeks = this.stateArrayOfWeeks(temp_date)
     let exempt_schedules = this.stateExemptSchedules(temp_date)
-    
+
     if (props.user) {
       let facilities = []
       let roles = []
@@ -113,7 +111,7 @@ class UserDetailsEditor extends React.Component {
       }
       let sundaySelected = { label: '', value: '' }
       let copySundaySelected = { label: '', value: '' }
-      
+
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -140,7 +138,7 @@ class UserDetailsEditor extends React.Component {
         array_of_weeks: array_of_weeks,
         exempt_schedules: exempt_schedules,
         defaultDepartments: [],
-        errors: {},
+        errors: {}
         // sundaySelected: sundaySelected,
         // copySundaySelected: copySundaySelected
       }
@@ -169,7 +167,7 @@ class UserDetailsEditor extends React.Component {
         array_of_weeks: array_of_weeks,
         exempt_schedules: exempt_schedules,
         defaultDepartments: [],
-        errors: {},
+        errors: {}
       }
     }
   }
@@ -178,7 +176,7 @@ class UserDetailsEditor extends React.Component {
     const temp_date = this.stateTempDate()
     let array_of_weeks = this.stateArrayOfWeeks(temp_date)
     let exempt_schedules = this.stateExemptSchedules(temp_date)
-    
+
     if (nextProps.userroleAction === 'new') {
       this.setState({
         tabs: 'General',
@@ -206,7 +204,7 @@ class UserDetailsEditor extends React.Component {
         array_of_weeks: array_of_weeks,
         exempt_schedules: exempt_schedules,
         defaultDepartments: [],
-        errors: {},
+        errors: {}
       })
     }
   }
@@ -222,14 +220,9 @@ class UserDetailsEditor extends React.Component {
       'Saturday'
     ]
 
-    let first_day = weekday.findIndex(
-      obj => obj === this.props.firstDayOfWeek
-    )
+    let first_day = weekday.findIndex(obj => obj === this.props.firstDayOfWeek)
     let curr_date = new Date()
-    let temp_date = addDays(
-      curr_date,
-      (0 + first_day - curr_date.getDay()) % 7
-    )
+    let temp_date = addDays(curr_date, (0 + first_day - curr_date.getDay()) % 7)
     return temp_date
   }
 
@@ -381,18 +374,18 @@ class UserDetailsEditor extends React.Component {
     ]
     // const updated_schedules = this.state.non_exempt_schedules
     let week_schedule = []
-    if(isEmptyString(this.state.userId)){
+    if (isEmptyString(this.state.userId)) {
       for (let i = 0; i < 7; i++) {
         let args = {
           day_id: i,
           day: weekday[addDays(date, i).getDay()].toLowerCase(),
           date: format(addDays(date, i), 'MM/DD/YYYY'),
-          start_time: "",
-          end_time: ""
+          start_time: '',
+          end_time: ''
         }
         week_schedule.push(args)
       }
-    }else{
+    } else {
       await UserRoleStore.getSchedulesByDate(this.state.userId, date)
       schedules = toJS(UserRoleStore.nonExemptSchedules)
       for (let i = 0; i < schedules.length; i++) {
@@ -447,11 +440,12 @@ class UserDetailsEditor extends React.Component {
       errors.email = ['Email is required']
     }
 
-    if (this.props.existingEmail.includes(email) && this.props.userroleAction === 'new') {
+    if (
+      this.props.existingEmail.includes(email) &&
+      this.props.userroleAction === 'new'
+    ) {
       errors.email = ['Email is already taken']
     }
-
-    
 
     const isValid = Object.getOwnPropertyNames(errors).length === 0
     if (!isValid) {
@@ -597,7 +591,9 @@ class UserDetailsEditor extends React.Component {
   formatOptionLabel = ({ value, label, customAbbreviation }) => (
     <div
       className={classNames('', {
-        'sunday-work': UserRoleStore.getWeekWithWorkSchedule() && UserRoleStore.getWeekWithWorkSchedule().includes(label)
+        'sunday-work':
+          UserRoleStore.getWeekWithWorkSchedule() &&
+          UserRoleStore.getWeekWithWorkSchedule().includes(label)
       })}
       style={{ display: 'flex' }}
     >
@@ -848,7 +844,8 @@ class UserDetailsEditor extends React.Component {
                   className="mt1 w-100 f6"
                 />
               </div>
-              {!isEmpty(roles) && !isEmpty(roles.find(v => v.label == 'Manager')) ? (
+              {!isEmpty(roles) &&
+              !isEmpty(roles.find(v => v.label == 'Manager')) ? (
                 <div className="mt2 fl w-100 mb2">
                   <label className="f6 fw6 db mb1 gray ttc">Department</label>
                   <AsyncCreatableSelect
@@ -1025,9 +1022,9 @@ class UserDetailsEditor extends React.Component {
                             <div className="bg-white f6 flex">
                               <div
                                 className="db shadow-4 pa3 overflow-y-scroll"
-                                style={{ width: 13 + 'rem', height: '320px'}}
+                                style={{ width: 13 + 'rem', height: '320px' }}
                               >
-                                {array_of_weeks.map(e => 
+                                {array_of_weeks.map(e => (
                                   <label className="dim db pv1 gray ttc">
                                     <input
                                       key={e.label}
@@ -1044,8 +1041,7 @@ class UserDetailsEditor extends React.Component {
                                     />
                                     {e.label}
                                   </label>
-                                  
-                                )}
+                                ))}
                                 <div class="flex center">
                                   <a
                                     className="btn btn--primary btn--small ml2 mt2"
@@ -1054,7 +1050,6 @@ class UserDetailsEditor extends React.Component {
                                     Copy
                                   </a>
                                 </div>
-                                
                               </div>
                             </div>
                           }

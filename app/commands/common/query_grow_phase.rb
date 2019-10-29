@@ -9,7 +9,10 @@ module Common
     def call
       json = []
       Constants::GROW_PHASES.each do |p|
-        phase = Common::GrowPhase.find_or_create_by(name: p)
+        Common::GrowPhase.find_or_create_by(name: p)
+      end
+
+      Common::GrowPhase.all.order(name: :asc).each do |phase|
         json << {
           id: phase.id.to_s,
           type: 'grow_phase',

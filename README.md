@@ -10,12 +10,12 @@ Cannected
 * v5.2.3 / v2.5.1
 
 ### Node version
-- Node v8.11+
+- Node v8.11+ / v10 (not tested with v12)
 - Npm v6+
 - Yarn v1.15+ (*We use `yarn` for this project*)
 
 ### Database
-* MongoDB v3.6+, don't use v4.x yet since mLab (https://mlab.com/mlab-vs-atlas/) doesn't support it yet (19 Sept 2018).
+* MongoDB v4.0+
 * Database GUI tools - Robo 3T (https://robomongo.org/download)
 
 ### Cache Server
@@ -43,7 +43,7 @@ Cannected
 ### Development Workflow
 * Pick a task from VSTS
     * Move task to `Active` column & assign yourself to the task
-* Branch from `master` to start working on a task.
+* Branch from `develop` to start working on a task.
   1. E.g branch name
       1.  `git checkout –b feat/sign-up-page`
       2.  feat – new feature
@@ -62,9 +62,13 @@ Cannected
 * It's fine to have a single PR addressing few smaller tasks / bugs / related items. But **use separate PR** for unrelated tasks.
 
 #### Create Pull Request (PR)
-* Once done with task, push to remote and create a PR to merge back to `master` branch.
+* Once done with task, push to remote and create a PR to merge back to `develop` branch.
 * Assign reviewer and associate the relevent task(s) to the PR.
-    * NOTE: Once a PR is merged, it would automatically be deployed to `staging` server.
+    * NOTE: Once a PR is merged, it would automatically be deployed to `staging` (`https://cannvas-staging.herokuapp.com`) server.
+
+#### PR to Master
+* When ready to deploy to Client's site, create PR to merge from `develop` to `master`
+* Once merged, the CI will deploy the changes to production and `https://beta.cannected.com`
 
 ### Running the test suite
 * `bundle exec rspec`

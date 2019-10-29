@@ -18,7 +18,7 @@ module People
         result&.map do |user|
           capacities = 0
           user_percentage = 0
-          if user[:roles].include?(role.id)
+          if user[:roles].include?(role.id) && user[:work_schedules].present?
             range(user[:work_schedules])&.map do |ws|
               if ws[:end_time] and ws[:start_time]
                 capacities += ((ws[:end_time] - ws[:start_time]) / 1.hour)
@@ -140,11 +140,11 @@ module People
     def range(data)
       date = Time.current
       if (@args[:period] == 'this_week')
-        data.select { |ws| ws[:end_time] >= date.beginning_of_week && ws[:start_time] <= date.end_of_week }
+        data.select { |ws| ws[:end_time] >= date.beginning_of_week && ws[:start_time] <= date.end_of_week if ws[:end_time].present? && ws[:start_time].present? }
       elsif (@args[:period] == 'this_year')
-        data.select { |ws| ws[:end_time] >= date.beginning_of_year && ws[:start_time] <= date.end_of_year }
+        data.select { |ws| ws[:end_time] >= date.beginning_of_year && ws[:start_time] <= date.end_of_year if ws[:end_time].present? && ws[:start_time].present? }
       elsif (@args[:period] == 'this_month')
-        data.select { |ws| ws[:end_time] >= date.beginning_of_month && ws[:start_time] <= date.end_of_month }
+        data.select { |ws| ws[:end_time] >= date.beginning_of_month && ws[:start_time] <= date.end_of_month if ws[:end_time].present? && ws[:start_time].present? }
       else
         data
       end

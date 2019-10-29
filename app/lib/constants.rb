@@ -75,10 +75,10 @@ module Constants
     CONST_VEG1,
     CONST_VEG2,
     CONST_FLOWER,
+    CONST_HARVEST,
+    CONST_TRIM,
     CONST_DRY,
     CONST_CURE,
-    CONST_TRIM,
-    CONST_HARVEST,
     CONST_STORAGE,
     CONST_VAULT,
   ].freeze
@@ -107,16 +107,16 @@ module Constants
   PLANT_GROWTH_PHASE_FLOWERING = 'Flowering'.freeze
 
   GROW_PHASES = [
-    CONST_MOTHER, 
-    CONST_CLONE, 
-    CONST_VEG, 
-    CONST_VEG1, 
-    CONST_VEG2, 
-    CONST_FLOWER, 
-    CONST_HARVEST, 
-    CONST_DRY, 
-    CONST_CURE, 
-    CONST_PACKAGING
+    CONST_MOTHER,
+    CONST_CLONE,
+    CONST_VEG,
+    CONST_VEG1,
+    CONST_VEG2,
+    CONST_FLOWER,
+    CONST_HARVEST,
+    CONST_DRY,
+    CONST_CURE,
+    CONST_PACKAGING,
   ].freeze
 
   PLANT_TYPES = [

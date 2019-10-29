@@ -25,8 +25,6 @@ module Charts
             foreignField: 'cultivation_batch_id',
             as: 'harvest_batch',
           }},
-          {"$unwind": {path: '$harvest_batch'}},
-
           {"$project": {
             "max_dry_weight": {"$max": {"$sum": '$harvest_batch.total_dry_weight'}},
           }},

@@ -10,11 +10,7 @@ module People
     def call
       result = capacity_planning_aggregate
       main = []
-      bar_colors = ['red', 'blue', 'orange', 'purple', 'yellowgreen', 'mediumvioletred', 'cadetblue', 'dodgerblue', 'sienna', 'palevioletred', 'cornflowerblue']
       Common::Role.all.map do |role|
-        bar_colors.shuffle
-        color_pick = bar_colors.sample
-        bar_colors.delete(color_pick)
         user_data = []
         total_capacity = 0
         total_actual = 0
@@ -55,7 +51,7 @@ module People
         main << {
           id: role.id,
           title: role.name,
-          color: "##{'%05x' % (rand * 0xffffff)}",
+          color: color_picker,
           capacity: total_capacity.round(0),
           actual: total_actual.round(0),
           percentage: percentage,
@@ -66,6 +62,30 @@ module People
     end
 
     private
+
+    def color_picker
+      s = rand(0.6..1)
+      v = rand(0.7..1)
+      hsv_to_rgb(rand, s, v)
+    end
+
+    def hsv_to_rgb(h, s, v)
+      h_i = (h * 6).to_i
+      f = h * 6 - h_i
+      p = v * (1 - s)
+      q = v * (1 - f * s)
+      t = v * (1 - (1 - f) * s)
+      r, g, b = v, t, p if h_i == 0
+      r, g, b = q, v, p if h_i == 1
+      r, g, b = p, v, t if h_i == 2
+      r, g, b = p, q, v if h_i == 3
+      r, g, b = t, p, v if h_i == 4
+      r, g, b = v, p, q if h_i == 5
+      r, g, b = v, p, t if h_i == 6
+      r, g, b = p, t, q if h_i == 7
+      r, g, b = t, q, p if h_i == 8
+      "rgb(#{(r * 256).to_i}, #{(g * 256).to_i}, #{(b * 256).to_i})"
+    end
 
     def capacity_planning_aggregate
       f_ids = @args[:facility_id].split(',').map { |x| x.to_bson_id }

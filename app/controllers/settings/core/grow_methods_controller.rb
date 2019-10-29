@@ -4,7 +4,7 @@ class Settings::Core::GrowMethodsController < ApplicationController
       @facility = Facility.find(params[:facility_id])
       @facility.update_onboarding('ONBOARDING_GROW_METHOD')
     end
-    @grow_methods = Common::GrowMethod.all
+    @grow_methods = Common::GrowMethod.all.order(name: :asc)
     if Inventory::ItemTransaction.count > 0
       @used_grow_methods = Inventory::ItemTransaction.all.map { |item| item.catalogue.label.parameterize.underscore }.uniq.compact
     else

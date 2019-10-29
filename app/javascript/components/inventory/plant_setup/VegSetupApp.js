@@ -41,6 +41,12 @@ class VegSetupApp extends React.Component {
           )
         },
         {
+          Header: 'Lot #',
+          accessor: 'lot_number',
+          headerStyle: { textAlign: 'left' },
+          Cell: props => <span>{props.value || '--'}</span>
+        },
+        {
           Header: (
             <HeaderFilter
               title="Batch ID"
@@ -76,7 +82,7 @@ class VegSetupApp extends React.Component {
         //   )
         // },
         {
-          Header: 'Clone Date',
+          Header: 'Planted Date',
           accessor: 'planting_date',
           headerStyle: { textAlign: 'left' },
           Cell: props => (props.value ? formatDate2(props.value) : '--')
@@ -121,7 +127,15 @@ class VegSetupApp extends React.Component {
           }
         },
         {
-          Header: 'Location',
+          Header: (
+            <HeaderFilter
+              title="Location"
+              accessor="location_name"
+              toLeft={true}
+              getOptions={PlantStore.getUniqPropValues}
+              onUpdate={PlantStore.updateFilterOptions}
+            />
+          ),
           accessor: 'location_name',
           headerStyle: { textAlign: 'left' },
           width: 180,

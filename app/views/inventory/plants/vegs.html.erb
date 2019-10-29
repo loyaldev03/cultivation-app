@@ -17,6 +17,7 @@
       <%= react_component('inventory/plant_setup/VegSetupApp', {
           cultivation_batches: @cultivation_batches,
           scanditLicense: @scanditLicense,
+          currentTime: Time.current,
           current_growth_stage: 'veg',
           facility_id: params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s,
           plantPermission: RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result

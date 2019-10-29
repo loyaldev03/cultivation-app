@@ -99,7 +99,7 @@ class WorkerList extends React.Component {
             </div>
             <div className="flex items-center w-50">
               <ProgressBar
-                key={i+0.5}
+                key={i + 0.5}
                 percent={e.user_percentage}
                 height={10}
                 barColor={this.getProgressBarColor(e.actual, e.capacity)}

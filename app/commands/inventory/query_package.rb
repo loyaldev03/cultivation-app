@@ -8,7 +8,7 @@ module Inventory
 
     def call
       arr = []
-      catalogues = Inventory::Catalogue.where(catalogue_type: 'sales_products', category: 'raw_sales_product')
+      catalogues = Inventory::Catalogue.where(catalogue_type: 'sales_products', category: 'raw_sales_product').order(label: :asc)
     end
   end
 end

@@ -191,6 +191,11 @@ class Comments extends React.Component {
           })
         }
       })
+    } else {
+      this.setState({
+        showResolveForm: false,
+        showAddComment: true
+      })
     }
   }
 

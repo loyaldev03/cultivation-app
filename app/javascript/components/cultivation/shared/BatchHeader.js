@@ -153,7 +153,7 @@ class BatchHeader extends React.PureComponent {
                     <div className="w-50">
                       <div className="tr">
                         <label>
-                          {moneyFormatter.format(total_estimated_cost)}
+                          {total_estimated_cost == '--' ? total_estimated_cost : moneyFormatter.format(total_estimated_cost)}
                         </label>
                       </div>
                     </div>
@@ -166,7 +166,7 @@ class BatchHeader extends React.PureComponent {
                     <div className="w-50">
                       <div className="tr">
                         <label>
-                          {decimalFormatter.format(total_estimated_hour)}
+                          {total_estimated_hour == '--' ? total_estimated_hour : decimalFormatter.format(total_estimated_hour)}
                         </label>
                       </div>
                     </div>

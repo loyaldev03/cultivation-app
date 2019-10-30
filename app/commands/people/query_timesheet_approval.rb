@@ -13,14 +13,6 @@ module People
       @args[:limit] = @args[:limit].to_i
     end
 
-    def calljjj
-      data = []
-      User.all.map do |user|
-        data << {email: user.email, data: user.work_schedules&.group_by { |d| (DateTime.parse(d[:start_time].strftime('%Y-%m-%d')).strftime('%W').to_i + 1) }}
-      end
-      data
-    end
-
     def call
       first_week = CompanyInfo.first.first_day_of_week.downcase[0..2].to_sym
       date = Date.current
@@ -31,10 +23,10 @@ module People
         result[0][:data]&.map do |user|
           roles = Common::Role.find(user[:roles])&.pluck(:name)
           manager = User.find(user[:reporting_manager_id]) unless user[:reporting_manager_id].nil?
-          ws = user[:work_schedules]&.select { |k| k[:start_time] != nil }
+          ws = user[:work_schedules]&.select { |k| k[:date] != nil }
           wl = user[:work_logs]&.select { |k| k[:start_time] != nil }
           worklogs = wl.present? ? wl.group_by_week(week_start: first_week) { |d| d[:start_time] } : []
-          workschedules = ws.present? ? ws.group_by_week(week_start: first_week) { |d| d[:start_time] } : []
+          workschedules = ws.present? ? ws.group_by_week(week_start: first_week) { |d| d[:date] } : []
           if (@args[:role].nil?) || (@args[:role] == 'all') || (user[:roles].include?(@args[:role].to_bson_id))
             workschedules&.map do |week, work_schedules|
               if (@args[:status] == 'all') || (work_schedules.first[:timesheet_status] == @args[:status])
@@ -72,8 +64,6 @@ module People
           metadata: nil,
         }
       end
-
-      # result[0][:data]
     end
 
     private

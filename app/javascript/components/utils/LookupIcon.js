@@ -57,15 +57,15 @@ function LookupIcon({ title, mode, className }) {
                   <ul className="list pl0 mv0">
                     <li className="w-100 flex justify-between items-center pv1">
                       <span className="f6 grey">1A4FF0100000022000042</span>
-                      <button class="btn btn--small orange">Pick</button>
+                      <button className="btn btn--small orange">Pick</button>
                     </li>
                     <li className="w-100 flex justify-between items-center pv1">
                       <span className="f6 grey">1A4FF0100000022000043</span>
-                      <button class="btn btn--small orange">Pick</button>
+                      <button className="btn btn--small orange">Pick</button>
                     </li>
                     <li className="w-100 flex justify-between items-center pv1">
                       <span className="f6 grey">1A4FF0100000022000044</span>
-                      <button class="btn btn--small orange">Pick</button>
+                      <button className="btn btn--small orange">Pick</button>
                     </li>
                   </ul>
                 </div>

@@ -9,7 +9,7 @@ module Inventory
     attributes :plant_id,
       :plant_tag,
       :location_type,
-      :status,
+      #:status,
       :current_growth_stage,
       :wet_weight,
       :wet_weight_uom,
@@ -20,15 +20,17 @@ module Inventory
       :veg1_date,
       :veg2_date,
       :flower_date,
-      :harvest_date,
       :estimated_harvest_date,
       :manifest_no,
       :destroyed_date,
-      :destroyed_reason,
       :created_at
 
     attribute :waste_type do |obj|
-      'Destroyed Plant'
+      if obj.harvest_batch_id.present?
+        'Harvest Waste'
+      else
+        'Destroyed Plant'
+      end
     end
 
     attribute :harvest_id do |obj|
@@ -36,7 +38,7 @@ module Inventory
     end
 
     attribute :assigned_to do |obj|
-      'Christie Ma'
+      '--'
     end
 
     attribute :net_waste_weight do |obj|
@@ -48,11 +50,31 @@ module Inventory
     end
 
     attribute :planting_date do |obj|
-      obj.planting_date&.strftime('%d/%m/%Y')
+      obj.planting_date&.strftime('%m/%d/%Y')
+    end
+
+    attribute :harvest_date do |obj|
+      if obj.harvest_date.present?
+        obj.harvest_date&.strftime('%m/%d/%Y')
+      else
+        '--'
+      end
+    end
+
+    attribute :destroyed_reason do |obj|
+      if obj.destroyed_reason.present?
+        obj.destroyed_reason
+      else
+        '--'
+      end
     end
 
     attribute :destroyed_date do |obj|
-      obj.destroyed_date&.strftime('%d/%m/%Y')
+      if obj.destroyed_date.present?
+        obj.destroyed_date&.strftime('%m/%d/%Y')
+      else
+        '--'
+      end
     end
 
     attribute :cultivation_batch do |object, params = {}|

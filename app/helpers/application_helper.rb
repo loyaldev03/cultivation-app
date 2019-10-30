@@ -56,7 +56,7 @@ module ApplicationHelper
     when 'facility'
       paths = [facility_dashboard_path, facility_setup_new_path, facility_dashboard_summary_path, facility_dashboard_summary_path, facility_setup_rooms_info_path, facility_setup_room_summary_path, facility_setup_row_shelf_info_path]
     when 'integration'
-      paths = [integration_path]
+      paths = [integration_path, metrc_setup_settings_company_metrc_integrations_path]
     when 'product'
       paths = [prod_dashboard_path, prod_packages_path, prod_sold_path, prod_unsold_path, prod_orders_path, prod_manifest_path]
     else

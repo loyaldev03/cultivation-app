@@ -100,16 +100,16 @@ export default class OverallInfo extends React.Component {
                 <MiniBoxWidget
                   icon="amp_stories"
                   title="Total yield"
-                  value={numberFormatter.format(
+                  value={`${numberFormatter.format(
                     ChartStore.cultivation_info.total_yield
-                  )}
+                  )} lb`}
                 />
                 <MiniBoxWidget
                   icon="amp_stories"
                   title="Projected yield"
-                  value={decimalFormatter.format(
+                  value={`${numberFormatter.format(
                     ChartStore.cultivation_info.projected_yield
-                  )}
+                  )} lb`}
                 />
                 {cost_permission && cost_permission == true ? (
                   <MiniBoxWidget

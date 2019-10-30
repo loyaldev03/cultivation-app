@@ -46,7 +46,7 @@ class FacilityOverview extends React.Component {
             // count={` ${
             //   FacilityDashboardStore.data_facility_overview.facility_capacity
             // } %`}
-            count = '17 %'
+            count="17 %"
             className="ma3"
             icon="home"
             loaded={FacilityDashboardStore.facility_overview_loaded}

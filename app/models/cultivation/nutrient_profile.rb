@@ -17,7 +17,7 @@ module Cultivation
     field :water_frequency_value, type: Integer
     field :water_frequency_uom, type: String
 
-    belongs_to :batch
+    belongs_to :batch, class_name: 'Cultivation::Batch', inverse_of: :nutrient_profiles
     belongs_to :task, optional: true
     embeds_many :nutrients
   end

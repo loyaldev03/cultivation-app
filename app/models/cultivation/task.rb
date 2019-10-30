@@ -80,17 +80,17 @@ module Cultivation
     #           and(:start_date.lte => date, :end_date.gte => date)
     #       }
 
-    scope :expected_on, ->(date) {
-      sdate = date.beginning_of_day
-      edate = date.end_of_day
-      cond_a = Cultivation::Task.and({end_date: {"$gte": sdate}},
-                                      start_date: {"$lte": edate}).selector
-      cond_b = Cultivation::Task.and({start_date: {"$gte": sdate}},
-                                      start_date: {"$lte": edate}).selector
-      cond_c = Cultivation::Task.and({start_date: {"$lte": sdate}},
-                                      end_date: {"$gte": edate}).selector
-      self.or(cond_a, cond_b, cond_c)
-    }
+    scope :expected_on, -> (date) {
+            sdate = date.beginning_of_day
+            edate = date.end_of_day
+            cond_a = Cultivation::Task.and({end_date: {"$gte": sdate}},
+                                           start_date: {"$lte": edate}).selector
+            cond_b = Cultivation::Task.and({start_date: {"$gte": sdate}},
+                                           start_date: {"$lte": edate}).selector
+            cond_c = Cultivation::Task.and({start_date: {"$lte": sdate}},
+                                           end_date: {"$gte": edate}).selector
+            self.or(cond_a, cond_b, cond_c)
+          }
 
     def tasks_depend
       batch.tasks.where(depend_on: id)

@@ -43,9 +43,10 @@ class FacilityOverview extends React.Component {
         <div className="flex justify-between">
           <FacilityWidget
             title="Capacity"
-            count={` ${
-              FacilityDashboardStore.data_facility_overview.facility_capacity
-            } %`}
+            // count={` ${
+            //   FacilityDashboardStore.data_facility_overview.facility_capacity
+            // } %`}
+            count = '17 %'
             className="ma3"
             icon="home"
             loaded={FacilityDashboardStore.facility_overview_loaded}

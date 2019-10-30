@@ -91,6 +91,7 @@ const loadBatchTasksOnly = (isShowAllTasks = false) => {
     })
     .then(data => {
       // console.log(data)
+      dailyTasksStore.load_tasks(data)
       const batches = data.data.map(x => {
         const batch = {
           ...x.batch.attributes,

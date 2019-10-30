@@ -12,13 +12,34 @@ class DailyTaskStore {
   @observable batches = []
   @observable locations = []
   @observable isLoading = false
+  @observable loaded_tasks = false
+  @observable has_tasks = true
   @observable otherTasks = {}
   @observable isShowAllTasks = false
 
   @action
   load(batches) {
-    // console.log(batches)
-    this.batches.replace(batches)
+    //console.log(batches)
+    if(!isEmpty(batches)){
+      this.has_tasks = true
+      this.batches.replace(batches)
+    }else{
+      this.has_tasks = false
+      //console.log(this.has_tasks)
+    }
+    
+  }
+
+  @action
+  load_tasks(response){
+    console.log(response)
+    if(response.status == 200){
+      this.loaded_tasks = true
+      if(isEmpty(response.data)){
+        console.log("MASUKKK")
+        this.has_tasks = false
+      }
+    }
   }
 
   @action

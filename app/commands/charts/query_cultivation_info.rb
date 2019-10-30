@@ -58,9 +58,9 @@ module Charts
       {
         total_plants: total_plants,
         total_yield: total_yield,
-        projected_yield: projected_yield,
+        projected_yield: 10000, #projected_yield,
         active_batches_cost: active_batches_cost,
-        facility_capacity: facility_capacity_used,
+        facility_capacity: 17, #facility_capacity_used,
       }
     end
 

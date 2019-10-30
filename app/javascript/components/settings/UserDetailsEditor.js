@@ -857,7 +857,9 @@ class UserDetailsEditor extends React.Component {
               ) : (
                 <div className="mt2 fl w-100">
                   <p className="pa3 bg-light-yellow ba br2 b--light-grey flex items-center">
-                    <i className="orange material-icons">notification_important</i>
+                    <i className="orange material-icons">
+                      notification_important
+                    </i>
                     <span className="pl2">
                       You don't have permissions to access this section.
                     </span>

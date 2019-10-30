@@ -196,7 +196,7 @@ class ReceiveCannabisForm extends React.Component {
                 />
                 {!isReadOnly && (
                   <a
-                    class="fr btn btn--primary ml3"
+                    className="fr btn btn--primary ml3"
                     onClick={this.onManifestValidate}
                   >
                     {this.state.validatingManifest ? 'Loading...' : 'Send'}
@@ -204,7 +204,7 @@ class ReceiveCannabisForm extends React.Component {
                 )}
                 {isReadOnly && (
                   <a
-                    class="fr btn btn--primary ml3"
+                    className="fr btn btn--primary ml3"
                     onClick={this.onClearManifest}
                   >
                     Clear
@@ -312,7 +312,7 @@ class ReceiveCannabisForm extends React.Component {
                   className="flex justify-center orange mt4 center items-center pointer"
                   onClick={this.addNewLocation}
                 >
-                  <span class="material-icons">add</span>
+                  <span className="material-icons">add</span>
                   <span>Add</span>
                 </div>
                 <div className="mt3" />

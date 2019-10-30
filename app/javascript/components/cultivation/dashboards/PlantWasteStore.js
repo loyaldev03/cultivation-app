@@ -1,34 +1,59 @@
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
-import { observable, action, runInAction, computed, toJS } from 'mobx'
+import { observable, action, runInAction, computed, toJS, autorun } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 
 class PlantWasteStore {
   @observable isLoading = false
   @observable isDataLoaded = false
-  @observable plants
-  @observable filter = ''
+  @observable plants = []
+  @observable metadata = {}
   @observable columnFilters = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_strain_id: '',
+    facility_id: '',
+    page: 0,
+    limit: 20
+  }
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadPlants()
+        }
+      },
+      { delay: 700 }
+    )
+  }
 
   @action
-  async loadPlants(facility_id) {
+  async loadPlants() {
     this.isLoading = true
-    const url = `/api/v1/plants/plant_waste?facility_id=${facility_id}`
+    let apiUrl = `/api/v1/plants/plant_waste?facility_id=${this.filter.facility_id}`
+
+    apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
+
     try {
-      const response = await (await fetch(url, httpGetOptions)).json()
-      runInAction(() => {
-        if (response.data) {
-          this.plants = response.data.map(rec => {
-            return { ...rec.attributes, id: rec.id }
-          })
-          this.isDataLoaded = true
-        } else {
-          this.plants = []
-          this.isDataLoaded = false
-        }
-      })
-    } catch (err) {
-      console.error(err)
+      const response = await (await fetch(apiUrl, httpGetOptions)).json()
+      if (response && response.data) {
+        this.plants = response.data.map(x => x)
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
+        this.isDataLoaded = true
+      } else {
+        this.plants = []
+        this.metadata = { pages: 0 }
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
     } finally {
       this.isLoading = false
     }
@@ -38,6 +63,32 @@ class PlantWasteStore {
   getSelected() {
     return toJS(this.plants.selected_plants)
   }
+  @action
+  load(newPlants) {
+    this.plants.replace(newPlants)
+  }
+
+  @action
+  prepend(newPlants = []) {
+    if (Array.isArray(newPlants)) {
+      this.plants.replace(newPlants.concat(this.plants.slice()))
+    } else {
+      this.plants.replace([newPlants, ...this.plants.slice()])
+    }
+  }
+
+  @action
+  update(plant) {
+    const index = this.plants.findIndex(x => x.id === plant.id)
+    if (index >= 0) {
+      this.plants[index] = plant
+    }
+  }
+
+  @computed
+  get bindablePlants() {
+    return this.plants.slice()
+  }
 
   @computed
   get filteredList() {
@@ -46,17 +97,26 @@ class PlantWasteStore {
         if (this.isFiltered(b)) {
           return false
         }
-        const plantId = b.plant_id.toLowerCase()
-        const filterLc = this.filter.toLowerCase()
-        console.log(this.filter)
-        const result = plantId.includes(filterLc)
-        return result
+        const filterLc = this.searchTerm.toLowerCase()
+        const field1 = `${b.plant_id}`.toLowerCase()
+        const results = field1.includes(filterLc)
+        return results
       })
     } else {
       return this.plants
     }
   }
 
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      page: filter.page,
+      limit: filter.limit
+    }
+  }
+
+  /* + Required for column filter */
   isFiltered = record => {
     let f = Object.keys(this.columnFilters).find(key => {
       const filter = this.columnFilters[key].filter(x => x.value === false)

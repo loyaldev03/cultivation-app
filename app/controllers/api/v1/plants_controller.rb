@@ -195,17 +195,114 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
       facility_strain_ids = Inventory::FacilityStrain.in(facility_id: facility).pluck(:id).map(&:to_s)
     end
 
-    plants = Inventory::Plant.in(facility_strain_id: facility_strain_ids).not_in(destroyed_date: nil)
-    data = Inventory::PlantWasteSerializer.new(
-      plants,
-      params: {
-        locations: QueryLocations.call(facility),
-      },
-    ).serialized_json
-    render json: data
+    @page = params[:page].to_i
+    @limit = params[:limit].to_i
+    skip ||= (@page * @limit)
+
+    plants = Inventory::Plant.collection.aggregate([
+      match_search,
+      {"$match": {"facility_strain_id": {"$in": facility_strain_ids.map { |x| x.to_bson_id }}}},
+      {"$match": {"destroyed_date": {"$nin": [nil]}}},
+      {"$lookup": {from: 'cultivation_batches',
+                   localField: 'cultivation_batch_id',
+                   foreignField: '_id',
+                   as: 'batch'}},
+
+      {"$unwind": {
+        "path": '$batch',
+        "preserveNullAndEmptyArrays": true,
+      }},
+
+      {"$lookup": {from: 'inventory_harvest_batches',
+                   localField: 'harvest_batch_id',
+                   foreignField: '_id',
+                   as: 'harvest'}},
+
+      {"$unwind": {
+        "path": '$harvest',
+        "preserveNullAndEmptyArrays": true,
+      }},
+      {"$lookup": {from: 'inventory_facility_strains',
+                   localField: 'facility_strain_id',
+                   foreignField: '_id',
+                   as: 'strain'}},
+      {"$unwind": {
+        "path": '$strain',
+        "preserveNullAndEmptyArrays": true,
+      }},
+
+      {"$lookup": {from: 'trays',
+                   localField: 'location_id',
+                   foreignField: '_id',
+                   as: 'location'}},
+
+      {"$unwind": {
+        "path": '$location',
+        "preserveNullAndEmptyArrays": true,
+      }},
+
+      {"$project": {
+        "_id": 0,
+        "id": {"$toString": '$_id'},
+        "plant_id": 1,
+        "batch_id": {"$concat": ['$batch.batch_no', ' - ', '$batch.name']},
+        "harvest_id": '$harvest.harverst_name',
+        "strain_name": '$strain.strain_name',
+        "location_id": 1,
+        "location": '$location.full_code',
+        "current_growth_stage": 1,
+        "planting_date": 1,
+        "harvest_date": 1,
+        "destroyed_date": 1,
+        "destroyed_reason": 1,
+        "wet_waste_weight": 1,
+        "wet_weight_uom": 1,
+
+      }},
+      {"$facet": {
+        metadata: [
+          {"$count": 'total'},
+          {"$addFields": {
+            page: @page,
+            pages: {"$ceil": {"$divide": ['$total', @limit]}},
+            skip: skip,
+            limit: @limit,
+          }},
+        ],
+        data: [
+          {"$skip": skip},
+          {"$limit": @limit},
+        ],
+      }},
+    ])
+
+    result = plants.to_a[0]
+    @metadata = result['metadata'][0]
+
+    new_tasks_info = {
+      metadata: @metadata,
+      data: result[:data],
+    }
+
+    # plants = Inventory::Plant.in(facility_strain_id: facility_strain_ids).not_in(destroyed_date: nil)
+    # data = Inventory::PlantWasteSerializer.new(
+    #   plants,
+    #   params: {
+    #     locations: QueryLocations.call(facility),
+    #   },
+    # ).serialized_json
+    render json: new_tasks_info
   end
 
   private
+
+  def match_search
+    if params[:search].present?
+      {"$match": {"$or": [{"plant_id": Regexp.new(@search, Regexp::IGNORECASE)}, {"plant_tag": Regexp.new(@search, Regexp::IGNORECASE)}]}}
+    else
+      {"$match": {}}
+    end
+  end
 
   def request_with_errors(errors)
     params[:plant].to_unsafe_h.merge(errors: errors)

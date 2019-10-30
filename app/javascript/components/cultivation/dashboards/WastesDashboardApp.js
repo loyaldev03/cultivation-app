@@ -12,152 +12,6 @@ import classNames from 'classnames'
 import uniq from 'lodash.uniq'
 import PlantWasteStore from './PlantWasteStore'
 
-const dummyData = [
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  },
-  {
-    waste_type: 'Destroyed Plant',
-    cultivation_batch: 'ABCDE',
-    harvest_id: 'acme',
-    plant_id: 'Plant0001',
-    strain_name: 'Afgani',
-    current_grow_phase: 'Flower',
-    location_name: 'Flower Room 2',
-    location_type: 'Waste Room',
-    planting_date: '1/1/2019',
-    harvest_date: '1/1/2019',
-    destroyed_date: '1/1/2019',
-    destroyed_reason: '1/1/2019',
-    net_waste_weight: '20lbs',
-    assigned_to: 'Christie Ma'
-  }
-]
-
-class OrderStore {
-  updateFilterOptions = (propName, filterOptions) => {
-    const updated = {
-      ...this.columnFilters,
-      [propName]: filterOptions
-    }
-    this.columnFilters = updated
-  }
-
-  getUniqPropValues = propName => {
-    return uniq(dummyData.map(x => x[propName]).sort())
-  }
-}
-
-const orderStore = new OrderStore()
 
 @observer
 class WastesDashboardApp extends React.Component {
@@ -175,19 +29,20 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'waste_type',
-        className: 'justify-center'
+        className: 'justify-center',
+        Cell: props => <span className="truncate">Destroyed Plant</span>
       },
       {
         headerClassName: '',
         Header: (
           <HeaderFilter
             title="Batch ID"
-            accessor="cultivation_batch"
+            accessor="batch_id"
             getOptions={PlantWasteStore.getUniqPropValues}
             onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
-        accessor: 'cultivation_batch',
+        accessor: 'batch_id',
         className: ' pr3 justify-center',
         width: 110
       },
@@ -202,7 +57,8 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'harvest_id',
-        className: ' pr3 justify-center'
+        className: ' pr3 justify-center',
+        Cell: props => <span className="truncate">{props.value || "--"}</span>
       },
       {
         headerClassName: '',
@@ -248,12 +104,12 @@ class WastesDashboardApp extends React.Component {
         Header: (
           <HeaderFilter
             title="Location Origin"
-            accessor="location_name"
+            accessor="location"
             getOptions={PlantWasteStore.getUniqPropValues}
             onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
-        accessor: 'location_name',
+        accessor: 'location',
         className: ' pr3 justify-center'
       },
       {
@@ -267,7 +123,8 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'planting_date',
-        className: ' pr3 justify-center'
+        className: ' pr3 justify-center',
+        Cell: props => <span className="truncate">{props.value ? formatDate2(props.value) : '--'}</span>
       },
       {
         headerClassName: '',
@@ -281,7 +138,7 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'harvest_date',
         className: ' pr3 justify-center',
-        Cell: props => <span className="truncate">{props.value}</span>
+        Cell: props => <span className="truncate">{props.value ? formatDate2(props.value) : '--'}</span>
       },
       {
         headerClassName: '',
@@ -295,7 +152,7 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'destroyed_date',
         className: ' pr3 justify-center',
-        Cell: props => <span className="truncate">{props.value}</span>
+        Cell: props => <span className="truncate">{props.value ? formatDate2(props.value) : '--'}</span>
       },
       {
         headerClassName: '',
@@ -303,8 +160,8 @@ class WastesDashboardApp extends React.Component {
           <HeaderFilter
             title="Reason"
             accessor="destroyed_reason"
-            getOptions={orderStore.getUniqPropValues}
-            onUpdate={orderStore.updateFilterOptions}
+            getOptions={PlantWasteStore.getUniqPropValues}
+            onUpdate={PlantWasteStore.updateFilterOptions}
           />
         ),
         accessor: 'destroyed_reason',
@@ -313,7 +170,7 @@ class WastesDashboardApp extends React.Component {
       {
         headerClassName: '',
         Header: 'Weight',
-        accessor: 'net_waste_weight',
+        accessor: 'wet_waste_weight',
         className: ' pr3 justify-center',
         Cell: props => (
           <span className="truncate">
@@ -334,17 +191,15 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'assigned_to',
-        className: ' pr3 justify-center'
+        className: ' pr3 justify-center',
+        Cell: props => (
+          <span className="truncate">
+            {props.value || "--"} 
+          </span>
+        )
       }
     ]
   }
-
-  constructor(props) {
-    super(props)
-    PlantWasteStore.loadPlants(this.props.currentFacilityId)
-  }
-
-  componentDidMount() {}
 
   onToggleColumns = (header, value) => {
     const column = this.state.columns.find(x => x.Header === header)
@@ -358,6 +213,14 @@ class WastesDashboardApp extends React.Component {
     }
   }
 
+  onFetchData = (state, instance) => {
+    PlantWasteStore.setFilter({
+      facility_id: this.props.facility_id,
+      page: state.page,
+      limit: state.pageSize
+    })
+  }
+
   render() {
     const { columns } = this.state
     return (
@@ -369,14 +232,17 @@ class WastesDashboardApp extends React.Component {
             className="input w5"
             placeholder="Search"
             onChange={e => {
-              PlantWasteStore.filter = e.target.value
+              PlantWasteStore.searchTerm = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable
+            ajax={true}
             data={PlantWasteStore.filteredList}
+            onFetchData={this.onFetchData}
+            pages={PlantWasteStore.metadata.pages}
             columns={columns}
             isLoading={PlantWasteStore.isLoading}
           />

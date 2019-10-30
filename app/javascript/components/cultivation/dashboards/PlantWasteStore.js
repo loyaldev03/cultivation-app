@@ -34,7 +34,9 @@ class PlantWasteStore {
   @action
   async loadPlants() {
     this.isLoading = true
-    let apiUrl = `/api/v1/plants/plant_waste?facility_id=${this.filter.facility_id}`
+    let apiUrl = `/api/v1/plants/plant_waste?facility_id=${
+      this.filter.facility_id
+    }`
 
     apiUrl += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
       this.searchTerm

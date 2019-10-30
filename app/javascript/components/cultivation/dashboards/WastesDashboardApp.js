@@ -12,7 +12,6 @@ import classNames from 'classnames'
 import uniq from 'lodash.uniq'
 import PlantWasteStore from './PlantWasteStore'
 
-
 @observer
 class WastesDashboardApp extends React.Component {
   state = {
@@ -58,7 +57,7 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'harvest_id',
         className: ' pr3 justify-center',
-        Cell: props => <span className="truncate">{props.value || "--"}</span>
+        Cell: props => <span className="truncate">{props.value || '--'}</span>
       },
       {
         headerClassName: '',
@@ -124,7 +123,11 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'planting_date',
         className: ' pr3 justify-center',
-        Cell: props => <span className="truncate">{props.value ? formatDate2(props.value) : '--'}</span>
+        Cell: props => (
+          <span className="truncate">
+            {props.value ? formatDate2(props.value) : '--'}
+          </span>
+        )
       },
       {
         headerClassName: '',
@@ -138,7 +141,11 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'harvest_date',
         className: ' pr3 justify-center',
-        Cell: props => <span className="truncate">{props.value ? formatDate2(props.value) : '--'}</span>
+        Cell: props => (
+          <span className="truncate">
+            {props.value ? formatDate2(props.value) : '--'}
+          </span>
+        )
       },
       {
         headerClassName: '',
@@ -152,7 +159,11 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'destroyed_date',
         className: ' pr3 justify-center',
-        Cell: props => <span className="truncate">{props.value ? formatDate2(props.value) : '--'}</span>
+        Cell: props => (
+          <span className="truncate">
+            {props.value ? formatDate2(props.value) : '--'}
+          </span>
+        )
       },
       {
         headerClassName: '',
@@ -192,11 +203,7 @@ class WastesDashboardApp extends React.Component {
         ),
         accessor: 'assigned_to',
         className: ' pr3 justify-center',
-        Cell: props => (
-          <span className="truncate">
-            {props.value || "--"} 
-          </span>
-        )
+        Cell: props => <span className="truncate">{props.value || '--'}</span>
       }
     ]
   }

@@ -317,11 +317,13 @@ class DailyTaskApp extends React.Component {
           />
           <label className="toggle-button" htmlFor="show_all_tasks" />
         </div>
-        {DailyTasksStore.loaded_tasks ? "" : <div className="ba b--black-20 br2 flex-auto bg-white pa3">
-            <span className="grey fw6 f5 tl ml3 i">
-             Loading...
-            </span>
-          </div>}
+        {DailyTasksStore.loaded_tasks ? (
+          ''
+        ) : (
+          <div className="ba b--black-20 br2 flex-auto bg-white pa3">
+            <span className="grey fw6 f5 tl ml3 i">Loading...</span>
+          </div>
+        )}
         {!DailyTasksStore.has_tasks && !DailyTasksStore.isShowAllTasks ? (
           <div className="ba b--black-20 br2 flex-auto bg-white pa3">
             <span className="gray fw6 f5 tc ml3 i">
@@ -330,13 +332,15 @@ class DailyTaskApp extends React.Component {
           </div>
         ) : (
           <React.Fragment>
-            {DailyTasksStore.isShowAllTasks && !DailyTasksStore.has_tasks ? 
+            {DailyTasksStore.isShowAllTasks && !DailyTasksStore.has_tasks ? (
               <div className="ba b--black-20 br2 flex-auto bg-white pa3">
-              <span className="gray fw6 f5 tc ml3 i">
-                No task assigned to you.
-              </span>
-            </div>
-            : ''}
+                <span className="gray fw6 f5 tc ml3 i">
+                  No task assigned to you.
+                </span>
+              </div>
+            ) : (
+              ''
+            )}
             {DailyTasksStore.batches.map(batch => (
               <BatchedDailyTasks
                 key={batch.id}

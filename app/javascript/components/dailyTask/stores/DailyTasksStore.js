@@ -20,23 +20,22 @@ class DailyTaskStore {
   @action
   load(batches) {
     //console.log(batches)
-    if(!isEmpty(batches)){
+    if (!isEmpty(batches)) {
       this.has_tasks = true
       this.batches.replace(batches)
-    }else{
+    } else {
       this.has_tasks = false
       //console.log(this.has_tasks)
     }
-    
   }
 
   @action
-  load_tasks(response){
+  load_tasks(response) {
     console.log(response)
-    if(response.status == 200){
+    if (response.status == 200) {
       this.loaded_tasks = true
-      if(isEmpty(response.data)){
-        console.log("MASUKKK")
+      if (isEmpty(response.data)) {
+        console.log('MASUKKK')
         this.has_tasks = false
       }
     }

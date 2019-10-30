@@ -104,7 +104,9 @@ class CustomerSettingApp extends React.Component {
                     Customers
                   </h1>
                   <div className="dim flex flex-row items-center pointer">
-                    <i className="material-icons md-gray">keyboard_arrow_left</i>
+                    <i className="material-icons md-gray">
+                      keyboard_arrow_left
+                    </i>
                     <a
                       href="/settings/"
                       className="db tr ttu link button--font grey"

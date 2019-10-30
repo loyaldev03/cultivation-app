@@ -1,7 +1,8 @@
 desc "Create Plant Wastes"
 
 task :create_wastes_plant => :environment do
-    batches = Cultivation::Batch.where(status: "ACTIVE")
+    facility_id = Facility.find_by(name: "DEMO F15")&.id
+    batches = Cultivation::Batch.where(status: "ACTIVE", facility_id: facility_id) 
     batches.map{|x| x.plants.update_all(wet_weight: nil, wet_waste_weight: nil, wet_weight_uom: nil, destroyed_date: nil, destroyed_reason: nil) if x.plants.any?}
     batches.each do |batch|
         reason = ["Overwatering", "Lack of humidity", "Fungal diseases", "Over-fertilizing"].sample

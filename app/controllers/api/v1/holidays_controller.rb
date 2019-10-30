@@ -6,7 +6,7 @@ class Api::V1::HolidaysController < Api::V1::BaseApiController
 
   def show_by_date
     if params[:date]
-      @date = params[:date].to_datetime.at_beginning_of_day
+      @date = Time.zone.parse(params[:date])
       @holiday = CompanyInfo.last.holidays.expected_on(@date).first
     end
     render json: Common::HolidaySerializer.new(@holiday).serialized_json

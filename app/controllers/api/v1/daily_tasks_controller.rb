@@ -72,7 +72,8 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def tasks_by_date
-    tasks = current_user.cultivation_tasks.expected_on(params[:date])
+    task_date = Time.zone.parse(params[:date])
+    tasks = current_user.cultivation_tasks.expected_on(task_date)
     batches = Cultivation::Batch.in(id: tasks.map(&:batch_id).uniq)
     locations = batches.map do |a|
       {batch_id: a.id.to_s, query: QueryLocations.call(a.facility_id)}

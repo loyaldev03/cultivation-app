@@ -31,11 +31,11 @@ class DailyTaskStore {
 
   @action
   load_tasks(response) {
-    console.log(response)
+    //console.log(response)
     if (response.status == 200) {
       this.loaded_tasks = true
       if (isEmpty(response.data)) {
-        console.log('MASUKKK')
+        //console.log('MASUKKK')
         this.has_tasks = false
       }
     }

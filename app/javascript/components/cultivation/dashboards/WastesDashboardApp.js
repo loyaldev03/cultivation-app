@@ -4,6 +4,7 @@ import {
   CheckboxSelect,
   ListingTable,
   HeaderFilter,
+  formatDate2,
   ActiveBadge,
   TempPackagesHistory
 } from '../../utils'
@@ -162,6 +163,7 @@ const orderStore = new OrderStore()
 class WastesDashboardApp extends React.Component {
   state = {
     columns: [
+      { accessor: 'wet_weight_uom', show: false },
       {
         headerClassName: 'tl',
         Header: (
@@ -258,19 +260,6 @@ class WastesDashboardApp extends React.Component {
         headerClassName: '',
         Header: (
           <HeaderFilter
-            title="Location"
-            accessor="location_type"
-            getOptions={PlantWasteStore.getUniqPropValues}
-            onUpdate={PlantWasteStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'location_type',
-        className: ' pr3 justify-center'
-      },
-      {
-        headerClassName: '',
-        Header: (
-          <HeaderFilter
             title="Planting Date"
             accessor="planting_date"
             getOptions={PlantWasteStore.getUniqPropValues}
@@ -291,7 +280,8 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'harvest_date',
-        className: ' pr3 justify-center'
+        className: ' pr3 justify-center',
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: '',
@@ -304,7 +294,8 @@ class WastesDashboardApp extends React.Component {
           />
         ),
         accessor: 'destroyed_date',
-        className: ' pr3 justify-center'
+        className: ' pr3 justify-center',
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: '',
@@ -323,7 +314,12 @@ class WastesDashboardApp extends React.Component {
         headerClassName: '',
         Header: 'Weight',
         accessor: 'net_waste_weight',
-        className: ' pr3 justify-center'
+        className: ' pr3 justify-center',
+        Cell: props => (
+          <span className="truncate">
+            {props.value} {props.row.wet_weight_uom}
+          </span>
+        )
       },
       {
         headerClassName: '',

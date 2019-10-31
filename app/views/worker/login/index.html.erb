@@ -100,7 +100,8 @@
 <script>
 
 var container = document.getElementsByClassName("container")[0];
-container.onkeyup = function(e) {
+if(container){
+  container.onkeyup = function(e) {
     var target = e.srcElement || e.target;
     var maxLength = parseInt(target.attributes["maxlength"].value, 10);
     var myLength = target.value.length;
@@ -128,4 +129,7 @@ container.onkeyup = function(e) {
         }
     }
 }
+
+}
+
 </script>

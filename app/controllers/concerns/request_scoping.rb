@@ -104,7 +104,7 @@ module RequestScoping
 
   def selected_facilities_ids
     param_fid = params[:facility_id]
-    @selected_facilities_ids = if param_fid == 'All'
+    @selected_facilities_ids = if param_fid == 'All' || param_fid.blank?
                                  current_user_facilities_ids
                                else
                                  current_user_facilities_ids.select { |x| x.to_s == param_fid }

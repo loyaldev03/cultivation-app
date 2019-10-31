@@ -8,7 +8,7 @@ module Inventory
 
     def call
       arr = []
-      catalogues = Inventory::Catalogue.where(catalogue_type: 'raw_materials')
+      catalogues = Inventory::Catalogue.where(catalogue_type: 'raw_materials').order(label: :asc)
       categories = catalogues.select { |a| a.category == '' and a.sub_category == '' }
       categories.each do |category|
         arr << category

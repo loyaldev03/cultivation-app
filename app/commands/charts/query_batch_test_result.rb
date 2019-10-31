@@ -16,8 +16,8 @@ module Charts
           batch: batch.name,
           thcValue: (batch.facility_strain.thc || 0),
           cbdValue: (batch.facility_strain.cbd || 0),
-          terpenoidsValue: 419, # FIXME: What is these? why is it hardcoded?
-          residualPesticidesValue: 425,
+          terpenoidsValue: rand(batch.facility_strain.thc).round(2), # FIXME: What is these? why is it hardcoded?
+          residualPesticidesValue: rand(batch.facility_strain.cbd).round(2), #hardcoded
         }
       end
       if json_output.any? && @args[:order].present?

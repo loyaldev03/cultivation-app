@@ -3,8 +3,8 @@ module Charts
     prepend SimpleCommand
 
     def initialize(current_user, args = {})
-      raise ArgumentError.new("current_user is required") if current_user.blank?
-      raise ArgumentError.new("facility_id is required") if args[:facility_id].blank?
+      raise ArgumentError.new('current_user is required') if current_user.blank?
+      raise ArgumentError.new('facility_id is required') if args[:facility_id].blank?
 
       @current_user = current_user
       @facility_id = args[:facility_id].to_bson_id

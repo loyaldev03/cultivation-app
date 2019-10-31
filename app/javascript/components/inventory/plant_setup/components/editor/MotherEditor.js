@@ -2,7 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
-import { LocationPicker } from '../../../../utils'
+import { LocationPicker, toast } from '../../../../utils'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupMother from '../../actions/setupMother'
 import getPlant from '../../actions/getPlant'
@@ -196,6 +196,7 @@ class MotherEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          toast('Plant added.', 'success')
           window.editorSidebar.close()
           this.props.onSave(payload)
         }

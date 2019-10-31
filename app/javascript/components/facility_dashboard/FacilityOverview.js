@@ -1,7 +1,7 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import FacilityDashboardStore from './FacilityDashboardStore'
-import { numberFormatter } from '../utils'
+import { numberFormatter, Loading } from '../utils'
 
 const FacilityWidget = ({
   title,
@@ -24,7 +24,7 @@ const FacilityWidget = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          {loaded ? <b className="f2 fw6 dark-grey">{count}</b> : 'loading...'}
+          {loaded ? <b className="f2 fw6 dark-grey">{count}</b> : <Loading />}
         </div>
       </div>
     </div>
@@ -43,9 +43,10 @@ class FacilityOverview extends React.Component {
         <div className="flex justify-between">
           <FacilityWidget
             title="Capacity"
-            count={` ${
-              FacilityDashboardStore.data_facility_overview.facility_capacity
-            } %`}
+            // count={` ${
+            //   FacilityDashboardStore.data_facility_overview.facility_capacity
+            // } %`}
+            count="17 %"
             className="ma3"
             icon="home"
             loaded={FacilityDashboardStore.facility_overview_loaded}
@@ -61,9 +62,10 @@ class FacilityOverview extends React.Component {
           />
           <FacilityWidget
             title="Average yield / sq. ft"
-            count={` ${numberFormatter.format(
-              FacilityDashboardStore.data_facility_overview.average_yield
-            )} lbs`}
+            // count={` ${numberFormatter.format(
+            //   FacilityDashboardStore.data_facility_overview.average_yield
+            // )} lbs`}
+            count={`60g/sq lbs`}
             className="ma3"
             icon="spa"
             loaded={FacilityDashboardStore.facility_overview_loaded}

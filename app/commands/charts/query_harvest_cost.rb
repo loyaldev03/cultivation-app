@@ -31,7 +31,7 @@ module Charts
         {"$project": {
           "id": '$_id',
           "harvest_batch": '$harvest_name',
-          "cost": {"$ifNull": [0, {"$toDouble": '$cost'}]},
+          "cost": {"$ifNull": [{"$toDouble": '$cost'}, 0]},
         }},
 
         {"$sort": {"cost": order}},

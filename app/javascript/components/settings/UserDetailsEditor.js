@@ -844,8 +844,7 @@ class UserDetailsEditor extends React.Component {
                   className="mt1 w-100 f6"
                 />
               </div>
-              {!isEmpty(roles) &&
-              !isEmpty(roles.find(v => v.label == 'Manager')) ? (
+              {roles && !isEmpty(roles.find(v => v.label == 'Manager')) ? (
                 <div className="mt2 fl w-100 mb2">
                   <label className="f6 fw6 db mb1 gray ttc">Department</label>
                   <AsyncCreatableSelect
@@ -923,9 +922,11 @@ class UserDetailsEditor extends React.Component {
                 </div>
               ) : (
                 <div className="mt2 fl w-100">
-                  <p class="pa3 bg-light-yellow ba br2 b--light-grey flex items-center">
-                    <i class="orange material-icons">notification_important</i>
-                    <span class="pl2">
+                  <p className="pa3 bg-light-yellow ba br2 b--light-grey flex items-center">
+                    <i className="orange material-icons">
+                      notification_important
+                    </i>
+                    <span className="pl2">
                       You don't have permissions to access this section.
                     </span>
                   </p>

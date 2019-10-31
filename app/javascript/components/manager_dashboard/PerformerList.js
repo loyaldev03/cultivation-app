@@ -141,7 +141,7 @@ export default class PerformerList extends React.Component {
                 ))}
               </React.Fragment>
             ) : (
-              <p class="lh-copy measure tc grey f4 i">No record found</p>
+              <p className="lh-copy measure tc grey f4 i">No record found</p>
             )}
           </div>
         ) : (

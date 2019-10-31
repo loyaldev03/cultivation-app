@@ -13,29 +13,34 @@ module Inventory
         limit: 20,
         search: nil,
       }.merge(args)
-
-      @args[:page] = @args[:page].to_i
-      @args[:limit] = @args[:limit].to_i
+      @facility_ids = args[:facility_id].split(',')
+      @page = @args[:page].to_i
+      @limit = @args[:limit].to_i
     end
 
     def call
       if valid_params?
+        if resource_shared?
+          facilities = Facility.in(_id: @user.facilities).pluck(:id)
+        else
+          facilities = Facility.in(_id: @facility_ids.map { |x| x.to_bson_id }).pluck(:id)
+        end
         criteria = Inventory::MetrcTag.collection.aggregate([
           match_search,
-          {"$match": {"facility_id": args[:facility_id].to_bson_id}},
+          {"$match": {"facility_id": {"$in": facilities}}},
           {"$facet": {
             metadata: [
               {"$count": 'total'},
               {"$addFields": {
-                page: args[:page],
-                pages: {"$ceil": {"$divide": ['$total', args[:limit]]}},
-                skip: (args[:page] * args[:limit]),
-                limit: args[:limit],
+                page: @page,
+                pages: {"$ceil": {"$divide": ['$total', @limit]}},
+                skip: (args[:page] * @limit),
+                limit: @limit,
               }},
             ],
             data: [
-              {"$skip": (args[:page] * args[:limit])},
-              {"$limit": args[:limit]},
+              {"$skip": (@page * @limit)},
+              {"$limit": @limit},
             ],
           }},
         ])
@@ -47,6 +52,10 @@ module Inventory
     end
 
     private
+
+    def resource_shared?
+      CompanyInfo.last.enable_resouces_sharing
+    end
 
     def match_search
       if !args[:search].blank?
@@ -65,11 +74,11 @@ module Inventory
         errors.add(:error, 'Missing params :facility_id')
         return false
       end
-      if args[:page].negative?
+      if @page.negative?
         errors.add(:error, 'params :page must either zero or positive')
         return false
       end
-      if !args[:limit].positive?
+      if !@limit.positive?
         errors.add(:error, 'params :limit must be positive')
         return false
       end

@@ -129,7 +129,7 @@ export default class OverallInfo extends React.Component {
             </Tippy>
           </div>
           {PeopleDashboardStore.capacity_planning_loaded ? (
-            <div className="flex mb3">
+            <div className="flex justify-center mb3">
               {PeopleDashboardStore.data_capacity_planning.map((e, i) => (
                 <PlanningCapacity
                   key={i}

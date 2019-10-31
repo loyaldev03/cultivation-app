@@ -1,13 +1,13 @@
 import React from 'react'
 import DashboardCalendarApp from '../dashboardCalendar/DashboardCalendarApp'
-import { WorkerDashboardGraph, longDate, NoData } from '../../utils'
+import { ErrorBoundary, NoData } from '../../utils'
 import workerDashboardStore from '../stores/WorkerDashboardStore'
-import { formatIssueNo } from '../../issues/components/FormatHelper'
 import IssueList from '../../../components/dailyTask/components/IssueList'
 import SidebarStore from '../../../components/dailyTask/stores/SidebarStore'
 import Tippy from '@tippy.js/react'
 import WorkingHourApp from './WorkingHourApp'
 import isEmpty from 'lodash.isempty'
+
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -134,66 +134,68 @@ export default class StatusTile extends React.Component {
             </div>
           </div>
         </div>
-
-        <div className="w-40 ml3">
-          <div className="ba b--light-gray pa3 bg-white h5">
-            <div className="flex justify-between">
+        <ErrorBoundary>
+          <div className="w-40 ml3">
+            <div className="ba b--light-gray pa3 bg-white h5">
+              <div className="flex justify-between">
+                <div>
+                  <h1 className="f5 fw6 ">Tasks</h1>
+                </div>
+                <div className="flex">
+                  <h1 className="f5 fw6">Today</h1>
+                  <i className="material-icons grey mr2 dim md-21 pointer mt2">
+                    keyboard_arrow_down
+                  </i>
+                </div>
+              </div>
+              <div className="mt2">
+                {!isEmpty(task) &&
+                  task.slice(0, 2).map(x => {
+                    return (
+                      <div className="flex justify-between mb2" key={x.id}>
+                        <div className="grey">
+                          <h1 className="f5 fw6">{x.attributes.name}</h1>
+                          <b className="f6 fw4">
+                            {x.attributes.location_name == ''
+                              ? 'No Location'
+                              : x.attributes.location_name}
+                          </b>
+                        </div>
+                      </div>
+                    )
+                  })}
+              </div>
+              {!isEmpty(task) && task.length > 0 ? (
+                <div className="flex justify-center mv3">
+                  <a className="fw6 orange dim pointer" href="/daily_tasks">
+                    Show More
+                  </a>
+                </div>
+              ) : (
+                <NoData text="No tasks for today" />
+              )}
+            </div>
+            <div
+              className="ba b--light-gray pa3 bg-white mt3"
+              style={{ height: '435px' }}
+            >
+              <div className="flex justify-between">
+                <div>
+                  <h1 className="f5 fw6 ">Working Calendar</h1>
+                </div>
+                <div className="flex">
+                  <h1 className="f5 fw6">Days off</h1>
+                  <i className="material-icons grey mr2 dim md-21 pointer mt2">
+                    keyboard_arrow_down
+                  </i>
+                </div>
+              </div>
               <div>
-                <h1 className="f5 fw6 ">Tasks</h1>
+                <DashboardCalendarApp date={date} />
               </div>
-              <div className="flex">
-                <h1 className="f5 fw6">Today</h1>
-                <i className="material-icons grey mr2 dim md-21 pointer mt2">
-                  keyboard_arrow_down
-                </i>
-              </div>
-            </div>
-            <div className="mt2">
-              {task.slice(0, 2).map(x => {
-                return (
-                  <div className="flex justify-between mb2" key={x.id}>
-                    <div className="grey">
-                      <h1 className="f5 fw6">{x.attributes.name}</h1>
-                      <b className="f6 fw4">
-                        {x.attributes.location_name == ''
-                          ? 'No Location'
-                          : x.attributes.location_name}
-                      </b>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            {task.length > 0 ? (
-              <div className="flex justify-center mv3">
-                <a className="fw6 orange dim pointer" href="/daily_tasks">
-                  Show More
-                </a>
-              </div>
-            ) : (
-              <NoData text="No tasks for today" />
-            )}
-          </div>
-          <div
-            className="ba b--light-gray pa3 bg-white mt3"
-            style={{ height: '435px' }}
-          >
-            <div className="flex justify-between">
-              <div>
-                <h1 className="f5 fw6 ">Working Calendar</h1>
-              </div>
-              <div className="flex">
-                <h1 className="f5 fw6">Days off</h1>
-                <i className="material-icons grey mr2 dim md-21 pointer mt2">
-                  keyboard_arrow_down
-                </i>
-              </div>
-            </div>
-            <div>
-              <DashboardCalendarApp date={date} />
             </div>
           </div>
-        </div>
+        </ErrorBoundary>
       </div>
     )
   }

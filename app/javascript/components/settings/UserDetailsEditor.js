@@ -357,7 +357,25 @@ class UserDetailsEditor extends React.Component {
         this.setState({ [field]: options })
       }
     } else {
-      this.setState({ [field]: '' })
+      if (field === 'copySundaySelected') {
+        let copySundaySelected = this.state.copySundaySelected
+        if(isEmpty(copySundaySelected)){
+          copySundaySelected = [options]
+        }else{
+          if(copySundaySelected.includes(options)){
+            let index = copySundaySelected.indexOf(options)
+            if (index !== -1) {
+              copySundaySelected.splice(index, 1)
+            }
+          } else {
+            copySundaySelected.push(options)
+          }
+        }
+        this.setState({ [field] : copySundaySelected })
+      } else{
+        console.log("enter else")
+        this.setState({ [field]: '' })
+      }
     }
   }
 
@@ -575,14 +593,16 @@ class UserDetailsEditor extends React.Component {
   copyWeekScedule = async () => {
     if (
       this.state.sundaySelected.value &&
-      this.state.copySundaySelected.value
+      !isEmpty(this.state.copySundaySelected)
     ) {
       this.tippy.hide()
-      await UserRoleStore.copyScheduleWeek(
-        this.state.userId,
-        this.state.sundaySelected.value,
-        this.state.copySundaySelected.value
-      )
+      this.state.copySundaySelected.map(e =>{
+        UserRoleStore.copyScheduleWeek(
+          this.state.userId,
+          this.state.sundaySelected.value,
+          e
+        )
+      })
     } else {
       alert('Please select week to copy from')
     }
@@ -1026,15 +1046,15 @@ class UserDetailsEditor extends React.Component {
                                 style={{ width: 13 + 'rem', height: '320px' }}
                               >
                                 {array_of_weeks.map(e => (
-                                  <label className="dim db pv1 gray ttc">
+                                  <label className="dim db pv1 gray ttc" key={e.label}>
                                     <input
-                                      key={e.label}
+                                      key={e.value}
                                       type="checkbox"
                                       options={e}
                                       onChange={opt =>
                                         this.onSelectChange(
                                           'copySundaySelected',
-                                          opt
+                                          e.value
                                         )
                                       }
                                       className="mr3"
@@ -1043,9 +1063,9 @@ class UserDetailsEditor extends React.Component {
                                     {e.label}
                                   </label>
                                 ))}
-                                <div class="flex center">
+                                <div className="tc mt3">
                                   <a
-                                    className="btn btn--primary btn--small ml2 mt2"
+                                    className="btn btn--primary"
                                     onClick={e => this.copyWeekScedule()}
                                   >
                                     Copy

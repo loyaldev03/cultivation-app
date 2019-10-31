@@ -12,6 +12,7 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { InputBarcode } from '../utils'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import reactSelectStyle from '../utils/reactSelectStyle'
+import MultiSelect from '../utils/MultiSelect'
 
 const styles = `
 
@@ -746,9 +747,10 @@ class UserDetailsEditor extends React.Component {
               </div>
               <div className="mt2 fl w-100">
                 <label className="f6 fw6 db mb1 gray ttc">Facilities</label>
-                <Select
+                <MultiSelect
                   options={facilitiesOptions}
                   isMulti={true}
+                  allowSelectAll={true}
                   isClearable={true}
                   onChange={opt => this.onSelectChange('facilities', opt)}
                   value={facilities}

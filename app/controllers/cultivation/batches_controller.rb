@@ -22,12 +22,13 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def new
+    select_single_facility
     if params[:onboarding_type].present?
       current_user_facilities.each do |f|
         f.update_onboarding('ONBOARDING_SETUP_BATCH')
       end
     end
-    @facility_id = current_facility&.id.to_s
+    @facility_id = params[:facility_id]
     # Cultivation Phases during batch setup depends on the
     # Facility's (room & section) purposes
     @phases = Common::GrowPhase.where(is_active: true).pluck(:name)

@@ -359,10 +359,10 @@ class UserDetailsEditor extends React.Component {
     } else {
       if (field === 'copySundaySelected') {
         let copySundaySelected = this.state.copySundaySelected
-        if(isEmpty(copySundaySelected)){
+        if (isEmpty(copySundaySelected)) {
           copySundaySelected = [options]
-        }else{
-          if(copySundaySelected.includes(options)){
+        } else {
+          if (copySundaySelected.includes(options)) {
             let index = copySundaySelected.indexOf(options)
             if (index !== -1) {
               copySundaySelected.splice(index, 1)
@@ -371,9 +371,9 @@ class UserDetailsEditor extends React.Component {
             copySundaySelected.push(options)
           }
         }
-        this.setState({ [field] : copySundaySelected })
-      } else{
-        console.log("enter else")
+        this.setState({ [field]: copySundaySelected })
+      } else {
+        console.log('enter else')
         this.setState({ [field]: '' })
       }
     }
@@ -596,7 +596,7 @@ class UserDetailsEditor extends React.Component {
       !isEmpty(this.state.copySundaySelected)
     ) {
       this.tippy.hide()
-      this.state.copySundaySelected.map(e =>{
+      this.state.copySundaySelected.map(e => {
         UserRoleStore.copyScheduleWeek(
           this.state.userId,
           this.state.sundaySelected.value,
@@ -1046,7 +1046,10 @@ class UserDetailsEditor extends React.Component {
                                 style={{ width: 13 + 'rem', height: '320px' }}
                               >
                                 {array_of_weeks.map(e => (
-                                  <label className="dim db pv1 gray ttc" key={e.label}>
+                                  <label
+                                    className="dim db pv1 gray ttc"
+                                    key={e.label}
+                                  >
                                     <input
                                       key={e.value}
                                       type="checkbox"

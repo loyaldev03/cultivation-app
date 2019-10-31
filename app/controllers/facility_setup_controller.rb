@@ -423,7 +423,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def set_home_status
-    @home = HomeSetupStatus.call(current_facility).result
+    @home = HomeSetupStatus.call(current_default_facility).result
   end
 
   def set_available_purposes

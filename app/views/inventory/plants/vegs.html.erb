@@ -11,7 +11,8 @@
 
 <div class="pa4">
   <% if RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result[:read] == true %>
-    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp', facility_id: params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s)%>
+    <%= react_component('inventory/plant_setup/plant_charts/PlantWidgetApp',
+                        facility_id: selected_facilities_ids_str) %>
     <%= render partial: 'setupNavigation', locals: { selected: 'veg' } %>
     <div class="flex flex-column">
       <%= react_component('inventory/plant_setup/VegSetupApp', {
@@ -19,7 +20,7 @@
           scanditLicense: @scanditLicense,
           currentTime: Time.current,
           current_growth_stage: 'veg',
-          facility_id: params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s,
+          facility_id: selected_facilities_ids_str,
           plantPermission: RoleCheck.call(current_user, Constants::APP_MOD_ACTIVE_PLANTS).result
         }) %>
       <div class="w-100 bg-white ph3 pt2 pb4">

@@ -2,29 +2,16 @@
   <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
 <% end %>
 <% if RoleCheck.call(current_user, Constants::APP_MOD_ALL_ISSUES).result[:read] == true %>
-  <%- if params[:facility_id].blank? || params[:facility_id] == "All"%>
-    <%= react_component 'cultivation/dashboards/IssuesDashboardApp',
-      {
-        defaultFacilityId: current_default_facility&.id.to_s,
-        currentFacilityId: current_user_facilities_ids.map{|x| x.to_s},
-        current_user_first_name: current_user.first_name,
-        current_user_last_name: current_user.last_name,
-        current_user_photo: current_user.photo&.url,
-        currentTime: Time.current,
-      }
-    %>
-  <%-else%>
-    <%= react_component 'cultivation/dashboards/IssuesDashboardApp',
-      {
-        defaultFacilityId: current_default_facility&.id.to_s,
-        currentFacilityId: current_facility&.id.to_s,
-        currentTime: Time.current,
-        current_user_first_name: current_user.first_name,
-        current_user_last_name: current_user.last_name,
-        current_user_photo: current_user.photo&.url,
-      }
-    %>
-  <%end%>
+  <%= react_component 'cultivation/dashboards/IssuesDashboardApp',
+    {
+      defaultFacilityId: current_default_facility&.id.to_s,
+      currentFacilityId: selected_facilities_ids_str,
+      current_user_first_name: current_user.first_name,
+      current_user_last_name: current_user.last_name,
+      current_user_photo: current_user.photo&.url,
+      currentTime: Time.current,
+    }
+  %>
 <% else %>
   <div class="w-100 bg-white ph3 pt2 pb4">
     <%= render partial: 'layouts/no_permission' %>

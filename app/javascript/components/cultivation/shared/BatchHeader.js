@@ -54,9 +54,19 @@ class BatchHeader extends React.PureComponent {
             <div className="fl w-100 flex flex-column">
               <div className="flex justify-between items-center">
                 <div className="w-30">
-                  <h4 className="tl pa0 ma0 h6--font dark-grey">
-                    Batch {batch_no}
-                  </h4>
+                  <div className="">
+                    {canUpdate ? (
+                      <InlineEditBatchNameField
+                        text={name}
+                        indent={0}
+                        onDoneClick={value => {
+                          this.updateBatchName(value, id)
+                        }}
+                      />
+                    ) : (
+                      <React.Fragment>{name}</React.Fragment>
+                    )}
+                  </div>
                 </div>
                 <span className="f5 fr">{current_growth_stage}</span>
               </div>
@@ -77,22 +87,10 @@ class BatchHeader extends React.PureComponent {
                   {batchQuantity > 0 ? (
                     <div className="flex">
                       <div className="w-40">
-                        <label>Batch Name</label>
+                        <label>Batch ID</label>
                       </div>
                       <div className="w-40">
-                        <div className="">
-                          {canUpdate ? (
-                            <InlineEditBatchNameField
-                              text={name}
-                              indent={0}
-                              onDoneClick={value => {
-                                this.updateBatchName(value, id)
-                              }}
-                            />
-                          ) : (
-                            <React.Fragment>{name}</React.Fragment>
-                          )}
-                        </div>
+                        {batch_no}
                       </div>
                     </div>
                   ) : (

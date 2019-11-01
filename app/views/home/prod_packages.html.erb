@@ -4,7 +4,7 @@
 <%= react_component 'cultivation/dashboards/PackagesDashboardApp',
   {
     defaultFacilityId: current_default_facility&.id.to_s,
-    currentFacilityId: current_facility&.id.to_s,
+    currentFacilityId: selected_facilities_ids_str[0],
     currentTime: Time.current,
   }
 %>

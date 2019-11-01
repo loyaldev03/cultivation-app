@@ -455,10 +455,7 @@ class PackagesUnsoldDashboardApp extends React.Component {
 
 PackagesUnsoldDashboardApp.propTypes = {
   facility_strains: PropTypes.array.isRequired,
-  harvest_batches: PropTypes.array.isRequired,
-  sales_catalogue: PropTypes.array.isRequired,
-  drawdown_uoms: PropTypes.array.isRequired,
-  users: PropTypes.array.isRequired
+  harvest_batches: PropTypes.array.isRequired
 }
 
 export default PackagesUnsoldDashboardApp

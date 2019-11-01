@@ -29,7 +29,7 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <a href="#0" className="grey link" onClick={onClick}>
+            <a href="#0" className="black f4 fw6 link" onClick={onClick}>
               {text}
             </a>
             <i

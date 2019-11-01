@@ -6,7 +6,7 @@
   <%= react_component 'cultivation/dashboards/TasksDashboardApp',
     {
       defaultFacilityId: current_default_facility&.id.to_s,
-      currentFacilityId: (params[:facility_id].blank? || params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s),
+      currentFacilityId: selected_facilities_ids_str,
       currentTime: Time.current,
       taskPermission: RoleCheck.call(current_user, Constants::APP_MOD_ALL_TASKS).result
     }

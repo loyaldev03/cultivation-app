@@ -10,9 +10,13 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def mothers
-    @facility_strains = Inventory::QueryFacilityStrains.call(selected_facilities_ids).result
+    @facility_strains = Inventory::QueryFacilityStrains.call(
+      selected_facilities_ids,
+    ).result
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('ONBOARDING_ACTIVE_PLANTS')
+      current_user_facilities.each do |f|
+        f.update_onboarding('ONBOARDING_ACTIVE_PLANTS')
+      end
     end
   end
 
@@ -50,15 +54,12 @@ class Inventory::PlantsController < ApplicationController
   private
 
   def load_batches
-    if resource_shared?
-      facilities = params[:facility_id] == 'All' ? current_user_facilities_ids.map { |x| x.to_s } : current_facility&.id.to_s
-      cultivation_batches = Cultivation::Batch.in(facility_id: facilities).includes(:facility_strain, :tasks)
-    else
-      facility_id = current_facility&.id.to_s
-      cultivation_batches = Cultivation::Batch.where(facility_id: facility_id).includes(:facility_strain, :tasks)
-    end
-
-    @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
+    cultivation_batches = Cultivation::Batch.
+      includes(:facility_strain, :plants).
+      in(facility_id: selected_facilities_ids)
+    @cultivation_batches = BatchSerializer.
+      new(cultivation_batches, params: {exclude_tasks: true}).
+      serializable_hash[:data]
   end
 
   def load_facility_strains

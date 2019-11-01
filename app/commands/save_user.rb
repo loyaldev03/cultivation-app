@@ -101,6 +101,31 @@ class SaveUser
         args[:facilities] = []
       end
       user = User.new(args.except(:non_exempt_schedules, :work_schedules, :id))
+      if args[:exempt]
+        #exempt worker
+        args[:work_schedules].map do |a|
+          user.work_schedules.build(
+            day: a[:day],
+            start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
+            end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
+          )
+        end
+      else
+        #non-exempt worker
+        args[:non_exempt_schedules].map do |a|
+          # check if start_time and end_time nil, try find the record and remove
+          if a[:start_time] == '' and a[:end_time] == ''
+            # remove schedule when start_time and end_time doesnt exist
+            user.work_schedules = user.work_schedules.reject { |b| b[:date] == Time.zone.parse(a[:date], Time.current) }
+          else
+            user.work_schedules.build(
+              date: a[:date] ? Time.zone.parse(a[:date], Time.current) : '',
+              start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
+              end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
+            )
+          end
+        end
+      end
     end
     user.save!
     user

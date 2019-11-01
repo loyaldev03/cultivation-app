@@ -65,11 +65,9 @@ function SearchBox(props) {
     window.location.replace(url)
   }
 
-  const { facility_id } = props.facility_id
-
   return (
     <div ref={node} className="flex min-w250">
-      <QuickSearchBox facility_id={props.facility_id} />
+      <QuickSearchBox facility_id={props.facility_ids} />
       {expand && (
         <div className="notification shadow-3 ba br2 b--light-grey fixed top-3 right-1">
           <div className="notification__header">

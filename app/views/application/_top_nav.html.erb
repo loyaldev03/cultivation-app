@@ -9,7 +9,7 @@
       %>
     </span>
     <div class="flex items-center">
-      <%= react_component 'utils/SearchBox', {facility_id: current_facility&.id.to_s} %>
+      <%= react_component 'utils/SearchBox', {facility_ids: selected_facilities_ids.map{|f| f.to_s}} %>
       <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>
         <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
       <% end %>

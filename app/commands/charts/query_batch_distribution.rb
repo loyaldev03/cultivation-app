@@ -3,9 +3,12 @@ module Charts
     prepend SimpleCommand
 
     def initialize(current_user, args = {})
+      raise ArgumentError, 'facility_ids is required' if args[:facility_ids].blank?
+      raise ArgumentError, 'facility_ids must be an array' unless (args[:facility_ids].is_a? Array)
+
       @user = current_user
-      @args = args
-      @facility_id = @args[:facility_id].split(',')
+      @facility_ids = args[:facility_ids].map(&:to_bson_id)
+
       date = Time.current
 
       @range = args[:range].humanize.downcase
@@ -30,7 +33,7 @@ module Charts
       end
 
       batch_plants = Cultivation::Batch.collection.aggregate([
-                                                               match_facility,
+                                                               match_facilities,
                                                                {"$match": {"status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
                                                                {"$match": {"current_growth_stage": {"$in": get_phases}}},
                                                                match_date,
@@ -65,15 +68,14 @@ module Charts
 
       all_counts
       #ordered_phases.compact
-
     end
 
     def match_facility
-      if resource_shared?
-        {"$match": {"facility_id": {"$in": @user.facilities}}}
-      else
-        {"$match": {"facility_id": {"$in": @facility_id.map(&:to_bson_id)}}}
-      end
+      {"$match": {"facility_id": {"$in": @facility_ids.map(&:to_bson_id)}}}
+    end
+
+    def match_facilities
+      {"$match": {facility_id: {"$in": @facility_ids}}}
     end
 
     def match_date

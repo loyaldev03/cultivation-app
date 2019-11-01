@@ -330,7 +330,6 @@ class DailyTaskApp extends React.Component {
               No task assigned to you.
             </span>
           </div>
-
         ) : (
           <React.Fragment>
             {DailyTasksStore.isShowAllTasks && !DailyTasksStore.has_tasks ? (

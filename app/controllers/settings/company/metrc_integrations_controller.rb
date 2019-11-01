@@ -22,7 +22,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   end
 
   def update_metrc
-    metrc_hist = current_facility.
+    metrc_hist = params_facility.
       metrc_histories.
       find_or_create_by(code: params[:code])
 

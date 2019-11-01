@@ -14,6 +14,7 @@ module RequestScoping
     helper_method :resource_shared?
     helper_method :current_user_facilities
     helper_method :selected_facilities_ids
+    helper_method :selected_facilities_ids_str
     helper_method :select_single_facility
     helper_method :params_facility
     helper_method :params_facility_id
@@ -109,6 +110,10 @@ module RequestScoping
                                else
                                  current_user_facilities_ids.select { |x| x.to_s == param_fid }
                                end
+  end
+
+  def selected_facilities_ids_str
+    @selected_facilities_ids_str ||= selected_facilities_ids.map(&:to_s)
   end
 
   def params_facility

@@ -7,7 +7,6 @@ module RequestScoping
     around_action :set_timetravel, if: :current_user
 
     helper_method :current_default_facility
-    helper_method :current_facility
     helper_method :current_user_facilities_ids
     helper_method :current_ip_facility
     helper_method :company_info
@@ -85,24 +84,6 @@ module RequestScoping
                                   end
     end
     @current_default_facility
-  end
-
-  # FIXME: DO NOT USE
-  # - Return array with only the selected facility
-  # - Return array with all enabled facility when 'All' is selected.
-  # OBSOLETE: DO NOT USE
-  def current_facility
-    if @current_facility.nil? && params[:facility_id].present?
-      if params[:facility_id] == 'All'
-        @current_facility = FindDefaultFacility.call(current_user).result
-      else
-        @current_facility = Facility.find(params[:facility_id])
-      end
-    elsif @current_facility.nil? && params[:facility_id].blank?
-      @current_facility = FindDefaultFacility.call(current_user).result
-    else
-      @current_facility
-    end
   end
 
   def selected_facilities_ids

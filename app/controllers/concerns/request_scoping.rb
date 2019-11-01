@@ -7,14 +7,16 @@ module RequestScoping
     around_action :set_timetravel, if: :current_user
 
     helper_method :current_default_facility
-    helper_method :current_facility
     helper_method :current_user_facilities_ids
     helper_method :current_ip_facility
     helper_method :company_info
     helper_method :resource_shared?
     helper_method :current_user_facilities
     helper_method :selected_facilities_ids
+    helper_method :selected_facilities_ids_str
     helper_method :select_single_facility
+    helper_method :first_selected_facility
+    helper_method :first_selected_facility_id_str
     helper_method :params_facility
     helper_method :params_facility_id
   end
@@ -61,7 +63,7 @@ module RequestScoping
   end
 
   def select_single_facility
-    if selected_facilities_ids.any? && params[:facility_id] == 'All'
+    if params[:facility_id] == 'All' || params[:facility_id].blank?
       return_url = url_for(params.except(:facility_id).to_unsafe_h)
       redirect_to select_facility_path(return_url: return_url)
     end
@@ -84,24 +86,6 @@ module RequestScoping
     @current_default_facility
   end
 
-  # FIXME: DO NOT USE
-  # - Return array with only the selected facility
-  # - Return array with all enabled facility when 'All' is selected.
-  # OBSOLETE: DO NOT USE
-  def current_facility
-    if @current_facility.nil? && params[:facility_id].present?
-      if params[:facility_id] == 'All'
-        @current_facility = FindDefaultFacility.call(current_user).result
-      else
-        @current_facility = Facility.find(params[:facility_id])
-      end
-    elsif @current_facility.nil? && params[:facility_id].blank?
-      @current_facility = FindDefaultFacility.call(current_user).result
-    else
-      @current_facility
-    end
-  end
-
   def selected_facilities_ids
     param_fid = params[:facility_id]
     @selected_facilities_ids = if param_fid == 'All' || param_fid.blank?
@@ -109,6 +93,10 @@ module RequestScoping
                                else
                                  current_user_facilities_ids.select { |x| x.to_s == param_fid }
                                end
+  end
+
+  def selected_facilities_ids_str
+    @selected_facilities_ids_str ||= selected_facilities_ids.map(&:to_s)
   end
 
   def params_facility
@@ -125,6 +113,14 @@ module RequestScoping
 
   def current_user_facilities_ids
     current_user.facilities.blank? ? [] : current_user.facilities
+  end
+
+  def first_selected_facility
+    @first_selected_facility ||= current_user_facilities.detect { |f| f.id == selected_facilities_ids[0] }
+  end
+
+  def first_selected_facility_id_str
+    @first_selected_facility_id ||= first_selected_facility&.id.to_s
   end
 
   def resource_shared?

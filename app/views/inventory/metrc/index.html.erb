@@ -6,11 +6,9 @@
 <div class="pa4">
   <% if RoleCheck.call(current_user, Constants::APP_MOD_METRC_TAG).result[:read] == true %>
     <div class="flex flex-column">
-      <%= react_component('inventory/metrc/MetrcInventoryApp',
-      {
-        facility_id: params[:facility_id] == "All" ? current_user_facilities_ids.map{|x| x.to_s} : current_facility&.id.to_s,
-        metrc_permission: RoleCheck.call(current_user, Constants::APP_MOD_METRC_TAG).result
-      })
+      <%= react_component('inventory/metrc/MetrcInventoryApp', {
+        facility_id: selected_facilities_ids_str,
+        metrc_permission: RoleCheck.call(current_user, Constants::APP_MOD_METRC_TAG).result })
       %>
     </div>
   <% else %>

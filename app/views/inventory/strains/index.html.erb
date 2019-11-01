@@ -8,7 +8,7 @@
 <div class="pa4">
   <div class="flex flex-column">
     <%= react_component('inventory/strains/StrainApp', {
-        facility_id: current_facility&.id.to_s,
+        facility_id: selected_facilities_ids_str[0],
         strain_permission: RoleCheck.call(current_user, Constants::APP_MOD_STRAIN_TYPE).result
       }) %>
 

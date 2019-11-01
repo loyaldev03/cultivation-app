@@ -11,7 +11,6 @@ export default class WorkerCapacityChart extends React.Component {
   }
 
   componentDidMount() {
-    console.log('load data chart')
     const result = {
       xTicks: [30, 25, 20, 15, 10, null, null],
       data: this.props.data

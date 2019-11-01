@@ -59,11 +59,7 @@ const Batcheslist = ({
 class BatchesDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    // DashboardBatchStore.loadBatchDistribution(
-    //   'all',
-    //   this.props.currentFacilityId
-    // )
-    DashboardBatchStore.loadBatches_info(this.props.currentFacilityId)
+    DashboardBatchStore.loadBatches_info(this.props.currentFacilityIds)
   }
   state = {
     columns: [
@@ -253,7 +249,7 @@ class BatchesDashboardApp extends React.Component {
     ]
   }
   componentDidMount() {
-    BatchStore.loadBatches(this.props.currentFacilityId)
+    BatchStore.loadBatches(this.props.currentFacilityIds)
   }
 
   onToggleColumns = (header, value) => {
@@ -277,18 +273,18 @@ class BatchesDashboardApp extends React.Component {
   }
 
   render() {
-    const { currentFacilityId, batchesPermission } = this.props
+    const { currentFacilityIds, batchesPermission } = this.props
     const { columns } = this.state
     return (
       <div className="pa4">
         <div id="toast" className="toast" />
-        {Array.isArray(this.props.currentFacilityId)
+        {Array.isArray(this.props.currentFacilityIds)
           ? ''
           : batchesPermission.create && (
               <React.Fragment>
                 <div className="flex flex-row-reverse">
                   <a
-                    href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
+                    href={`/cultivation/batches/new?facility_id=${currentFacilityIds}`}
                     className="btn btn--primary"
                   >
                     Create new batch
@@ -302,7 +298,7 @@ class BatchesDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 423 + 'px' }}
             >
-              <BatchPhases facility_id={this.props.currentFacilityId} />
+              <BatchPhases facility_id={this.props.currentFacilityIds} />
             </div>
           </div>
           <div className="w-50">
@@ -355,7 +351,7 @@ class BatchesDashboardApp extends React.Component {
               <h1 className="f5 fw6 dark-grey">Strain Distribution</h1>
               <StrainDistribution
                 url={`/api/v1/dashboard_charts/strain_distribution?facility_id=${
-                  this.props.currentFacilityId
+                  this.props.currentFacilityIds
                 }`}
               />
             </div>

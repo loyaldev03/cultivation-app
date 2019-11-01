@@ -241,6 +241,7 @@ class TeamSetttingApp extends React.Component {
     const departmentsOptions = build_departments_options(
       uniq(users.map(x => x.department))
     )
+    const existingEmail = uniq(users.map(x => x.email))
     const {
       userId,
       setting_role_permissions,
@@ -603,6 +604,7 @@ class TeamSetttingApp extends React.Component {
                 userManagerOptions={userManagerOptions}
                 rolesOptions={rolesOptions}
                 departmentsOptions={departmentsOptions}
+                existingEmail={existingEmail}
                 isSaving={isSaving}
                 userroleAction={userroleAction}
                 companyWorkSchedules={companyWorkSchedules}

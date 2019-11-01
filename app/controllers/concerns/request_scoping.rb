@@ -16,6 +16,8 @@ module RequestScoping
     helper_method :selected_facilities_ids
     helper_method :selected_facilities_ids_str
     helper_method :select_single_facility
+    helper_method :first_selected_facility
+    helper_method :first_selected_facility_id_str
     helper_method :params_facility
     helper_method :params_facility_id
   end
@@ -62,7 +64,7 @@ module RequestScoping
   end
 
   def select_single_facility
-    if selected_facilities_ids.any? && params[:facility_id] == 'All'
+    if params[:facility_id] == 'All' || params[:facility_id].blank?
       return_url = url_for(params.except(:facility_id).to_unsafe_h)
       redirect_to select_facility_path(return_url: return_url)
     end
@@ -130,6 +132,14 @@ module RequestScoping
 
   def current_user_facilities_ids
     current_user.facilities.blank? ? [] : current_user.facilities
+  end
+
+  def first_selected_facility
+    @first_selected_facility ||= current_user_facilities.detect { |f| f.id == selected_facilities_ids[0] }
+  end
+
+  def first_selected_facility_id_str
+    @first_selected_facility_id ||= first_selected_facility&.id.to_s
   end
 
   def resource_shared?

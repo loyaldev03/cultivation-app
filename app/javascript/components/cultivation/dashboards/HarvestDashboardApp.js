@@ -131,6 +131,7 @@ class HarvestDashboard extends React.Component {
   }
 
   render() {
+    const { currentFacilityIds } = this.props
     const { columns } = this.state
     return (
       <div className="pa4">
@@ -144,7 +145,7 @@ class HarvestDashboard extends React.Component {
           <div className="flex h-50">
             <div className="w-30">
               <HarvestAverageWidget
-                facility_id={this.props.currentFacilityId}
+                facility_id={currentFacilityIds}
               />
             </div>
             <div className="w-50">
@@ -153,7 +154,7 @@ class HarvestDashboard extends React.Component {
                 style={{ height: 320 + 'px' }}
               >
                 <HarvestByYeildWidget
-                  facility_id={this.props.currentFacilityId}
+                  facility_id={currentFacilityIds}
                 />
               </div>
             </div>
@@ -163,7 +164,7 @@ class HarvestDashboard extends React.Component {
                 style={{ height: 320 + 'px' }}
               >
                 <HarvestCostByGramWidget
-                  facility_id={this.props.currentFacilityId}
+                  facility_id={currentFacilityIds}
                 />
               </div>
             </div>

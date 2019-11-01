@@ -89,9 +89,7 @@ class BatchHeader extends React.PureComponent {
                       <div className="w-40">
                         <label>Batch ID</label>
                       </div>
-                      <div className="w-40">
-                        {batch_no}
-                      </div>
+                      <div className="w-40">{batch_no}</div>
                     </div>
                   ) : (
                     <div className="flex">

@@ -4,5 +4,5 @@
 
 <%= react_component('cultivation/batches/BatchListApp', {
   batches: @dashboard.cultivation_batches,
-  facilityId: selected_facilities_ids[0].id.to_s
+  facilityId: first_selected_facility_id_str
 }) %>

@@ -33,7 +33,7 @@ module Charts
       end
 
       batch_plants = Cultivation::Batch.collection.aggregate([
-                                                                match_facilities,
+                                                               match_facilities,
                                                                {"$match": {"status": {"$in": [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]}}},
                                                                {"$match": {"current_growth_stage": {"$in": get_phases}}},
                                                                match_date,
@@ -73,9 +73,11 @@ module Charts
     def match_facility
       {"$match": {"facility_id": {"$in": @facility_ids.map(&:to_bson_id)}}}
     end
+
     def match_facilities
       {"$match": {facility_id: {"$in": @facility_ids}}}
     end
+
     def match_date
       if @date_st.present? && @date_nd.present?
         {'$match': {'$and': [

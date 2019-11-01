@@ -16,13 +16,12 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   end
 
   def batch_distribution
-    facility_ids = params[:facility_id]&.split(",") || []
+    facility_ids = params[:facility_id]&.split(',') || []
     result = Charts::QueryBatchDistribution.call(current_user,
-      {
-        range: params[:range],
-        facility_ids: facility_ids
-      }
-    ).result
+                                                 {
+      range: params[:range],
+      facility_ids: facility_ids,
+    }).result
     render json: result.to_json, status: 200
   end
 
